@@ -1,0 +1,1 @@
+AWS_PROFILE=cnb-next-copilot copilot svc deploy -n web -e test
