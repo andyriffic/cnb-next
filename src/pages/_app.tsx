@@ -1,4 +1,5 @@
 import type { AppProps } from "next/app";
+import { GraphqlProvider } from "../providers/GraphqlProvider";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -7,7 +8,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         <h2>Hey</h2>
       </div>
       <div>
-        <Component {...pageProps} />
+        <GraphqlProvider>
+          <Component {...pageProps} />
+        </GraphqlProvider>
       </div>
     </div>
   );
