@@ -1,9 +1,10 @@
 import React from "react";
 import { createClient, Provider, Context, useQuery } from "urql";
+import { GRAPHQL_ENDPOINT } from "../environmentVariables.dev";
 import { Player } from "../types/Player";
 
 const client = createClient({
-  url: "http://localhost:3000/api/graphql",
+  url: GRAPHQL_ENDPOINT,
 });
 
 type Props = {
