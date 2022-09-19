@@ -35,11 +35,11 @@ exec: true # Enable running commands in your container.
 #  GITHUB_TOKEN: GITHUB_TOKEN  # The key is the name of the environment variable, the value is the name of the SSM parameter.
 
 # You can override any of the values defined above by environment.
-environments:
-  test:
-    http:
-      alias: test.finx-rocks.com
-      hosted_zone: Z3H2KCS6G4PEXD
+# environments:
+#   test:
+#     http:
+#       alias: test.finx-rocks.com
+#       hosted_zone: Z3H2KCS6G4PEXD
 #    count: 2               # Number of tasks to run for the "test" environment.
 #    deployment:            # The deployment strategy for the "test" environment.
 #       rolling: 'recreate' # Stops existing tasks before new ones are started for faster deployments.
