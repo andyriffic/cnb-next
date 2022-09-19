@@ -31,8 +31,10 @@ exec: true # Enable running commands in your container.
 #variables:                    # Pass environment variables as key value pairs.
 #  LOG_LEVEL: info
 
-# secrets:
-#   secretsmanager: TEST_SUPER_SECRET
+secrets:
+  SECRET_TEST_2: /copilot/${COPILOT_APPLICATION_NAME}/${COPILOT_ENVIRONMENT_NAME}/secrets/SECRET_TEST_2
+  TEST_SUPER_SECRET:
+    secretsmanager: TEST_SUPER_SECRET
 #
 # You can override any of the values defined above by environment.
 # environments:
