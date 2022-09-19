@@ -7,6 +7,8 @@ export const GRAPHQL_ENDPOINT: string =
 export const DB_TABLE_NAME_PLAYERS: string =
   process.env.DB_TABLE_NAME_PLAYERS || "";
 
+export const ENVIRONMENT_NAME: string = process.env.ENVIRONMENT_NAME || "";
+
 //private
 export const DYNAMO_DB_ACCESS_KEY = process.env.DYNAMO_DB_ACCESS_KEY || "";
 export const DYNAMO_DB_ACCESS_KEY_SECRET =
