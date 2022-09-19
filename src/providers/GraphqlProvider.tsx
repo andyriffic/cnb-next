@@ -1,6 +1,6 @@
 import React from "react";
 import { createClient, Provider, Context, useQuery } from "urql";
-import { GRAPHQL_ENDPOINT } from "../environmentVariables.dev";
+import { GRAPHQL_ENDPOINT } from "../environment";
 import { Player } from "../types/Player";
 
 const client = createClient({
