@@ -4,7 +4,6 @@ import {
   GetItemCommand,
   GetItemCommandInput,
   GetItemCommandOutput,
-  ServiceOutputTypes,
 } from "@aws-sdk/client-dynamodb";
 import { AWS_REGION } from "../../constants";
 import {

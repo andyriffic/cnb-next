@@ -14,6 +14,7 @@
     "@aws-sdk/util-dynamodb": "^3.172.0",
     "@graphql-yoga/node": "^2.13.13",
     "@mobily/ts-belt": "^3.13.1",
+    "@urql/core": "^3.0.3",
     "graphql": "^16.6.0",
     "next": "^12.3.0",
     "react": "17.0.2",
