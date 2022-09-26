@@ -25,7 +25,10 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
-RUN yarn build
+ARG DYNAMO_DB_ACCESS_KEY
+ARG DYNAMO_DB_ACCESS_KEY_SECRET
+
+RUN DYNAMO_DB_ACCESS_KEY=$DYNAMO_DB_ACCESS_KEY DYNAMO_DB_ACCESS_KEY_SECRET=$DYNAMO_DB_ACCESS_KEY_SECRET yarn build
 
 # If using npm comment out above and use below instead
 # RUN npm run build

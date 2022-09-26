@@ -1,15 +1,18 @@
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { unmarshall } from "@aws-sdk/util-dynamodb";
 import {
+  DynamoDBClient,
   GetItemCommand,
   GetItemCommandInput,
   GetItemCommandOutput,
+  ScanCommand,
+  ScanCommandInput,
 } from "@aws-sdk/client-dynamodb";
+import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { AWS_REGION } from "../../constants";
 import {
   DB_TABLE_NAME_PLAYERS,
   DYNAMO_DB_ACCESS_KEY,
   DYNAMO_DB_ACCESS_KEY_SECRET,
+  ENVIRONMENT_NAME,
 } from "../../environment";
 import { Player } from "../../types/Player";
 
@@ -21,25 +24,29 @@ const ddbClient = new DynamoDBClient({
   },
 });
 
-const allPlayers: Player[] = [
-  { id: "p1", name: "player1" },
-  { id: "p2", name: "player2" },
-];
+export const getAllPlayers = (): Promise<Player[] | void> => {
+  // console.log("BUILDING FROM ENV:", ENVIRONMENT_NAME);
 
-export const getAllPlayers = (): Promise<Player[]> => {
-  //TODO: actually call aws
-  return Promise.resolve(allPlayers);
+  const params: ScanCommandInput = {
+    // FilterExpression: "",
+    // Define the expression attribute value, which are substitutes for the values you want to compare.
+    //  ExpressionAttributeValues: { ["#n"]: { S: "name" } },
+    ExpressionAttributeNames: { ["#n"]: "name" },
+    // Set the projection expression, which the the attributes that you want.
+    ProjectionExpression: "id, #n, tags",
+    TableName: DB_TABLE_NAME_PLAYERS,
+  };
+  return ddbClient
+    .send(new ScanCommand(params))
+    .then((data) => {
+      return data.Items?.map((i) => unmarshall(i) as Player);
+    })
+    .catch((err) => console.log("dynamodb error", err));
 };
-
-type OutputType = {
-  Item: Player | void;
-} & GetItemCommandOutput;
 
 export const getPlayer = (
   playerId: string
 ): Promise<Player | undefined | void> => {
-  //TODO: actually call aws
-
   const params: GetItemCommandInput = {
     TableName: DB_TABLE_NAME_PLAYERS,
     Key: {
@@ -47,16 +54,10 @@ export const getPlayer = (
     },
   };
 
-  console.log("finding", params);
-
   return ddbClient
     .send(new GetItemCommand(params))
     .then((data) => {
-      console.log("Got dynamo response", data);
-
       return !data.Item ? undefined : (unmarshall(data.Item) as Player);
     })
     .catch((err) => console.log("dynamodb error", err));
-
-  // return Promise.resolve(allPlayers.find((p) => p.id === playerId)!);
 };

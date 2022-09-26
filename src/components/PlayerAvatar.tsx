@@ -1,10 +1,10 @@
-import Image from "next/image";
+import Image from "next/future/image";
 import styled from "styled-components";
 import { Player } from "../types/Player";
 
 const ImageContainer = styled.div`
-  width: 40vw;
-  height: 50vw;
+  /* width: 70vh; */
+  height: 90vh;
   display: block;
 `;
 
@@ -15,14 +15,13 @@ type Props = {
 export const PlayerAvatar = ({ player }: Props): JSX.Element => {
   return (
     <>
-      <h2>{player.name}</h2>
       <ImageContainer>
         <Image
           src={`/images/players/${player.id}.png`}
           alt=""
-          width={80}
-          height={120}
-          layout="responsive"
+          style={{ width: "100%", height: "80vw" }}
+          width={450}
+          height={780}
         />
       </ImageContainer>
     </>
