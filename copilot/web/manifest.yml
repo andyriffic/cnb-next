@@ -40,11 +40,11 @@ secrets:
   DYNAMO_DB_ACCESS_KEY_SECRET: /copilot/${COPILOT_APPLICATION_NAME}/${COPILOT_ENVIRONMENT_NAME}/secrets/DYNAMO_DB_ACCESS_KEY_SECRET
 #
 # You can override any of the values defined above by environment.
-# environments:
-#   test:
-#     http:
-#       alias: test.finx-rocks.com
-#       hosted_zone: Z3H2KCS6G4PEXD
+environments:
+  test:
+    http:
+      alias: test.finx-rocks.com
+      hosted_zone: Z3H2KCS6G4PEXD
 #    count: 2               # Number of tasks to run for the "test" environment.
 #    deployment:            # The deployment strategy for the "test" environment.
 #       rolling: 'recreate' # Stops existing tasks before new ones are started for faster deployments.
