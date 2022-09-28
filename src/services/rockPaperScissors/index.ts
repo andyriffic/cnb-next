@@ -1,4 +1,4 @@
-import { O, pipe, R } from "@mobily/ts-belt";
+import { A, O, pipe, R } from "@mobily/ts-belt";
 import { RPSCreateGameProps, RPSGame, RPSMoveName, RPSRound } from "./types";
 
 export const createGame = (
@@ -22,10 +22,9 @@ export const makeMoveForPlayer = (
   return pipe(
     rpsGame.rounds,
     findPlayersRound(playerId),
-    O.map(setPlayersMoveForRound(playerId, moveName)),
-    O.map(updateRoundInRounds(rpsGame.rounds)),
-    O.map((rounds) => ({ ...rpsGame, rounds })),
-    O.toResult("doh")
+    R.map(setPlayersMoveForRound(playerId, moveName)),
+    R.map(updateRoundInRounds(rpsGame.rounds)),
+    R.map((updatedRounds) => ({ ...rpsGame, rounds: updatedRounds }))
   );
 };
 
@@ -64,13 +63,27 @@ function updateRoundInRounds(
 
 function findPlayersRound(
   playerId: string
-): (rounds: RPSRound[]) => O.Option<RPSRound> {
+): (rounds: RPSRound[]) => R.Result<RPSRound, string> {
   return (rounds) => {
+    return pipe(
+      rounds,
+      A.last,
+      O.flatMap((lastRound) =>
+        lastRound.moves.find((m) => m.playerId === playerId)
+          ? O.None
+          : O.Some(lastRound)
+      ),
+      O.toResult(`Player "${playerId}" has already played last round`)
+    );
+
     const nextRound = rounds.find(
       (round) => !round.moves.find((move) => move.playerId === playerId)
     );
 
-    return O.fromNullable(nextRound);
+    return R.fromNullable(
+      nextRound,
+      `Player "${playerId}" has played all rounds`
+    );
   };
 }
 

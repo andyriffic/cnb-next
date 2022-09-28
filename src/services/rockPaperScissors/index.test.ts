@@ -22,9 +22,7 @@ test("Makes move with invalid player is not ok", () => {
     pipe(
       { playerIds: ["p1", "p2"] },
       createGame,
-      R.map((game) =>
-        makeMoveForPlayer("not a registered player", "paper", game)
-      ),
+      R.map((game) => makeMoveForPlayer("p3", "paper", game)),
       R.tap((v) => console.log("RESULT:", v)),
       R.isOk
     )
