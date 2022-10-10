@@ -4,7 +4,7 @@ import { RPSCreateGameProps, RPSGame, RPSMoveName, RPSRound } from "./types";
 export const createGame = (
   createGameProps: RPSCreateGameProps
 ): R.Result<RPSGame, string> => {
-  return pipe(createGameProps, createBlankGame, addRoundToGame);
+  return pipe(createGameProps, createBlankGame, R.flatMap(addRoundToGame));
 };
 
 function createBlankGame(createGameProps: RPSCreateGameProps): R.Ok<RPSGame> {
@@ -16,29 +16,43 @@ function createBlankGame(createGameProps: RPSCreateGameProps): R.Ok<RPSGame> {
 
 export const makeMoveForPlayer = (
   playerId: string,
-  moveName: RPSMoveName,
-  rpsGame: RPSGame
-): R.Result<RPSGame, string> => {
-  return pipe(
-    rpsGame.rounds,
-    findPlayersRound(playerId),
-    R.map(setPlayersMoveForRound(playerId, moveName)),
-    R.map(updateRoundInRounds(rpsGame.rounds)),
-    R.map((updatedRounds) => ({ ...rpsGame, rounds: updatedRounds }))
-  );
+  moveName: RPSMoveName
+): ((rpsGame: RPSGame) => R.Result<RPSGame, string>) => {
+  return (rpsGame) =>
+    pipe(
+      rpsGame,
+      validatePlayerOnGame(playerId),
+      R.map((game) => game.rounds),
+      R.flatMap(findPlayersRound(playerId)),
+      R.map(setPlayersMoveForRound(playerId, moveName)),
+      R.map(updateRoundInRounds(rpsGame.rounds)),
+      R.map((updatedRounds) => ({ ...rpsGame, rounds: updatedRounds }))
+    );
 };
 
-export function addRoundToGame(
-  rpsGame: R.Result<RPSGame, string>
-): R.Result<RPSGame, string> {
-  //TODO: validate all current rounds are complete
+export function addRoundToGame(rpsGame: RPSGame): R.Result<RPSGame, string> {
   return pipe(
     rpsGame,
+    canCreateNewRound,
     R.flatMap((game) =>
       R.Ok({
         ...game,
         rounds: [...game.rounds, { index: game.rounds.length, moves: [] }],
       })
+    )
+  );
+}
+
+function canCreateNewRound(rpsGame: RPSGame): R.Result<RPSGame, string> {
+  return pipe(
+    rpsGame.rounds,
+    A.last,
+    O.match(
+      (round) =>
+        round.moves.length === 2
+          ? R.Ok(rpsGame)
+          : R.Error("Not all moves made on current round"),
+      () => R.Ok(rpsGame)
     )
   );
 }
@@ -76,22 +90,22 @@ function findPlayersRound(
       O.toResult(`Player "${playerId}" has already played last round`)
     );
 
-    const nextRound = rounds.find(
-      (round) => !round.moves.find((move) => move.playerId === playerId)
-    );
+    // const nextRound = rounds.find(
+    //   (round) => !round.moves.find((move) => move.playerId === playerId)
+    // );
 
-    return R.fromNullable(
-      nextRound,
-      `Player "${playerId}" has played all rounds`
-    );
+    // return R.fromNullable(
+    //   nextRound,
+    //   `Player "${playerId}" has played all rounds`
+    // );
   };
 }
 
 function validatePlayerOnGame(
   playerId: string
-): (rpsGame: RPSGame) => R.Result<string, string> {
+): (rpsGame: RPSGame) => R.Result<RPSGame, string> {
   return (rpsGame) =>
     rpsGame.playerIds.includes(playerId)
-      ? R.Ok(playerId)
+      ? R.Ok(rpsGame)
       : R.Error(`Player "${playerId}" not included in game`);
 }

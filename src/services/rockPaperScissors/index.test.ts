@@ -1,5 +1,5 @@
 import { A, O, pipe, R } from "@mobily/ts-belt";
-import { createGame, makeMoveForPlayer } from ".";
+import { addRoundToGame, createGame, makeMoveForPlayer } from ".";
 
 test("Create game successfully", () => {
   const game = createGame({ playerIds: ["p1", "p2"] });
@@ -11,10 +11,10 @@ test("Makes move ok", () => {
     pipe(
       { playerIds: ["p1", "p2"] },
       createGame,
-      R.map((game) => makeMoveForPlayer("p1", "paper", game)),
+      R.flatMap(makeMoveForPlayer("p1", "paper")),
       R.isOk
     )
-  ).toBe(true);
+  ).toEqual(true);
 });
 
 test("Makes move with invalid player is not ok", () => {
@@ -22,25 +22,32 @@ test("Makes move with invalid player is not ok", () => {
     pipe(
       { playerIds: ["p1", "p2"] },
       createGame,
-      R.map((game) => makeMoveForPlayer("p3", "paper", game)),
-      R.tap((v) => console.log("RESULT:", v)),
-      R.isOk
+      R.flatMap(makeMoveForPlayer("p3", "paper")),
+      R.isError
     )
-  ).toBe(true);
+  ).toEqual(true);
 });
 
-test.skip("Some stuff", () => {
-  const output = pipe(
-    O.fromNullable(["hello", "world", "lorem", "ipsum"]),
-    O.tap((v) => console.log("After nullable", v)),
-    O.flatMap(A.takeExactly(2)),
-    O.tap((v) => console.log("After flatmap", v)),
-    O.map(A.join(" ")),
-    O.tap((v) => console.log("After join", v)),
-    O.match(
-      (str) => str,
-      () => "oops!"
+test("Can add new round if all players have moved", () => {
+  expect(
+    pipe(
+      { playerIds: ["p1", "p2"] },
+      createGame,
+      R.flatMap(makeMoveForPlayer("p1", "paper")),
+      R.flatMap(makeMoveForPlayer("p2", "paper")),
+      R.flatMap(addRoundToGame),
+      R.isOk
     )
-  ); // → 'hello world!'
-  console.log(output);
+  ).toEqual(true);
+});
+
+test("Can't add new round if all players haven't moved", () => {
+  expect(
+    pipe(
+      { playerIds: ["p1", "p2"] },
+      createGame,
+      R.flatMap(addRoundToGame),
+      R.isError
+    )
+  ).toEqual(true);
 });
