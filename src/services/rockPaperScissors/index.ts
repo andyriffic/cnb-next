@@ -30,17 +30,17 @@ export const makeMoveForPlayer = (
     );
 };
 
-export const resolveCurrentRound = (
-  rpsGame: RPSGame
-): R.Result<RPSGame, string> => {
-  return pipe(rpsGame.rounds, A.last);
-};
+// export const resolveCurrentRound = (
+//   rpsGame: RPSGame
+// ): R.Result<RPSGame, string> => {
+//   return pipe(rpsGame.rounds, A.last);
+// };
 
-function getResultForRound(
-  round: O.Option<RPSRound>
-): R.Result<RPSRound, string> {
-  return pipe(round, validateBothPlayersMoved);
-}
+// function getResultForRound(
+//   round: O.Option<RPSRound>
+// ): R.Result<RPSRound, string> {
+//   return pipe(round, validateBothPlayersMoved);
+// }
 
 export function addRoundToGame(rpsGame: RPSGame): R.Result<RPSGame, string> {
   return pipe(
