@@ -30,6 +30,18 @@ export const makeMoveForPlayer = (
     );
 };
 
+export const resolveCurrentRound = (
+  rpsGame: RPSGame
+): R.Result<RPSGame, string> => {
+  return pipe(rpsGame.rounds, A.last);
+};
+
+function getResultForRound(
+  round: O.Option<RPSRound>
+): R.Result<RPSRound, string> {
+  return pipe(round, validateBothPlayersMoved);
+}
+
 export function addRoundToGame(rpsGame: RPSGame): R.Result<RPSGame, string> {
   return pipe(
     rpsGame,
@@ -55,6 +67,19 @@ function canCreateNewRound(rpsGame: RPSGame): R.Result<RPSGame, string> {
       () => R.Ok(rpsGame)
     )
   );
+
+  // return pipe(
+  //   rpsGame.rounds,
+  //   A.last,
+  //   O.map(validateBothPlayersMoved),
+  //   O.toResult()
+  // );
+}
+
+function validateBothPlayersMoved(round: RPSRound): R.Result<RPSRound, string> {
+  return round.moves.length === 2
+    ? R.Ok(round)
+    : R.Error("Not all moves made on current round");
 }
 
 function setPlayersMoveForRound(
@@ -89,15 +114,6 @@ function findPlayersRound(
       ),
       O.toResult(`Player "${playerId}" has already played last round`)
     );
-
-    // const nextRound = rounds.find(
-    //   (round) => !round.moves.find((move) => move.playerId === playerId)
-    // );
-
-    // return R.fromNullable(
-    //   nextRound,
-    //   `Player "${playerId}" has played all rounds`
-    // );
   };
 }
 
