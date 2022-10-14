@@ -8,7 +8,7 @@ const Container = styled.div`
   overflow: hidden;
   justify-content: center;
   align-items: center;
-  background-color: #02315e;
+  background-color: #f3f3f3;
 `;
 
 const Main = styled.div`
