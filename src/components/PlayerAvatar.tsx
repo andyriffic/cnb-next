@@ -19,7 +19,7 @@ export const PlayerAvatar = ({ player }: Props): JSX.Element => {
         <Image
           src={`/images/players/${player.id}.png`}
           alt=""
-          style={{ width: "100%", height: "80vw" }}
+          style={{ width: "60vh", height: "80vh" }}
           width={450}
           height={780}
         />

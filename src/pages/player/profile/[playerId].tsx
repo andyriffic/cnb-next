@@ -1,17 +1,19 @@
 import { GetStaticPaths, GetStaticProps } from "next";
-import { useRouter } from "next/router";
 import styled from "styled-components";
 import { AnimateFadeInLeft } from "../../../components/animations/FadeInLeft";
 import { AnimateFadeInRight } from "../../../components/animations/FadeInRight";
 import { PlayerAvatar } from "../../../components/PlayerAvatar";
 import { SpectatorPageLayout } from "../../../components/SpectatorPageLayout";
-import { useFetchPlayerQuery } from "../../../providers/GraphqlProvider";
 import { Player } from "../../../types/Player";
 import { getCnbPlayer, getCnbPlayers } from "../../../utils/data/graphql";
 
 const CenterAlignContainer = styled.div`
   display: flex;
   justify-content: center;
+`;
+
+const PlayerProfileContainer = styled.div`
+  position: relative;
 `;
 
 const PlayerName = styled.div`
@@ -24,6 +26,9 @@ const PlayerName = styled.div`
   width: auto;
   display: inline-block;
   text-transform: uppercase;
+  position: absolute;
+  bottom: 10vh;
+  left: 0;
 `;
 
 type Props = {
@@ -31,30 +36,17 @@ type Props = {
 };
 
 function Page({ player }: Props) {
-  // const router = useRouter();
-  // const { playerId } = router.query;
-  // const { data, fetching, error } = useFetchPlayerQuery(playerId as string);
-
-  // if (fetching) {
-  //   return <h3>Finding player...</h3>;
-  // }
-
-  // if (!(data && data.player)) {
-  //   return <h3>Player not found :(</h3>;
-  // }
-
   return (
     <SpectatorPageLayout>
-      {/* {error && <p>Error: {JSON.stringify(error)}</p>} */}
       <CenterAlignContainer>
-        <div>
+        <PlayerProfileContainer>
           <AnimateFadeInLeft>
             <PlayerAvatar player={player} />
           </AnimateFadeInLeft>
-          <AnimateFadeInRight delayMilliseconds={500}>
+          <AnimateFadeInRight delayMilliseconds={0}>
             <PlayerName>{player.name}</PlayerName>
           </AnimateFadeInRight>
-        </div>
+        </PlayerProfileContainer>
       </CenterAlignContainer>
     </SpectatorPageLayout>
   );
@@ -62,7 +54,6 @@ function Page({ player }: Props) {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const players = await getCnbPlayers();
-  //Something
 
   if (!players) {
     return { paths: [], fallback: false };
