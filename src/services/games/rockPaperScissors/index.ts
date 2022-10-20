@@ -1,5 +1,11 @@
 import { A, O, pipe, R } from "@mobily/ts-belt";
-import { RPSCreateGameProps, RPSGame, RPSMoveName, RPSRound } from "./types";
+import {
+  RPSCreateGameProps,
+  RPSGame,
+  RPSMoveName,
+  RPSRound,
+  RPSRoundResult,
+} from "./types";
 
 export const createGame = (
   createGameProps: RPSCreateGameProps
@@ -30,11 +36,29 @@ export const makeMoveForPlayer = (
     );
 };
 
-// export const resolveCurrentRound = (
-//   rpsGame: RPSGame
-// ): R.Result<RPSGame, string> => {
-//   return pipe(rpsGame.rounds, A.last);
-// };
+export const resolveLastRound = (
+  rpsGame: RPSGame
+): R.Result<RPSGame, string> => {
+  return pipe(
+    rpsGame.rounds,
+    A.last,
+    O.toResult("No last round"),
+    R.flatMap(resolveRound),
+    R.map(updateRoundInRounds(rpsGame.rounds)),
+    R.map((r) => ({ ...rpsGame, r }))
+  );
+};
+
+function resolveRound(round: RPSRound): R.Result<RPSRound, string> {
+  // return pipe(
+  //   round,
+  //   R.match((r) => r.moves.length === 2 )
+  // );
+
+  //TODO: determine result
+
+  return R.Ok({ ...round, result: { draw: true } });
+}
 
 // function getResultForRound(
 //   round: O.Option<RPSRound>
@@ -44,18 +68,37 @@ export const makeMoveForPlayer = (
 
 export function addRoundToGame(rpsGame: RPSGame): R.Result<RPSGame, string> {
   return pipe(
-    rpsGame,
-    canCreateNewRound,
-    R.flatMap((game) =>
+    R.Ok(rpsGame),
+    R.flatMap(canCreateNewRound),
+    R.flatMap(() =>
       R.Ok({
-        ...game,
-        rounds: [...game.rounds, { index: game.rounds.length, moves: [] }],
+        ...rpsGame,
+        rounds: [
+          ...rpsGame.rounds,
+          { index: rpsGame.rounds.length, moves: [] },
+        ],
       })
     )
   );
 }
 
 function canCreateNewRound(rpsGame: RPSGame): R.Result<RPSGame, string> {
+  // return pipe(
+  //   rpsGame.rounds,
+  //   A.last,
+  //   O.match(
+  //     (round) =>
+  //       pipe(
+  //         R.Ok(round),
+  //         R.flatMap(validateRoundIsComplete),
+  //         R.match(
+  //           () => R.fromNullable(rpsGame, ""),
+  //           (error) => R.fromNullable(null, error)
+  //         )
+  //       ),
+  //     () => R.Ok(rpsGame)
+  //   )
+  // );
   return pipe(
     rpsGame.rounds,
     A.last,
@@ -67,19 +110,26 @@ function canCreateNewRound(rpsGame: RPSGame): R.Result<RPSGame, string> {
       () => R.Ok(rpsGame)
     )
   );
+}
 
-  // return pipe(
-  //   rpsGame.rounds,
-  //   A.last,
-  //   O.map(validateBothPlayersMoved),
-  //   O.toResult()
-  // );
+function validateRoundIsComplete(round: RPSRound): R.Result<RPSRound, string> {
+  return pipe(
+    R.fromNullable(round, "must have a round!"),
+    R.flatMap(validateBothPlayersMoved),
+    R.flatMap(validateRoundHasResult)
+  );
 }
 
 function validateBothPlayersMoved(round: RPSRound): R.Result<RPSRound, string> {
   return round.moves.length === 2
     ? R.Ok(round)
     : R.Error("Not all moves made on current round");
+}
+
+function validateRoundHasResult(round: RPSRound): R.Result<RPSRound, string> {
+  return !!round.result
+    ? R.Ok(round)
+    : R.Error("Current round is not resolved");
 }
 
 function setPlayersMoveForRound(
