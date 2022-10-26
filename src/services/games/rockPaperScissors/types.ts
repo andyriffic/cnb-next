@@ -1,6 +1,6 @@
 import { Player } from "../../../types/Player";
 
-export type RPSCreateGameProps = { playerIds: [string, string] };
+export type RPSCreateGameProps = { id: string; playerIds: [string, string] };
 
 export type RPSGame = {
   playerIds: string[];

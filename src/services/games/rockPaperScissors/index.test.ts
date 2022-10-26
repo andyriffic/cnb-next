@@ -1,145 +1,248 @@
-import { A, O, pipe, R } from "@mobily/ts-belt";
-import { buildASTSchema } from "graphql";
-import {
-  addRoundToGame,
-  createGame,
-  makeMoveForPlayer,
-  resolveLastRound,
-} from ".";
+import * as E from "fp-ts/Either";
+import { pipe } from "fp-ts/function";
+import { createGame, makePlayerMove, resolveRound } from ".";
 
-test("Create game successfully", () => {
-  const game = createGame({ playerIds: ["p1", "p2"] });
-  expect(R.isOk(game)).toBe(true);
+test("Can create game successfully", () => {
+  const game = createGame({ id: "test", playerIds: ["p1", "p2"] });
+  expect(game).toBeRight();
 });
 
-test("Makes move for valid player is ok", () => {
-  expect(
-    pipe(
-      { playerIds: ["p1", "p2"] },
-      createGame,
-      R.flatMap(makeMoveForPlayer("p1", "paper")),
-      R.isOk
-    )
-  ).toEqual(true);
-});
-
-test("Makes move with invalid player is not ok", () => {
+test("Can make player move for valid player", () => {
   const result = pipe(
-    { playerIds: ["p1", "p2"] },
-    createGame,
-    R.flatMap(makeMoveForPlayer("p3", "paper"))
+    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    E.chain((game) =>
+      makePlayerMove({ playerId: "p1", moveName: "paper" }, game)
+    )
   );
 
-  expect(pipe(result, R.isError)).toEqual(true);
-  expect(
-    pipe(
-      result,
-      R.match(
-        () => "",
-        (e) => e
-      )
-    )
-  ).toEqual('Player "p3" not included in game');
+  expect(result).toBeRight();
 });
 
-test("Can add new round if all players have moved", () => {
-  expect(
-    pipe(
-      { playerIds: ["p1", "p2"] },
-      createGame,
-      R.flatMap(makeMoveForPlayer("p1", "paper")),
-      R.flatMap(makeMoveForPlayer("p2", "paper")),
-      R.flatMap(addRoundToGame),
-      R.isOk
-    )
-  ).toEqual(true);
-});
-
-test("Can't add new round if current round not resolved", () => {
+test("Can't make move for invalid player", () => {
   const result = pipe(
-    { playerIds: ["p1", "p2"] },
-    createGame,
-    R.flatMap(makeMoveForPlayer("p1", "paper")),
-    R.flatMap(makeMoveForPlayer("p2", "paper")),
-    R.flatMap(addRoundToGame)
+    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    E.chain((game) =>
+      makePlayerMove({ playerId: "xx", moveName: "paper" }, game)
+    )
   );
 
-  expect(R.isError(result)).toEqual(true);
-
-  expect(
-    pipe(
-      result,
-      R.match(
-        () => "",
-        (e) => e
-      )
-    )
-  ).toEqual("Current round is not resolved");
+  expect(result).toBeLeft();
+  expect(result).toEqualLeft('Player "xx" is not in this game');
 });
 
-test("Can't add new round if all players haven't moved", () => {
+test("Can't make two moves for the same player in the same round", () => {
   const result = pipe(
-    { playerIds: ["p1", "p2"] },
-    createGame,
-    R.flatMap(addRoundToGame)
+    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    E.chain((game) =>
+      makePlayerMove({ playerId: "p1", moveName: "paper" }, game)
+    ),
+    E.chain((game) =>
+      makePlayerMove({ playerId: "p1", moveName: "paper" }, game)
+    )
   );
 
-  expect(R.isError(result)).toEqual(true);
-  expect(
-    pipe(
-      result,
-      R.match(
-        () => "",
-        (e) => e
-      )
-    )
-  ).toEqual("Not all moves made on current round");
+  expect(result).toBeLeft();
+  expect(result).toEqualLeft('Player "p1" has already moved this round');
 });
 
-test("Player can't move on same round twice", () => {
+test("Correct round result for draw with paper", () => {
   const result = pipe(
-    { playerIds: ["p1", "p2"] },
-    createGame,
-    R.flatMap(makeMoveForPlayer("p1", "paper")),
-    R.flatMap(makeMoveForPlayer("p1", "paper"))
+    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    E.chain((game) =>
+      makePlayerMove({ playerId: "p1", moveName: "paper" }, game)
+    ),
+    E.chain((game) =>
+      makePlayerMove({ playerId: "p2", moveName: "paper" }, game)
+    ),
+    E.chain(resolveRound)
   );
 
-  expect(R.isError(result)).toEqual(true);
-  expect(
-    pipe(
-      result,
-      R.match(
-        () => "",
-        (e) => e
-      )
-    )
-  ).toEqual('Player "p1" has already played last round');
+  expect(result).toBeRight();
+  expect(result).toSubsetEqualRight({
+    rounds: [{ index: 0, result: { draw: true } }],
+  });
 });
 
-test("Round result correct for a paper draw", () => {
+test("Correct round result for draw with rock", () => {
   const result = pipe(
-    { playerIds: ["p1", "p2"] },
-    createGame,
-    R.flatMap(makeMoveForPlayer("p1", "paper")),
-    R.flatMap(makeMoveForPlayer("p2", "paper")),
-    R.flatMap(resolveLastRound)
+    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    E.chain((game) =>
+      makePlayerMove({ playerId: "p1", moveName: "rock" }, game)
+    ),
+    E.chain((game) =>
+      makePlayerMove({ playerId: "p2", moveName: "rock" }, game)
+    ),
+    E.chain(resolveRound)
   );
 
-  expect(R.isOk(result)).toEqual(true);
-  expect(
-    pipe(
-      result,
-      R.map((g) => g.rounds),
-      // R.recover([]),
-      R.match(
-        (r) => r,
-        () => []
-      ),
-      A.last,
-      O.match(
-        (round) => round.result?.draw,
-        () => undefined
-      )
-    )
-  ).toEqual(true);
+  expect(result).toBeRight();
+  expect(result).toSubsetEqualRight({
+    rounds: [{ index: 0, result: { draw: true } }],
+  });
+});
+
+test("Correct round result for draw with scissors", () => {
+  const result = pipe(
+    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    E.chain((game) =>
+      makePlayerMove({ playerId: "p1", moveName: "scissors" }, game)
+    ),
+    E.chain((game) =>
+      makePlayerMove({ playerId: "p2", moveName: "scissors" }, game)
+    ),
+    E.chain(resolveRound)
+  );
+
+  expect(result).toBeRight();
+  expect(result).toSubsetEqualRight({
+    rounds: [{ index: 0, result: { draw: true } }],
+  });
+});
+
+test("Correct round result for player1 winning with rock", () => {
+  const result = pipe(
+    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    E.chain((game) =>
+      makePlayerMove({ playerId: "p1", moveName: "rock" }, game)
+    ),
+    E.chain((game) =>
+      makePlayerMove({ playerId: "p2", moveName: "scissors" }, game)
+    ),
+    E.chain(resolveRound)
+  );
+
+  expect(result).toBeRight();
+  expect(result).toSubsetEqualRight({
+    rounds: [{ index: 0, result: { draw: false, winningPlayerId: "p1" } }],
+  });
+});
+
+test("Correct round result for player1 winning with paper", () => {
+  const result = pipe(
+    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    E.chain((game) =>
+      makePlayerMove({ playerId: "p1", moveName: "paper" }, game)
+    ),
+    E.chain((game) =>
+      makePlayerMove({ playerId: "p2", moveName: "rock" }, game)
+    ),
+    E.chain(resolveRound)
+  );
+
+  expect(result).toBeRight();
+  expect(result).toSubsetEqualRight({
+    rounds: [{ index: 0, result: { draw: false, winningPlayerId: "p1" } }],
+  });
+});
+
+test("Correct round result for player1 winning with scissors", () => {
+  const result = pipe(
+    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    E.chain((game) =>
+      makePlayerMove({ playerId: "p1", moveName: "scissors" }, game)
+    ),
+    E.chain((game) =>
+      makePlayerMove({ playerId: "p2", moveName: "paper" }, game)
+    ),
+    E.chain(resolveRound)
+  );
+
+  expect(result).toBeRight();
+  expect(result).toSubsetEqualRight({
+    rounds: [{ index: 0, result: { draw: false, winningPlayerId: "p1" } }],
+  });
+});
+
+test("Correct round result for player2 winning with rock", () => {
+  const result = pipe(
+    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    E.chain((game) =>
+      makePlayerMove({ playerId: "p1", moveName: "scissors" }, game)
+    ),
+    E.chain((game) =>
+      makePlayerMove({ playerId: "p2", moveName: "rock" }, game)
+    ),
+    E.chain(resolveRound)
+  );
+
+  expect(result).toBeRight();
+  expect(result).toSubsetEqualRight({
+    rounds: [{ index: 0, result: { draw: false, winningPlayerId: "p2" } }],
+  });
+});
+
+test("Correct round result for player2 winning with paper", () => {
+  const result = pipe(
+    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    E.chain((game) =>
+      makePlayerMove({ playerId: "p1", moveName: "rock" }, game)
+    ),
+    E.chain((game) =>
+      makePlayerMove({ playerId: "p2", moveName: "paper" }, game)
+    ),
+    E.chain(resolveRound)
+  );
+
+  expect(result).toBeRight();
+  expect(result).toSubsetEqualRight({
+    rounds: [{ index: 0, result: { draw: false, winningPlayerId: "p2" } }],
+  });
+});
+
+test("Correct round result for player2 winning with scissors", () => {
+  const result = pipe(
+    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    E.chain((game) =>
+      makePlayerMove({ playerId: "p1", moveName: "paper" }, game)
+    ),
+    E.chain((game) =>
+      makePlayerMove({ playerId: "p2", moveName: "scissors" }, game)
+    ),
+    E.chain(resolveRound)
+  );
+
+  expect(result).toBeRight();
+  expect(result).toSubsetEqualRight({
+    rounds: [{ index: 0, result: { draw: false, winningPlayerId: "p2" } }],
+  });
+});
+
+test("Can't resolve round if no players have moved", () => {
+  const result = pipe(
+    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    E.chain((game) => resolveRound(game))
+  );
+
+  expect(result).toBeLeft();
+  expect(result).toEqualLeft("Not all players have moved");
+});
+
+test("Can't resolve round if only 1 player has moved", () => {
+  const result = pipe(
+    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    E.chain((game) =>
+      makePlayerMove({ playerId: "p1", moveName: "paper" }, game)
+    ),
+    E.chain((game) => resolveRound(game))
+  );
+
+  expect(result).toBeLeft();
+  expect(result).toEqualLeft("Not all players have moved");
+});
+
+test("Can't resolve round if it already has a result", () => {
+  const result = pipe(
+    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    E.chain((game) =>
+      makePlayerMove({ playerId: "p1", moveName: "paper" }, game)
+    ),
+    E.chain((game) =>
+      makePlayerMove({ playerId: "p2", moveName: "paper" }, game)
+    ),
+    E.chain((game) => resolveRound(game)),
+    E.chain((game) => resolveRound(game))
+  );
+
+  expect(result).toBeLeft();
+  expect(result).toEqualLeft("Round already has a result");
 });
