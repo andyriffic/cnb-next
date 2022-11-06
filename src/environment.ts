@@ -3,6 +3,8 @@
 //public
 export const GRAPHQL_ENDPOINT: string =
   process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT || "";
+export const SOCKET_ENDPOINT: string =
+  process.env.NEXT_PUBLIC_SOCKET_ENDPOINT || "";
 
 export const DB_TABLE_NAME_PLAYERS: string =
   process.env.DB_TABLE_NAME_PLAYERS || "";

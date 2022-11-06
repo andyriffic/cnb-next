@@ -6,7 +6,11 @@ import { RPSCreateGameProps, RPSGame, RPSPlayerMove, RPSRound } from "./types";
 export function createGame(
   props: RPSCreateGameProps
 ): E.Either<string, RPSGame> {
-  const newGame: RPSGame = { playerIds: [...props.playerIds], rounds: [] };
+  const newGame: RPSGame = {
+    id: props.id,
+    playerIds: [...props.playerIds],
+    rounds: [],
+  };
   return pipe(newGame, addRoundToGame);
 }
 

@@ -2,6 +2,7 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { createGlobalStyle } from "styled-components";
 import { GraphqlProvider } from "../providers/GraphqlProvider";
+import { SocketIoProvider } from "../providers/SocketIoProvider";
 
 const GlobalStyles = createGlobalStyle`
 html,
@@ -30,7 +31,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       </Head>
       <div>
         <GraphqlProvider>
-          <Component {...pageProps} />
+          <SocketIoProvider>
+            <Component {...pageProps} />
+          </SocketIoProvider>
         </GraphqlProvider>
       </div>
     </div>
