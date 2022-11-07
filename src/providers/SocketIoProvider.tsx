@@ -2,10 +2,14 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { io } from "socket.io-client";
 import { SOCKET_ENDPOINT } from "../environment";
 import { RPS_ACTIONS } from "../services/games/rockPaperScissors/socket.io";
-import { RPSGame } from "../services/games/rockPaperScissors/types";
+import {
+  RPSGame,
+  RPSPlayerMove,
+} from "../services/games/rockPaperScissors/types";
 
 type SocketIoService = {
   activeRPSGames: RPSGame[];
+  makeGameMove: (move: RPSPlayerMove, gameId: string) => void;
 };
 
 type Props = {
@@ -72,8 +76,14 @@ export const SocketIoProvider = ({ children }: Props): JSX.Element => {
     []
   );
 
+  const makeGameMove = useCallback(
+    (move: RPSPlayerMove, gameId: string) =>
+      socket.emit(RPS_ACTIONS.MAKE_MOVE, move, gameId),
+    []
+  );
+
   return (
-    <SocketIoContent.Provider value={{ activeRPSGames }}>
+    <SocketIoContent.Provider value={{ activeRPSGames, makeGameMove }}>
       <button onClick={() => socket.emit("hello", "are you there?")}>
         Send test
       </button>
@@ -92,12 +102,24 @@ export function useSocketIo(): SocketIoService {
   return context;
 }
 
-export function useRPSGame(gameId: string): RPSGame | undefined {
-  const { activeRPSGames } = useSocketIo();
+export function useRPSGame(gameId: string): {
+  game: RPSGame | undefined;
+  makeMove: (move: RPSPlayerMove) => void;
+} {
+  const { activeRPSGames, makeGameMove } = useSocketIo();
 
-  return useMemo(() => {
+  const game = useMemo(() => {
     console.log("useRPSGame", activeRPSGames, gameId);
 
     return activeRPSGames.find((g) => g.id === gameId);
   }, [gameId, activeRPSGames]);
+
+  const makeMove = useCallback(
+    (move: RPSPlayerMove) => {
+      return makeGameMove(move, gameId);
+    },
+    [gameId, makeGameMove]
+  );
+
+  return { game, makeMove };
 }
