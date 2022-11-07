@@ -4,6 +4,7 @@ import * as A from "fp-ts/Array";
 import { Socket, Server as SocketIOServer } from "socket.io";
 import { createGame, makePlayerMove, resolveRound } from ".";
 import { RPSCreateGameProps, RPSGame, RPSPlayerMove } from "./types";
+import { sendClientMessage } from "../../socket";
 
 let inMemoryGames: RPSGame[] = [
   { id: "game2", playerIds: ["t1", "t2"], rounds: [] },
@@ -25,7 +26,10 @@ export default function initialise(io: SocketIOServer, socket: Socket) {
     pipe(
       createGame(props),
       E.match(
-        (error) => console.error(error),
+        (error) => {
+          console.error(error);
+          sendClientMessage(socket, error);
+        },
         (game) => {
           inMemoryGames = [
             ...inMemoryGames.filter((g) => g.id !== game.id),
@@ -46,7 +50,10 @@ export default function initialise(io: SocketIOServer, socket: Socket) {
       E.fromOption(() => "no game found"),
       E.chain((game) => makePlayerMove(move, game)),
       E.match(
-        (e) => console.error(e),
+        (error) => {
+          console.error(error);
+          sendClientMessage(socket, error);
+        },
         (game) => {
           inMemoryGames = [
             ...inMemoryGames.filter((g) => g.id !== game.id),
@@ -66,7 +73,10 @@ export default function initialise(io: SocketIOServer, socket: Socket) {
       E.fromOption(() => "no game found"),
       E.chain(resolveRound),
       E.match(
-        (e) => console.error(e),
+        (error) => {
+          console.error(error);
+          sendClientMessage(socket, error);
+        },
         (game) => {
           inMemoryGames = [
             ...inMemoryGames.filter((g) => g.id !== game.id),
@@ -86,5 +96,5 @@ export default function initialise(io: SocketIOServer, socket: Socket) {
   socket.on(RPS_ACTIONS.RESOLVE_ROUND, resolveRoundHandler);
 
   socket.emit(RPS_ACTIONS.GAME_UPDATE, inMemoryGames);
-  socket.emit("server_message", "Welcome to Rock/Paper/Scissors 🎉");
+  sendClientMessage(socket, "Welcome to Rock/Paper/Scissors 🎉");
 }
