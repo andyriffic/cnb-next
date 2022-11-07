@@ -13,15 +13,18 @@ type Props = {};
 function Page({}: Props) {
   const router = useRouter();
   const gameId = router.query.gameId as string;
-  const { game, makeMove } = useRPSGame(gameId);
+  const { game, makeMove, resolveRound } = useRPSGame(gameId);
 
   return (
     <SpectatorPageLayout>
       <h1>{gameId}</h1>
       {game ? (
         <>
-          <div>{JSON.stringify(game.playerIds)}</div>
-          <div>{JSON.stringify(game.rounds)}</div>
+          <div>Players: {JSON.stringify(game.playerIds)}</div>
+          <div>Rounds: {JSON.stringify(game.rounds)}</div>
+          <div>
+            <button onClick={resolveRound}>RESOLVE</button>
+          </div>
           <div>
             {game.playerIds.map((pid) => (
               <div key={pid}>
