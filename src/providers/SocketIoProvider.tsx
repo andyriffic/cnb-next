@@ -14,6 +14,7 @@ type SocketIoService = {
   activeRPSGames: RPSGame[];
   makeGameMove: (move: RPSPlayerMove, gameId: string) => void;
   resolveGameRound: (gameId: string) => void;
+  newGameRound: (gameId: string) => void;
 };
 
 type Props = {
@@ -91,9 +92,14 @@ export const SocketIoProvider = ({ children }: Props): JSX.Element => {
     []
   );
 
+  const newGameRound = useCallback(
+    (gameId: string) => socket.emit(RPS_ACTIONS.NEW_ROUND, gameId),
+    []
+  );
+
   return (
     <SocketIoContent.Provider
-      value={{ activeRPSGames, makeGameMove, resolveGameRound }}
+      value={{ activeRPSGames, makeGameMove, resolveGameRound, newGameRound }}
     >
       <button onClick={() => socket.emit("hello", "are you there?")}>
         Send test
@@ -117,8 +123,10 @@ export function useRPSGame(gameId: string): {
   game: RPSGame | undefined;
   makeMove: (move: RPSPlayerMove) => void;
   resolveRound: () => void;
+  newRound: () => void;
 } {
-  const { activeRPSGames, makeGameMove, resolveGameRound } = useSocketIo();
+  const { activeRPSGames, makeGameMove, resolveGameRound, newGameRound } =
+    useSocketIo();
 
   const game = useMemo(() => {
     console.log("useRPSGame", activeRPSGames, gameId);
@@ -137,5 +145,9 @@ export function useRPSGame(gameId: string): {
     return resolveGameRound(gameId);
   }, [gameId, resolveGameRound]);
 
-  return { game, makeMove, resolveRound };
+  const newRound = useCallback(() => {
+    return newGameRound(gameId);
+  }, [gameId, newGameRound]);
+
+  return { game, makeMove, resolveRound, newRound };
 }

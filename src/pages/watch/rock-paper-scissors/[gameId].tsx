@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import styled from "styled-components";
-import { SpectatorPageLayout } from "../../components/SpectatorPageLayout";
-import { useRPSGame } from "../../providers/SocketIoProvider";
+import { SpectatorPageLayout } from "../../../components/SpectatorPageLayout";
+import { useRPSGame } from "../../../providers/SocketIoProvider";
 
 const CenterAlignContainer = styled.div`
   display: flex;
@@ -13,7 +13,7 @@ type Props = {};
 function Page({}: Props) {
   const router = useRouter();
   const gameId = router.query.gameId as string;
-  const { game, makeMove, resolveRound } = useRPSGame(gameId);
+  const { game, makeMove, resolveRound, newRound } = useRPSGame(gameId);
 
   return (
     <SpectatorPageLayout>
@@ -24,6 +24,7 @@ function Page({}: Props) {
           <div>Rounds: {JSON.stringify(game.rounds)}</div>
           <div>
             <button onClick={resolveRound}>RESOLVE</button>
+            <button onClick={newRound}>NEW ROUND</button>
           </div>
           <div>
             {game.playerIds.map((pid) => (
