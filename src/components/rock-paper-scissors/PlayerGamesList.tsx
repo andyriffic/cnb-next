@@ -15,16 +15,17 @@ export const PlayerGamesList = ({ playerId }: Props): JSX.Element | null => {
   return playersGames ? (
     <div>
       <h2>Games</h2>
-      <div>
+      <ul>
         {playersGames.map((game) => (
-          <Link
-            key={game.id}
-            href={`/play/${playerId}/rock-paper-scissors/${game.id}`}
-          >
-            {game.id}
-          </Link>
+          <li key={game.id}>
+            <Link
+              href={`/play/${playerId}/rock-paper-scissors?gameId=${game.id}`}
+            >
+              {game.id}
+            </Link>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   ) : null;
 };

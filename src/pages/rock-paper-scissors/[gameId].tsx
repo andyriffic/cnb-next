@@ -28,7 +28,7 @@ function Page({}: Props) {
           <div>
             {game.playerIds.map((pid) => (
               <div key={pid}>
-                {pid}{" "}
+                <p>{pid}</p>
                 <div>
                   <button
                     onClick={() =>

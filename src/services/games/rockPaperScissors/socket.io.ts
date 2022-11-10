@@ -7,7 +7,11 @@ import { RPSCreateGameProps, RPSGame, RPSPlayerMove } from "./types";
 import { sendClientMessage } from "../../socket";
 
 let inMemoryGames: RPSGame[] = [
-  { id: "1234", playerIds: ["andy", "alex"], rounds: [] },
+  {
+    id: "1234",
+    playerIds: ["andy", "alex"],
+    rounds: [{ index: 1, moves: [] }],
+  },
 ];
 
 export enum RPS_ACTIONS {
@@ -36,7 +40,7 @@ export default function initialise(io: SocketIOServer, socket: Socket) {
             game,
           ];
           console.log("updated games", inMemoryGames);
-          socket.emit(RPS_ACTIONS.GAME_UPDATE, inMemoryGames);
+          io.emit(RPS_ACTIONS.GAME_UPDATE, inMemoryGames);
           onCreated(game.id);
         }
       )
@@ -60,7 +64,7 @@ export default function initialise(io: SocketIOServer, socket: Socket) {
             game,
           ];
           console.log("Player moved", move, gameId);
-          socket.emit(RPS_ACTIONS.GAME_UPDATE, inMemoryGames);
+          io.emit(RPS_ACTIONS.GAME_UPDATE, inMemoryGames);
         }
       )
     );
@@ -83,7 +87,7 @@ export default function initialise(io: SocketIOServer, socket: Socket) {
             game,
           ];
           console.log("Round resolved", gameId);
-          socket.emit(RPS_ACTIONS.GAME_UPDATE, inMemoryGames);
+          io.emit(RPS_ACTIONS.GAME_UPDATE, inMemoryGames);
         }
       )
     );

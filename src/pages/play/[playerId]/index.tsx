@@ -1,11 +1,9 @@
 import { GetStaticPaths, GetStaticProps } from "next";
-import { useRouter } from "next/router";
 import styled from "styled-components";
-import { PlayerPageLayout } from "../../components/PlayerPageLayout";
-import { PlayerGamesList } from "../../components/rock-paper-scissors/PlayerGamesList";
-import { useRPSGame } from "../../providers/SocketIoProvider";
-import { Player } from "../../types/Player";
-import { getCnbPlayer, getCnbPlayers } from "../../utils/data/graphql";
+import { PlayerPageLayout } from "../../../components/PlayerPageLayout";
+import { PlayerGamesList } from "../../../components/rock-paper-scissors/PlayerGamesList";
+import { Player } from "../../../types/Player";
+import { getCnbPlayer, getCnbPlayers } from "../../../utils/data/graphql";
 
 const CenterAlignContainer = styled.div`
   display: flex;

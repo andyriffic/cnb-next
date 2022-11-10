@@ -74,7 +74,7 @@ export const SocketIoProvider = ({ children }: Props): JSX.Element => {
     () =>
       socket.emit(
         RPS_ACTIONS.CREATE_GAME,
-        { id: generateGameId(4), playerIds: ["p1", "p2"] },
+        { id: generateGameId(4), playerIds: ["andy", "alex"] },
         (gameId: string) => console.log("create", gameId)
       ),
     []

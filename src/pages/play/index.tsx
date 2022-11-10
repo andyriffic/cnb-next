@@ -25,7 +25,6 @@ const PlayerName = styled.a`
   /* border: 0.5rem solid #b9848c; */
   border-radius: 1rem;
   font-size: 3rem;
-  display: inline-block;
   text-transform: uppercase;
   left: 0;
 `;
