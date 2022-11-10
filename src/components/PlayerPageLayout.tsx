@@ -15,15 +15,15 @@ const Main = styled.div`
   /* border: 1px solid black; */
   width: 100vw;
   flex: 1;
-  min-height: 100vh;
-  overflow: scroll;
+  height: 100vh;
+  overflow: hidden;
 `;
 
 type Props = {
   children: React.ReactNode;
 };
 
-export function SpectatorPageLayout({ children }: Props): JSX.Element {
+export function PlayerPageLayout({ children }: Props): JSX.Element {
   return (
     <Container>
       <Main>{children}</Main>

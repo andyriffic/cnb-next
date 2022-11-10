@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { customAlphabet } from "nanoid";
 import { io } from "socket.io-client";
 import { SOCKET_ENDPOINT } from "../environment";
 import { RPS_ACTIONS } from "../services/games/rockPaperScissors/socket.io";
@@ -6,6 +7,8 @@ import {
   RPSGame,
   RPSPlayerMove,
 } from "../services/games/rockPaperScissors/types";
+
+const generateGameId = customAlphabet("1234567890");
 
 type SocketIoService = {
   activeRPSGames: RPSGame[];
@@ -71,7 +74,7 @@ export const SocketIoProvider = ({ children }: Props): JSX.Element => {
     () =>
       socket.emit(
         RPS_ACTIONS.CREATE_GAME,
-        { id: "game1", playerIds: ["p1", "p2"] },
+        { id: generateGameId(4), playerIds: ["p1", "p2"] },
         (gameId: string) => console.log("create", gameId)
       ),
     []

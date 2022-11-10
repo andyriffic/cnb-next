@@ -7,7 +7,7 @@ import { RPSCreateGameProps, RPSGame, RPSPlayerMove } from "./types";
 import { sendClientMessage } from "../../socket";
 
 let inMemoryGames: RPSGame[] = [
-  { id: "game2", playerIds: ["t1", "t2"], rounds: [] },
+  { id: "1234", playerIds: ["andy", "alex"], rounds: [] },
 ];
 
 export enum RPS_ACTIONS {
