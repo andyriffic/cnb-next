@@ -2,7 +2,13 @@ import * as E from "fp-ts/Either";
 import * as A from "fp-ts/Array";
 import * as O from "fp-ts/Option";
 import { pipe } from "fp-ts/function";
-import { RPSCreateGameProps, RPSGame, RPSPlayerMove, RPSRound } from "./types";
+import {
+  RPSCreateGameProps,
+  RPSGame,
+  RPSPlayerMove,
+  RPSRound,
+  RPSSpectatorGameView,
+} from "./types";
 
 export function createGame(
   props: RPSCreateGameProps
@@ -155,4 +161,21 @@ export function addRoundToGame(game: RPSGame): E.Either<string, RPSGame> {
       (lastRound) => pipe(lastRound, ensureHasRoundResult, E.map(addNewRound))
     )
   );
+}
+
+export function createGameView(game: RPSGame): RPSSpectatorGameView {
+  return {
+    id: game.id,
+    playerIds: [...game.playerIds],
+    rounds: game.rounds.map((round) => {
+      return {
+        number: round.index,
+        movedPlayerIds: round.moves.map((move) => move.playerId),
+        result:
+          round.result === undefined
+            ? undefined
+            : { moves: round.moves, ...round.result },
+      };
+    }),
+  };
 }

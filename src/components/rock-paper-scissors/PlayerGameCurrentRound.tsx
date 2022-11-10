@@ -4,12 +4,13 @@ import {
   RPSGame,
   RPSPlayerMove,
   RPSRound,
+  RPSSpectatorRoundView,
 } from "../../services/games/rock-paper-scissors/types";
 
 type Props = {
   playerId: string;
   makeMove: (move: RPSPlayerMove) => void;
-  currentRound: RPSRound;
+  currentRound: RPSSpectatorRoundView;
 };
 
 export const PlayerGameCurrentRound = ({
@@ -17,8 +18,8 @@ export const PlayerGameCurrentRound = ({
   playerId,
   makeMove,
 }: Props): JSX.Element | null => {
-  const currentMove = useMemo(() => {
-    return currentRound.moves.find((move) => move.playerId === playerId);
+  const hasMoved = useMemo(() => {
+    return currentRound.movedPlayerIds.includes(playerId);
   }, [currentRound, playerId]);
 
   const currentResult = useMemo(() => {
@@ -37,8 +38,8 @@ export const PlayerGameCurrentRound = ({
     );
   }
 
-  return currentMove ? (
-    <h3>{currentMove.moveName}</h3>
+  return hasMoved ? (
+    <h3>Moved...</h3>
   ) : (
     <div>
       <button onClick={() => makeMove({ playerId, moveName: "rock" })}>

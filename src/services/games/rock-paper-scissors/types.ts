@@ -4,7 +4,7 @@ export type RPSCreateGameProps = { id: string; playerIds: [string, string] };
 
 export type RPSGame = {
   id: string;
-  playerIds: string[];
+  playerIds: [string, string];
   rounds: RPSRound[];
 };
 
@@ -27,16 +27,16 @@ export type RPSPlayerMove = {
 export type RPSMoveName = "rock" | "paper" | "scissors";
 export type RPSPlayer = {} & Player;
 
+export type RPSSpectatorRoundView = {
+  number: number;
+  movedPlayerIds: string[];
+  result?: {
+    moves: RPSPlayerMove[];
+  } & RPSRoundResult;
+};
+
 export type RPSSpectatorGameView = {
+  id: string;
   playerIds: [string, string];
-  rounds: {
-    number: number;
-    movedPlayerIds: [string, string];
-    status: "waiting" | "ready" | "resolved";
-    result?: {
-      moves: [RPSPlayerMove, RPSPlayerMove];
-      draw: boolean;
-      winningPlayerId?: string;
-    };
-  }[];
+  rounds: RPSSpectatorRoundView[];
 };

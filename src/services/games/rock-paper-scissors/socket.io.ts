@@ -2,7 +2,13 @@ import { pipe } from "fp-ts/lib/function";
 import * as E from "fp-ts/Either";
 import * as A from "fp-ts/Array";
 import { Socket, Server as SocketIOServer } from "socket.io";
-import { addRoundToGame, createGame, makePlayerMove, resolveRound } from ".";
+import {
+  addRoundToGame,
+  createGame,
+  createGameView,
+  makePlayerMove,
+  resolveRound,
+} from ".";
 import { RPSCreateGameProps, RPSGame, RPSPlayerMove } from "./types";
 import { sendClientMessage } from "../../socket";
 
@@ -41,7 +47,7 @@ export default function initialise(io: SocketIOServer, socket: Socket) {
             game,
           ];
           console.log("updated games", inMemoryGames);
-          io.emit(RPS_ACTIONS.GAME_UPDATE, inMemoryGames);
+          io.emit(RPS_ACTIONS.GAME_UPDATE, inMemoryGames.map(createGameView));
           onCreated(game.id);
         }
       )
@@ -65,7 +71,7 @@ export default function initialise(io: SocketIOServer, socket: Socket) {
             game,
           ];
           console.log("Player moved", move, gameId);
-          io.emit(RPS_ACTIONS.GAME_UPDATE, inMemoryGames);
+          io.emit(RPS_ACTIONS.GAME_UPDATE, inMemoryGames.map(createGameView));
         }
       )
     );
@@ -88,7 +94,7 @@ export default function initialise(io: SocketIOServer, socket: Socket) {
             game,
           ];
           console.log("Round resolved", gameId);
-          io.emit(RPS_ACTIONS.GAME_UPDATE, inMemoryGames);
+          io.emit(RPS_ACTIONS.GAME_UPDATE, inMemoryGames.map(createGameView));
         }
       )
     );
@@ -110,7 +116,7 @@ export default function initialise(io: SocketIOServer, socket: Socket) {
             game,
           ];
           console.log("New round added", gameId);
-          io.emit(RPS_ACTIONS.GAME_UPDATE, inMemoryGames);
+          io.emit(RPS_ACTIONS.GAME_UPDATE, inMemoryGames.map(createGameView));
         }
       )
     );
@@ -123,6 +129,6 @@ export default function initialise(io: SocketIOServer, socket: Socket) {
   socket.on(RPS_ACTIONS.RESOLVE_ROUND, resolveRoundHandler);
   socket.on(RPS_ACTIONS.NEW_ROUND, newRoundHandler);
 
-  socket.emit(RPS_ACTIONS.GAME_UPDATE, inMemoryGames);
+  socket.emit(RPS_ACTIONS.GAME_UPDATE, inMemoryGames.map(createGameView));
   sendClientMessage(socket, "Welcome to Rock/Paper/Scissors 🎉");
 }

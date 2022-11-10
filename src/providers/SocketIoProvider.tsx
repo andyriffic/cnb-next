@@ -6,12 +6,13 @@ import { RPS_ACTIONS } from "../services/games/rock-paper-scissors/socket.io";
 import {
   RPSGame,
   RPSPlayerMove,
+  RPSSpectatorGameView,
 } from "../services/games/rock-paper-scissors/types";
 
 const generateGameId = customAlphabet("1234567890");
 
 type SocketIoService = {
-  activeRPSGames: RPSGame[];
+  activeRPSGames: RPSSpectatorGameView[];
   makeGameMove: (move: RPSPlayerMove, gameId: string) => void;
   resolveGameRound: (gameId: string) => void;
   newGameRound: (gameId: string) => void;
@@ -32,7 +33,9 @@ const SocketIoContent = React.createContext<SocketIoService | undefined>(
 );
 
 export const SocketIoProvider = ({ children }: Props): JSX.Element => {
-  const [activeRPSGames, setActiveRPSGames] = useState<RPSGame[]>([]);
+  const [activeRPSGames, setActiveRPSGames] = useState<RPSSpectatorGameView[]>(
+    []
+  );
 
   useEffect(() => {
     console.log("Setting up socket connection");
@@ -49,7 +52,7 @@ export const SocketIoProvider = ({ children }: Props): JSX.Element => {
       console.error("Client connection error", error);
     });
 
-    socket.on(RPS_ACTIONS.GAME_UPDATE, (games: RPSGame[]) => {
+    socket.on(RPS_ACTIONS.GAME_UPDATE, (games: RPSSpectatorGameView[]) => {
       console.log("Socket useEffect", RPS_ACTIONS.GAME_UPDATE, games);
       setActiveRPSGames(games);
     });
@@ -120,7 +123,7 @@ export function useSocketIo(): SocketIoService {
 }
 
 export function useRPSGame(gameId: string): {
-  game: RPSGame | undefined;
+  game: RPSSpectatorGameView | undefined;
   makeMove: (move: RPSPlayerMove) => void;
   resolveRound: () => void;
   newRound: () => void;
