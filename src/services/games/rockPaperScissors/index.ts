@@ -1,5 +1,6 @@
 import * as E from "fp-ts/Either";
 import * as A from "fp-ts/Array";
+import * as O from "fp-ts/Option";
 import { pipe } from "fp-ts/function";
 import { RPSCreateGameProps, RPSGame, RPSPlayerMove, RPSRound } from "./types";
 
@@ -99,11 +100,11 @@ function validateRoundCanBeResolved(
     return E.left("Not all players have moved");
   }
 
-  if (round.result) {
-    return E.left("Round already has a result");
-  }
+  return hasRoundResult(round);
+}
 
-  return E.right(round);
+function hasRoundResult(round: RPSRound): E.Either<string, RPSRound> {
+  return round.result ? E.left("Round already has a result") : E.right(round);
 }
 
 function validatePlayerInGame(
@@ -138,8 +139,17 @@ function updateRoundInGame(updatedRound: RPSRound, game: RPSGame): RPSGame {
 }
 
 function addRoundToGame(game: RPSGame): E.Either<string, RPSGame> {
-  return E.of({
+  const addNewRound = () => ({
     ...game,
     rounds: [...game.rounds, { index: game.rounds.length, moves: [] }],
   });
+
+  return pipe(
+    game.rounds,
+    A.last,
+    O.match(
+      () => E.right(addNewRound()),
+      (lastRound) => pipe(lastRound, hasRoundResult, E.map(addNewRound))
+    )
+  );
 }
