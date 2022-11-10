@@ -1,6 +1,6 @@
 import * as E from "fp-ts/Either";
 import { pipe } from "fp-ts/function";
-import { createGame, makePlayerMove, resolveRound } from ".";
+import { addRoundToGame, createGame, makePlayerMove, resolveRound } from ".";
 
 test("Can create game successfully", () => {
   const game = createGame({ id: "test", playerIds: ["p1", "p2"] });
@@ -210,7 +210,7 @@ test("Correct round result for player2 winning with scissors", () => {
 test("Can't resolve round if no players have moved", () => {
   const result = pipe(
     createGame({ id: "test", playerIds: ["p1", "p2"] }),
-    E.chain((game) => resolveRound(game))
+    E.chain(resolveRound)
   );
 
   expect(result).toBeLeft();
@@ -223,7 +223,7 @@ test("Can't resolve round if only 1 player has moved", () => {
     E.chain((game) =>
       makePlayerMove({ playerId: "p1", moveName: "paper" }, game)
     ),
-    E.chain((game) => resolveRound(game))
+    E.chain(resolveRound)
   );
 
   expect(result).toBeLeft();
@@ -239,10 +239,42 @@ test("Can't resolve round if it already has a result", () => {
     E.chain((game) =>
       makePlayerMove({ playerId: "p2", moveName: "paper" }, game)
     ),
-    E.chain((game) => resolveRound(game)),
-    E.chain((game) => resolveRound(game))
+    E.chain(resolveRound),
+    E.chain(resolveRound)
   );
 
   expect(result).toBeLeft();
   expect(result).toEqualLeft("Round already has a result");
+});
+
+test("Can add new round to game if last round has a result", () => {
+  const result = pipe(
+    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    E.chain((game) =>
+      makePlayerMove({ playerId: "p1", moveName: "paper" }, game)
+    ),
+    E.chain((game) =>
+      makePlayerMove({ playerId: "p2", moveName: "paper" }, game)
+    ),
+    E.chain(resolveRound),
+    E.chain(addRoundToGame)
+  );
+
+  expect(result).toBeRight();
+});
+
+test("Can't add new round to game if last round doesn't have result", () => {
+  const result = pipe(
+    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    E.chain((game) =>
+      makePlayerMove({ playerId: "p1", moveName: "paper" }, game)
+    ),
+    E.chain((game) =>
+      makePlayerMove({ playerId: "p2", moveName: "paper" }, game)
+    ),
+    E.chain(addRoundToGame)
+  );
+
+  expect(result).toBeLeft();
+  expect(result).toEqualLeft("Round does not have result");
 });

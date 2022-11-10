@@ -100,11 +100,14 @@ function validateRoundCanBeResolved(
     return E.left("Not all players have moved");
   }
 
-  return hasRoundResult(round);
+  return ensureNoRoundResult(round);
 }
 
-function hasRoundResult(round: RPSRound): E.Either<string, RPSRound> {
+function ensureNoRoundResult(round: RPSRound): E.Either<string, RPSRound> {
   return round.result ? E.left("Round already has a result") : E.right(round);
+}
+function ensureHasRoundResult(round: RPSRound): E.Either<string, RPSRound> {
+  return round.result ? E.right(round) : E.left("Round does not have result");
 }
 
 function validatePlayerInGame(
@@ -138,7 +141,7 @@ function updateRoundInGame(updatedRound: RPSRound, game: RPSGame): RPSGame {
   };
 }
 
-function addRoundToGame(game: RPSGame): E.Either<string, RPSGame> {
+export function addRoundToGame(game: RPSGame): E.Either<string, RPSGame> {
   const addNewRound = () => ({
     ...game,
     rounds: [...game.rounds, { index: game.rounds.length, moves: [] }],
@@ -149,7 +152,7 @@ function addRoundToGame(game: RPSGame): E.Either<string, RPSGame> {
     A.last,
     O.match(
       () => E.right(addNewRound()),
-      (lastRound) => pipe(lastRound, hasRoundResult, E.map(addNewRound))
+      (lastRound) => pipe(lastRound, ensureHasRoundResult, E.map(addNewRound))
     )
   );
 }
