@@ -4,7 +4,7 @@ import {
   RPSGame,
   RPSPlayerMove,
   RPSRound,
-} from "../../services/games/rockPaperScissors/types";
+} from "../../services/games/rock-paper-scissors/types";
 
 type Props = {
   playerId: string;
