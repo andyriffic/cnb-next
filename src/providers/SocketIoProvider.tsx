@@ -2,12 +2,12 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { customAlphabet } from "nanoid";
 import { io } from "socket.io-client";
 import { SOCKET_ENDPOINT } from "../environment";
-import { RPS_ACTIONS } from "../services/games/rock-paper-scissors/socket.io";
+import { RPS_ACTIONS } from "../services/rock-paper-scissors/socket.io";
 import {
   RPSGame,
   RPSPlayerMove,
   RPSSpectatorGameView,
-} from "../services/games/rock-paper-scissors/types";
+} from "../services/rock-paper-scissors/types";
 
 const generateGameId = customAlphabet("1234567890");
 

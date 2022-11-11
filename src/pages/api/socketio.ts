@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { Server as NetServer, Socket } from "net";
 import { Server as SocketIOServer } from "socket.io";
-import initialiseSocketRockPaperScissors from "../../services/games/rock-paper-scissors/socket.io";
+import initialiseSocketRockPaperScissors from "../../services/rock-paper-scissors/socket.io";
 
 type NextApiResponseServerIO = NextApiResponse & {
   socket: Socket & {

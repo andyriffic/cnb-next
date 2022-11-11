@@ -10,7 +10,7 @@ import {
   resolveRound,
 } from ".";
 import { RPSCreateGameProps, RPSGame, RPSPlayerMove } from "./types";
-import { sendClientMessage } from "../../socket";
+import { sendClientMessage } from "../socket";
 
 let inMemoryGames: RPSGame[] = [
   {
