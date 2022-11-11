@@ -1,5 +1,5 @@
 import { Socket, Server as SocketIOServer } from "socket.io";
-import { sendClientMessage } from "../../socket";
+import { sendClientMessage } from "../socket";
 
 export enum BETTING_ACTIONS {
   CREATE_BETTING_ROUND = "CREATE_BETTING_ROUND",
