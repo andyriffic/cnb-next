@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import styled from "styled-components";
 import { PlayerPageLayout } from "../../../components/PlayerPageLayout";
 import { PlayerGameCurrentRound } from "../../../components/rock-paper-scissors/PlayerGameCurrentRound";
-import { useRPSGame } from "../../../providers/SocketIoProvider";
+import { useRPSGame } from "../../../providers/SocketIoProvider/useRockPaperScissorsSocket";
 
 function Page() {
   const query = useRouter().query;

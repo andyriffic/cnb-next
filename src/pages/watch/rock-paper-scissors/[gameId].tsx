@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import styled from "styled-components";
 import { SpectatorPageLayout } from "../../../components/SpectatorPageLayout";
-import { useRPSGame } from "../../../providers/SocketIoProvider";
+import { useRPSGame } from "../../../providers/SocketIoProvider/useRockPaperScissorsSocket";
 
 const CenterAlignContainer = styled.div`
   display: flex;
