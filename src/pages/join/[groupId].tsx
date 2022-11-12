@@ -19,6 +19,16 @@ function Page() {
       <label>Join Code:</label>
       <h1>{groupId}</h1>
       {group ? "Valid Group 😄" : "Invalid group 😭"}
+      {group && (
+        <div>
+          <h2>Joined players</h2>
+          <ul>
+            {group.playerIds.map((pid) => (
+              <li key={pid}>{pid}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </SpectatorPageLayout>
   );
 }
