@@ -1,10 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { SOCKET_ENDPOINT } from "../../environment";
-import {
-  RPSPlayerMove,
-  RPSSpectatorGameView,
-} from "../../services/rock-paper-scissors/types";
+import { RPSSpectatorGameView } from "../../services/rock-paper-scissors/types";
 import {
   RPSSocketService,
   useRockPaperScissorsSocket,
@@ -29,10 +26,6 @@ const SocketIoContent = React.createContext<SocketIoService | undefined>(
 );
 
 export const SocketIoProvider = ({ children }: Props): JSX.Element => {
-  const [activeRPSGames, setActiveRPSGames] = useState<RPSSpectatorGameView[]>(
-    []
-  );
-
   useEffect(() => {
     console.log("Setting up socket connection");
 
