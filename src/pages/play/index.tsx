@@ -3,7 +3,7 @@ import Link from "next/link";
 import styled from "styled-components";
 import { SpectatorPageLayout } from "../../components/SpectatorPageLayout";
 import { Player } from "../../types/Player";
-import { getCnbPlayers } from "../../utils/data/graphql";
+import { getAllPlayers } from "../../utils/data/aws-dynamodb";
 
 const PlayerList = styled.div`
   display: flex;
@@ -62,7 +62,7 @@ const activePlayer = (player: Player): boolean => {
 };
 
 export const getStaticProps: GetStaticProps = async () => {
-  const players = await getCnbPlayers();
+  const players = await getAllPlayers();
 
   return {
     props: {

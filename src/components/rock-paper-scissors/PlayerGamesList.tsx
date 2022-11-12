@@ -6,7 +6,9 @@ type Props = {
   playerId: string;
 };
 export const PlayerGamesList = ({ playerId }: Props): JSX.Element | null => {
-  const { activeRPSGames } = useSocketIo();
+  const {
+    rockPaperScissors: { activeRPSGames },
+  } = useSocketIo();
 
   const playersGames = useMemo(() => {
     return activeRPSGames.filter((game) => game.playerIds.includes(playerId));
