@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { PlayerPageLayout } from "../../../components/PlayerPageLayout";
 import { PlayerGamesList } from "../../../components/rock-paper-scissors/PlayerGamesList";
 import { Player } from "../../../types/Player";
-import { getCnbPlayer, getCnbPlayers } from "../../../utils/data/graphql";
+import { getAllPlayers, getPlayer } from "../../../utils/data/aws-dynamodb";
 
 const CenterAlignContainer = styled.div`
   display: flex;
@@ -24,7 +24,7 @@ function Page({ player }: Props) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const players = await getCnbPlayers();
+  const players = await getAllPlayers();
 
   if (!players) {
     return { paths: [], fallback: false };
@@ -41,7 +41,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const player = await getCnbPlayer(params!.playerId! as string);
+  const player = await getPlayer(params!.playerId! as string);
   return {
     props: { player },
   };

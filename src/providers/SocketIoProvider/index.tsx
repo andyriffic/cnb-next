@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { SOCKET_ENDPOINT } from "../../environment";
-import { RPSSpectatorGameView } from "../../services/rock-paper-scissors/types";
+import {
+  GroupJoinSocketService,
+  useGroupPlayerJoin,
+} from "./useGroupPlayerJoin";
 import {
   RPSSocketService,
   useRockPaperScissorsSocket,
@@ -9,6 +12,7 @@ import {
 
 type SocketIoService = {
   rockPaperScissors: RPSSocketService;
+  groupJoin: GroupJoinSocketService;
 };
 
 type Props = {
@@ -58,10 +62,14 @@ export const SocketIoProvider = ({ children }: Props): JSX.Element => {
   }, []);
 
   const rockPaperScissorsSocket = useRockPaperScissorsSocket(socket);
+  const groupJoinSocket = useGroupPlayerJoin(socket);
 
   return (
     <SocketIoContent.Provider
-      value={{ rockPaperScissors: rockPaperScissorsSocket }}
+      value={{
+        rockPaperScissors: rockPaperScissorsSocket,
+        groupJoin: groupJoinSocket,
+      }}
     >
       <button onClick={() => socket.emit("hello", "are you there?")}>
         Send test

@@ -72,6 +72,7 @@ export function useRockPaperScissorsSocket(socket: Socket): RPSSocketService {
   };
 }
 
+// Helper for individual game
 export function useRPSGame(gameId: string): {
   game: RPSSpectatorGameView | undefined;
   makeMove: (move: RPSPlayerMove) => void;
