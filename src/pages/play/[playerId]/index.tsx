@@ -1,5 +1,7 @@
 import { GetStaticPaths, GetStaticProps } from "next";
+import Link from "next/link";
 import styled from "styled-components";
+import { Card, Heading, SubHeading } from "../../../components/Atoms";
 import { PlayerPageLayout } from "../../../components/PlayerPageLayout";
 import { PlayerGamesList } from "../../../components/rock-paper-scissors/PlayerGamesList";
 import { Player } from "../../../types/Player";
@@ -16,8 +18,11 @@ type Props = {
 
 function Page({ player }: Props) {
   return (
-    <PlayerPageLayout>
-      <h1>{player.name}</h1>
+    <PlayerPageLayout headerContent={<>{player.name}</>}>
+      <Card>
+        <SubHeading>What to do</SubHeading>
+        <Link href={`/play/${player.id}/join`}>Join a game</Link>
+      </Card>
       <PlayerGamesList playerId={player.id} />
     </PlayerPageLayout>
   );

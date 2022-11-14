@@ -2,6 +2,7 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
 import styled from "styled-components";
+import { BigInput, Heading, Label } from "../../../components/Atoms";
 import { PlayerPageLayout } from "../../../components/PlayerPageLayout";
 import { useSocketIo } from "../../../providers/SocketIoProvider";
 
@@ -9,6 +10,10 @@ const CenterAlignContainer = styled.div`
   display: flex;
   justify-content: center;
 `;
+
+function numbersOnly(str: string): string {
+  return str.replace(/\D/g, "");
+}
 
 type Props = {};
 
@@ -21,21 +26,22 @@ function Page({}: Props) {
 
   const joinedGroup = useMemo(() => {
     if (joinedId && joinedId === groupId) {
-      return groupJoin.playerGroups.find((g) => g.id === joinedId);
+      return groupJoin.playerGroups.find(
+        (g) => g.id === joinedId && g.playerIds.includes(playerId)
+      );
     }
-  }, [groupId, joinedId, groupJoin.playerGroups]);
+  }, [groupId, joinedId, playerId, groupJoin.playerGroups]);
 
   return (
-    <PlayerPageLayout>
+    <PlayerPageLayout headerContent={<>Header</>}>
       {joinedGroup ? (
         <div>
-          <h1>You&lsquo;ve joined!</h1>
+          <Heading>You&lsquo;ve joined!</Heading>
           <p>Waiting for other players</p>
         </div>
       ) : (
         <div>
-          {" "}
-          <h1>Join a game</h1>
+          <Heading>Join a game</Heading>
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -45,15 +51,16 @@ function Page({}: Props) {
             }}
           >
             <fieldset>
-              <label htmlFor="group-id-input">Group Id</label>
-              <input
+              <Label htmlFor="group-id-input">Join Code</Label>
+              <BigInput
                 id="group-id-input"
                 type="tel"
                 maxLength={4}
                 value={groupId}
-                onChange={(e) => setGroupId(e.target.value)}
+                onChange={(e) => setGroupId(numbersOnly(e.target.value))}
                 autoComplete="off"
-              ></input>
+                autoFocus
+              ></BigInput>
               <button type="submit">JOIN</button>
             </fieldset>
           </form>

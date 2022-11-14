@@ -71,13 +71,13 @@ export const SocketIoProvider = ({ children }: Props): JSX.Element => {
         groupJoin: groupJoinSocket,
       }}
     >
-      <button onClick={() => socket.emit("hello", "are you there?")}>
+      {/* <button onClick={() => socket.emit("hello", "are you there?")}>
         Send test
       </button>
       <button onClick={rockPaperScissorsSocket.createRPSGame}>
         Create Game
       </button>
-
+ */}
       {children}
     </SocketIoContent.Provider>
   );

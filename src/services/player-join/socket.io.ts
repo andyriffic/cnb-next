@@ -20,7 +20,7 @@ export type PlayerJoinGroupSocketHandler = (
   onJoined?: (groupId: string) => void
 ) => void;
 
-let inMemoryGroups: PlayerGroup[] = [];
+let inMemoryGroups: PlayerGroup[] = [createPlayerJoinGroup("1234")];
 
 export function initialiseGroupJoinSocket(
   io: SocketIOServer,
