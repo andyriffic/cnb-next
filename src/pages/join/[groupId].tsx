@@ -1,13 +1,13 @@
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 import styled from "styled-components";
+import { Heading, PrimaryButton, SubHeading } from "../../components/Atoms";
 import { SpectatorPageLayout } from "../../components/SpectatorPageLayout";
 import { useSocketIo } from "../../providers/SocketIoProvider";
 
 function Page() {
   const router = useRouter();
-  const { groupJoin } = useSocketIo();
+  const { groupJoin, rockPaperScissors } = useSocketIo();
   const groupId = router.query.groupId as string;
 
   const group = useMemo(() => {
@@ -16,17 +16,33 @@ function Page() {
 
   return (
     <SpectatorPageLayout>
-      <label>Join Code:</label>
-      <h1>{groupId}</h1>
+      <SubHeading>Join Code:</SubHeading>
+      <Heading>{groupId}</Heading>
       {group ? "Valid Group 😄" : "Invalid group 😭"}
       {group && (
         <div>
-          <h2>Joined players</h2>
+          <Heading>Joined players</Heading>
           <ul>
             {group.playerIds.map((pid) => (
               <li key={pid}>{pid}</li>
             ))}
           </ul>
+          <PrimaryButton
+            disabled={group.playerIds.length < 2}
+            onClick={() => {
+              rockPaperScissors.createRPSGame(
+                {
+                  id: group.id,
+                  playerIds: [group.playerIds[0]!, group.playerIds[1]!],
+                },
+                (gameId) => {
+                  router.push(`/watch/rock-paper-scissors/${gameId}`);
+                }
+              );
+            }}
+          >
+            Start Game
+          </PrimaryButton>
         </div>
       )}
     </SpectatorPageLayout>

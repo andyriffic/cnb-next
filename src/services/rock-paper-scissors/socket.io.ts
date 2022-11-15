@@ -12,13 +12,12 @@ import {
 import { RPSCreateGameProps, RPSGame, RPSPlayerMove } from "./types";
 import { sendClientMessage } from "../socket";
 
-let inMemoryGames: RPSGame[] = [
-  {
-    id: "1234",
-    playerIds: ["andy", "alex"],
-    rounds: [{ index: 0, moves: [] }],
-  },
-];
+let inMemoryGames: RPSGame[] = [];
+
+export type RPSCreateGameHandler = (
+  props: RPSCreateGameProps,
+  onCreated: (gameId: string) => void
+) => void;
 
 export enum RPS_ACTIONS {
   CREATE_GAME = "CREATE_GAME",
@@ -29,10 +28,10 @@ export enum RPS_ACTIONS {
 }
 
 export default function initialise(io: SocketIOServer, socket: Socket) {
-  function createGameHandler(
+  const createGameHandler: RPSCreateGameHandler = (
     props: RPSCreateGameProps,
     onCreated: (gameId: string) => void
-  ): void {
+  ) => {
     console.log("Creating game", props);
     pipe(
       createGame(props),
@@ -52,7 +51,7 @@ export default function initialise(io: SocketIOServer, socket: Socket) {
         }
       )
     );
-  }
+  };
 
   function makePlayerMoveHandler(move: RPSPlayerMove, gameId: string): void {
     pipe(

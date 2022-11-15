@@ -1,4 +1,3 @@
-import { customAlphabet } from "nanoid";
 import { useCallback, useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import {
@@ -6,14 +5,13 @@ import {
   PLAYER_JOIN_ACTIONS,
 } from "../../services/player-join/socket.io";
 import { PlayerGroup } from "../../services/player-join/types";
+import { generateShortNumericId } from "../../utils/id";
 
 export type GroupJoinSocketService = {
   playerGroups: PlayerGroup[];
   createPlayerGroup: (onCreated?: (groupId: string) => void) => void;
   joinGroup: PlayerJoinGroupSocketHandler;
 };
-
-const generateGameId = customAlphabet("1234567890");
 
 export function useGroupPlayerJoin(socket: Socket): GroupJoinSocketService {
   const [playerGroups, setPlayerGroups] = useState<PlayerGroup[]>([]);
@@ -22,7 +20,7 @@ export function useGroupPlayerJoin(socket: Socket): GroupJoinSocketService {
     (onCreated?: (groupId: string) => void) =>
       socket.emit(
         PLAYER_JOIN_ACTIONS.CREATE_JOIN_GROUP,
-        generateGameId(4),
+        generateShortNumericId(),
         onCreated
       ),
     [socket]

@@ -1,10 +1,18 @@
 import { GetStaticPaths, GetStaticProps } from "next";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
 import styled from "styled-components";
-import { BigInput, Heading, Label } from "../../../components/Atoms";
+import {
+  BigInput,
+  Heading,
+  Label,
+  PrimaryButton,
+  PrimaryLinkButton,
+} from "../../../components/Atoms";
 import { PlayerPageLayout } from "../../../components/PlayerPageLayout";
 import { useSocketIo } from "../../../providers/SocketIoProvider";
+import { playersRockPaperScissorsGameUrl } from "../../../utils/url";
 
 const CenterAlignContainer = styled.div`
   display: flex;
@@ -19,7 +27,7 @@ type Props = {};
 
 function Page({}: Props) {
   const router = useRouter();
-  const { groupJoin } = useSocketIo();
+  const { groupJoin, rockPaperScissors } = useSocketIo();
   const [groupId, setGroupId] = useState("");
   const playerId = router.query.playerId as string;
   const joinedId = router.query.joinedId as string;
@@ -32,12 +40,33 @@ function Page({}: Props) {
     }
   }, [groupId, joinedId, playerId, groupJoin.playerGroups]);
 
+  const relatedRPSGame = useMemo(() => {
+    return (
+      joinedGroup &&
+      rockPaperScissors.activeRPSGames.find(
+        (g) => g.id === joinedGroup.id && g.playerIds.includes(playerId)
+      )
+    );
+  }, [rockPaperScissors.activeRPSGames, joinedGroup, playerId]);
+
   return (
     <PlayerPageLayout headerContent={<>Header</>}>
       {joinedGroup ? (
         <div>
           <Heading>You&lsquo;ve joined!</Heading>
-          <p>Waiting for other players</p>
+          {relatedRPSGame ? (
+            <Link
+              href={playersRockPaperScissorsGameUrl(
+                playerId,
+                relatedRPSGame.id
+              )}
+              passHref={true}
+            >
+              <PrimaryLinkButton>Play</PrimaryLinkButton>
+            </Link>
+          ) : (
+            <p>Waiting for game to start</p>
+          )}
         </div>
       ) : (
         <div>
@@ -61,7 +90,9 @@ function Page({}: Props) {
                 autoComplete="off"
                 autoFocus
               ></BigInput>
-              <button type="submit">JOIN</button>
+              <PrimaryButton type="submit" disabled={groupId.length !== 4}>
+                JOIN
+              </PrimaryButton>
             </fieldset>
           </form>
         </div>

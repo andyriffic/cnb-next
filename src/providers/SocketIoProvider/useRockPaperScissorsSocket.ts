@@ -1,8 +1,10 @@
-import { customAlphabet } from "nanoid";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Socket } from "socket.io-client";
 import { useSocketIo } from ".";
-import { RPS_ACTIONS } from "../../services/rock-paper-scissors/socket.io";
+import {
+  RPSCreateGameHandler,
+  RPS_ACTIONS,
+} from "../../services/rock-paper-scissors/socket.io";
 import {
   RPSPlayerMove,
   RPSSpectatorGameView,
@@ -10,26 +12,20 @@ import {
 
 export type RPSSocketService = {
   activeRPSGames: RPSSpectatorGameView[];
-  createRPSGame: () => void;
+  createRPSGame: RPSCreateGameHandler;
   makeGameMove: (move: RPSPlayerMove, gameId: string) => void;
   resolveGameRound: (gameId: string) => void;
   newGameRound: (gameId: string) => void;
 };
-
-const generateGameId = customAlphabet("1234567890");
 
 export function useRockPaperScissorsSocket(socket: Socket): RPSSocketService {
   const [activeRPSGames, setActiveRPSGames] = useState<RPSSpectatorGameView[]>(
     []
   );
 
-  const createRPSGame = useCallback(
-    () =>
-      socket.emit(
-        RPS_ACTIONS.CREATE_GAME,
-        { id: generateGameId(4), playerIds: ["andy", "alex"] },
-        (gameId: string) => console.log("create", gameId)
-      ),
+  const createRPSGame = useCallback<RPSCreateGameHandler>(
+    (createGameProps, onCreated) =>
+      socket.emit(RPS_ACTIONS.CREATE_GAME, createGameProps, onCreated),
     [socket]
   );
 
