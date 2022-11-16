@@ -39,4 +39,5 @@ export type RPSSpectatorGameView = {
   id: string;
   playerIds: [string, string];
   rounds: RPSSpectatorRoundView[];
+  scores: { playerId: string; score: number }[];
 };

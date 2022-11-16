@@ -1,17 +1,30 @@
-import Link from "next/link";
 import { useMemo } from "react";
+import styled from "styled-components";
 import {
-  RPSGame,
   RPSPlayerMove,
-  RPSRound,
   RPSSpectatorRoundView,
 } from "../../services/rock-paper-scissors/types";
+import { Card, PrimaryButton, SubHeading } from "../Atoms";
 
 type Props = {
   playerId: string;
   makeMove: (move: RPSPlayerMove) => void;
   currentRound: RPSSpectatorRoundView;
 };
+
+const MoveOptionsContainer = styled.div`
+  display: flex;
+  gap: 1rem;
+  justify-content: space-evenly;
+`;
+
+const MoveIcon = styled.span`
+  font-size: 2rem;
+`;
+
+const RoundResultIcon = styled.div`
+  font-size: 6rem;
+`;
 
 export const PlayerGameCurrentRound = ({
   currentRound,
@@ -28,29 +41,51 @@ export const PlayerGameCurrentRound = ({
 
   if (currentResult) {
     return (
-      <div>
-        {currentResult.draw
-          ? "Draw 😅"
-          : currentResult.winningPlayerId === playerId
-          ? "Won 🎉"
-          : "Lost 😭"}
-      </div>
+      <Card style={{ textAlign: "center" }}>
+        {currentResult.draw ? (
+          <>
+            <SubHeading>Draw</SubHeading>
+            <RoundResultIcon>😅</RoundResultIcon>
+          </>
+        ) : currentResult.winningPlayerId === playerId ? (
+          <>
+            <SubHeading>Won</SubHeading>
+            <RoundResultIcon>🎉</RoundResultIcon>
+          </>
+        ) : (
+          <>
+            <SubHeading>Lost</SubHeading>
+            <RoundResultIcon>😭</RoundResultIcon>
+          </>
+        )}
+      </Card>
     );
   }
 
   return hasMoved ? (
-    <h3>Moved...</h3>
+    <Card style={{ textAlign: "center" }}>
+      <SubHeading>Moved</SubHeading>
+      <RoundResultIcon>🤞</RoundResultIcon>
+    </Card>
   ) : (
-    <div>
-      <button onClick={() => makeMove({ playerId, moveName: "rock" })}>
-        Rock
-      </button>
-      <button onClick={() => makeMove({ playerId, moveName: "paper" })}>
-        Paper
-      </button>
-      <button onClick={() => makeMove({ playerId, moveName: "scissors" })}>
-        Scissors
-      </button>
-    </div>
+    <Card>
+      <SubHeading>Select your move</SubHeading>
+
+      <MoveOptionsContainer>
+        <PrimaryButton onClick={() => makeMove({ playerId, moveName: "rock" })}>
+          <MoveIcon>🪨</MoveIcon>
+        </PrimaryButton>
+        <PrimaryButton
+          onClick={() => makeMove({ playerId, moveName: "paper" })}
+        >
+          <MoveIcon>📄</MoveIcon>
+        </PrimaryButton>
+        <PrimaryButton
+          onClick={() => makeMove({ playerId, moveName: "scissors" })}
+        >
+          <MoveIcon>✂️</MoveIcon>
+        </PrimaryButton>
+      </MoveOptionsContainer>
+    </Card>
   );
 };

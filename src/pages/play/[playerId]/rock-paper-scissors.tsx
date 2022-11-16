@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import styled from "styled-components";
+import { Heading, SubHeading } from "../../../components/Atoms";
 import { PlayerPageLayout } from "../../../components/PlayerPageLayout";
 import { PlayerGameCurrentRound } from "../../../components/rock-paper-scissors/PlayerGameCurrentRound";
+import { PlayerGameScore } from "../../../components/rock-paper-scissors/PlayerGameScore";
 import { useRPSGame } from "../../../providers/SocketIoProvider/useRockPaperScissorsSocket";
 
 function Page() {
@@ -18,11 +20,16 @@ function Page() {
         {gameId}: {game ? "found" : "not found"}
       </p> */}
       {game && (
-        <PlayerGameCurrentRound
-          currentRound={game.rounds[game.rounds.length - 1]!}
-          playerId={playerId}
-          makeMove={makeMove}
-        />
+        <>
+          <Heading>Round {game.rounds.length}</Heading>
+          <PlayerGameCurrentRound
+            currentRound={game.rounds[game.rounds.length - 1]!}
+            playerId={playerId}
+            makeMove={makeMove}
+          />
+          <SubHeading>Score</SubHeading>
+          <PlayerGameScore playerId={playerId} game={game} />
+        </>
       )}
       <h5>
         <Link href={`/play/${playerId}`}>Back to games</Link>

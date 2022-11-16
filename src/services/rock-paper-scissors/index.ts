@@ -167,6 +167,12 @@ export function createGameView(game: RPSGame): RPSSpectatorGameView {
   return {
     id: game.id,
     playerIds: [...game.playerIds],
+    scores: game.playerIds.map((pid) => ({
+      playerId: pid,
+      score: game.rounds.filter(
+        (round) => round.result && round.result.winningPlayerId === pid
+      ).length,
+    })),
     rounds: game.rounds.map((round) => {
       return {
         number: round.index,
