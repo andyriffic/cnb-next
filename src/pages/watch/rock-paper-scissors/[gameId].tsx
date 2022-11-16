@@ -1,12 +1,8 @@
 import { useRouter } from "next/router";
 import styled from "styled-components";
+import { Heading, SubHeading } from "../../../components/Atoms";
 import { SpectatorPageLayout } from "../../../components/SpectatorPageLayout";
 import { useRPSGame } from "../../../providers/SocketIoProvider/useRockPaperScissorsSocket";
-
-const CenterAlignContainer = styled.div`
-  display: flex;
-  justify-content: center;
-`;
 
 type Props = {};
 
@@ -17,16 +13,28 @@ function Page({}: Props) {
 
   return (
     <SpectatorPageLayout>
-      <h1>{gameId}</h1>
+      <Heading>Game: {gameId}</Heading>
       {game ? (
         <>
-          <div>Players: {JSON.stringify(game.playerIds)}</div>
-          <div>Rounds: {JSON.stringify(game.rounds)}</div>
+          <Heading>Players</Heading>
+          <SubHeading>{JSON.stringify(game.playerIds)}</SubHeading>
+          <Heading>Scores</Heading>
+          <SubHeading>{JSON.stringify(game.scores)}</SubHeading>
+
+          <Heading>Rounds</Heading>
           <div>
             <button onClick={resolveRound}>RESOLVE</button>
             <button onClick={newRound}>NEW ROUND</button>
           </div>
-          <div>
+
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
+          >
+            {game.rounds.map((round) => (
+              <div key={round.number}>{JSON.stringify(round)}</div>
+            ))}
+          </div>
+          {/* <div>
             {game.playerIds.map((pid) => (
               <div key={pid}>
                 <p>{pid}</p>
@@ -55,7 +63,7 @@ function Page({}: Props) {
                 </div>
               </div>
             ))}
-          </div>
+          </div> */}
         </>
       ) : (
         <h2>{gameId} not found</h2>

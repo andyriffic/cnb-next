@@ -32,7 +32,7 @@ function Page() {
         </>
       )}
       <h5>
-        <Link href={`/play/${playerId}`}>Back to games</Link>
+        <Link href={`/play/${playerId}`}>Back to home</Link>
       </h5>
     </PlayerPageLayout>
   );
