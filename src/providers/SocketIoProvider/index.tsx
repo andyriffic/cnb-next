@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { SOCKET_ENDPOINT } from "../../environment";
+import { GroupBettingSocketService, useGroupBetting } from "./useGroupBetting";
 import {
   GroupJoinSocketService,
   useGroupPlayerJoin,
@@ -13,6 +14,7 @@ import {
 type SocketIoService = {
   rockPaperScissors: RPSSocketService;
   groupJoin: GroupJoinSocketService;
+  groupBetting: GroupBettingSocketService;
 };
 
 type Props = {
@@ -63,12 +65,14 @@ export const SocketIoProvider = ({ children }: Props): JSX.Element => {
 
   const rockPaperScissorsSocket = useRockPaperScissorsSocket(socket);
   const groupJoinSocket = useGroupPlayerJoin(socket);
+  const groupBettingSocket = useGroupBetting(socket);
 
   return (
     <SocketIoContent.Provider
       value={{
         rockPaperScissors: rockPaperScissorsSocket,
         groupJoin: groupJoinSocket,
+        groupBetting: groupBettingSocket,
       }}
     >
       {/* <button onClick={() => socket.emit("hello", "are you there?")}>

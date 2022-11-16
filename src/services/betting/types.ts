@@ -1,5 +1,10 @@
-export type GroupPlayerBettingRound = {
+export type GroupBettingGame = {
   id: string;
+  rounds: GroupPlayerBettingRound[];
+  playerIds: string[];
+};
+
+export type GroupPlayerBettingRound = {
   bettingOptions: BettingOption[];
   playerBets: PlayerBet[];
 };

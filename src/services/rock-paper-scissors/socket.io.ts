@@ -27,7 +27,10 @@ export enum RPS_ACTIONS {
   NEW_ROUND = "NEW_ROUND",
 }
 
-export default function initialise(io: SocketIOServer, socket: Socket) {
+export function initialiseRockPaperScissorsSocket(
+  io: SocketIOServer,
+  socket: Socket
+) {
   const createGameHandler: RPSCreateGameHandler = (
     props: RPSCreateGameProps,
     onCreated: (gameId: string) => void

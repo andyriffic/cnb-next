@@ -7,7 +7,7 @@ import { useSocketIo } from "../../providers/SocketIoProvider";
 
 function Page() {
   const router = useRouter();
-  const { groupJoin, rockPaperScissors } = useSocketIo();
+  const { groupJoin, rockPaperScissors, groupBetting } = useSocketIo();
   const groupId = router.query.groupId as string;
 
   const group = useMemo(() => {
@@ -30,13 +30,28 @@ function Page() {
           <PrimaryButton
             disabled={group.playerIds.length < 2}
             onClick={() => {
+              const player1 = group.playerIds[0]!;
+              const player2 = group.playerIds[1]!;
+
               rockPaperScissors.createRPSGame(
                 {
                   id: group.id,
-                  playerIds: [group.playerIds[0]!, group.playerIds[1]!],
+                  playerIds: [player1, player2],
                 },
                 (gameId) => {
-                  router.push(`/watch/rock-paper-scissors/${gameId}`);
+                  groupBetting.createGroupBettingGame(
+                    gameId,
+                    [
+                      { id: player1, name: player1, odds: 2 },
+                      { id: player2, name: player2, odds: 2 },
+                      { id: "draw", name: "draw", odds: 3 },
+                    ],
+                    group.playerIds.filter(
+                      (pid) => pid !== player1 && pid !== player2
+                    ),
+                    (bettingId) =>
+                      router.push(`/watch/rock-paper-scissors/${gameId}`)
+                  );
                 }
               );
             }}

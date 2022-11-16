@@ -9,10 +9,14 @@ import {
   Label,
   PrimaryButton,
   PrimaryLinkButton,
+  SubHeading,
 } from "../../../components/Atoms";
 import { PlayerPageLayout } from "../../../components/PlayerPageLayout";
 import { useSocketIo } from "../../../providers/SocketIoProvider";
-import { playersRockPaperScissorsGameUrl } from "../../../utils/url";
+import {
+  playersBettingGameUrl,
+  playersRockPaperScissorsGameUrl,
+} from "../../../utils/url";
 
 const CenterAlignContainer = styled.div`
   display: flex;
@@ -27,7 +31,7 @@ type Props = {};
 
 function Page({}: Props) {
   const router = useRouter();
-  const { groupJoin, rockPaperScissors } = useSocketIo();
+  const { groupJoin, rockPaperScissors, groupBetting } = useSocketIo();
   const [groupId, setGroupId] = useState("");
   const playerId = router.query.playerId as string;
   const joinedId = router.query.joinedId as string;
@@ -49,11 +53,21 @@ function Page({}: Props) {
     );
   }, [rockPaperScissors.activeRPSGames, joinedGroup, playerId]);
 
+  const relatedGroupBettingGame = useMemo(() => {
+    return (
+      joinedGroup &&
+      groupBetting.bettingGames.find(
+        (g) => g.id === joinedGroup.id && g.playerIds.includes(playerId)
+      )
+    );
+  }, [groupBetting.bettingGames, joinedGroup, playerId]);
+
   return (
     <PlayerPageLayout headerContent={<>Header</>}>
       {joinedGroup ? (
         <div>
-          <Heading>You&lsquo;ve joined!</Heading>
+          <Heading>You&lsquo;ve joined 👍</Heading>
+          <SubHeading>{joinedGroup.id}</SubHeading>
           {relatedRPSGame ? (
             <Link
               href={playersRockPaperScissorsGameUrl(
@@ -66,6 +80,14 @@ function Page({}: Props) {
             </Link>
           ) : (
             <p>Waiting for game to start</p>
+          )}
+          {relatedGroupBettingGame && (
+            <Link
+              href={playersBettingGameUrl(playerId, relatedGroupBettingGame.id)}
+              passHref={true}
+            >
+              <PrimaryLinkButton>Bet</PrimaryLinkButton>
+            </Link>
           )}
         </div>
       ) : (

@@ -5,19 +5,21 @@ import { pipe } from "fp-ts/lib/function";
 
 import {
   BettingOption,
+  GroupBettingGame,
   GroupPlayerBettingRound,
   PlayerBet,
   PlayerBettingRoundResult,
 } from "./types";
 
-export function createBettingEvent(
+export function createBettingGame(
   id: string,
-  bettingOptions: BettingOption[]
-): E.Either<string, GroupPlayerBettingRound> {
+  bettingOptions: BettingOption[],
+  playerIds: string[]
+): E.Either<string, GroupBettingGame> {
   return E.right({
     id,
-    bettingOptions: [...bettingOptions],
-    playerBets: [],
+    rounds: [{ bettingOptions, playerBets: [] }],
+    playerIds,
   });
 }
 

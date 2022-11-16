@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { Server as NetServer, Socket } from "net";
 import { Server as SocketIOServer } from "socket.io";
-import initialiseSocketRockPaperScissors from "../../services/rock-paper-scissors/socket.io";
 import { initialiseGroupJoinSocket } from "../../services/player-join/socket.io";
+import { initialiseRockPaperScissorsSocket } from "../../services/rock-paper-scissors/socket.io";
+import { initialiseGroupBettingSocket } from "../../services/betting/socket.io";
 
 type NextApiResponseServerIO = NextApiResponse & {
   socket: Socket & {
@@ -27,8 +28,9 @@ export default function SocketHandler(
     io.on("connection", (socket) => {
       console.log("Socket Connected (server) 🎉", socket.id);
 
-      initialiseSocketRockPaperScissors(io, socket);
+      initialiseRockPaperScissorsSocket(io, socket);
       initialiseGroupJoinSocket(io, socket);
+      initialiseGroupBettingSocket(io, socket);
 
       socket.on("hello", (message: string) => {
         console.log("🔈", message);
