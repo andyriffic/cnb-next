@@ -1,9 +1,15 @@
 import { pipe } from "fp-ts/lib/function";
+import * as A from "fp-ts/Array";
 import * as E from "fp-ts/Either";
 import { Socket, Server as SocketIOServer } from "socket.io";
-import { createBettingGame } from ".";
+import { createBettingGame, makePlayerBet } from ".";
 import { sendClientMessage } from "../socket";
-import { BettingOption, GroupBettingGame, PlayerWallet } from "./types";
+import {
+  BettingOption,
+  GroupBettingGame,
+  PlayerBet,
+  PlayerWallet,
+} from "./types";
 
 export enum BETTING_ACTIONS {
   CREATE_BETTING_GAME = "CREATE_BETTING_GAME",
@@ -18,6 +24,11 @@ export type CreateBettingGameHandler = (
   options: BettingOption[],
   playerWallets: PlayerWallet[],
   onCreated: (id: string) => void
+) => void;
+
+export type MakePlayerBetHandler = (
+  gameId: string,
+  playerBet: PlayerBet
 ) => void;
 
 let inMemoryBettingGames: GroupBettingGame[] = [];
@@ -52,9 +63,33 @@ export function initialiseGroupBettingSocket(
     );
   };
 
+  const makePlayerBetHandler: MakePlayerBetHandler = (gameId, playerBet) => {
+    return pipe(
+      inMemoryBettingGames,
+      A.findFirst((g) => g.id === gameId),
+      E.fromOption(() => "no game found"),
+      E.chain((game) => makePlayerBet(game, playerBet)),
+      E.match(
+        (error) => {
+          console.error(error);
+          sendClientMessage(socket, error);
+        },
+        (groupGame) => {
+          inMemoryBettingGames = [
+            ...inMemoryBettingGames.filter((g) => g.id !== groupGame.id),
+            groupGame,
+          ];
+          console.log("updated bets", groupGame);
+          io.emit(BETTING_ACTIONS.BETTING_UPDATE, inMemoryBettingGames);
+        }
+      )
+    );
+  };
+
   console.log("Registering Betting SocketIo 🔌");
 
   socket.on(BETTING_ACTIONS.CREATE_BETTING_GAME, createBettingGameHandler);
+  socket.on(BETTING_ACTIONS.MAKE_PLAYER_BET, makePlayerBetHandler);
   socket.emit(BETTING_ACTIONS.BETTING_UPDATE, inMemoryBettingGames);
   sendClientMessage(socket, "Welcome to Betting 💰");
 }
