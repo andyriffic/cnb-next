@@ -30,9 +30,7 @@ export function makePlayerBet(
 ): E.Either<string, GroupBettingGame> {
   return pipe(
     isValidBettingOption(playerBet.betOptionId, bettingGame),
-    E.chain((betGame) =>
-      playerHasAmountInWallet(playerBet.playerId, playerBet.betValue, betGame)
-    ),
+    E.chain((betGame) => playerHasAmountInWallet(playerBet, betGame)),
     E.chain((betGame) => playerHasNotBet(playerBet.playerId, betGame)),
     E.chain((betGame) => addPlayerBetToCurrentRound(playerBet, betGame))
   );
@@ -86,17 +84,16 @@ function updateGroupBettingRound(
 }
 
 function playerHasAmountInWallet(
-  playerId: string,
-  minAmount: number,
+  playerBet: PlayerBet,
   bettingGame: GroupBettingGame
 ): E.Either<string, GroupBettingGame> {
   return pipe(
     bettingGame.playerWallets,
-    A.findFirst((wallet) => wallet.playerId === playerId),
+    A.findFirst((wallet) => wallet.playerId === playerBet.playerId),
     O.match(
       () => E.left("No wallet found"),
       (wallet) =>
-        wallet.value >= minAmount
+        wallet.value >= playerBet.betValue
           ? E.right(bettingGame)
           : E.left("Not enough in wallet")
     )
@@ -143,14 +140,4 @@ function getCurrentBettingRound(
   bettingGame: GroupBettingGame
 ): O.Option<GroupPlayerBettingRound> {
   return pipe(bettingGame.rounds, A.last);
-}
-
-function addPlayerBetToRound(
-  bettingRound: GroupPlayerBettingRound,
-  playerBet: PlayerBet
-): GroupPlayerBettingRound {
-  return {
-    ...bettingRound,
-    playerBets: [...bettingRound.playerBets, playerBet],
-  };
 }
