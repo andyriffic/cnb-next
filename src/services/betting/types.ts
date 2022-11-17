@@ -1,12 +1,14 @@
 export type GroupBettingGame = {
   id: string;
   rounds: GroupPlayerBettingRound[];
-  playerIds: string[];
+  playerWallets: PlayerWallet[];
 };
 
 export type GroupPlayerBettingRound = {
+  index: number;
   bettingOptions: BettingOption[];
   playerBets: PlayerBet[];
+  playerResults: PlayerBettingRoundResult[];
 };
 
 export type PlayerBettingRoundResult = {
@@ -24,4 +26,9 @@ export type BettingOption = {
   id: string;
   name: string;
   odds: number;
+};
+
+export type PlayerWallet = {
+  playerId: string;
+  value: number;
 };

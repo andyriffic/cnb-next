@@ -57,7 +57,9 @@ function Page({}: Props) {
     return (
       joinedGroup &&
       groupBetting.bettingGames.find(
-        (g) => g.id === joinedGroup.id && g.playerIds.includes(playerId)
+        (g) =>
+          g.id === joinedGroup.id &&
+          g.playerWallets.map((w) => w.playerId).includes(playerId)
       )
     );
   }, [groupBetting.bettingGames, joinedGroup, playerId]);

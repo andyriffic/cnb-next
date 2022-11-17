@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { Heading, PrimaryButton, SubHeading } from "../../components/Atoms";
 import { SpectatorPageLayout } from "../../components/SpectatorPageLayout";
 import { useSocketIo } from "../../providers/SocketIoProvider";
+import { PlayerWallet } from "../../services/betting/types";
 
 function Page() {
   const router = useRouter();
@@ -33,6 +34,10 @@ function Page() {
               const player1 = group.playerIds[0]!;
               const player2 = group.playerIds[1]!;
 
+              const bettingPlayerWallets = group.playerIds
+                .filter((pid) => pid !== player1 && pid !== player2)
+                .map<PlayerWallet>((pid) => ({ playerId: pid, value: 2 }));
+
               rockPaperScissors.createRPSGame(
                 {
                   id: group.id,
@@ -43,12 +48,10 @@ function Page() {
                     gameId,
                     [
                       { id: player1, name: player1, odds: 2 },
-                      { id: player2, name: player2, odds: 2 },
                       { id: "draw", name: "draw", odds: 3 },
+                      { id: player2, name: player2, odds: 2 },
                     ],
-                    group.playerIds.filter(
-                      (pid) => pid !== player1 && pid !== player2
-                    ),
+                    bettingPlayerWallets,
                     (bettingId) =>
                       router.push(`/watch/rock-paper-scissors/${gameId}`)
                   );

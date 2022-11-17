@@ -3,7 +3,7 @@ import * as E from "fp-ts/Either";
 import { Socket, Server as SocketIOServer } from "socket.io";
 import { createBettingGame } from ".";
 import { sendClientMessage } from "../socket";
-import { BettingOption, GroupBettingGame } from "./types";
+import { BettingOption, GroupBettingGame, PlayerWallet } from "./types";
 
 export enum BETTING_ACTIONS {
   CREATE_BETTING_GAME = "CREATE_BETTING_GAME",
@@ -16,7 +16,7 @@ export enum BETTING_ACTIONS {
 export type CreateBettingGameHandler = (
   id: string,
   options: BettingOption[],
-  playerIds: string[],
+  playerWallets: PlayerWallet[],
   onCreated: (id: string) => void
 ) => void;
 
@@ -29,11 +29,11 @@ export function initialiseGroupBettingSocket(
   const createBettingGameHandler: CreateBettingGameHandler = (
     id,
     options,
-    playerIds,
+    playerWallets,
     onCreated
   ) => {
     pipe(
-      createBettingGame(id, options, playerIds),
+      createBettingGame(id, options, playerWallets),
       E.match(
         (error) => {
           console.error(error);
