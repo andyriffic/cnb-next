@@ -8,6 +8,11 @@ export type GroupPlayerBettingRound = {
   index: number;
   bettingOptions: BettingOption[];
   playerBets: PlayerBet[];
+  result?: GroupBettingRoundResult;
+};
+
+export type GroupBettingRoundResult = {
+  winningOptionId: string;
   playerResults: PlayerBettingRoundResult[];
 };
 

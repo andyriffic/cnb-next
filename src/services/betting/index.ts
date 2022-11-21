@@ -6,6 +6,7 @@ import { pipe } from "fp-ts/lib/function";
 import {
   BettingOption,
   GroupBettingGame,
+  GroupBettingRoundResult,
   GroupPlayerBettingRound,
   PlayerBet,
   PlayerBettingRoundResult,
@@ -19,9 +20,9 @@ export function createBettingGame(
 ): E.Either<string, GroupBettingGame> {
   return E.right({
     id,
-    rounds: [{ index: 0, bettingOptions, playerBets: [], playerResults: [] }],
+    rounds: [{ index: 0, bettingOptions, playerBets: [] }],
     playerWallets,
-  });
+  } as GroupBettingGame);
 }
 
 export function makePlayerBet(
@@ -36,21 +37,64 @@ export function makePlayerBet(
   );
 }
 
-export function getBetResults(
+export function applyBetResultToCurrentRound(
+  bettingGame: GroupBettingGame,
+  winningOptionId: string
+): E.Either<string, GroupBettingGame> {
+  return pipe(
+    getCurrentBettingRound(bettingGame),
+    E.fromOption(() => "No current betting round"),
+    E.chain((bettingRound) =>
+      applyResultToBettingRound(bettingRound, winningOptionId)
+    ),
+    E.map((updatedRound) => updateGroupBettingRound(updatedRound, bettingGame))
+  );
+}
+
+export function addNewBettingRound(
+  bettingGame: GroupBettingGame
+): E.Either<string, GroupBettingGame> {
+  return pipe(checkCurrentRoundHasBetResult(bettingGame));
+}
+
+function applyResultToBettingRound(
   bettingRound: GroupPlayerBettingRound,
   winningOptionId: string
-): PlayerBettingRoundResult[] {
+): E.Either<string, GroupPlayerBettingRound> {
   const winingOption = bettingRound.bettingOptions.find(
     (o) => o.id === winningOptionId
-  )!;
+  );
 
-  return bettingRound.playerBets.map((bet) => {
-    const won = bet.betOptionId === winingOption.id;
-    return {
-      playerId: bet.playerId,
-      totalWinnings: won ? bet.betValue * winingOption.odds : -bet.betValue,
-    };
-  });
+  if (!winingOption) {
+    return E.left(`Winning option "${winningOptionId}" not found`);
+  }
+
+  return E.right({
+    ...bettingRound,
+    result: {
+      winningOptionId,
+      playerResults: bettingRound.playerBets.map((bet) => {
+        const won = bet.betOptionId === winingOption.id;
+        return {
+          playerId: bet.playerId,
+          totalWinnings: won ? bet.betValue * winingOption.odds : -bet.betValue,
+        };
+      }),
+    },
+  } as GroupPlayerBettingRound);
+}
+
+function checkCurrentRoundHasBetResult(
+  bettingGame: GroupBettingGame
+): E.Either<string, GroupBettingGame> {
+  return pipe(
+    getCurrentBettingRound(bettingGame),
+    O.chain((round) => O.fromNullable(round.result)),
+    O.match(
+      () => E.left("Current round does not have result"),
+      () => E.right(bettingGame)
+    )
+  );
 }
 
 function addPlayerBetToCurrentRound(
