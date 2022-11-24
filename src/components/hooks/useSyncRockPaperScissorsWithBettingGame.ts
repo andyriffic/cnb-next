@@ -15,7 +15,7 @@ export function useSyncRockPapersScissorsWithBettingGame(gameId: string) {
 
     // const totalRpsResolvedRounds
 
-    if (rpsGame.rounds.length <= bettingGame.rounds.length) {
+    if (rpsGame.rounds.length < bettingGame.rounds.length) {
       //If rpsGame has less rounds then that's a problem but just gonna ignore that (It shouldn't happen right 😅)
       console.log(
         "useSyncRockPapersScissorsWithBettingGame",
@@ -24,29 +24,48 @@ export function useSyncRockPapersScissorsWithBettingGame(gameId: string) {
       return;
     }
 
-    const lastRpsRoundResult =
-      rpsGame.rounds[rpsGame.rounds.length - 2]!.result!;
+    if (rpsGame.rounds.length === bettingGame.rounds.length) {
+      const rpsGameResult = rpsGame.rounds[rpsGame.rounds.length - 1]?.result;
+      const betResult =
+        bettingGame.rounds[bettingGame.rounds.length - 1]?.result;
+      if (rpsGameResult && !betResult) {
+        console.log(
+          "useSyncRockPapersScissorsWithBettingGame",
+          "Setting bet result for last game"
+        );
 
-    const lastBettingRound = bettingGame.rounds[bettingGame.rounds.length - 1]!;
+        const winningOptionId = rpsGameResult.winningPlayerId
+          ? rpsGameResult.winningPlayerId
+          : "draw";
 
-    if (!lastBettingRound.result) {
-      console.log(
-        "useSyncRockPapersScissorsWithBettingGame",
-        "Setting bet result for last game"
-      );
-
-      const winningOptionId = lastRpsRoundResult.winningPlayerId
-        ? lastRpsRoundResult.winningPlayerId
-        : "draw";
-
-      resolveBettingRound(winningOptionId);
-    } else {
+        resolveBettingRound(winningOptionId);
+      }
+    } else if (rpsGame.rounds.length > bettingGame.rounds.length) {
       console.log(
         "useSyncRockPapersScissorsWithBettingGame",
         "Adding new betting round"
       );
-
       newBettingRound();
     }
+
+    // const lastRpsRoundResult =
+    //   rpsGame.rounds[rpsGame.rounds.length - 2]!.result!;
+
+    // const lastBettingRound = bettingGame.rounds[bettingGame.rounds.length - 1]!;
+
+    // if (!lastBettingRound.result) {
+    //   console.log(
+    //     "useSyncRockPapersScissorsWithBettingGame",
+    //     "Setting bet result for last game"
+    //   );
+
+    //   const winningOptionId = lastRpsRoundResult.winningPlayerId
+    //     ? lastRpsRoundResult.winningPlayerId
+    //     : "draw";
+
+    //   resolveBettingRound(winningOptionId);
+    // } else {
+    //   newBettingRound();
+    // }
   }, [rpsGame, bettingGame, resolveBettingRound, newBettingRound]);
 }

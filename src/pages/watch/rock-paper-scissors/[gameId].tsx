@@ -93,7 +93,7 @@ function Page({}: Props) {
                   {favorableBets && favorableBets.length > 0 && (
                     <Card>
                       {favorableBets.map((bet) => (
-                        <span key={bet.playerId}>{bet.playerId}</span>
+                        <div key={bet.playerId}>{bet.playerId}</div>
                       ))}
                     </Card>
                   )}
@@ -144,11 +144,20 @@ function Page({}: Props) {
               const currentBet = currentBettingRound.playerBets.find(
                 (b) => b.playerId === wallet.playerId
               );
+              const currentResult =
+                currentBettingRound!.result?.playerResults.find(
+                  (r) => r.playerId === wallet.playerId
+                );
               return (
                 <CenteredCard
                   key={wallet.playerId}
                   style={{
-                    backgroundColor: wallet.value === 0 ? "#E5D2E0" : "",
+                    backgroundColor:
+                      wallet.value === 0
+                        ? "#E5D2E0"
+                        : currentResult && currentResult.totalWinnings > 0
+                        ? "#3CAE85"
+                        : "",
                   }}
                 >
                   <SubHeading>{wallet.playerId}</SubHeading>
