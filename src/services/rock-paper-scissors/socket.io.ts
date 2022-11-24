@@ -29,6 +29,11 @@ export type RPSResolveRoundHandler = (
   onResolved?: (previousRound: RPSSpectatorRoundView) => void
 ) => void;
 
+export type RPSNewRoundHandler = (
+  gameId: string,
+  onResolved?: () => void
+) => void;
+
 export enum RPS_ACTIONS {
   CREATE_GAME = "CREATE_GAME",
   GAME_UPDATE = "GAME_UPDATE",
@@ -115,7 +120,8 @@ export function initialiseRockPaperScissorsSocket(
       )
     );
   };
-  function newRoundHandler(gameId: string): void {
+
+  const newRoundHandler: RPSNewRoundHandler = (gameId, onResolved) => {
     pipe(
       inMemoryGames,
       A.findFirst((game: RPSGame) => game.id === gameId),
@@ -133,10 +139,11 @@ export function initialiseRockPaperScissorsSocket(
           ];
           console.log("New round added", gameId);
           io.emit(RPS_ACTIONS.GAME_UPDATE, inMemoryGames.map(createGameView));
+          onResolved && onResolved();
         }
       )
     );
-  }
+  };
 
   console.log("Registering RockPaperScissors SocketIo 🔌");
 

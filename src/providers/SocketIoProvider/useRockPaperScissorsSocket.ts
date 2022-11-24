@@ -3,6 +3,7 @@ import { Socket } from "socket.io-client";
 import { useSocketIo } from ".";
 import {
   RPSCreateGameHandler,
+  RPSNewRoundHandler,
   RPSResolveRoundHandler,
   RPS_ACTIONS,
 } from "../../services/rock-paper-scissors/socket.io";
@@ -17,7 +18,7 @@ export type RPSSocketService = {
   createRPSGame: RPSCreateGameHandler;
   makeGameMove: (move: RPSPlayerMove, gameId: string) => void;
   resolveGameRound: RPSResolveRoundHandler;
-  newGameRound: (gameId: string) => void;
+  newGameRound: RPSNewRoundHandler;
 };
 
 export function useRockPaperScissorsSocket(socket: Socket): RPSSocketService {
@@ -43,8 +44,9 @@ export function useRockPaperScissorsSocket(socket: Socket): RPSSocketService {
     [socket]
   );
 
-  const newGameRound = useCallback(
-    (gameId: string) => socket.emit(RPS_ACTIONS.NEW_ROUND, gameId),
+  const newGameRound = useCallback<RPSNewRoundHandler>(
+    (gameId, onResolved) =>
+      socket.emit(RPS_ACTIONS.NEW_ROUND, gameId, onResolved),
     [socket]
   );
 
@@ -78,7 +80,7 @@ export function useRPSGame(gameId: string): {
   resolveRound: (
     onResolved?: (resolvedRound: RPSSpectatorRoundView) => void
   ) => void;
-  newRound: () => void;
+  newRound: (onResolved?: () => void) => void;
   currentRound: RPSSpectatorRoundView | undefined;
 } {
   const {
@@ -110,9 +112,12 @@ export function useRPSGame(gameId: string): {
     [gameId, resolveGameRound]
   );
 
-  const newRound = useCallback(() => {
-    return newGameRound(gameId);
-  }, [gameId, newGameRound]);
+  const newRound = useCallback(
+    (onResolved?: () => void) => {
+      return newGameRound(gameId, onResolved);
+    },
+    [gameId, newGameRound]
+  );
 
   return {
     game,
