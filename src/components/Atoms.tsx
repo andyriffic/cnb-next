@@ -13,6 +13,12 @@ export const SubHeading = styled.h2`
   margin: 0 0 0.5rem;
 `;
 
+export const FeatureEmoji = styled.div`
+  font-size: 4rem;
+`;
+
+export const CaptionText = styled.p``;
+
 export const PrimaryButton = styled.button`
   display: inline-block;
   padding: 1rem 2rem;
@@ -58,6 +64,10 @@ export const Card = styled.div`
   border-radius: 1rem;
   padding: 1rem;
   margin-bottom: 2rem;
+`;
+
+export const CenteredCard = styled(Card)`
+  text-align: center;
 `;
 
 export const BigInput = styled.input`

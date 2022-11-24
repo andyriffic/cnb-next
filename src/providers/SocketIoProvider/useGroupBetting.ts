@@ -8,7 +8,11 @@ import {
   MakePlayerBetHandler,
   ResolveBettingRoundHandler,
 } from "../../services/betting/socket.io";
-import { GroupBettingGame, PlayerBet } from "../../services/betting/types";
+import {
+  GroupBettingGame,
+  GroupPlayerBettingRound,
+  PlayerBet,
+} from "../../services/betting/types";
 import { RPSSpectatorRoundView } from "../../services/rock-paper-scissors/types";
 
 export type GroupBettingSocketService = {
@@ -79,6 +83,7 @@ export function useGroupBetting(socket: Socket): GroupBettingSocketService {
 // Helper for individual betting game
 export function useBettingGame(gameId: string): {
   bettingGame: GroupBettingGame | undefined;
+  currentBettingRound: GroupPlayerBettingRound | undefined;
   makePlayerBet: (playerBet: PlayerBet) => void;
   resolveBettingRound: (winningOptionId: string) => void;
   newBettingRound: () => void;
@@ -95,6 +100,10 @@ export function useBettingGame(gameId: string): {
   const bettingGame = useMemo(() => {
     return bettingGames.find((g) => g.id === gameId);
   }, [gameId, bettingGames]);
+
+  const currentBettingRound = useMemo(() => {
+    return bettingGame && bettingGame.rounds[bettingGame.rounds.length - 1];
+  }, [bettingGame]);
 
   const makeBet = useCallback(
     (playerBet: PlayerBet) => {
@@ -116,6 +125,7 @@ export function useBettingGame(gameId: string): {
 
   return {
     bettingGame,
+    currentBettingRound,
     makePlayerBet: makeBet,
     resolveBettingRound: resolveRound,
     newBettingRound: newRound,

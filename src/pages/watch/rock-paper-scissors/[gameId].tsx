@@ -1,58 +1,107 @@
 import { useRouter } from "next/router";
 import { useCallback } from "react";
 import styled from "styled-components";
-import { Heading, SubHeading } from "../../../components/Atoms";
+import {
+  CaptionText,
+  Card,
+  CenteredCard,
+  FeatureEmoji,
+  Heading,
+  SubHeading,
+} from "../../../components/Atoms";
 import { useSyncRockPapersScissorsWithBettingGame } from "../../../components/hooks/useSyncRockPaperScissorsWithBettingGame";
+import { EvenlySpaced } from "../../../components/Layouts";
 import { SpectatorPageLayout } from "../../../components/SpectatorPageLayout";
 import { useBettingGame } from "../../../providers/SocketIoProvider/useGroupBetting";
 import { useRPSGame } from "../../../providers/SocketIoProvider/useRockPaperScissorsSocket";
+import { RPSMoveName } from "../../../services/rock-paper-scissors/types";
 
 type Props = {};
+
+const getMoveEmoji = (moveName: RPSMoveName): string => {
+  switch (moveName) {
+    case "rock":
+      return "🪨";
+    case "paper":
+      return "📄";
+    case "scissors":
+      return "✂️";
+  }
+};
 
 function Page({}: Props) {
   const router = useRouter();
   const gameId = router.query.gameId as string;
   const { game, makeMove, resolveRound, newRound, currentRound } =
     useRPSGame(gameId);
-  const { bettingGame } = useBettingGame(gameId);
+  const { bettingGame, currentBettingRound } = useBettingGame(gameId);
   useSyncRockPapersScissorsWithBettingGame(gameId);
-
-  // const resolveGameAndBet = useCallback(() => {
-  //   if (!(game && bettingGame && currentRound)) {
-  //     return;
-  //   }
-
-  //   resolveRound((resolvedRound) => {
-  //     const winningOptionId = resolvedRound.result!.draw
-  //       ? "draw"
-  //       : resolvedRound.result?.winningPlayerId!;
-  //     resolveBettingRound(winningOptionId);
-  //   });
-  // }, [game, bettingGame, currentRound, resolveRound, resolveBettingRound]);
 
   return (
     <SpectatorPageLayout>
       <Heading>Game: {gameId}</Heading>
-      {game ? (
-        <>
-          <Heading>Players</Heading>
-          <SubHeading>{JSON.stringify(game.playerIds)}</SubHeading>
-          <Heading>Scores</Heading>
-          <SubHeading>{JSON.stringify(game.scores)}</SubHeading>
-
-          <Heading>Rounds</Heading>
+      {game && currentRound ? (
+        <div>
           <div>
             <button onClick={() => resolveRound()}>RESOLVE</button>
-            <button onClick={newRound}>NEW ROUND</button>
+            <button onClick={() => newRound()}>NEW ROUND</button>
           </div>
 
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
-          >
-            {game.rounds.map((round) => (
-              <div key={round.number}>{JSON.stringify(round)}</div>
-            ))}
-          </div>
+          <EvenlySpaced>
+            {game.playerIds.map((pid) => {
+              const score = game.scores.find((s) => s.playerId === pid)!;
+              const hasMoved = currentRound.movedPlayerIds.includes(pid);
+              const visibleMove = currentRound.result?.moves.find(
+                (m) => m.playerId === pid
+              );
+              const didWin = currentRound.result?.winningPlayerId === pid;
+              const isDraw = currentRound.result?.draw;
+
+              const favorableBets = currentBettingRound?.playerBets.filter(
+                (b) => b.betOptionId === pid
+              );
+              return (
+                <EvenlySpaced key={pid} style={{ gap: "0.4rem" }}>
+                  <Card
+                    style={{
+                      backgroundColor: didWin || isDraw ? "#3CAE85" : "",
+                      minWidth: "20vw",
+                    }}
+                  >
+                    <Heading
+                      style={{
+                        textAlign: "center",
+                      }}
+                    >
+                      {pid}
+                    </Heading>
+                    <FeatureEmoji
+                      style={{
+                        textAlign: "center",
+                      }}
+                    >
+                      {visibleMove
+                        ? getMoveEmoji(visibleMove.moveName)
+                        : hasMoved
+                        ? "👍"
+                        : "😪"}
+                    </FeatureEmoji>
+                    <CaptionText style={{ textAlign: "center" }}>
+                      Score: {score.score}
+                    </CaptionText>
+                  </Card>
+                  {favorableBets && favorableBets.length > 0 && (
+                    <Card>
+                      {favorableBets.map((bet) => (
+                        <span key={bet.playerId}>{bet.playerId}</span>
+                      ))}
+                    </Card>
+                  )}
+                </EvenlySpaced>
+              );
+            })}
+          </EvenlySpaced>
+
           {/* <div>
             {game.playerIds.map((pid) => (
               <div key={pid}>
@@ -83,15 +132,40 @@ function Page({}: Props) {
               </div>
             ))}
           </div> */}
-        </>
+        </div>
       ) : (
         <h2>{gameId} not found</h2>
       )}
-      {bettingGame ? (
-        <>
+      {bettingGame && currentBettingRound ? (
+        <div>
           <Heading>Bets</Heading>
+          <EvenlySpaced>
+            {bettingGame.playerWallets.map((wallet) => {
+              const currentBet = currentBettingRound.playerBets.find(
+                (b) => b.playerId === wallet.playerId
+              );
+              return (
+                <CenteredCard
+                  key={wallet.playerId}
+                  style={{
+                    backgroundColor: wallet.value === 0 ? "#E5D2E0" : "",
+                  }}
+                >
+                  <SubHeading>{wallet.playerId}</SubHeading>
+                  <Heading>
+                    {wallet.value === 0 ? "😩" : `${wallet.value}🍒`}
+                  </Heading>
+                  <CaptionText>
+                    {wallet.value === 0
+                      ? "Broke"
+                      : currentBet && currentBet.betOptionId}
+                  </CaptionText>
+                </CenteredCard>
+              );
+            })}
+          </EvenlySpaced>
           {/* <button onClick={() => resolveBettingRound("draw")}>DRAW</button> */}
-          <SubHeading>Wallets 💰</SubHeading>
+          {/* <SubHeading>Wallets 💰</SubHeading>
           {bettingGame.playerWallets.map((wallet) => (
             <div key={wallet.playerId}>
               {wallet.playerId}: {wallet.value}
@@ -123,8 +197,8 @@ function Page({}: Props) {
                   </div>
                 ))}
             </div>
-          ))}
-        </>
+          ))} */}
+        </div>
       ) : (
         <>
           <h2>No Betting game found</h2>
