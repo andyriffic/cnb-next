@@ -30,9 +30,19 @@ function Page() {
       bettingGame.playerWallets.find((w) => w.playerId === playerId)
     );
   }, [bettingGame, playerId]);
+
   const [selectedBetOption, setSelectedBetOption] = useState<
     BettingOption | undefined
   >();
+
+  const lockedInBet = useMemo(() => {
+    return (
+      bettingGame &&
+      bettingGame.rounds[bettingGame.rounds.length - 1]?.playerBets.find(
+        (b) => b.playerId === playerId
+      )
+    );
+  }, [bettingGame, playerId]);
 
   return (
     <PlayerPageLayout>
@@ -42,30 +52,35 @@ function Page() {
           {playerWallet && (
             <Card>
               <SubHeading>Balance</SubHeading>
-              <Heading>{playerWallet.value}</Heading>
+              <Heading>{playerWallet.value}🍒</Heading>
             </Card>
           )}
-          <SubHeading>Options</SubHeading>
-          <BettingOptionContainer>
-            {bettingGame.rounds[0]?.bettingOptions.map((option) => (
-              <button
-                key={option.id}
-                onClick={() => setSelectedBetOption(option)}
-                style={{
-                  border:
-                    option.id === selectedBetOption?.id
-                      ? "2px solid red"
-                      : "2px solid black",
-                }}
-              >
-                <Card>
-                  <SubHeading>{option.name}</SubHeading>
-                  <Heading>{option.odds}:1</Heading>
-                </Card>
-              </button>
-            ))}
-          </BettingOptionContainer>
-          {playerWallet && playerWallet.value > 0 && (
+          {!lockedInBet && (
+            <>
+              <SubHeading>Options</SubHeading>
+              <BettingOptionContainer>
+                {bettingGame.rounds[0]?.bettingOptions.map((option) => (
+                  <button
+                    key={option.id}
+                    onClick={() => setSelectedBetOption(option)}
+                    style={{
+                      border:
+                        option.id === selectedBetOption?.id
+                          ? "2px solid red"
+                          : "2px solid black",
+                    }}
+                  >
+                    <Card>
+                      <SubHeading>{option.name}</SubHeading>
+                      <Heading>{option.odds}:1</Heading>
+                    </Card>
+                  </button>
+                ))}
+              </BettingOptionContainer>
+            </>
+          )}
+
+          {!lockedInBet && playerWallet && playerWallet.value > 0 && (
             <PrimaryButton
               disabled={!selectedBetOption}
               onClick={() =>
@@ -78,6 +93,14 @@ function Page() {
             >
               Place Bet
             </PrimaryButton>
+          )}
+          {lockedInBet && (
+            <Card>
+              <SubHeading>Your bet</SubHeading>
+              <p>
+                {lockedInBet.betValue}🍒 on {lockedInBet.betOptionId}
+              </p>
+            </Card>
           )}
         </>
       )}

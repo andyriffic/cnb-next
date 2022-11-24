@@ -9,7 +9,12 @@ import {
   makePlayerMove,
   resolveRound,
 } from ".";
-import { RPSCreateGameProps, RPSGame, RPSPlayerMove } from "./types";
+import {
+  RPSCreateGameProps,
+  RPSGame,
+  RPSPlayerMove,
+  RPSSpectatorRoundView,
+} from "./types";
 import { sendClientMessage } from "../socket";
 
 let inMemoryGames: RPSGame[] = [];
@@ -17,6 +22,11 @@ let inMemoryGames: RPSGame[] = [];
 export type RPSCreateGameHandler = (
   props: RPSCreateGameProps,
   onCreated: (gameId: string) => void
+) => void;
+
+export type RPSResolveRoundHandler = (
+  gameId: string,
+  onResolved?: (previousRound: RPSSpectatorRoundView) => void
 ) => void;
 
 export enum RPS_ACTIONS {
@@ -79,7 +89,7 @@ export function initialiseRockPaperScissorsSocket(
     );
   }
 
-  function resolveRoundHandler(gameId: string): void {
+  const resolveRoundHandler: RPSResolveRoundHandler = (gameId, onResolved) => {
     pipe(
       inMemoryGames,
       A.findFirst((game: RPSGame) => game.id === gameId),
@@ -97,10 +107,14 @@ export function initialiseRockPaperScissorsSocket(
           ];
           console.log("Round resolved", gameId);
           io.emit(RPS_ACTIONS.GAME_UPDATE, inMemoryGames.map(createGameView));
+
+          const gameView = createGameView(game);
+          onResolved &&
+            onResolved(gameView.rounds[gameView.rounds.length - 1]!);
         }
       )
     );
-  }
+  };
   function newRoundHandler(gameId: string): void {
     pipe(
       inMemoryGames,

@@ -47,14 +47,44 @@ export function applyBetResultToCurrentRound(
     E.chain((bettingRound) =>
       applyResultToBettingRound(bettingRound, winningOptionId)
     ),
-    E.map((updatedRound) => updateGroupBettingRound(updatedRound, bettingGame))
+    E.map((updatedRound) => updateGroupBettingRound(updatedRound, bettingGame)),
+    E.map(updatePlayerWalletsWithRoundResult)
   );
 }
 
 export function addNewBettingRound(
   bettingGame: GroupBettingGame
 ): E.Either<string, GroupBettingGame> {
-  return pipe(checkCurrentRoundHasBetResult(bettingGame));
+  return pipe(
+    checkCurrentRoundHasBetResult(bettingGame),
+    E.map(addBettingRoundWithPreviousRoundBettingOptions)
+  );
+}
+
+function updatePlayerWalletsWithRoundResult({
+  round,
+  bettingGame,
+}: {
+  round: GroupPlayerBettingRound;
+  bettingGame: GroupBettingGame;
+}): GroupBettingGame {
+  const bettingResult = round.result!;
+  return {
+    ...bettingGame,
+    playerWallets: bettingGame.playerWallets.map((wallet) => {
+      const betResult = bettingResult.playerResults.find(
+        (r) => r.playerId === wallet.playerId
+      );
+      if (!betResult) {
+        return wallet;
+      }
+
+      return {
+        ...wallet,
+        value: wallet.value + betResult.totalWinnings,
+      };
+    }),
+  };
 }
 
 function applyResultToBettingRound(
@@ -111,6 +141,7 @@ function addPlayerBetToCurrentRound(
         } as GroupPlayerBettingRound)
     ),
     O.map((updatedRound) => updateGroupBettingRound(updatedRound, bettingGame)),
+    O.map((result) => result.bettingGame),
     E.fromOption(() => "")
   );
 }
@@ -118,12 +149,15 @@ function addPlayerBetToCurrentRound(
 function updateGroupBettingRound(
   round: GroupPlayerBettingRound,
   bettingGame: GroupBettingGame
-): GroupBettingGame {
+): { round: GroupPlayerBettingRound; bettingGame: GroupBettingGame } {
   return {
-    ...bettingGame,
-    rounds: bettingGame.rounds.map((r) =>
-      r.index === round.index ? round : r
-    ),
+    round,
+    bettingGame: {
+      ...bettingGame,
+      rounds: bettingGame.rounds.map((r) =>
+        r.index === round.index ? round : r
+      ),
+    },
   };
 }
 
@@ -178,6 +212,25 @@ function isValidBettingOption(
       () => E.right(bettingGame)
     )
   );
+}
+
+function addBettingRoundWithPreviousRoundBettingOptions(
+  bettingGame: GroupBettingGame
+): GroupBettingGame {
+  //Just gonna assume there's a previous round 😅
+  const lastBettingOptions =
+    bettingGame.rounds[bettingGame.rounds.length - 1]!.bettingOptions;
+  return {
+    ...bettingGame,
+    rounds: [
+      ...bettingGame.rounds,
+      {
+        index: bettingGame.rounds.length,
+        playerBets: [],
+        bettingOptions: lastBettingOptions,
+      },
+    ],
+  };
 }
 
 function getCurrentBettingRound(

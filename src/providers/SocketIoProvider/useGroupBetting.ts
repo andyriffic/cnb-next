@@ -9,6 +9,7 @@ import {
   ResolveBettingRoundHandler,
 } from "../../services/betting/socket.io";
 import { GroupBettingGame, PlayerBet } from "../../services/betting/types";
+import { RPSSpectatorRoundView } from "../../services/rock-paper-scissors/types";
 
 export type GroupBettingSocketService = {
   bettingGames: GroupBettingGame[];

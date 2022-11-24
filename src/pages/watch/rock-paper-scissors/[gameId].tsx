@@ -1,6 +1,8 @@
 import { useRouter } from "next/router";
+import { useCallback } from "react";
 import styled from "styled-components";
 import { Heading, SubHeading } from "../../../components/Atoms";
+import { useSyncRockPapersScissorsWithBettingGame } from "../../../components/hooks/useSyncRockPaperScissorsWithBettingGame";
 import { SpectatorPageLayout } from "../../../components/SpectatorPageLayout";
 import { useBettingGame } from "../../../providers/SocketIoProvider/useGroupBetting";
 import { useRPSGame } from "../../../providers/SocketIoProvider/useRockPaperScissorsSocket";
@@ -10,8 +12,23 @@ type Props = {};
 function Page({}: Props) {
   const router = useRouter();
   const gameId = router.query.gameId as string;
-  const { game, makeMove, resolveRound, newRound } = useRPSGame(gameId);
+  const { game, makeMove, resolveRound, newRound, currentRound } =
+    useRPSGame(gameId);
   const { bettingGame } = useBettingGame(gameId);
+  useSyncRockPapersScissorsWithBettingGame(gameId);
+
+  // const resolveGameAndBet = useCallback(() => {
+  //   if (!(game && bettingGame && currentRound)) {
+  //     return;
+  //   }
+
+  //   resolveRound((resolvedRound) => {
+  //     const winningOptionId = resolvedRound.result!.draw
+  //       ? "draw"
+  //       : resolvedRound.result?.winningPlayerId!;
+  //     resolveBettingRound(winningOptionId);
+  //   });
+  // }, [game, bettingGame, currentRound, resolveRound, resolveBettingRound]);
 
   return (
     <SpectatorPageLayout>
@@ -25,7 +42,7 @@ function Page({}: Props) {
 
           <Heading>Rounds</Heading>
           <div>
-            <button onClick={resolveRound}>RESOLVE</button>
+            <button onClick={() => resolveRound()}>RESOLVE</button>
             <button onClick={newRound}>NEW ROUND</button>
           </div>
 
@@ -73,6 +90,7 @@ function Page({}: Props) {
       {bettingGame ? (
         <>
           <Heading>Bets</Heading>
+          {/* <button onClick={() => resolveBettingRound("draw")}>DRAW</button> */}
           <SubHeading>Wallets 💰</SubHeading>
           {bettingGame.playerWallets.map((wallet) => (
             <div key={wallet.playerId}>
@@ -88,8 +106,22 @@ function Page({}: Props) {
               </h3>
               <SubHeading>Player Bets 💰</SubHeading>
               {betRound.playerBets.map((playerBet) => (
-                <div key={playerBet.playerId}>{JSON.stringify(playerBet)}</div>
+                <div key={playerBet.playerId}>
+                  {playerBet.playerId} bet {playerBet.betValue} on{" "}
+                  {playerBet.betOptionId}
+                </div>
               ))}
+              <SubHeading>Betting Result</SubHeading>
+              {betRound.result && (
+                <h3>RESULT: {betRound.result.winningOptionId}</h3>
+              )}
+              {betRound.result &&
+                betRound.result.playerResults.map((result) => (
+                  <div key={result.playerId}>
+                    {result.playerId} {result.totalWinnings > 0 ? "+" : ""}
+                    {result.totalWinnings}
+                  </div>
+                ))}
             </div>
           ))}
         </>

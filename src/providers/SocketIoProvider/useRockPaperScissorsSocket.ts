@@ -3,18 +3,20 @@ import { Socket } from "socket.io-client";
 import { useSocketIo } from ".";
 import {
   RPSCreateGameHandler,
+  RPSResolveRoundHandler,
   RPS_ACTIONS,
 } from "../../services/rock-paper-scissors/socket.io";
 import {
   RPSPlayerMove,
   RPSSpectatorGameView,
+  RPSSpectatorRoundView,
 } from "../../services/rock-paper-scissors/types";
 
 export type RPSSocketService = {
   activeRPSGames: RPSSpectatorGameView[];
   createRPSGame: RPSCreateGameHandler;
   makeGameMove: (move: RPSPlayerMove, gameId: string) => void;
-  resolveGameRound: (gameId: string) => void;
+  resolveGameRound: RPSResolveRoundHandler;
   newGameRound: (gameId: string) => void;
 };
 
@@ -35,8 +37,9 @@ export function useRockPaperScissorsSocket(socket: Socket): RPSSocketService {
     [socket]
   );
 
-  const resolveGameRound = useCallback(
-    (gameId: string) => socket.emit(RPS_ACTIONS.RESOLVE_ROUND, gameId),
+  const resolveGameRound = useCallback<RPSResolveRoundHandler>(
+    (gameId, onResolved) =>
+      socket.emit(RPS_ACTIONS.RESOLVE_ROUND, gameId, onResolved),
     [socket]
   );
 
@@ -72,8 +75,11 @@ export function useRockPaperScissorsSocket(socket: Socket): RPSSocketService {
 export function useRPSGame(gameId: string): {
   game: RPSSpectatorGameView | undefined;
   makeMove: (move: RPSPlayerMove) => void;
-  resolveRound: () => void;
+  resolveRound: (
+    onResolved?: (resolvedRound: RPSSpectatorRoundView) => void
+  ) => void;
   newRound: () => void;
+  currentRound: RPSSpectatorRoundView | undefined;
 } {
   const {
     rockPaperScissors: {
@@ -97,13 +103,22 @@ export function useRPSGame(gameId: string): {
     [gameId, makeGameMove]
   );
 
-  const resolveRound = useCallback(() => {
-    return resolveGameRound(gameId);
-  }, [gameId, resolveGameRound]);
+  const resolveRound = useCallback(
+    (onResolved?: (resolvedRound: RPSSpectatorRoundView) => void) => {
+      return resolveGameRound(gameId, onResolved);
+    },
+    [gameId, resolveGameRound]
+  );
 
   const newRound = useCallback(() => {
     return newGameRound(gameId);
   }, [gameId, newGameRound]);
 
-  return { game, makeMove, resolveRound, newRound };
+  return {
+    game,
+    makeMove,
+    resolveRound,
+    newRound,
+    currentRound: game && game.rounds[game.rounds.length - 1],
+  };
 }

@@ -136,6 +136,9 @@ test("Can add new betting round", () => {
   );
 
   expect(result).toBeRight();
+  expect(result).toSubsetEqualRight({
+    rounds: [{ index: 0 }, { index: 1 }],
+  });
 });
 
 test("Can't add new betting round if current round does not have a result", () => {
