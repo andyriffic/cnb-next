@@ -44,6 +44,8 @@ function Page() {
     );
   }, [bettingGame, playerId]);
 
+  const [betValue, setBetValue] = useState(0);
+
   return (
     <PlayerPageLayout>
       {bettingGame && (
@@ -55,8 +57,20 @@ function Page() {
               <Heading>{playerWallet.value}🍒</Heading>
             </Card>
           )}
-          {!lockedInBet && (
+          {!lockedInBet && playerWallet && playerWallet.value > 0 && (
             <>
+              <SubHeading>Amount ({betValue}🍒)</SubHeading>
+              <fieldset>
+                <input
+                  type="range"
+                  min={0}
+                  max={playerWallet.value}
+                  step="1"
+                  value={betValue}
+                  onChange={(e) => setBetValue(e.currentTarget.valueAsNumber)}
+                />
+              </fieldset>
+
               <SubHeading>Options</SubHeading>
               <BettingOptionContainer>
                 {bettingGame.rounds[0]?.bettingOptions.map((option) => (
@@ -77,23 +91,23 @@ function Page() {
                   </button>
                 ))}
               </BettingOptionContainer>
+              <PrimaryButton
+                disabled={!selectedBetOption || betValue <= 0}
+                onClick={() =>
+                  makePlayerBet({
+                    playerId,
+                    betOptionId: selectedBetOption!.id,
+                    betValue: betValue,
+                  })
+                }
+              >
+                {betValue > 0 && selectedBetOption
+                  ? `${betValue}🍒 on ${selectedBetOption.name}`
+                  : "Place Bet"}
+              </PrimaryButton>
             </>
           )}
 
-          {!lockedInBet && playerWallet && playerWallet.value > 0 && (
-            <PrimaryButton
-              disabled={!selectedBetOption}
-              onClick={() =>
-                makePlayerBet({
-                  playerId,
-                  betOptionId: selectedBetOption!.id,
-                  betValue: 1,
-                })
-              }
-            >
-              Place Bet
-            </PrimaryButton>
-          )}
           {lockedInBet && (
             <Card>
               <SubHeading>Your bet</SubHeading>

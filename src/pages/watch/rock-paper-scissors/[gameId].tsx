@@ -168,6 +168,7 @@ function Page({}: Props) {
                     {wallet.value === 0
                       ? "Broke"
                       : currentBet && currentBet.betOptionId}
+                    {currentBet && <> ({currentBet.betValue})</>}
                   </CaptionText>
                 </CenteredCard>
               );
