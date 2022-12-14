@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import styled from "styled-components";
 import {
   CaptionText,
@@ -11,6 +11,7 @@ import {
 } from "../../../components/Atoms";
 import { useSyncRockPapersScissorsWithBettingGame } from "../../../components/hooks/useSyncRockPaperScissorsWithBettingGame";
 import { EvenlySpaced } from "../../../components/Layouts";
+import { RPSGameSubject } from "../../../components/rock-paper-scissors/observers";
 import { SpectatorPageLayout } from "../../../components/SpectatorPageLayout";
 import { useBettingGame } from "../../../providers/SocketIoProvider/useGroupBetting";
 import { useRPSGame } from "../../../providers/SocketIoProvider/useRockPaperScissorsSocket";
@@ -36,6 +37,10 @@ function Page({}: Props) {
     useRPSGame(gameId);
   const { bettingGame, currentBettingRound } = useBettingGame(gameId);
   useSyncRockPapersScissorsWithBettingGame(gameId);
+
+  useEffect(() => {
+    game && RPSGameSubject.notify(game);
+  }, [game]);
 
   return (
     <SpectatorPageLayout>

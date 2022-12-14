@@ -3,16 +3,16 @@ import { RPSSpectatorGameView } from "../../services/rock-paper-scissors/types";
 export interface Subject<T> {
   attach(observer: Observer<T>): void;
   detach(observer: Observer<T>): void;
-  notify(obj: T): void;
+  notify(previous: T | undefined, current: T): void;
 }
 
 export interface Observer<T> {
-  update(obj: T): void;
+  update(previous: T | undefined, current: T): void;
 }
 
-class RockPaperScissorsSubject implements Subject<RPSSpectatorGameView> {
+export class RockPaperScissorsSubject implements Subject<RPSSpectatorGameView> {
   private observers: Observer<RPSSpectatorGameView>[] = [];
-  private gameView: RPSSpectatorGameView | undefined;
+  private previous: RPSSpectatorGameView | undefined;
 
   attach(observer: Observer<RPSSpectatorGameView>): void {
     //TODO: check if observer is already attached
@@ -23,9 +23,8 @@ class RockPaperScissorsSubject implements Subject<RPSSpectatorGameView> {
     this.observers = this.observers.filter((o) => o !== observer);
   }
 
-  notify(): void {
-    this.observers.forEach(
-      (o) => this.gameView !== undefined && o.update(this.gameView)
-    );
+  notify(obj: RPSSpectatorGameView): void {
+    this.observers.forEach((o) => o.update(this.previous, obj));
+    this.previous = obj;
   }
 }
