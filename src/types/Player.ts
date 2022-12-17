@@ -3,3 +3,5 @@ export type Player = {
   name: string;
   tags: string[];
 };
+
+export type PlayerNames = { [playerId: string]: string };

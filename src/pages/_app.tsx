@@ -1,11 +1,7 @@
-import { GetStaticProps } from "next";
 import type { AppProps } from "next/app";
 import { createGlobalStyle } from "styled-components";
 import { GraphqlProvider } from "../providers/GraphqlProvider";
-import { PlayerNamesProvider } from "../providers/PlayerNameProvider";
 import { SocketIoProvider } from "../providers/SocketIoProvider";
-import { PlayerNames } from "../types/Player";
-import { getAllPlayers } from "../utils/data/aws-dynamodb";
 
 const GlobalStyles = createGlobalStyle`
 /* http://meyerweb.com/eric/tools/css/reset/ 
@@ -61,11 +57,7 @@ table {
 }
 `;
 
-type Props = {
-  playerNames: PlayerNames;
-} & AppProps;
-
-function MyApp({ Component, pageProps, playerNames }: Props) {
+function MyApp({ Component, pageProps }: AppProps) {
   console.log("APP", pageProps);
 
   return (
@@ -74,28 +66,12 @@ function MyApp({ Component, pageProps, playerNames }: Props) {
       <div>
         <GraphqlProvider>
           <SocketIoProvider>
-            <PlayerNamesProvider playerNames={playerNames}>
-              <Component {...pageProps} />
-            </PlayerNamesProvider>
+            <Component {...pageProps} />
           </SocketIoProvider>
         </GraphqlProvider>
       </div>
     </div>
   );
 }
-
-export const getStaticProps: GetStaticProps = async () => {
-  const players = await getAllPlayers();
-  return {
-    props: {
-      playerNames: players
-        ? players.reduce<PlayerNames>((acc, p) => {
-            acc[p.id] = p.name;
-            return acc;
-          }, {})
-        : {},
-    },
-  };
-};
 
 export default MyApp;

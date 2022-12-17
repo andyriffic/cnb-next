@@ -93,8 +93,6 @@ export function useRPSGame(gameId: string): {
   } = useSocketIo();
 
   const game = useMemo(() => {
-    console.log("useRPSGame", activeRPSGames, gameId);
-
     return activeRPSGames.find((g) => g.id === gameId);
   }, [gameId, activeRPSGames]);
 

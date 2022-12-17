@@ -1,4 +1,3 @@
-import { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
 import { useCallback } from "react";
 import styled from "styled-components";
@@ -18,7 +17,7 @@ function Page() {
 
     groupJoin.createPlayerGroup((groupId) => {
       console.log("Group Created", groupId);
-      router.push(`/join/${groupId}`);
+      router.replace(`/join/${groupId}`);
     });
   }, [groupJoin, router]);
 

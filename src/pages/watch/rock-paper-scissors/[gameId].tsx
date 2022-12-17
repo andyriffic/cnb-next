@@ -5,30 +5,19 @@ import {
   CaptionText,
   Card,
   CenteredCard,
-  FeatureEmoji,
   Heading,
   SubHeading,
 } from "../../../components/Atoms";
 import { useSyncRockPapersScissorsWithBettingGame } from "../../../components/hooks/useSyncRockPaperScissorsWithBettingGame";
 import { EvenlySpaced } from "../../../components/Layouts";
 import { RPSGameSubject } from "../../../components/rock-paper-scissors/observers";
+import { ViewerPlayersMove } from "../../../components/rock-paper-scissors/ViewerPlayersMove";
 import { SpectatorPageLayout } from "../../../components/SpectatorPageLayout";
 import { useBettingGame } from "../../../providers/SocketIoProvider/useGroupBetting";
 import { useRPSGame } from "../../../providers/SocketIoProvider/useRockPaperScissorsSocket";
 import { RPSMoveName } from "../../../services/rock-paper-scissors/types";
 
 type Props = {};
-
-const getMoveEmoji = (moveName: RPSMoveName): string => {
-  switch (moveName) {
-    case "rock":
-      return "🪨";
-    case "paper":
-      return "📄";
-    case "scissors":
-      return "✂️";
-  }
-};
 
 function Page({}: Props) {
   const router = useRouter();
@@ -48,17 +37,13 @@ function Page({}: Props) {
       {game && currentRound ? (
         <div>
           <div>
-            <button onClick={() => resolveRound()}>RESOLVE</button>
+            <button onClick={() => resolveRound()}>SHOW RESULT</button>
             <button onClick={() => newRound()}>NEW ROUND</button>
           </div>
 
           <EvenlySpaced>
             {game.playerIds.map((pid) => {
               const score = game.scores.find((s) => s.playerId === pid)!;
-              const hasMoved = currentRound.movedPlayerIds.includes(pid);
-              const visibleMove = currentRound.result?.moves.find(
-                (m) => m.playerId === pid
-              );
               const didWin = currentRound.result?.winningPlayerId === pid;
               const isDraw = currentRound.result?.draw;
 
@@ -80,17 +65,10 @@ function Page({}: Props) {
                     >
                       {pid}
                     </Heading>
-                    <FeatureEmoji
-                      style={{
-                        textAlign: "center",
-                      }}
-                    >
-                      {visibleMove
-                        ? getMoveEmoji(visibleMove.moveName)
-                        : hasMoved
-                        ? "👍"
-                        : "😪"}
-                    </FeatureEmoji>
+                    <ViewerPlayersMove
+                      playerId={pid}
+                      currentRound={currentRound}
+                    />
                     <CaptionText style={{ textAlign: "center" }}>
                       Score: {score.score}
                     </CaptionText>
