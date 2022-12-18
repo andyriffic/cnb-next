@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Socket } from "socket.io-client";
-import { useSocketIo } from ".";
 import {
   RPSCreateGameHandler,
   RPSNewRoundHandler,
@@ -12,6 +11,7 @@ import {
   RPSSpectatorGameView,
   RPSSpectatorRoundView,
 } from "../../services/rock-paper-scissors/types";
+import { useSocketIo } from ".";
 
 export type RPSSocketService = {
   activeRPSGames: RPSSpectatorGameView[];

@@ -1,7 +1,7 @@
 import { Socket, Server as SocketIOServer } from "socket.io";
-import { addPlayerToGroup, createPlayerJoinGroup } from ".";
 import { sendClientMessage } from "../socket";
 import { PlayerGroup } from "./types";
+import { addPlayerToGroup, createPlayerJoinGroup } from ".";
 
 export enum PLAYER_JOIN_ACTIONS {
   JOIN_GROUP_UPDATE = "JOIN_GROUP_UPDATE",

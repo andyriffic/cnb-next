@@ -2,12 +2,6 @@ import { pipe } from "fp-ts/lib/function";
 import * as A from "fp-ts/Array";
 import * as E from "fp-ts/Either";
 import { Socket, Server as SocketIOServer } from "socket.io";
-import {
-  addNewBettingRound,
-  applyBetResultToCurrentRound,
-  createBettingGame,
-  makePlayerBet,
-} from ".";
 import { sendClientMessage } from "../socket";
 import {
   BettingOption,
@@ -15,6 +9,12 @@ import {
   PlayerBet,
   PlayerWallet,
 } from "./types";
+import {
+  addNewBettingRound,
+  applyBetResultToCurrentRound,
+  createBettingGame,
+  makePlayerBet,
+} from ".";
 
 export enum BETTING_ACTIONS {
   CREATE_BETTING_GAME = "CREATE_BETTING_GAME",

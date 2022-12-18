@@ -2,6 +2,13 @@ import { pipe } from "fp-ts/lib/function";
 import * as E from "fp-ts/Either";
 import * as A from "fp-ts/Array";
 import { Socket, Server as SocketIOServer } from "socket.io";
+import { sendClientMessage } from "../socket";
+import {
+  RPSCreateGameProps,
+  RPSGame,
+  RPSPlayerMove,
+  RPSSpectatorRoundView,
+} from "./types";
 import {
   addRoundToGame,
   createGame,
@@ -9,13 +16,6 @@ import {
   makePlayerMove,
   resolveRound,
 } from ".";
-import {
-  RPSCreateGameProps,
-  RPSGame,
-  RPSPlayerMove,
-  RPSSpectatorRoundView,
-} from "./types";
-import { sendClientMessage } from "../socket";
 
 let inMemoryGames: RPSGame[] = [];
 

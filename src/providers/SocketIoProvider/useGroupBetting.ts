@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Socket } from "socket.io-client";
-import { useSocketIo } from ".";
 import {
   AddNewBettingRoundHandler,
   BETTING_ACTIONS,
@@ -13,7 +12,7 @@ import {
   GroupPlayerBettingRound,
   PlayerBet,
 } from "../../services/betting/types";
-import { RPSSpectatorRoundView } from "../../services/rock-paper-scissors/types";
+import { useSocketIo } from ".";
 
 export type GroupBettingSocketService = {
   bettingGames: GroupBettingGame[];

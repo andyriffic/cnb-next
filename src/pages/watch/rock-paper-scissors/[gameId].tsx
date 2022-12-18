@@ -1,6 +1,5 @@
+import { useEffect } from "react";
 import { useRouter } from "next/router";
-import { useCallback, useEffect } from "react";
-import styled from "styled-components";
 import {
   CaptionText,
   Card,
@@ -15,7 +14,6 @@ import { ViewerPlayersMove } from "../../../components/rock-paper-scissors/Viewe
 import { SpectatorPageLayout } from "../../../components/SpectatorPageLayout";
 import { useBettingGame } from "../../../providers/SocketIoProvider/useGroupBetting";
 import { useRPSGame } from "../../../providers/SocketIoProvider/useRockPaperScissorsSocket";
-import { RPSMoveName } from "../../../services/rock-paper-scissors/types";
 
 type Props = {};
 

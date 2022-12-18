@@ -1,21 +1,8 @@
-import { useMemo } from "react";
-import styled from "styled-components";
 import {
-  RPSGame,
   RPSMoveName,
-  RPSPlayerMove,
-  RPSSpectatorGameView,
   RPSSpectatorRoundView,
 } from "../../services/rock-paper-scissors/types";
-import {
-  CaptionText,
-  Card,
-  FeatureEmoji,
-  Heading,
-  PrimaryButton,
-  SubHeading,
-} from "../Atoms";
-import { EvenlySpaced } from "../Layouts";
+import { FeatureEmoji } from "../Atoms";
 
 type Props = {
   playerId: string;
