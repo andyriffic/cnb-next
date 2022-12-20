@@ -12,6 +12,7 @@ const CenterAlignContainer = styled.div`
 function Page() {
   const router = useRouter();
   const { groupJoin } = useSocketIo();
+
   const startNewGame = useCallback(() => {
     console.log("Creating New Player Group...");
 

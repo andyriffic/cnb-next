@@ -58,8 +58,6 @@ table {
 `;
 
 function MyApp({ Component, pageProps }: AppProps) {
-  console.log("APP", pageProps);
-
   return (
     <div>
       <GlobalStyles />

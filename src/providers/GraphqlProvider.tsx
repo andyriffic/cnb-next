@@ -24,6 +24,15 @@ const getPlayerQuery = `
   }
 `;
 
+const getAllPlayersQuery = `
+ query {
+    players {
+      id
+      name
+    }
+  }
+`;
+
 export function useFetchPlayerQuery(playerId: string) {
   const context = React.useContext(Context);
   if (context === undefined) {
@@ -35,6 +44,21 @@ export function useFetchPlayerQuery(playerId: string) {
   const [result] = useQuery<{ player: Player } | null>({
     query: getPlayerQuery,
     variables: { playerId },
+  });
+
+  return result;
+}
+
+export function useFetchAllPlayersQuery() {
+  const context = React.useContext(Context);
+  if (context === undefined) {
+    throw new Error(
+      "useFetchAllPlayersQuery must be used within a GraphqlProvider"
+    );
+  }
+
+  const [result] = useQuery<{ players: Player[] } | null>({
+    query: getAllPlayersQuery,
   });
 
   return result;
