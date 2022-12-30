@@ -15,7 +15,7 @@ function Page() {
   const { game, makeMove } = useRPSGame(gameId);
 
   return (
-    <PlayerPageLayout>
+    <PlayerPageLayout playerId={playerId}>
       {/* <p>
         {gameId}: {game ? "found" : "not found"}
       </p> */}

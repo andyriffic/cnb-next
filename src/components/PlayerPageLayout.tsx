@@ -1,4 +1,6 @@
+import Link from "next/link";
 import styled from "styled-components";
+import { getPlayerHomeUrl } from "../utils/url";
 
 const Container = styled.div`
   display: flex;
@@ -40,17 +42,21 @@ const Footer = styled.div`
 type Props = {
   children: React.ReactNode;
   headerContent?: React.ReactNode;
+  playerId: string;
 };
 
 export function PlayerPageLayout({
   children,
   headerContent,
+  playerId,
 }: Props): JSX.Element {
   return (
     <Container>
       {headerContent && <Header>{headerContent}</Header>}
       <Main>{children}</Main>
-      <Footer>Footer</Footer>
+      <Footer>
+        <Link href={getPlayerHomeUrl(playerId)}>Home</Link>
+      </Footer>
     </Container>
   );
 }

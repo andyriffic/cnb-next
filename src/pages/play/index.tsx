@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { SpectatorPageLayout } from "../../components/SpectatorPageLayout";
 import { Player } from "../../types/Player";
 import { getAllPlayers } from "../../utils/data/aws-dynamodb";
+import { getPlayerHomeUrl } from "../../utils/url";
 
 const PlayerList = styled.div`
   display: flex;
@@ -38,7 +39,11 @@ function Page({ players }: Props) {
     <SpectatorPageLayout>
       <PlayerList>
         {players.map((player) => (
-          <Link key={player.id} href={`/play/${player.id}`} passHref={true}>
+          <Link
+            key={player.id}
+            href={getPlayerHomeUrl(player.id)}
+            passHref={true}
+          >
             <PlayerName>{player.name}</PlayerName>
           </Link>
         ))}

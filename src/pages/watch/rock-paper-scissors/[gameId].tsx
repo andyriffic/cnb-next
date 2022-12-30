@@ -1,19 +1,18 @@
-import { useEffect } from "react";
 import { useRouter } from "next/router";
-import {
-  CaptionText,
-  Card,
-  CenteredCard,
-  Heading,
-  SubHeading,
-} from "../../../components/Atoms";
+import { useEffect, useMemo } from "react";
+import { CaptionText, Heading, PrimaryButton } from "../../../components/Atoms";
 import { useSyncRockPapersScissorsWithBettingGame } from "../../../components/hooks/useSyncRockPaperScissorsWithBettingGame";
-import { EvenlySpaced } from "../../../components/Layouts";
+import { CenterSpaced, EvenlySpaced } from "../../../components/Layouts";
 import { RPSGameSubject } from "../../../components/rock-paper-scissors/observers";
 import { ViewerPlayersMove } from "../../../components/rock-paper-scissors/ViewerPlayersMove";
 import { SpectatorPageLayout } from "../../../components/SpectatorPageLayout";
 import { useBettingGame } from "../../../providers/SocketIoProvider/useGroupBetting";
 import { useRPSGame } from "../../../providers/SocketIoProvider/useRockPaperScissorsSocket";
+import { ViewerPlayersAvatar } from "../../../components/rock-paper-scissors/ViewerPlayerAvatar";
+import { ViewerWaitingToBetList } from "../../../components/rock-paper-scissors/ViewerWaitingToBetList";
+import { latestRound } from "../../../services/rock-paper-scissors/helpers";
+import { Positioned } from "../../../components/Positioned";
+import { FeatureValue } from "../../../components/FeatureValue";
 
 type Props = {};
 
@@ -24,6 +23,23 @@ function Page({}: Props) {
     useRPSGame(gameId);
   const { bettingGame, currentBettingRound } = useBettingGame(gameId);
   useSyncRockPapersScissorsWithBettingGame(gameId);
+
+  const roundReady = useMemo(() => {
+    if (!(game && bettingGame)) {
+      return false;
+    }
+
+    const gameRound = latestRound(game);
+    const bettingRound = bettingGame.rounds[bettingGame.rounds.length - 1]!;
+
+    const bothPlayersReady =
+      gameRound.movedPlayerIds.length === game.playerIds.length;
+
+    const everyoneHasBet =
+      bettingRound.playerBets.length === bettingGame.playerWallets.length;
+
+    return bothPlayersReady && everyoneHasBet;
+  }, [game, bettingGame]);
 
   useEffect(() => {
     game && RPSGameSubject.notify(game);
@@ -38,9 +54,16 @@ function Page({}: Props) {
             <button onClick={() => resolveRound()}>SHOW RESULT</button>
             <button onClick={() => newRound()}>NEW ROUND</button>
           </div>
+          <CenterSpaced>
+            {roundReady ? (
+              <PrimaryButton onClick={() => resolveRound()}>Go!</PrimaryButton>
+            ) : (
+              <Heading>Waiting for players to move</Heading>
+            )}
+          </CenterSpaced>
 
           <EvenlySpaced>
-            {game.playerIds.map((pid) => {
+            {game.playerIds.map((pid, index) => {
               const score = game.scores.find((s) => s.playerId === pid)!;
               const didWin = currentRound.result?.winningPlayerId === pid;
               const isDraw = currentRound.result?.draw;
@@ -48,36 +71,65 @@ function Page({}: Props) {
               const favorableBets = currentBettingRound?.playerBets.filter(
                 (b) => b.betOptionId === pid
               );
+
+              const totalFavorableBetValue =
+                favorableBets
+                  ?.map((b) => b.betValue)
+                  .reduce((acc, val) => acc + val, 0) || 0;
+
               return (
                 <EvenlySpaced key={pid} style={{ gap: "0.4rem" }}>
-                  <Card
+                  <div
                     style={{
-                      backgroundColor: didWin || isDraw ? "#3CAE85" : "",
                       minWidth: "20vw",
                     }}
                   >
-                    <Heading
-                      style={{
-                        textAlign: "center",
+                    {didWin && (
+                      <CaptionText style={{ position: "absolute" }}>
+                        Winner
+                      </CaptionText>
+                    )}
+                    <ViewerPlayersAvatar
+                      playerId={pid}
+                      size="medium"
+                      facing={index === 0 ? "right" : "left"}
+                    />
+                    <Positioned
+                      absolute={{
+                        topPercent: 20,
+                        leftPercent: index === 0 ? 40 : undefined,
+                        rightPercent: index === 0 ? undefined : 40,
                       }}
                     >
-                      {pid}
-                    </Heading>
-                    <ViewerPlayersMove
-                      playerId={pid}
-                      currentRound={currentRound}
-                    />
+                      <ViewerPlayersMove
+                        playerId={pid}
+                        currentRound={currentRound}
+                      />
+                    </Positioned>
                     <CaptionText style={{ textAlign: "center" }}>
                       Score: {score.score}
                     </CaptionText>
-                  </Card>
-                  {favorableBets && favorableBets.length > 0 && (
+                  </div>
+                  <Positioned
+                    absolute={{
+                      topPercent: 20,
+                      leftPercent: index === 0 ? 1 : undefined,
+                      rightPercent: index === 0 ? undefined : 1,
+                    }}
+                  >
+                    <FeatureValue
+                      label="Total 🍒"
+                      value={totalFavorableBetValue}
+                    />
+                  </Positioned>
+
+                  {/* {favorableBets && favorableBets.length > 0 && (
                     <Card>
                       {favorableBets.map((bet) => (
                         <div key={bet.playerId}>{bet.playerId}</div>
                       ))}
                     </Card>
-                  )}
+                  )} */}
                 </EvenlySpaced>
               );
             })}
@@ -119,42 +171,12 @@ function Page({}: Props) {
       )}
       {bettingGame && currentBettingRound ? (
         <div>
-          <Heading>Bets</Heading>
-          <EvenlySpaced>
-            {bettingGame.playerWallets.map((wallet) => {
-              const currentBet = currentBettingRound.playerBets.find(
-                (b) => b.playerId === wallet.playerId
-              );
-              const currentResult =
-                currentBettingRound!.result?.playerResults.find(
-                  (r) => r.playerId === wallet.playerId
-                );
-              return (
-                <CenteredCard
-                  key={wallet.playerId}
-                  style={{
-                    backgroundColor:
-                      wallet.value === 0
-                        ? "#E5D2E0"
-                        : currentResult && currentResult.totalWinnings > 0
-                        ? "#3CAE85"
-                        : "",
-                  }}
-                >
-                  <SubHeading>{wallet.playerId}</SubHeading>
-                  <Heading>
-                    {wallet.value === 0 ? "😩" : `${wallet.value}🍒`}
-                  </Heading>
-                  <CaptionText>
-                    {wallet.value === 0
-                      ? "Broke"
-                      : currentBet && currentBet.betOptionId}
-                    {currentBet && <> ({currentBet.betValue})</>}
-                  </CaptionText>
-                </CenteredCard>
-              );
-            })}
-          </EvenlySpaced>
+          <Heading style={{ textAlign: "center" }}>Bets</Heading>
+          <ViewerWaitingToBetList
+            wallets={bettingGame.playerWallets}
+            bettingRound={currentBettingRound}
+          />
+
           {/* <button onClick={() => resolveBettingRound("draw")}>DRAW</button> */}
           {/* <SubHeading>Wallets 💰</SubHeading>
           {bettingGame.playerWallets.map((wallet) => (

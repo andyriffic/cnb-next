@@ -23,7 +23,7 @@ type Props = {
 
 function Page({ player }: Props) {
   return (
-    <PlayerPageLayout headerContent={<>{player.name}</>}>
+    <PlayerPageLayout headerContent={<>{player.name}</>} playerId={player.id}>
       <Card>
         <SubHeading>What to do</SubHeading>
         <Link href={`/play/${player.id}/join`} passHref={true}>

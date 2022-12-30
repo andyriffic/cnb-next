@@ -1,6 +1,7 @@
 import type { AppProps } from "next/app";
 import { createGlobalStyle } from "styled-components";
 import { GraphqlProvider } from "../providers/GraphqlProvider";
+import { PlayerNamesProvider } from "../providers/PlayerNamesProvider";
 import { SocketIoProvider } from "../providers/SocketIoProvider";
 
 const GlobalStyles = createGlobalStyle`
@@ -64,7 +65,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       <div>
         <GraphqlProvider>
           <SocketIoProvider>
-            <Component {...pageProps} />
+            <PlayerNamesProvider>
+              <Component {...pageProps} />
+            </PlayerNamesProvider>
           </SocketIoProvider>
         </GraphqlProvider>
       </div>

@@ -41,7 +41,7 @@ function Page({ player }: Props) {
       <CenterAlignContainer>
         <PlayerProfileContainer>
           <AnimateFadeInLeft>
-            <PlayerAvatar player={player} />
+            <PlayerAvatar playerId={player.id} />
           </AnimateFadeInLeft>
           <AnimateFadeInRight delayMilliseconds={0}>
             <PlayerName>{player.name}</PlayerName>

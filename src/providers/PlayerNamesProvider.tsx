@@ -1,10 +1,11 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { useFetchAllPlayersQuery } from "./GraphqlProvider";
 
 type PlayerNames = { [playerId: string]: string };
 
 type PlayerNamesService = {
   names: PlayerNames;
+  getName: (playerId: string) => string;
 };
 
 type Props = {
@@ -27,10 +28,18 @@ export const PlayerNamesProvider = ({ children }: Props): JSX.Element => {
     );
   }, [playerNamesQuery]);
 
+  const getName = useCallback(
+    (id: string) => {
+      return names[id] || "";
+    },
+    [names]
+  );
+
   return (
     <PlayerNamesContext.Provider
       value={{
         names,
+        getName,
       }}
     >
       {children}

@@ -47,7 +47,7 @@ function Page() {
   const [betValue, setBetValue] = useState(0);
 
   return (
-    <PlayerPageLayout>
+    <PlayerPageLayout playerId={playerId}>
       {bettingGame && (
         <>
           <Heading>Round {bettingGame.rounds.length}</Heading>

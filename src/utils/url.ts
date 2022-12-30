@@ -11,3 +11,7 @@ export const playersBettingGameUrl = (
 export const getPlayerAvatarUrl = (playerId: string): string => {
   return `/images/players/${playerId}.png`;
 };
+
+export const getPlayerHomeUrl = (playerId: string): string => {
+  return `/play/${playerId}`;
+};

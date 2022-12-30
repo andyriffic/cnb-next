@@ -65,7 +65,7 @@ function Page({}: Props) {
   }, [groupBetting.bettingGames, joinedGroup, playerId]);
 
   return (
-    <PlayerPageLayout headerContent={<>Header</>}>
+    <PlayerPageLayout headerContent={<>Header</>} playerId={playerId}>
       {joinedGroup ? (
         <div>
           <Heading>You&lsquo;ve joined 👍</Heading>
