@@ -29,11 +29,13 @@ const getBetState = (
 type Props = {
   wallets: PlayerWallet[];
   bettingRound: GroupPlayerBettingRound;
+  revealResult: boolean;
 };
 
 export const ViewerWaitingToBetList = ({
   wallets,
   bettingRound,
+  revealResult,
 }: Props): JSX.Element => {
   const { names } = usePlayerNames();
   return (
@@ -52,21 +54,24 @@ export const ViewerWaitingToBetList = ({
           <CenteredCard
             key={wallet.playerId}
             style={{
-              borderColor: currentResult
-                ? currentResult.totalWinnings > 0
+              borderColor:
+                revealResult && currentResult
+                  ? currentResult.totalWinnings > 0
+                    ? COLORS.backgroundSuccess
+                    : COLORS.backgroundFailure
+                  : betState.state === "broke"
+                  ? COLORS.backgroundInactive
+                  : betState.state === "bet"
                   ? COLORS.backgroundSuccess
-                  : COLORS.backgroundFailure
-                : betState.state === "broke"
-                ? COLORS.backgroundInactive
-                : betState.state === "bet"
-                ? COLORS.backgroundSuccess
-                : "",
+                  : "",
             }}
           >
             <SubHeading>{names[wallet.playerId]}</SubHeading>
             <PlayerAvatar playerId={wallet.playerId} size="thumbnail" />
             <Heading>
-              {currentResult && currentResult.totalWinnings}
+              {revealResult && currentResult && (
+                <>{currentResult.totalWinnings}🍒</>
+              )}
               {!currentResult && betState.state === "broke" && "😩"}
               {!currentResult &&
                 betState.state === "waiting" &&

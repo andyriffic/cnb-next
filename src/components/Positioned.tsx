@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 
-const Container = styled.div<{ absolute: AbsolutePosition }>`
+const AbsoluteContainer = styled.div<{ absolute: AbsolutePosition }>`
   position: absolute;
   ${({ absolute }) =>
     absolute.topPercent &&
@@ -24,6 +24,13 @@ const Container = styled.div<{ absolute: AbsolutePosition }>`
     `}
 `;
 
+const HorizontalContainer = styled.div<{ topPercent: number }>`
+  position: absolute;
+  top: ${({ topPercent }) => topPercent}vh;
+  left: 50%;
+  transform: translateX(-50%);
+`;
+
 type AbsolutePosition = {
   topPercent?: number;
   leftPercent?: number;
@@ -34,8 +41,27 @@ type AbsolutePosition = {
 type Props = {
   children: React.ReactNode;
   absolute?: AbsolutePosition;
+  horizontalAlign?: { align: "center"; topPercent: number };
 };
 
-export function Positioned({ children, absolute = {} }: Props): JSX.Element {
-  return <Container absolute={absolute}>{children}</Container>;
+export function Positioned({
+  children,
+  absolute,
+  horizontalAlign,
+}: Props): JSX.Element {
+  if (absolute) {
+    return (
+      <AbsoluteContainer absolute={absolute}>{children}</AbsoluteContainer>
+    );
+  }
+
+  if (horizontalAlign) {
+    return (
+      <HorizontalContainer topPercent={horizontalAlign.topPercent}>
+        {children}
+      </HorizontalContainer>
+    );
+  }
+
+  return <>Position not set</>;
 }

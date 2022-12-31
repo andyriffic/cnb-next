@@ -2,11 +2,15 @@ import {
   RPSMoveName,
   RPSSpectatorRoundView,
 } from "../../services/rock-paper-scissors/types";
+import { Appear } from "../animations/Appear";
 import { FeatureEmoji } from "../Atoms";
+import { FacingDirection } from "../PlayerAvatar";
 
 type Props = {
   playerId: string;
   currentRound: RPSSpectatorRoundView;
+  reveal: boolean;
+  facingDirection: FacingDirection;
 };
 
 const getMoveEmoji = (moveName: RPSMoveName): string => {
@@ -23,6 +27,8 @@ const getMoveEmoji = (moveName: RPSMoveName): string => {
 export const ViewerPlayersMove = ({
   playerId,
   currentRound,
+  reveal,
+  facingDirection,
 }: Props): JSX.Element => {
   // const score = game.scores.find((s) => s.playerId === pid)!;
   const hasMoved = currentRound.movedPlayerIds.includes(playerId);
@@ -41,11 +47,19 @@ export const ViewerPlayersMove = ({
         textAlign: "center",
       }}
     >
-      {visibleMove
-        ? getMoveEmoji(visibleMove.moveName)
-        : hasMoved
-        ? "👍"
-        : "😪"}
+      {visibleMove && reveal ? (
+        <Appear
+          animation={
+            facingDirection === "left" ? "roll-in-right" : "roll-in-left"
+          }
+        >
+          {getMoveEmoji(visibleMove.moveName)}
+        </Appear>
+      ) : hasMoved ? (
+        ""
+      ) : (
+        "😪"
+      )}
     </FeatureEmoji>
   );
 };

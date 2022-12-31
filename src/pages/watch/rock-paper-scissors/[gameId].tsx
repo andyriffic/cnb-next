@@ -10,9 +10,14 @@ import { useBettingGame } from "../../../providers/SocketIoProvider/useGroupBett
 import { useRPSGame } from "../../../providers/SocketIoProvider/useRockPaperScissorsSocket";
 import { ViewerPlayersAvatar } from "../../../components/rock-paper-scissors/ViewerPlayerAvatar";
 import { ViewerWaitingToBetList } from "../../../components/rock-paper-scissors/ViewerWaitingToBetList";
-import { latestRound } from "../../../services/rock-paper-scissors/helpers";
+import { roundReady as gameRoundReady } from "../../../services/rock-paper-scissors/helpers";
 import { Positioned } from "../../../components/Positioned";
 import { FeatureValue } from "../../../components/FeatureValue";
+import {
+  RpsGameState,
+  useGameState,
+} from "../../../components/rock-paper-scissors/hooks/useGameState";
+import { Appear } from "../../../components/animations/Appear";
 
 type Props = {};
 
@@ -23,22 +28,19 @@ function Page({}: Props) {
     useRPSGame(gameId);
   const { bettingGame, currentBettingRound } = useBettingGame(gameId);
   useSyncRockPapersScissorsWithBettingGame(gameId);
+  const gameState = useGameState(game);
 
   const roundReady = useMemo(() => {
     if (!(game && bettingGame)) {
       return false;
     }
 
-    const gameRound = latestRound(game);
     const bettingRound = bettingGame.rounds[bettingGame.rounds.length - 1]!;
-
-    const bothPlayersReady =
-      gameRound.movedPlayerIds.length === game.playerIds.length;
 
     const everyoneHasBet =
       bettingRound.playerBets.length === bettingGame.playerWallets.length;
 
-    return bothPlayersReady && everyoneHasBet;
+    return gameRoundReady(game) && everyoneHasBet;
   }, [game, bettingGame]);
 
   useEffect(() => {
@@ -47,20 +49,28 @@ function Page({}: Props) {
 
   return (
     <SpectatorPageLayout>
-      <Heading>Game: {gameId}</Heading>
+      <Heading>
+        Game: {gameId} | {RpsGameState[gameState]}
+      </Heading>
       {game && currentRound ? (
         <div>
           <div>
             <button onClick={() => resolveRound()}>SHOW RESULT</button>
             <button onClick={() => newRound()}>NEW ROUND</button>
           </div>
-          <CenterSpaced>
-            {roundReady ? (
-              <PrimaryButton onClick={() => resolveRound()}>Go!</PrimaryButton>
-            ) : (
-              <Heading>Waiting for players to move</Heading>
-            )}
-          </CenterSpaced>
+          {gameState <= RpsGameState.PLAYERS_READY && (
+            <Positioned horizontalAlign={{ align: "center", topPercent: 5 }}>
+              <CenterSpaced>
+                {roundReady ? (
+                  <PrimaryButton onClick={() => resolveRound()}>
+                    Go!
+                  </PrimaryButton>
+                ) : (
+                  <Heading>Waiting for players to move</Heading>
+                )}
+              </CenterSpaced>
+            </Positioned>
+          )}
 
           <EvenlySpaced>
             {game.playerIds.map((pid, index) => {
@@ -84,7 +94,7 @@ function Page({}: Props) {
                       minWidth: "20vw",
                     }}
                   >
-                    {didWin && (
+                    {gameState >= RpsGameState.SHOW_GAME_RESULT && didWin && (
                       <CaptionText style={{ position: "absolute" }}>
                         Winner
                       </CaptionText>
@@ -104,24 +114,28 @@ function Page({}: Props) {
                       <ViewerPlayersMove
                         playerId={pid}
                         currentRound={currentRound}
+                        reveal={gameState >= RpsGameState.SHOW_MOVES}
+                        facingDirection={index === 0 ? "right" : "left"}
                       />
                     </Positioned>
                     <CaptionText style={{ textAlign: "center" }}>
                       Score: {score.score}
                     </CaptionText>
                   </div>
-                  <Positioned
-                    absolute={{
-                      topPercent: 20,
-                      leftPercent: index === 0 ? 1 : undefined,
-                      rightPercent: index === 0 ? undefined : 1,
-                    }}
-                  >
-                    <FeatureValue
-                      label="Total 🍒"
-                      value={totalFavorableBetValue}
-                    />
-                  </Positioned>
+                  <Appear show={gameState >= RpsGameState.SHOW_BETS}>
+                    <Positioned
+                      absolute={{
+                        topPercent: 20,
+                        leftPercent: index === 0 ? 1 : undefined,
+                        rightPercent: index === 0 ? undefined : 1,
+                      }}
+                    >
+                      <FeatureValue
+                        label="Total 🍒"
+                        value={totalFavorableBetValue}
+                      />
+                    </Positioned>
+                  </Appear>
 
                   {/* {favorableBets && favorableBets.length > 0 && (
                     <Card>
@@ -175,6 +189,7 @@ function Page({}: Props) {
           <ViewerWaitingToBetList
             wallets={bettingGame.playerWallets}
             bettingRound={currentBettingRound}
+            revealResult={gameState >= RpsGameState.SHOW_BET_RESULT}
           />
 
           {/* <button onClick={() => resolveBettingRound("draw")}>DRAW</button> */}
