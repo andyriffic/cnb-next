@@ -122,20 +122,23 @@ function Page({}: Props) {
                       Score: {score.score}
                     </CaptionText>
                   </div>
-                  <Appear show={gameState >= RpsGameState.SHOW_BETS}>
-                    <Positioned
-                      absolute={{
-                        topPercent: 20,
-                        leftPercent: index === 0 ? 1 : undefined,
-                        rightPercent: index === 0 ? undefined : 1,
-                      }}
+                  <Positioned
+                    absolute={{
+                      topPercent: 20,
+                      leftPercent: index === 0 ? 1 : undefined,
+                      rightPercent: index === 0 ? undefined : 1,
+                    }}
+                  >
+                    <Appear
+                      show={gameState >= RpsGameState.SHOW_BETS}
+                      animation="flip-in"
                     >
                       <FeatureValue
                         label="Total 🍒"
                         value={totalFavorableBetValue}
                       />
-                    </Positioned>
-                  </Appear>
+                    </Appear>
+                  </Positioned>
 
                   {/* {favorableBets && favorableBets.length > 0 && (
                     <Card>

@@ -4,7 +4,7 @@ import styled, {
   keyframes,
 } from "styled-components";
 
-type AppearAnimation = "roll-in-left" | "roll-in-right";
+type AppearAnimation = "roll-in-left" | "roll-in-right" | "flip-in";
 
 const Animation_RollInBlurredLeft = keyframes` {
   0% {
@@ -32,6 +32,17 @@ const Animation_RollInBlurredRight = keyframes` {
   }
 }`;
 
+const Animation_FlipIn = keyframes`
+  0% {
+    transform: rotateY(-80deg);
+    opacity: 0;
+  }
+  100% {
+    transform: rotateY(0);
+    opacity: 1;
+  }
+`;
+
 const ANIMATION_CSS: {
   [key in AppearAnimation]: FlattenSimpleInterpolation;
 } = {
@@ -42,6 +53,10 @@ const ANIMATION_CSS: {
   "roll-in-right": css`
     animation: ${Animation_RollInBlurredRight} 0.65s
       cubic-bezier(0.23, 1, 0.32, 1) both;
+  `,
+  "flip-in": css`
+    animation: ${Animation_FlipIn} 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+      both;
   `,
 };
 
