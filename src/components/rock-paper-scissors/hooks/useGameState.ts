@@ -75,6 +75,12 @@ export const useGameState = (
     }
   }, [state]);
 
+  useEffect(() => {
+    if (state === RpsGameState.FINISHED && game && !roundReady(game)) {
+      setState(RpsGameState.WAITING);
+    }
+  }, [game, state]);
+
   return state;
 };
 

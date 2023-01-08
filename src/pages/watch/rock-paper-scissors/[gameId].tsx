@@ -18,14 +18,17 @@ import {
   useGameState,
 } from "../../../components/rock-paper-scissors/hooks/useGameState";
 import { Appear } from "../../../components/animations/Appear";
+import { BetTotal } from "../../../components/rock-paper-scissors/BetTotal";
+import { DebugPlayerMove } from "../../../components/rock-paper-scissors/DebugPlayerMove";
+import { DebugPlayerBets } from "../../../components/rock-paper-scissors/DebugPlayerBets";
+import { ViewerPlayer } from "../../../components/rock-paper-scissors/ViewerPlayer";
 
 type Props = {};
 
 function Page({}: Props) {
   const router = useRouter();
   const gameId = router.query.gameId as string;
-  const { game, makeMove, resolveRound, newRound, currentRound } =
-    useRPSGame(gameId);
+  const { game, resolveRound, newRound, currentRound } = useRPSGame(gameId);
   const { bettingGame, currentBettingRound } = useBettingGame(gameId);
   useSyncRockPapersScissorsWithBettingGame(gameId);
   const gameState = useGameState(game);
@@ -48,7 +51,17 @@ function Page({}: Props) {
   }, [game]);
 
   return (
-    <SpectatorPageLayout>
+    <SpectatorPageLayout
+      debug={
+        game &&
+        bettingGame && (
+          <div style={{ display: "flex", gap: "2rem" }}>
+            <DebugPlayerMove game={game} />
+            <DebugPlayerBets bettingGame={bettingGame} />
+          </div>
+        )
+      }
+    >
       <Heading>
         Game: {gameId} | {RpsGameState[gameState]}
       </Heading>
@@ -73,83 +86,20 @@ function Page({}: Props) {
           )}
 
           <EvenlySpaced>
-            {game.playerIds.map((pid, index) => {
-              const score = game.scores.find((s) => s.playerId === pid)!;
-              const didWin = currentRound.result?.winningPlayerId === pid;
-              const isDraw = currentRound.result?.draw;
-
-              const favorableBets = currentBettingRound?.playerBets.filter(
-                (b) => b.betOptionId === pid
-              );
-
-              const totalFavorableBetValue =
-                favorableBets
-                  ?.map((b) => b.betValue)
-                  .reduce((acc, val) => acc + val, 0) || 0;
-
-              return (
-                <EvenlySpaced key={pid} style={{ gap: "0.4rem" }}>
-                  <div
-                    style={{
-                      minWidth: "20vw",
-                    }}
-                  >
-                    {gameState >= RpsGameState.SHOW_GAME_RESULT && didWin && (
-                      <CaptionText style={{ position: "absolute" }}>
-                        Winner
-                      </CaptionText>
-                    )}
-                    <ViewerPlayersAvatar
-                      playerId={pid}
-                      size="medium"
-                      facing={index === 0 ? "right" : "left"}
-                    />
-                    <Positioned
-                      absolute={{
-                        topPercent: 20,
-                        leftPercent: index === 0 ? 40 : undefined,
-                        rightPercent: index === 0 ? undefined : 40,
-                      }}
-                    >
-                      <ViewerPlayersMove
-                        playerId={pid}
-                        currentRound={currentRound}
-                        reveal={gameState >= RpsGameState.SHOW_MOVES}
-                        facingDirection={index === 0 ? "right" : "left"}
-                      />
-                    </Positioned>
-                    <CaptionText style={{ textAlign: "center" }}>
-                      Score: {score.score}
-                    </CaptionText>
-                  </div>
-                  <Positioned
-                    absolute={{
-                      topPercent: 20,
-                      leftPercent: index === 0 ? 1 : undefined,
-                      rightPercent: index === 0 ? undefined : 1,
-                    }}
-                  >
-                    <Appear
-                      show={gameState >= RpsGameState.SHOW_BETS}
-                      animation="flip-in"
-                    >
-                      <FeatureValue
-                        label="Total 🍒"
-                        value={totalFavorableBetValue}
-                      />
-                    </Appear>
-                  </Positioned>
-
-                  {/* {favorableBets && favorableBets.length > 0 && (
-                    <Card>
-                      {favorableBets.map((bet) => (
-                        <div key={bet.playerId}>{bet.playerId}</div>
-                      ))}
-                    </Card>
-                  )} */}
-                </EvenlySpaced>
-              );
-            })}
+            <ViewerPlayer
+              playerId={game.playerIds[0]}
+              game={game}
+              bettingGame={bettingGame}
+              direction="right"
+              gameState={gameState}
+            />
+            <ViewerPlayer
+              playerId={game.playerIds[1]}
+              game={game}
+              bettingGame={bettingGame}
+              direction="left"
+              gameState={gameState}
+            />
           </EvenlySpaced>
 
           {/* <div>
