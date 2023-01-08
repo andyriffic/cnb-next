@@ -13,7 +13,8 @@ export enum RpsGameState {
   SHOW_MOVES = 4,
   SHOW_GAME_RESULT = 5,
   SHOW_BET_RESULT = 6,
-  FINISHED = 7,
+  SHOW_WALLET_RANKINGS = 7,
+  FINISHED = 8,
 }
 
 const getGameInitialState = (
@@ -71,6 +72,12 @@ export const useGameState = (
 
   useEffect(() => {
     if (state === RpsGameState.SHOW_BET_RESULT) {
+      setTimeout(() => setState(RpsGameState.SHOW_WALLET_RANKINGS), 3000);
+    }
+  }, [state]);
+
+  useEffect(() => {
+    if (state === RpsGameState.SHOW_WALLET_RANKINGS) {
       setTimeout(() => setState(RpsGameState.FINISHED), 3000);
     }
   }, [state]);
