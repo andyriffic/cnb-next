@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { useMemo } from "react";
 import styled from "styled-components";
 import { Heading, PrimaryButton, SubHeading } from "../../components/Atoms";
+import { DebugPlayerJoin } from "../../components/DebugPlayerJoin";
 import { SpectatorPageLayout } from "../../components/SpectatorPageLayout";
 import { usePlayerNames } from "../../providers/PlayerNamesProvider";
 import { useSocketIo } from "../../providers/SocketIoProvider";
@@ -18,7 +19,7 @@ function Page() {
   }, [groupJoin.playerGroups, groupId]);
 
   return (
-    <SpectatorPageLayout>
+    <SpectatorPageLayout debug={group && <DebugPlayerJoin group={group} />}>
       <SubHeading>Join Code:</SubHeading>
       <Heading>{groupId}</Heading>
       {group ? "Valid Group 😄" : "Invalid group 😭"}
