@@ -3,7 +3,9 @@ import {
   RPSSpectatorRoundView,
 } from "../../services/rock-paper-scissors/types";
 import { Appear } from "../animations/Appear";
+import { Attention } from "../animations/Attention";
 import { FeatureEmoji } from "../Atoms";
+import { FlipX } from "../FlipX";
 import { FacingDirection } from "../PlayerAvatar";
 
 type Props = {
@@ -56,9 +58,9 @@ export const ViewerPlayersMove = ({
           {getMoveEmoji(visibleMove.moveName)}
         </Appear>
       ) : hasMoved ? (
-        ""
+        <FlipX flip={facingDirection === "left"}>👍</FlipX>
       ) : (
-        "😪"
+        <Attention>😪</Attention>
       )}
     </FeatureEmoji>
   );

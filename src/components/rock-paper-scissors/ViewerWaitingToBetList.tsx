@@ -101,6 +101,7 @@ export const ViewerWaitingToBetList = ({
         return (
           <CenteredCard
             key={wallet.playerId}
+            style={{ opacity: betState.state === "waiting" ? 0.65 : 1 }}
             // style={{
             //   borderColor:
             //     revealResult && currentResult

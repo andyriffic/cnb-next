@@ -27,11 +27,11 @@ type Props = {
 };
 
 export function BetTotal({ betValue, totalBetValue }: Props): JSX.Element {
-  const trails = useTrail(betValue, {
-    from: { opacity: 0 },
-    to: { opacity: 1 },
+  const trails = useTrail(betValue + 1, {
+    from: { opacity: 0, y: -30 },
+    to: { opacity: 1, y: 0 },
     delay: 1,
-    config: config.slow,
+    config: config.wobbly,
   });
 
   return (
@@ -41,7 +41,7 @@ export function BetTotal({ betValue, totalBetValue }: Props): JSX.Element {
       </Value> */}
       {trails.map((style, i) => (
         <BetPill key={i} style={style}>
-          🍒
+          {i === betValue ? <>{betValue}</> : "🍒"}
         </BetPill>
       ))}
     </Container>

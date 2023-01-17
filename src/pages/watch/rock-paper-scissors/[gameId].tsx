@@ -17,6 +17,9 @@ import {
 import { DebugPlayerMove } from "../../../components/rock-paper-scissors/DebugPlayerMove";
 import { DebugPlayerBets } from "../../../components/rock-paper-scissors/DebugPlayerBets";
 import { ViewerPlayer } from "../../../components/rock-paper-scissors/ViewerPlayer";
+import { Attention } from "../../../components/animations/Attention";
+import { BetTotal } from "../../../components/rock-paper-scissors/BetTotal";
+import { DrawBetTotal } from "../../../components/DrawBetTotal";
 
 type Props = {};
 
@@ -28,8 +31,16 @@ function Page({}: Props) {
   useSyncRockPapersScissorsWithBettingGame(gameId);
   const gameState = useGameState(game);
 
-  const roundReady = useMemo(() => {
-    if (!(game && bettingGame)) {
+  const gamePlayersReady = useMemo(() => {
+    if (!game) {
+      return false;
+    }
+
+    return gameRoundReady(game);
+  }, [game]);
+
+  const allPlayerHaveBet = useMemo(() => {
+    if (!bettingGame) {
       return false;
     }
 
@@ -39,8 +50,8 @@ function Page({}: Props) {
       bettingRound.playerBets.length ===
       bettingGame.playerWallets.filter((w) => w.value > 0).length;
 
-    return gameRoundReady(game) && everyoneHasBet;
-  }, [game, bettingGame]);
+    return everyoneHasBet;
+  }, [bettingGame]);
 
   useEffect(() => {
     game && RPSGameSubject.notify(game);
@@ -61,17 +72,19 @@ function Page({}: Props) {
       <Heading>
         Game: {gameId} | {RpsGameState[gameState]}
       </Heading>
-      {game && currentRound ? (
+      {game && currentRound && currentBettingRound ? (
         <div>
           <div>
-            <button onClick={() => resolveRound()}>SHOW RESULT</button>
             <button onClick={() => newRound()}>NEW ROUND</button>
           </div>
           {gameState <= RpsGameState.PLAYERS_READY && (
             <Positioned horizontalAlign={{ align: "center", topPercent: 5 }}>
               <CenterSpaced>
-                {roundReady ? (
-                  <PrimaryButton onClick={() => resolveRound()}>
+                {gamePlayersReady ? (
+                  <PrimaryButton
+                    disabled={!allPlayerHaveBet}
+                    onClick={() => resolveRound()}
+                  >
                     Go!
                   </PrimaryButton>
                 ) : (
@@ -89,6 +102,12 @@ function Page({}: Props) {
               direction="right"
               gameState={gameState}
             />
+            <DrawBetTotal
+              currentBettingRound={currentBettingRound}
+              show={gameState >= RpsGameState.SHOW_BETS}
+              gameState={gameState}
+              isDraw={currentRound?.result?.draw || false}
+            />
             <ViewerPlayer
               playerId={game.playerIds[1]}
               game={game}
@@ -103,7 +122,9 @@ function Page({}: Props) {
       )}
       {bettingGame && currentBettingRound ? (
         <div>
-          <Heading style={{ textAlign: "center" }}>Bets</Heading>
+          <Heading style={{ textAlign: "center" }}>
+            {allPlayerHaveBet ? "All bets are in!" : "Place your bets"}
+          </Heading>
           <ViewerWaitingToBetList
             wallets={bettingGame.playerWallets}
             bettingRound={currentBettingRound}

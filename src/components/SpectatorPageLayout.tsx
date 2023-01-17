@@ -27,6 +27,7 @@ const DebugContainer = styled.div`
   width: 100vw;
   padding: 1rem;
   background-color: #f7e6b6;
+  overflow: scroll;
 `;
 
 type Props = {
