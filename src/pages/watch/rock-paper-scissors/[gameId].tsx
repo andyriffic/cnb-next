@@ -125,12 +125,19 @@ function Page({}: Props) {
           <Heading style={{ textAlign: "center" }}>
             {allPlayerHaveBet ? "All bets are in!" : "Place your bets"}
           </Heading>
-          <ViewerWaitingToBetList
-            wallets={bettingGame.playerWallets}
-            bettingRound={currentBettingRound}
-            revealResult={gameState >= RpsGameState.SHOW_BET_RESULT}
-            showNewWalletOrder={gameState >= RpsGameState.SHOW_WALLET_RANKINGS}
-          />
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <ViewerWaitingToBetList
+              wallets={bettingGame.playerWallets}
+              bettingRound={currentBettingRound}
+              revealResult={gameState >= RpsGameState.SHOW_BET_RESULT}
+              showNewWalletOrder={
+                gameState >= RpsGameState.SHOW_WALLET_RANKINGS
+              }
+              removeBustedPlayers={
+                gameState >= RpsGameState.REMOVE_BUSTED_PLAYERS
+              }
+            />
+          </div>
         </div>
       ) : (
         <>

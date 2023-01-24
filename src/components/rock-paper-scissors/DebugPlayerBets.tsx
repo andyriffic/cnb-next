@@ -71,10 +71,10 @@ function PlayersBettingOptions({
   betOptions: BettingOption[];
   makeBet: (playerBet: PlayerBet) => void;
 }) {
-  const [betValue, setBetValue] = useState(wallet.value);
+  const [betValue, setBetValue] = useState(1);
   return wallet.value > 0 ? (
     <div>
-      <div>
+      {/* <div>
         <input
           type="number"
           min={1}
@@ -82,7 +82,7 @@ function PlayersBettingOptions({
           value={betValue}
           onChange={(e) => setBetValue(e.target.valueAsNumber)}
         />
-      </div>
+      </div> */}
       <div>
         {betOptions.map((bo) => (
           <button

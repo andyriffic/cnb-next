@@ -1,3 +1,4 @@
+import { animated, config, useTransition } from "@react-spring/web";
 import { useMemo, useRef } from "react";
 import { COLORS } from "../../colors";
 import { usePlayerNames } from "../../providers/PlayerNamesProvider";
@@ -8,6 +9,7 @@ import {
 import { CenteredCard, SubHeading, Heading, CaptionText } from "../Atoms";
 import { CenterSpaced } from "../Layouts";
 import { PlayerAvatar } from "../PlayerAvatar";
+import { RpsGameState } from "./hooks/useGameState";
 
 type BetState =
   | "broke"
@@ -62,6 +64,7 @@ type Props = {
   bettingRound: GroupPlayerBettingRound;
   revealResult: boolean;
   showNewWalletOrder: boolean;
+  removeBustedPlayers: boolean;
 };
 
 export const ViewerWaitingToBetList = ({
@@ -69,24 +72,42 @@ export const ViewerWaitingToBetList = ({
   bettingRound,
   revealResult,
   showNewWalletOrder,
+  removeBustedPlayers,
 }: Props): JSX.Element => {
   const { names } = usePlayerNames();
   const previousWalletsRef = useRef(
     wallets.sort(sortWalletByBetMostToLeastBetAmount)
   );
 
-  const sortedWallets = useMemo(() => {
+  const displayedWallets = useMemo(() => {
     if (showNewWalletOrder) {
-      previousWalletsRef.current = wallets.sort(
+      previousWalletsRef.current = previousWalletsRef.current.sort(
         sortWalletByBetMostToLeastBetAmount
       );
     }
+    if (removeBustedPlayers) {
+      previousWalletsRef.current = previousWalletsRef.current.filter(
+        (w) => w.value > 0
+      );
+    }
     return previousWalletsRef.current;
-  }, [wallets, showNewWalletOrder]);
+  }, [showNewWalletOrder, removeBustedPlayers]);
+
+  const transitions = useTransition(
+    displayedWallets.map((w, i) => ({ ...w, x: i * 200 })),
+    {
+      key: (w: PlayerWallet) => w.playerId,
+      from: { position: "absolute", opacity: 0, top: -50 },
+      leave: { opacity: 0, top: 50 },
+      enter: ({ x }) => ({ x, opacity: 1, top: 0 }),
+      update: ({ x }) => ({ x }),
+      config: config.molasses,
+    }
+  );
 
   return (
-    <CenterSpaced>
-      {sortedWallets.map((wallet) => {
+    <div style={{ position: "relative", width: wallets.length * 200 }}>
+      {transitions((style, wallet, t, index) => {
         const currentResult = bettingRound!.result?.playerResults.find(
           (r) => r.playerId === wallet.playerId
         );
@@ -99,45 +120,65 @@ export const ViewerWaitingToBetList = ({
         );
 
         return (
-          <CenteredCard
-            key={wallet.playerId}
-            style={{ opacity: betState.state === "waiting" ? 0.65 : 1 }}
-            // style={{
-            //   borderColor:
-            //     revealResult && currentResult
-            //       ? currentResult.totalWinnings > 0
-            //         ? COLORS.backgroundSuccess
-            //         : COLORS.backgroundFailure
-            //       : betState.state === "broke"
-            //       ? COLORS.backgroundInactive
-            //       : betState.state === "bet"
-            //       ? COLORS.backgroundSuccess
-            //       : "",
-            // }}
+          <animated.div
+            style={{ zIndex: displayedWallets.length - index, ...style }}
           >
-            <SubHeading>{names[wallet.playerId]}</SubHeading>
-            <PlayerAvatar playerId={wallet.playerId} size="thumbnail" />
-            <Heading>
-              {currentResult && betState.state === "result-win" && (
-                <>+{currentResult.totalWinnings}🍒</>
-              )}
-              {currentResult && betState.state === "result-lose" && (
-                <>{currentResult.totalWinnings}🍒</>
-              )}
-              {betState.state === "waiting" && `${wallet.value}🍒`}
-              {betState.state === "show-wallet" && `${wallet.value}🍒`}
-              {betState.state === "broke" && "😩"}
-              {betState.state === "bet" && "✅"}
-            </Heading>
-            {/* <CaptionText>
-              {betState.state === "broke"
-                ? "Broke"
-                : currentBet && currentBet.betOptionId}
-              {currentBet && <> ({currentBet.betValue})</>}
-            </CaptionText> */}
-          </CenteredCard>
+            <CenteredCard
+              key={wallet.playerId}
+              style={{ opacity: betState.state === "waiting" ? 0.65 : 1 }}
+            >
+              <SubHeading>{names[wallet.playerId]}</SubHeading>
+              <PlayerAvatar playerId={wallet.playerId} size="thumbnail" />
+              <Heading>
+                {currentResult && betState.state === "result-win" && (
+                  <>+{currentResult.totalWinnings}🍒</>
+                )}
+                {currentResult && betState.state === "result-lose" && (
+                  <>{currentResult.totalWinnings}🍒</>
+                )}
+                {betState.state === "waiting" && `${wallet.value}🍒`}
+                {betState.state === "show-wallet" && `${wallet.value}🍒`}
+                {betState.state === "broke" && "😩"}
+                {betState.state === "bet" && "✅"}
+              </Heading>
+            </CenteredCard>
+          </animated.div>
         );
       })}
-    </CenterSpaced>
+      {/* {sortedWallets.map((wallet) => {
+          const currentResult = bettingRound!.result?.playerResults.find(
+            (r) => r.playerId === wallet.playerId
+          );
+
+          const betState = getBetState(
+            bettingRound,
+            wallet,
+            revealResult,
+            showNewWalletOrder
+          );
+
+          return (
+            <CenteredCard
+              key={wallet.playerId}
+              style={{ opacity: betState.state === "waiting" ? 0.65 : 1 }}
+            >
+              <SubHeading>{names[wallet.playerId]}</SubHeading>
+              <PlayerAvatar playerId={wallet.playerId} size="thumbnail" />
+              <Heading>
+                {currentResult && betState.state === "result-win" && (
+                  <>+{currentResult.totalWinnings}🍒</>
+                )}
+                {currentResult && betState.state === "result-lose" && (
+                  <>{currentResult.totalWinnings}🍒</>
+                )}
+                {betState.state === "waiting" && `${wallet.value}🍒`}
+                {betState.state === "show-wallet" && `${wallet.value}🍒`}
+                {betState.state === "broke" && "😩"}
+                {betState.state === "bet" && "✅"}
+              </Heading>
+            </CenteredCard>
+          );
+        })} */}
+    </div>
   );
 };
