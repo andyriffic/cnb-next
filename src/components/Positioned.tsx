@@ -24,9 +24,21 @@ const AbsoluteContainer = styled.div<{ absolute: AbsolutePosition }>`
     `}
 `;
 
-const HorizontalContainer = styled.div<{ topPercent: number }>`
+const HorizontalContainer = styled.div<{
+  topPercent?: number;
+  bottomPercent?: number;
+}>`
   position: absolute;
-  top: ${({ topPercent }) => topPercent}vh;
+  ${({ topPercent }) =>
+    topPercent !== undefined &&
+    css`
+      top: ${topPercent}vh;
+    `};
+  ${({ bottomPercent }) =>
+    bottomPercent !== undefined &&
+    css`
+      bottom: ${bottomPercent}vh;
+    `};
   left: 50%;
   transform: translateX(-50%);
 `;
@@ -41,7 +53,11 @@ type AbsolutePosition = {
 type Props = {
   children: React.ReactNode;
   absolute?: AbsolutePosition;
-  horizontalAlign?: { align: "center"; topPercent: number };
+  horizontalAlign?: {
+    align: "center";
+    topPercent?: number;
+    bottomPercent?: number;
+  };
 };
 
 export function Positioned({
@@ -57,7 +73,10 @@ export function Positioned({
 
   if (horizontalAlign) {
     return (
-      <HorizontalContainer topPercent={horizontalAlign.topPercent}>
+      <HorizontalContainer
+        topPercent={horizontalAlign.topPercent}
+        bottomPercent={horizontalAlign.bottomPercent}
+      >
         {children}
       </HorizontalContainer>
     );

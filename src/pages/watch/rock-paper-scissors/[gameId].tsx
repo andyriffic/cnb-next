@@ -19,7 +19,9 @@ import { DebugPlayerBets } from "../../../components/rock-paper-scissors/DebugPl
 import { ViewerPlayer } from "../../../components/rock-paper-scissors/ViewerPlayer";
 import { Attention } from "../../../components/animations/Attention";
 import { BetTotal } from "../../../components/rock-paper-scissors/BetTotal";
-import { DrawBetTotal } from "../../../components/DrawBetTotal";
+import { DrawBetTotal } from "../../../components/rock-paper-scissors/DrawBetTotal";
+import { ViewerPlayerBets } from "../../../components/rock-paper-scissors/ViewerPlayerBets";
+import { GameStatusAnnouncement } from "../../../components/rock-paper-scissors/GameStatusAnnouncement";
 
 type Props = {};
 
@@ -93,8 +95,7 @@ function Page({}: Props) {
               </CenterSpaced>
             </Positioned>
           )}
-
-          <EvenlySpaced>
+          <Positioned absolute={{ topPercent: 5, leftPercent: 10 }}>
             <ViewerPlayer
               playerId={game.playerIds[0]}
               game={game}
@@ -102,12 +103,8 @@ function Page({}: Props) {
               direction="right"
               gameState={gameState}
             />
-            <DrawBetTotal
-              currentBettingRound={currentBettingRound}
-              show={gameState >= RpsGameState.SHOW_BETS}
-              gameState={gameState}
-              isDraw={currentRound?.result?.draw || false}
-            />
+          </Positioned>
+          <Positioned absolute={{ topPercent: 5, rightPercent: 10 }}>
             <ViewerPlayer
               playerId={game.playerIds[1]}
               game={game}
@@ -115,30 +112,52 @@ function Page({}: Props) {
               direction="left"
               gameState={gameState}
             />
-          </EvenlySpaced>
+          </Positioned>
+
+          {bettingGame && gameState >= RpsGameState.SHOW_BETS && (
+            <Positioned horizontalAlign={{ align: "center", topPercent: 5 }}>
+              <ViewerPlayerBets
+                groupBettingRound={currentBettingRound}
+                wallets={bettingGame.playerWallets}
+                betId="draw"
+                direction="right"
+                explodeLosers={gameState >= RpsGameState.REMOVE_BUSTED_PLAYERS}
+              />
+            </Positioned>
+          )}
+          {bettingGame && (
+            <Positioned horizontalAlign={{ align: "center", topPercent: 5 }}>
+              <GameStatusAnnouncement
+                gameState={gameState}
+                groupBettingGame={bettingGame}
+                rpsGame={game}
+              />
+            </Positioned>
+          )}
         </div>
       ) : (
         <h2>{gameId} not found</h2>
       )}
       {bettingGame && currentBettingRound ? (
-        <div>
-          <Heading style={{ textAlign: "center" }}>
-            {allPlayerHaveBet ? "All bets are in!" : "Place your bets"}
-          </Heading>
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <ViewerWaitingToBetList
-              wallets={bettingGame.playerWallets}
-              bettingRound={currentBettingRound}
-              revealResult={gameState >= RpsGameState.SHOW_BET_RESULT}
-              showNewWalletOrder={
-                gameState >= RpsGameState.SHOW_WALLET_RANKINGS
-              }
-              removeBustedPlayers={
-                gameState >= RpsGameState.REMOVE_BUSTED_PLAYERS
-              }
-            />
+        <Positioned horizontalAlign={{ align: "center", bottomPercent: 30 }}>
+          <div>
+            {gameState < RpsGameState.HAS_RESULT && !allPlayerHaveBet && (
+              <Heading style={{ textAlign: "center" }}>
+                Make your choice
+              </Heading>
+            )}
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <ViewerWaitingToBetList
+                wallets={bettingGame.playerWallets}
+                bettingRound={currentBettingRound}
+                revealResult={gameState >= RpsGameState.SHOW_BET_RESULT}
+                removeBustedPlayers={
+                  gameState >= RpsGameState.REMOVE_BUSTED_PLAYERS
+                }
+              />
+            </div>
           </div>
-        </div>
+        </Positioned>
       ) : (
         <>
           <h2>No Betting game found</h2>

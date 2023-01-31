@@ -63,15 +63,15 @@ type Props = {
   wallets: PlayerWallet[];
   bettingRound: GroupPlayerBettingRound;
   revealResult: boolean;
-  showNewWalletOrder: boolean;
   removeBustedPlayers: boolean;
 };
+
+const WIDTH_PX = 100;
 
 export const ViewerWaitingToBetList = ({
   wallets,
   bettingRound,
   revealResult,
-  showNewWalletOrder,
   removeBustedPlayers,
 }: Props): JSX.Element => {
   const { names } = usePlayerNames();
@@ -79,22 +79,16 @@ export const ViewerWaitingToBetList = ({
     wallets.sort(sortWalletByBetMostToLeastBetAmount)
   );
 
-  const displayedWallets = useMemo(() => {
-    if (showNewWalletOrder) {
-      previousWalletsRef.current = previousWalletsRef.current.sort(
-        sortWalletByBetMostToLeastBetAmount
+  const waitingPlayerWallets = useMemo(() => {
+    return wallets
+      .filter((w) => w.value > 0)
+      .filter(
+        (w) => !bettingRound.playerBets.find((b) => b.playerId === w.playerId)
       );
-    }
-    if (removeBustedPlayers) {
-      previousWalletsRef.current = previousWalletsRef.current.filter(
-        (w) => w.value > 0
-      );
-    }
-    return previousWalletsRef.current;
-  }, [showNewWalletOrder, removeBustedPlayers]);
+  }, [wallets, bettingRound]);
 
   const transitions = useTransition(
-    displayedWallets.map((w, i) => ({ ...w, x: i * 200 })),
+    waitingPlayerWallets.map((w, i) => ({ ...w, x: i * WIDTH_PX })),
     {
       key: (w: PlayerWallet) => w.playerId,
       from: { position: "absolute", opacity: 0, top: -50 },
@@ -106,42 +100,26 @@ export const ViewerWaitingToBetList = ({
   );
 
   return (
-    <div style={{ position: "relative", width: wallets.length * 200 }}>
+    <div style={{ position: "relative", width: wallets.length * WIDTH_PX }}>
       {transitions((style, wallet, t, index) => {
         const currentResult = bettingRound!.result?.playerResults.find(
           (r) => r.playerId === wallet.playerId
         );
 
-        const betState = getBetState(
-          bettingRound,
-          wallet,
-          revealResult,
-          showNewWalletOrder
-        );
+        // const betState = getBetState(
+        //   bettingRound,
+        //   wallet,
+        //   revealResult,
+        // );
 
         return (
           <animated.div
-            style={{ zIndex: displayedWallets.length - index, ...style }}
+            style={{ zIndex: waitingPlayerWallets.length - index, ...style }}
           >
-            <CenteredCard
-              key={wallet.playerId}
-              style={{ opacity: betState.state === "waiting" ? 0.65 : 1 }}
-            >
-              <SubHeading>{names[wallet.playerId]}</SubHeading>
+            <div key={wallet.playerId}>
+              {/* <SubHeading>{names[wallet.playerId]}</SubHeading> */}
               <PlayerAvatar playerId={wallet.playerId} size="thumbnail" />
-              <Heading>
-                {currentResult && betState.state === "result-win" && (
-                  <>+{currentResult.totalWinnings}🍒</>
-                )}
-                {currentResult && betState.state === "result-lose" && (
-                  <>{currentResult.totalWinnings}🍒</>
-                )}
-                {betState.state === "waiting" && `${wallet.value}🍒`}
-                {betState.state === "show-wallet" && `${wallet.value}🍒`}
-                {betState.state === "broke" && "😩"}
-                {betState.state === "bet" && "✅"}
-              </Heading>
-            </CenteredCard>
+            </div>
           </animated.div>
         );
       })}

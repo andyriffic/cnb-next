@@ -1,10 +1,10 @@
 import { useMemo } from "react";
 import styled from "styled-components";
-import { GroupPlayerBettingRound } from "../services/betting/types";
-import { Attention } from "./animations/Attention";
-import { SubHeading } from "./Atoms";
-import { BetTotal } from "./rock-paper-scissors/BetTotal";
-import { RpsGameState } from "./rock-paper-scissors/hooks/useGameState";
+import { GroupPlayerBettingRound } from "../../services/betting/types";
+import { Attention } from "../animations/Attention";
+import { SubHeading } from "../Atoms";
+import { BetTotal } from "./BetTotal";
+import { RpsGameState } from "./hooks/useGameState";
 
 const Container = styled.div``;
 

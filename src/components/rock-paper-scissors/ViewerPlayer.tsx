@@ -10,6 +10,7 @@ import { Positioned } from "../Positioned";
 import { BetTotal } from "./BetTotal";
 import { RpsGameState } from "./hooks/useGameState";
 import { ViewerPlayersAvatar } from "./ViewerPlayerAvatar";
+import { ViewerPlayerBets } from "./ViewerPlayerBets";
 import { ViewerPlayersMove } from "./ViewerPlayersMove";
 
 type Props = {
@@ -47,63 +48,53 @@ export const ViewerPlayer = ({
     0;
 
   return (
-    <EvenlySpaced key={pid} style={{ gap: "0.4rem" }}>
-      <div
-        style={{
-          minWidth: "20vw",
+    <EvenlySpaced key={pid} style={{ gap: "0.4rem", position: "relative" }}>
+      {gameState >= RpsGameState.SHOW_GAME_RESULT && didWin && (
+        <SubHeading style={{ position: "absolute" }}>
+          <Attention animate={gameState === RpsGameState.SHOW_GAME_RESULT}>
+            Winner 🎉
+          </Attention>
+        </SubHeading>
+      )}
+      <ViewerPlayersAvatar
+        playerId={playerId}
+        size="medium"
+        facing={direction}
+      />
+      <Positioned
+        absolute={{
+          topPercent: 20,
+          leftPercent: direction === "right" ? 25 : undefined,
+          rightPercent: direction === "left" ? 25 : undefined,
         }}
       >
-        {gameState >= RpsGameState.SHOW_GAME_RESULT && didWin && (
-          <SubHeading style={{ position: "absolute" }}>
-            <Attention animate={gameState === RpsGameState.SHOW_GAME_RESULT}>
-              Winner 🎉
-            </Attention>
-          </SubHeading>
-        )}
-        <ViewerPlayersAvatar
+        <ViewerPlayersMove
           playerId={playerId}
-          size="medium"
-          facing={direction}
+          currentRound={currentRound}
+          reveal={gameState >= RpsGameState.SHOW_MOVES}
+          facingDirection={direction}
         />
-        <Positioned
-          absolute={{
-            topPercent: 20,
-            leftPercent: direction === "right" ? 40 : undefined,
-            rightPercent: direction === "left" ? 40 : undefined,
-          }}
-        >
-          <ViewerPlayersMove
-            playerId={playerId}
-            currentRound={currentRound}
-            reveal={gameState >= RpsGameState.SHOW_MOVES}
-            facingDirection={direction}
-          />
-        </Positioned>
-        <CaptionText style={{ textAlign: "center" }}>
-          Score: {score.score}
-        </CaptionText>
-      </div>
+      </Positioned>
+      {/* <CaptionText style={{ textAlign: "center" }}>
+        Score: {score.score}
+      </CaptionText> */}
       {gameState >= RpsGameState.SHOW_BETS && (
         <Positioned
           absolute={{
-            bottomPercent: 55,
-            leftPercent: direction === "right" ? 10 : undefined,
-            rightPercent: direction === "left" ? 10 : undefined,
+            bottomPercent: 1,
+            leftPercent: direction === "right" ? -5 : undefined,
+            rightPercent: direction === "left" ? -5 : undefined,
           }}
         >
-          {/* <Appear
-          show={gameState >= RpsGameState.SHOW_BETS}
-          animation="flip-in"
-        > */}
-          {/* <FeatureValue
-            label="Total 🍒"
-            value={totalFavorableBetValue}
-          /> */}
-          <BetTotal
-            totalBetValue={totalBetValue}
-            betValue={totalFavorableBetValue}
-          />
-          {/* </Appear> */}
+          {currentBettingRound && (
+            <ViewerPlayerBets
+              groupBettingRound={currentBettingRound}
+              wallets={bettingGame.playerWallets}
+              betId={playerId}
+              direction={direction}
+              explodeLosers={gameState >= RpsGameState.REMOVE_BUSTED_PLAYERS}
+            />
+          )}
         </Positioned>
       )}
 

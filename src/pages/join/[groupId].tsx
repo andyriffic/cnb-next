@@ -50,9 +50,9 @@ function Page() {
                   groupBetting.createGroupBettingGame(
                     gameId,
                     [
-                      { id: playerId1, name: getName(playerId1), odds: 2 },
-                      { id: "draw", name: "draw", odds: 3 },
-                      { id: playerId2, name: getName(playerId2), odds: 2 },
+                      { id: playerId1, name: getName(playerId1), odds: 0 },
+                      { id: "draw", name: "draw", odds: 0 },
+                      { id: playerId2, name: getName(playerId2), odds: 0 },
                     ],
                     bettingPlayerWallets,
                     (bettingId) =>
