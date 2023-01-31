@@ -4,7 +4,7 @@ import styled, { css } from "styled-components";
 import { getPlayerAvatarUrl } from "../utils/url";
 
 export type FacingDirection = "right" | "left";
-export type AvatarSize = "thumbnail" | "medium" | "large";
+export type AvatarSize = "thumbnail" | "small" | "medium" | "large";
 
 const ImageContainer = styled.div<{ reverseImage: boolean }>`
   /* width: 70vh; */
@@ -19,6 +19,7 @@ const ImageContainer = styled.div<{ reverseImage: boolean }>`
 
 const ImagesSizeStyles: { [key in AvatarSize]: CSSProperties } = {
   thumbnail: { width: "8vh", height: "10vh" },
+  small: { width: "14vh", height: "20vh" },
   medium: { width: "30vh", height: "40vh" },
   large: { width: "60vh", height: "80vh" },
 };

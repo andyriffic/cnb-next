@@ -1,12 +1,24 @@
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 import styled from "styled-components";
+import { Appear } from "../../components/animations/Appear";
 import { Heading, PrimaryButton, SubHeading } from "../../components/Atoms";
 import { DebugPlayerJoin } from "../../components/DebugPlayerJoin";
+import { CenterSpaced } from "../../components/Layouts";
+import { PlayerAvatar } from "../../components/PlayerAvatar";
 import { SpectatorPageLayout } from "../../components/SpectatorPageLayout";
 import { usePlayerNames } from "../../providers/PlayerNamesProvider";
 import { useSocketIo } from "../../providers/SocketIoProvider";
 import { PlayerWallet } from "../../services/betting/types";
+
+const JoinedPlayerContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  max-width: 90vw;
+  flex-wrap: wrap;
+`;
+
+const JoinedPlayerItem = styled.div``;
 
 function Page() {
   const router = useRouter();
@@ -22,15 +34,19 @@ function Page() {
     <SpectatorPageLayout debug={group && <DebugPlayerJoin group={group} />}>
       <SubHeading>Join Code:</SubHeading>
       <Heading>{groupId}</Heading>
-      {group ? "Valid Group 😄" : "Invalid group 😭"}
+      {!group && "Invalid group 😭"}
       {group && (
-        <div>
-          <Heading>Joined players</Heading>
-          <ul>
+        <CenterSpaced stacked={true}>
+          <Heading>Joined players ({group.playerIds.length})</Heading>
+          <JoinedPlayerContainer>
             {group.playerIds.map((pid) => (
-              <li key={pid}>{pid}</li>
+              <JoinedPlayerItem key={pid}>
+                <Appear animation="flip-in">
+                  <PlayerAvatar playerId={pid} size="small" />
+                </Appear>
+              </JoinedPlayerItem>
             ))}
-          </ul>
+          </JoinedPlayerContainer>
           <PrimaryButton
             disabled={group.playerIds.length < 2}
             onClick={() => {
@@ -64,7 +80,7 @@ function Page() {
           >
             Start Game
           </PrimaryButton>
-        </div>
+        </CenterSpaced>
       )}
     </SpectatorPageLayout>
   );
