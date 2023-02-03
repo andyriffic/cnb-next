@@ -3,14 +3,14 @@ import styled from "styled-components";
 export const Heading = styled.h1`
   font-weight: 600;
   font-size: 2.3rem;
-  margin: 0 0 1rem;
+  margin: 0;
   text-transform: uppercase;
 `;
 
 export const SubHeading = styled.h2`
   font-weight: 600;
   font-size: 1.4rem;
-  margin: 0 0 0.5rem;
+  margin: 0;
 `;
 
 export const FeatureEmoji = styled.div`

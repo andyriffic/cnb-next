@@ -126,7 +126,9 @@ function Page({}: Props) {
             </Positioned>
           )}
           {bettingGame && (
-            <Positioned horizontalAlign={{ align: "center", topPercent: 5 }}>
+            <Positioned
+              horizontalAlign={{ align: "center", bottomPercent: 20 }}
+            >
               <GameStatusAnnouncement
                 gameState={gameState}
                 groupBettingGame={bettingGame}

@@ -32,9 +32,8 @@ export function AnimatedList({ items }: Props) {
   return (
     <Container>
       {transitions((style, item, t, index) => (
-        <animated.div style={{ zIndex: items.length - index, ...style }}>
-          {item.content}
-        </animated.div>
+        // <animated.div style={{ zIndex: items.length - index, ...style }}>
+        <animated.div>{item.content}</animated.div>
       ))}
     </Container>
   );

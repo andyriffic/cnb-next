@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
 import styled from "styled-components";
 import {
+  CaptionText,
   Card,
   Heading,
   PrimaryButton,
@@ -16,6 +17,8 @@ const BettingOptionContainer = styled.div`
   display: flex;
   gap: 1rem;
 `;
+
+const FIXED_BET_VALUE = 1;
 
 function Page() {
   const query = useRouter().query;
@@ -44,8 +47,6 @@ function Page() {
     );
   }, [bettingGame, playerId]);
 
-  const [betValue, setBetValue] = useState(0);
-
   return (
     <PlayerPageLayout playerId={playerId}>
       {bettingGame && (
@@ -53,67 +54,43 @@ function Page() {
           <Heading>Round {bettingGame.rounds.length}</Heading>
           {playerWallet && (
             <Card>
-              <SubHeading>Balance</SubHeading>
-              <Heading>{playerWallet.value}🍒</Heading>
+              <SubHeading>Lives:</SubHeading>
+              <Heading>{playerWallet.value}♥️</Heading>
             </Card>
           )}
           {!lockedInBet && playerWallet && playerWallet.value > 0 && (
             <>
-              <SubHeading>Amount ({betValue}🍒)</SubHeading>
-              <fieldset>
-                <input
-                  type="range"
-                  min={0}
-                  max={playerWallet.value}
-                  step="1"
-                  value={betValue}
-                  onChange={(e) => setBetValue(e.currentTarget.valueAsNumber)}
-                />
-              </fieldset>
-
-              <SubHeading>Options</SubHeading>
+              <SubHeading>Make your choice</SubHeading>
               <BettingOptionContainer>
                 {bettingGame.rounds[0]?.bettingOptions.map((option) => (
-                  <button
+                  <PrimaryButton
                     key={option.id}
-                    onClick={() => setSelectedBetOption(option)}
-                    style={{
-                      border:
-                        option.id === selectedBetOption?.id
-                          ? "2px solid red"
-                          : "2px solid black",
-                    }}
+                    onClick={() =>
+                      makePlayerBet({
+                        playerId,
+                        betOptionId: option.id,
+                        betValue: FIXED_BET_VALUE,
+                      })
+                    }
                   >
-                    <Card>
-                      <SubHeading>{option.name}</SubHeading>
-                      <Heading>{option.odds}:1</Heading>
-                    </Card>
-                  </button>
+                    {option.name}
+                  </PrimaryButton>
                 ))}
               </BettingOptionContainer>
-              <PrimaryButton
-                disabled={!selectedBetOption || betValue <= 0}
-                onClick={() =>
-                  makePlayerBet({
-                    playerId,
-                    betOptionId: selectedBetOption!.id,
-                    betValue: betValue,
-                  })
-                }
-              >
-                {betValue > 0 && selectedBetOption
-                  ? `${betValue}🍒 on ${selectedBetOption.name}`
-                  : "Place Bet"}
-              </PrimaryButton>
             </>
           )}
 
           {lockedInBet && (
             <Card>
-              <SubHeading>Your bet</SubHeading>
-              <p>
-                {lockedInBet.betValue}🍒 on {lockedInBet.betOptionId}
-              </p>
+              <CaptionText>You chose</CaptionText>
+              <Heading>
+                {bettingGame.rounds[
+                  bettingGame.rounds.length - 1
+                ]?.bettingOptions.find(
+                  (bo) => bo.id === lockedInBet.betOptionId
+                )?.name || ""}{" "}
+                🤞
+              </Heading>
             </Card>
           )}
         </>

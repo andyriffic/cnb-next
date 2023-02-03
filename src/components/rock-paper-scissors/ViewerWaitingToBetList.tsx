@@ -91,7 +91,7 @@ export const ViewerWaitingToBetList = ({
     waitingPlayerWallets.map((w, i) => ({ ...w, x: i * WIDTH_PX })),
     {
       key: (w: PlayerWallet) => w.playerId,
-      from: { position: "absolute", opacity: 0, top: -50 },
+      from: { opacity: 0, top: -50 },
       leave: { opacity: 0, top: 50 },
       enter: ({ x }) => ({ x, opacity: 1, top: 0 }),
       update: ({ x }) => ({ x }),
@@ -114,7 +114,11 @@ export const ViewerWaitingToBetList = ({
 
         return (
           <animated.div
-            style={{ zIndex: waitingPlayerWallets.length - index, ...style }}
+            style={{
+              zIndex: waitingPlayerWallets.length - index,
+              position: "absolute",
+              ...style,
+            }}
           >
             <div key={wallet.playerId}>
               {/* <SubHeading>{names[wallet.playerId]}</SubHeading> */}

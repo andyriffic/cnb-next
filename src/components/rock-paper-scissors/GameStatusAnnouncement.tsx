@@ -7,7 +7,7 @@ import {
 } from "../../services/betting/types";
 import { RPSSpectatorGameView } from "../../services/rock-paper-scissors/types";
 import { Attention } from "../animations/Attention";
-import { Heading, SubHeading } from "../Atoms";
+import { Card, Heading, SubHeading } from "../Atoms";
 import { BetTotal } from "./BetTotal";
 import { RpsGameState } from "./hooks/useGameState";
 
@@ -61,11 +61,13 @@ export function GameStatusAnnouncement({
   return (
     <Container>
       {gameState >= RpsGameState.FINISHED && (
-        <Heading>
-          <Attention animate={gameState === RpsGameState.SHOW_GAME_RESULT}>
-            {gameStatusText}
-          </Attention>
-        </Heading>
+        <Card>
+          <Heading>
+            <Attention animate={gameState === RpsGameState.SHOW_GAME_RESULT}>
+              {gameStatusText}
+            </Attention>
+          </Heading>
+        </Card>
       )}
     </Container>
   );

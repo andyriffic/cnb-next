@@ -105,7 +105,7 @@ export function ViewerPlayerBets({
               size="thumbnail"
               facing={direction}
             />
-            {explodeLosers && <Lives>{hearts(livesRemaining)}</Lives>}
+            {/* {explodeLosers && <Lives>{hearts(livesRemaining)}</Lives>} */}
           </BetPill>
         );
       })}

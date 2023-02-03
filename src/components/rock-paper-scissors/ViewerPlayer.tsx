@@ -48,14 +48,7 @@ export const ViewerPlayer = ({
     0;
 
   return (
-    <EvenlySpaced key={pid} style={{ gap: "0.4rem", position: "relative" }}>
-      {gameState >= RpsGameState.SHOW_GAME_RESULT && didWin && (
-        <SubHeading style={{ position: "absolute" }}>
-          <Attention animate={gameState === RpsGameState.SHOW_GAME_RESULT}>
-            Winner 🎉
-          </Attention>
-        </SubHeading>
-      )}
+    <div style={{ position: "relative" }}>
       <ViewerPlayersAvatar
         playerId={playerId}
         size="medium"
@@ -97,6 +90,15 @@ export const ViewerPlayer = ({
           )}
         </Positioned>
       )}
+      {gameState >= RpsGameState.SHOW_GAME_RESULT && didWin && (
+        <Positioned absolute={{ topPercent: -5, leftPercent: 10 }}>
+          <Attention animate={gameState === RpsGameState.SHOW_GAME_RESULT}>
+            <Card>
+              <SubHeading>Winner 🎉</SubHeading>
+            </Card>
+          </Attention>
+        </Positioned>
+      )}
 
       {/* {favorableBets && favorableBets.length > 0 && (
         <Card>
@@ -105,6 +107,6 @@ export const ViewerPlayer = ({
           ))}
         </Card>
       )} */}
-    </EvenlySpaced>
+    </div>
   );
 };

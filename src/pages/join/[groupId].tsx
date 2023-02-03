@@ -67,7 +67,7 @@ function Page() {
                     gameId,
                     [
                       { id: playerId1, name: getName(playerId1), odds: 0 },
-                      { id: "draw", name: "draw", odds: 0 },
+                      { id: "draw", name: "Draw", odds: 0 },
                       { id: playerId2, name: getName(playerId2), odds: 0 },
                     ],
                     bettingPlayerWallets,
