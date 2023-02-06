@@ -59,7 +59,7 @@ test("Correct round result for draw with paper", () => {
 
   expect(result).toBeRight();
   expect(result).toSubsetEqualRight({
-    rounds: [{ index: 0, result: { draw: true } }],
+    currentRound: { result: { draw: true } },
   });
 });
 
@@ -77,7 +77,7 @@ test("Correct round result for draw with rock", () => {
 
   expect(result).toBeRight();
   expect(result).toSubsetEqualRight({
-    rounds: [{ index: 0, result: { draw: true } }],
+    currentRound: { result: { draw: true } },
   });
 });
 
@@ -95,7 +95,7 @@ test("Correct round result for draw with scissors", () => {
 
   expect(result).toBeRight();
   expect(result).toSubsetEqualRight({
-    rounds: [{ index: 0, result: { draw: true } }],
+    currentRound: { result: { draw: true } },
   });
 });
 
@@ -113,7 +113,7 @@ test("Correct round result for player1 winning with rock", () => {
 
   expect(result).toBeRight();
   expect(result).toSubsetEqualRight({
-    rounds: [{ index: 0, result: { draw: false, winningPlayerId: "p1" } }],
+    currentRound: { result: { draw: false, winningPlayerId: "p1" } },
   });
 });
 
@@ -131,7 +131,7 @@ test("Correct round result for player1 winning with paper", () => {
 
   expect(result).toBeRight();
   expect(result).toSubsetEqualRight({
-    rounds: [{ index: 0, result: { draw: false, winningPlayerId: "p1" } }],
+    currentRound: { result: { draw: false, winningPlayerId: "p1" } },
   });
 });
 
@@ -149,7 +149,7 @@ test("Correct round result for player1 winning with scissors", () => {
 
   expect(result).toBeRight();
   expect(result).toSubsetEqualRight({
-    rounds: [{ index: 0, result: { draw: false, winningPlayerId: "p1" } }],
+    currentRound: { result: { draw: false, winningPlayerId: "p1" } },
   });
 });
 
@@ -167,7 +167,7 @@ test("Correct round result for player2 winning with rock", () => {
 
   expect(result).toBeRight();
   expect(result).toSubsetEqualRight({
-    rounds: [{ index: 0, result: { draw: false, winningPlayerId: "p2" } }],
+    currentRound: { result: { draw: false, winningPlayerId: "p2" } },
   });
 });
 
@@ -185,7 +185,7 @@ test("Correct round result for player2 winning with paper", () => {
 
   expect(result).toBeRight();
   expect(result).toSubsetEqualRight({
-    rounds: [{ index: 0, result: { draw: false, winningPlayerId: "p2" } }],
+    currentRound: { result: { draw: false, winningPlayerId: "p2" } },
   });
 });
 
@@ -203,7 +203,7 @@ test("Correct round result for player2 winning with scissors", () => {
 
   expect(result).toBeRight();
   expect(result).toSubsetEqualRight({
-    rounds: [{ index: 0, result: { draw: false, winningPlayerId: "p2" } }],
+    currentRound: { result: { draw: false, winningPlayerId: "p2" } },
   });
 });
 

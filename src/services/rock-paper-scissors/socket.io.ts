@@ -115,7 +115,9 @@ export function initialiseRockPaperScissorsSocket(
 
           const gameView = createGameView(game);
           onResolved &&
-            onResolved(gameView.rounds[gameView.rounds.length - 1]!);
+            onResolved(
+              gameView.roundHistory[gameView.roundHistory.length - 1]!
+            );
         }
       )
     );

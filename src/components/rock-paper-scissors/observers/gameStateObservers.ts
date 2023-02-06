@@ -11,7 +11,8 @@ export class MoveObserver implements Observer<RPSSpectatorGameView> {
 
   update(current: RPSSpectatorGameView) {
     const currentMovesCount =
-      current.rounds[current.rounds.length - 1]?.movedPlayerIds.length || 0;
+      current.roundHistory[current.roundHistory.length - 1]?.movedPlayerIds
+        .length || 0;
 
     if (
       this.lastMovesCount !== undefined &&

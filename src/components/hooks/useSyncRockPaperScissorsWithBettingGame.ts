@@ -15,7 +15,7 @@ export function useSyncRockPapersScissorsWithBettingGame(gameId: string) {
 
     // const totalRpsResolvedRounds
 
-    if (rpsGame.rounds.length < bettingGame.roundHistory.length + 1) {
+    if (rpsGame.roundHistory.length < bettingGame.roundHistory.length) {
       //If rpsGame has less rounds then that's a problem but just gonna ignore that (It shouldn't happen right 😅)
       console.log(
         "useSyncRockPapersScissorsWithBettingGame",
@@ -24,8 +24,8 @@ export function useSyncRockPapersScissorsWithBettingGame(gameId: string) {
       return;
     }
 
-    if (rpsGame.rounds.length === bettingGame.roundHistory.length + 1) {
-      const rpsGameResult = rpsGame.rounds[rpsGame.rounds.length - 1]?.result;
+    if (rpsGame.roundHistory.length === bettingGame.roundHistory.length) {
+      const rpsGameResult = rpsGame.currentRound.result;
       const betResult = bettingGame.currentRound.result;
       if (rpsGameResult && !betResult) {
         console.log(
@@ -39,7 +39,7 @@ export function useSyncRockPapersScissorsWithBettingGame(gameId: string) {
 
         resolveBettingRound(winningOptionId);
       }
-    } else if (rpsGame.rounds.length > bettingGame.roundHistory.length + 1) {
+    } else if (rpsGame.roundHistory.length > bettingGame.roundHistory.length) {
       console.log(
         "useSyncRockPapersScissorsWithBettingGame",
         "Adding new betting round"

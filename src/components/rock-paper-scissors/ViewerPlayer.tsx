@@ -1,13 +1,9 @@
-import { pid } from "process";
 import { GroupBettingGame } from "../../services/betting/types";
-import { latestRound } from "../../services/rock-paper-scissors/helpers";
 import { RPSSpectatorGameView } from "../../services/rock-paper-scissors/types";
 import { Attention } from "../animations/Attention";
-import { CaptionText, Card, SubHeading } from "../Atoms";
-import { EvenlySpaced } from "../Layouts";
+import { Card, SubHeading } from "../Atoms";
 import { FacingDirection } from "../PlayerAvatar";
 import { Positioned } from "../Positioned";
-import { BetTotal } from "./BetTotal";
 import { RpsGameState } from "./hooks/useGameState";
 import { ViewerPlayersAvatar } from "./ViewerPlayerAvatar";
 import { ViewerPlayerBets } from "./ViewerPlayerBets";
@@ -27,7 +23,7 @@ export const ViewerPlayer = ({
   direction,
   gameState,
 }: Props): JSX.Element | null => {
-  const currentRound = latestRound(game);
+  const currentRound = game.currentRound;
   const score = game.scores.find((s) => s.playerId === playerId)!;
   const didWin = currentRound.result?.winningPlayerId === playerId;
   const isDraw = currentRound.result?.draw;

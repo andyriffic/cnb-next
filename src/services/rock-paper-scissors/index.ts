@@ -8,17 +8,20 @@ import {
   RPSPlayerMove,
   RPSRound,
   RPSSpectatorGameView,
+  RPSSpectatorRoundView,
 } from "./types";
 
 export function createGame(
   props: RPSCreateGameProps
 ): E.Either<string, RPSGame> {
+  //TODO: could probably validate there's enough players 🤷‍♂️
   const newGame: RPSGame = {
     id: props.id,
     playerIds: [...props.playerIds],
-    rounds: [],
+    roundHistory: [],
+    currentRound: getNewRound(),
   };
-  return pipe(newGame, addRoundToGame);
+  return E.right(newGame);
 }
 
 export function makePlayerMove(
@@ -31,13 +34,10 @@ export function makePlayerMove(
       (e) => E.left(e),
       (g) =>
         pipe(
-          g.rounds,
-          A.last,
-          E.fromOption(() => "no last round"),
-          E.chain((lastRound) =>
-            validatePlayerNotMovedInRound(move.playerId, lastRound)
-          ),
-          E.map((lastRound) => addMoveToRound(lastRound, move)),
+          g.currentRound,
+          (currentRound) =>
+            validatePlayerNotMovedInRound(move.playerId, currentRound),
+          E.map((round) => addMoveToRound(round, move)),
           E.map((roundWithMove) => updateRoundInGame(roundWithMove, game))
         )
     )
@@ -46,10 +46,8 @@ export function makePlayerMove(
 
 export function resolveRound(game: RPSGame): E.Either<string, RPSGame> {
   return pipe(
-    game.rounds,
-    A.last,
-    E.fromOption(() => "No round to resolve"),
-    E.chain(validateRoundCanBeResolved),
+    game.currentRound,
+    validateRoundCanBeResolved,
     E.chain(addResultToRound),
     E.map((round) => updateRoundInGame(round, game))
   );
@@ -141,26 +139,36 @@ function addMoveToRound(round: RPSRound, move: RPSPlayerMove): RPSRound {
 function updateRoundInGame(updatedRound: RPSRound, game: RPSGame): RPSGame {
   return {
     ...game,
-    rounds: game.rounds.map((r) =>
-      r.index === updatedRound.index ? updatedRound : r
-    ),
+    currentRound: updatedRound,
   };
 }
 
-export function addRoundToGame(game: RPSGame): E.Either<string, RPSGame> {
-  const addNewRound = () => ({
-    ...game,
-    rounds: [...game.rounds, { index: game.rounds.length, moves: [] }],
-  });
+function getNewRound(): RPSRound {
+  return { moves: [] };
+}
 
-  return pipe(
-    game.rounds,
-    A.last,
-    O.match(
-      () => E.right(addNewRound()),
-      (lastRound) => pipe(lastRound, ensureHasRoundResult, E.map(addNewRound))
-    )
-  );
+export function addRoundToGame(game: RPSGame): E.Either<string, RPSGame> {
+  const currentRound = game.currentRound;
+
+  if (!currentRound.result) {
+    return E.left("Round does not have result");
+  }
+
+  return E.right({
+    ...game,
+    currentRound: getNewRound(),
+    roundHistory: [...game.roundHistory, currentRound],
+  });
+}
+
+function createGameRoundView(round: RPSRound): RPSSpectatorRoundView {
+  return {
+    movedPlayerIds: round.moves.map((move) => move.playerId),
+    result:
+      round.result === undefined
+        ? undefined
+        : { moves: round.moves, ...round.result },
+  };
 }
 
 export function createGameView(game: RPSGame): RPSSpectatorGameView {
@@ -169,19 +177,11 @@ export function createGameView(game: RPSGame): RPSSpectatorGameView {
     playerIds: [...game.playerIds],
     scores: game.playerIds.map((pid) => ({
       playerId: pid,
-      score: game.rounds.filter(
+      score: game.roundHistory.filter(
         (round) => round.result && round.result.winningPlayerId === pid
       ).length,
     })),
-    rounds: game.rounds.map((round) => {
-      return {
-        number: round.index,
-        movedPlayerIds: round.moves.map((move) => move.playerId),
-        result:
-          round.result === undefined
-            ? undefined
-            : { moves: round.moves, ...round.result },
-      };
-    }),
+    currentRound: createGameRoundView(game.currentRound),
+    roundHistory: game.roundHistory.map(createGameRoundView),
   };
 }

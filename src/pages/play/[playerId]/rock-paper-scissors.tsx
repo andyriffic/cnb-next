@@ -21,9 +21,9 @@ function Page() {
       </p> */}
       {game && (
         <>
-          <Heading>Round {game.rounds.length}</Heading>
+          <Heading>Round {game.roundHistory.length + 1}</Heading>
           <PlayerGameCurrentRound
-            currentRound={game.rounds[game.rounds.length - 1]!}
+            currentRound={game.currentRound}
             playerId={playerId}
             makeMove={makeMove}
           />

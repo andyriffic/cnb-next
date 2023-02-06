@@ -81,7 +81,6 @@ export function useRPSGame(gameId: string): {
     onResolved?: (resolvedRound: RPSSpectatorRoundView) => void
   ) => void;
   newRound: (onResolved?: () => void) => void;
-  currentRound: RPSSpectatorRoundView | undefined;
 } {
   const {
     rockPaperScissors: {
@@ -122,6 +121,5 @@ export function useRPSGame(gameId: string): {
     makeMove,
     resolveRound,
     newRound,
-    currentRound: game && game.rounds[game.rounds.length - 1],
   };
 }

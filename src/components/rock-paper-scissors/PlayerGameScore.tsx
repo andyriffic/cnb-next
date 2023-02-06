@@ -40,7 +40,7 @@ export const PlayerGameScore = ({ playerId, game }: Props): JSX.Element => {
       <Card style={{ textAlign: "center" }}>
         <SubHeading>Draw</SubHeading>
         <ScoreCount>
-          {game.rounds.filter((r) => r.result && r.result.draw).length}
+          {game.roundHistory.filter((r) => r.result && r.result.draw).length}
         </ScoreCount>
       </Card>
       <Card style={{ textAlign: "center" }}>

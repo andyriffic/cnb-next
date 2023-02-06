@@ -29,7 +29,7 @@ type Props = {};
 function Page({}: Props) {
   const router = useRouter();
   const gameId = router.query.gameId as string;
-  const { game, resolveRound, newRound, currentRound } = useRPSGame(gameId);
+  const { game, resolveRound, newRound } = useRPSGame(gameId);
   const { bettingGame } = useBettingGame(gameId);
   useSyncRockPapersScissorsWithBettingGame(gameId);
   const gameState = useGameState(game);
@@ -75,7 +75,7 @@ function Page({}: Props) {
       <Heading>
         Game: {gameId} | {RpsGameState[gameState]}
       </Heading>
-      {game && currentRound && bettingGame?.currentRound ? (
+      {game && bettingGame?.currentRound ? (
         <div>
           <div>
             <button onClick={() => newRound()}>NEW ROUND</button>
