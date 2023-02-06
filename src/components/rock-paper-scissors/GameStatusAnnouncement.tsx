@@ -19,8 +19,6 @@ type Props = {
   gameState: RpsGameState;
 };
 
-const SPECTATOR_TARGET_SCORE = 4;
-
 export function GameStatusAnnouncement({
   winningConditions,
   gameState,

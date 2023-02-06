@@ -28,18 +28,16 @@ export const ViewerPlayer = ({
   gameState,
 }: Props): JSX.Element | null => {
   const currentRound = latestRound(game);
-  const currentBettingRound =
-    bettingGame?.rounds[bettingGame.rounds.length - 1];
   const score = game.scores.find((s) => s.playerId === playerId)!;
   const didWin = currentRound.result?.winningPlayerId === playerId;
   const isDraw = currentRound.result?.draw;
 
   const totalBetValue =
-    currentBettingRound?.playerBets
+    bettingGame?.currentRound.playerBets
       .map((b) => b.betValue)
       .reduce((acc, val) => acc + val, 0) || 0;
 
-  const favorableBets = currentBettingRound?.playerBets.filter(
+  const favorableBets = bettingGame?.currentRound.playerBets.filter(
     (b) => b.betOptionId === playerId
   );
 
@@ -79,9 +77,9 @@ export const ViewerPlayer = ({
             rightPercent: direction === "left" ? -5 : undefined,
           }}
         >
-          {currentBettingRound && (
+          {bettingGame && (
             <ViewerPlayerBets
-              groupBettingRound={currentBettingRound}
+              groupBettingRound={bettingGame.currentRound}
               wallets={bettingGame.playerWallets}
               betId={playerId}
               direction={direction}

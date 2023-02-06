@@ -31,10 +31,7 @@ export const DebugPlayerBets = ({ bettingGame }: Props) => {
           <div>
             <PlayersBettingOptions
               wallet={wallet}
-              betOptions={
-                bettingGame.rounds[bettingGame.rounds.length - 1]!
-                  .bettingOptions
-              }
+              betOptions={bettingGame.currentRound.bettingOptions}
               makeBet={makePlayerBet}
             />
             {/* <button onClick={() => makePlayerBet({ playerId })}>1</button> */}

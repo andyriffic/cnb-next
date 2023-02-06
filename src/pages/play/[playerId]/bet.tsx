@@ -41,9 +41,7 @@ function Page() {
   const lockedInBet = useMemo(() => {
     return (
       bettingGame &&
-      bettingGame.rounds[bettingGame.rounds.length - 1]?.playerBets.find(
-        (b) => b.playerId === playerId
-      )
+      bettingGame.currentRound.playerBets.find((b) => b.playerId === playerId)
     );
   }, [bettingGame, playerId]);
 
@@ -51,7 +49,7 @@ function Page() {
     <PlayerPageLayout playerId={playerId}>
       {bettingGame && (
         <>
-          <Heading>Round {bettingGame.rounds.length}</Heading>
+          <Heading>Round {bettingGame.roundHistory.length + 1}</Heading>
           {playerWallet && (
             <Card>
               <SubHeading>Lives:</SubHeading>
@@ -62,7 +60,7 @@ function Page() {
             <>
               <SubHeading>Make your choice</SubHeading>
               <BettingOptionContainer>
-                {bettingGame.rounds[0]?.bettingOptions.map((option) => (
+                {bettingGame.currentRound.bettingOptions.map((option) => (
                   <PrimaryButton
                     key={option.id}
                     onClick={() =>
@@ -84,9 +82,7 @@ function Page() {
             <Card>
               <CaptionText>You chose</CaptionText>
               <Heading>
-                {bettingGame.rounds[
-                  bettingGame.rounds.length - 1
-                ]?.bettingOptions.find(
+                {bettingGame.currentRound.bettingOptions.find(
                   (bo) => bo.id === lockedInBet.betOptionId
                 )?.name || ""}{" "}
                 🤞

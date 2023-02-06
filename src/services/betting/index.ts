@@ -1,15 +1,13 @@
-import * as E from "fp-ts/Either";
 import * as A from "fp-ts/Array";
-import * as O from "fp-ts/Option";
+import * as E from "fp-ts/Either";
 import { pipe } from "fp-ts/lib/function";
+import * as O from "fp-ts/Option";
 
 import {
   BettingOption,
   GroupBettingGame,
-  GroupBettingRoundResult,
   GroupPlayerBettingRound,
   PlayerBet,
-  PlayerBettingRoundResult,
   PlayerWallet,
 } from "./types";
 
@@ -20,7 +18,8 @@ export function createBettingGame(
 ): E.Either<string, GroupBettingGame> {
   return E.right({
     id,
-    rounds: [{ index: 0, bettingOptions, playerBets: [] }],
+    currentRound: { bettingOptions, playerBets: [] },
+    roundHistory: [],
     playerWallets,
   } as GroupBettingGame);
 }
@@ -33,7 +32,7 @@ export function makePlayerBet(
     isValidBettingOption(playerBet.betOptionId, bettingGame),
     E.chain((betGame) => playerHasAmountInWallet(playerBet, betGame)),
     E.chain((betGame) => playerHasNotBet(playerBet.playerId, betGame)),
-    E.chain((betGame) => addPlayerBetToCurrentRound(playerBet, betGame))
+    E.map((betGame) => addPlayerBetToCurrentRound(playerBet, betGame))
   );
 }
 
@@ -42,11 +41,7 @@ export function applyBetResultToCurrentRound(
   winningOptionId: string
 ): E.Either<string, GroupBettingGame> {
   return pipe(
-    getCurrentBettingRound(bettingGame),
-    E.fromOption(() => "No current betting round"),
-    E.chain((bettingRound) =>
-      applyResultToBettingRound(bettingRound, winningOptionId)
-    ),
+    applyResultToBettingRound(bettingGame.currentRound, winningOptionId),
     E.map((updatedRound) => updateGroupBettingRound(updatedRound, bettingGame)),
     E.map(updatePlayerWalletsWithRoundResult)
   );
@@ -132,8 +127,7 @@ function checkCurrentRoundHasBetResult(
   bettingGame: GroupBettingGame
 ): E.Either<string, GroupBettingGame> {
   return pipe(
-    getCurrentBettingRound(bettingGame),
-    O.chain((round) => O.fromNullable(round.result)),
+    O.fromNullable(bettingGame.currentRound.result),
     O.match(
       () => E.left("Current round does not have result"),
       () => E.right(bettingGame)
@@ -144,19 +138,15 @@ function checkCurrentRoundHasBetResult(
 function addPlayerBetToCurrentRound(
   playerBet: PlayerBet,
   bettingGame: GroupBettingGame
-): E.Either<string, GroupBettingGame> {
+): GroupBettingGame {
   return pipe(
-    getCurrentBettingRound(bettingGame),
-    O.map(
-      (round) =>
-        ({
-          ...round,
-          playerBets: [...round.playerBets, playerBet],
-        } as GroupPlayerBettingRound)
-    ),
-    O.map((updatedRound) => updateGroupBettingRound(updatedRound, bettingGame)),
-    O.map((result) => result.bettingGame),
-    E.fromOption(() => "")
+    bettingGame.currentRound,
+    (round): GroupPlayerBettingRound => ({
+      ...round,
+      playerBets: [...round.playerBets, playerBet],
+    }),
+    (updatedRound) => updateGroupBettingRound(updatedRound, bettingGame),
+    (result) => result.bettingGame
   );
 }
 
@@ -168,9 +158,7 @@ function updateGroupBettingRound(
     round,
     bettingGame: {
       ...bettingGame,
-      rounds: bettingGame.rounds.map((r) =>
-        r.index === round.index ? round : r
-      ),
+      currentRound: round,
     },
   };
 }
@@ -197,18 +185,12 @@ function playerHasNotBet(
   bettingGame: GroupBettingGame
 ): E.Either<string, GroupBettingGame> {
   return pipe(
-    getCurrentBettingRound(bettingGame),
+    bettingGame.currentRound,
+    (currentRound) => currentRound.playerBets,
+    A.findFirst((bet) => bet.playerId === playerId),
     O.match(
-      () => E.left("No current round"),
-      (currentRound) =>
-        pipe(
-          currentRound.playerBets,
-          A.findFirst((bet) => bet.playerId === playerId),
-          O.match(
-            () => E.right(bettingGame),
-            () => E.left("Player has already bet this round")
-          )
-        )
+      () => E.right(bettingGame),
+      () => E.left("Player has already bet this round")
     )
   );
 }
@@ -218,9 +200,9 @@ function isValidBettingOption(
   bettingGame: GroupBettingGame
 ): E.Either<string, GroupBettingGame> {
   return pipe(
-    getCurrentBettingRound(bettingGame),
-    O.map((round) => round.bettingOptions),
-    O.chain(A.findFirst((o) => o.id === optionId)),
+    bettingGame.currentRound,
+    (currentRound) => currentRound.bettingOptions,
+    A.findFirst((o) => o.id === optionId),
     O.match(
       () => E.left("Invalid betting option"),
       () => E.right(bettingGame)
@@ -231,24 +213,13 @@ function isValidBettingOption(
 function addBettingRoundWithPreviousRoundBettingOptions(
   bettingGame: GroupBettingGame
 ): GroupBettingGame {
-  //Just gonna assume there's a previous round 😅
-  const lastBettingOptions =
-    bettingGame.rounds[bettingGame.rounds.length - 1]!.bettingOptions;
+  const currentRound = bettingGame.currentRound;
   return {
     ...bettingGame,
-    rounds: [
-      ...bettingGame.rounds,
-      {
-        index: bettingGame.rounds.length,
-        playerBets: [],
-        bettingOptions: lastBettingOptions,
-      },
-    ],
+    currentRound: {
+      playerBets: [],
+      bettingOptions: currentRound.bettingOptions,
+    },
+    roundHistory: [...bettingGame.roundHistory, currentRound],
   };
-}
-
-function getCurrentBettingRound(
-  bettingGame: GroupBettingGame
-): O.Option<GroupPlayerBettingRound> {
-  return pipe(bettingGame.rounds, A.last);
 }

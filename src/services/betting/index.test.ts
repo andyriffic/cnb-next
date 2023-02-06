@@ -118,15 +118,12 @@ test("Can apply result to current betting round for multiply bets", () => {
 
   expect(result).toBeRight();
   expect(result).toSubsetEqualRight({
-    rounds: [
-      {
-        index: 0,
-        result: {
-          winningOptionId: "b1",
-          playerResults: [{ playerId: "p1", totalWinnings: 6 }],
-        },
+    currentRound: {
+      result: {
+        winningOptionId: "b1",
+        playerResults: [{ playerId: "p1", totalWinnings: 6 }],
       },
-    ],
+    },
   });
 });
 
@@ -145,15 +142,12 @@ test("Can apply result to current betting round for oddsOnly bets", () => {
 
   expect(result).toBeRight();
   expect(result).toSubsetEqualRight({
-    rounds: [
-      {
-        index: 0,
-        result: {
-          winningOptionId: "b1",
-          playerResults: [{ playerId: "p1", totalWinnings: 2 }],
-        },
+    currentRound: {
+      result: {
+        winningOptionId: "b1",
+        playerResults: [{ playerId: "p1", totalWinnings: 2 }],
       },
-    ],
+    },
   });
 });
 
@@ -172,15 +166,12 @@ test("Can bet 0 and get a return on oddsOnly bet", () => {
 
   expect(result).toBeRight();
   expect(result).toSubsetEqualRight({
-    rounds: [
-      {
-        index: 0,
-        result: {
-          winningOptionId: "b1",
-          playerResults: [{ playerId: "p1", totalWinnings: 2 }],
-        },
+    currentRound: {
+      result: {
+        winningOptionId: "b1",
+        playerResults: [{ playerId: "p1", totalWinnings: 2 }],
       },
-    ],
+    },
   });
 });
 
@@ -212,9 +203,6 @@ test("Can add new betting round", () => {
   );
 
   expect(result).toBeRight();
-  expect(result).toSubsetEqualRight({
-    rounds: [{ index: 0 }, { index: 1 }],
-  });
 });
 
 test("Can't add new betting round if current round does not have a result", () => {

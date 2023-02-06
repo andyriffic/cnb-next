@@ -1,11 +1,11 @@
 export type GroupBettingGame = {
   id: string;
-  rounds: GroupPlayerBettingRound[];
+  currentRound: GroupPlayerBettingRound;
+  roundHistory: GroupPlayerBettingRound[];
   playerWallets: PlayerWallet[];
 };
 
 export type GroupPlayerBettingRound = {
-  index: number;
   bettingOptions: BettingOption[];
   playerBets: PlayerBet[];
   result?: GroupBettingRoundResult;

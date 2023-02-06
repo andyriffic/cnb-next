@@ -30,7 +30,7 @@ function Page({}: Props) {
   const router = useRouter();
   const gameId = router.query.gameId as string;
   const { game, resolveRound, newRound, currentRound } = useRPSGame(gameId);
-  const { bettingGame, currentBettingRound } = useBettingGame(gameId);
+  const { bettingGame } = useBettingGame(gameId);
   useSyncRockPapersScissorsWithBettingGame(gameId);
   const gameState = useGameState(game);
   const winningConditions = useGameWinningConditions(game, bettingGame);
@@ -48,7 +48,7 @@ function Page({}: Props) {
       return false;
     }
 
-    const bettingRound = bettingGame.rounds[bettingGame.rounds.length - 1]!;
+    const bettingRound = bettingGame.currentRound;
 
     const everyoneHasBet =
       bettingRound.playerBets.length === bettingGame.playerWallets.length;
@@ -75,7 +75,7 @@ function Page({}: Props) {
       <Heading>
         Game: {gameId} | {RpsGameState[gameState]}
       </Heading>
-      {game && currentRound && currentBettingRound ? (
+      {game && currentRound && bettingGame?.currentRound ? (
         <div>
           <div>
             <button onClick={() => newRound()}>NEW ROUND</button>
@@ -118,7 +118,7 @@ function Page({}: Props) {
           {bettingGame && gameState >= RpsGameState.SHOW_BETS && (
             <Positioned horizontalAlign={{ align: "center", topPercent: 5 }}>
               <ViewerPlayerBets
-                groupBettingRound={currentBettingRound}
+                groupBettingRound={bettingGame.currentRound}
                 wallets={bettingGame.playerWallets}
                 betId="draw"
                 direction="right"
@@ -142,7 +142,7 @@ function Page({}: Props) {
       ) : (
         <h2>{gameId} not found</h2>
       )}
-      {bettingGame && currentBettingRound ? (
+      {bettingGame ? (
         <Positioned horizontalAlign={{ align: "center", bottomPercent: 30 }}>
           <div>
             {gameState < RpsGameState.HAS_RESULT && !allPlayerHaveBet && (
@@ -153,7 +153,7 @@ function Page({}: Props) {
             <div style={{ display: "flex", justifyContent: "center" }}>
               <ViewerWaitingToBetList
                 wallets={bettingGame.playerWallets}
-                bettingRound={currentBettingRound}
+                bettingRound={bettingGame.currentRound}
                 revealResult={false}
                 removeBustedPlayers={
                   gameState >= RpsGameState.HIGHLIGHT_WINNING_SPECTATORS
