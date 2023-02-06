@@ -10,53 +10,48 @@ import { Attention } from "../animations/Attention";
 import { Card, Heading, SubHeading } from "../Atoms";
 import { BetTotal } from "./BetTotal";
 import { RpsGameState } from "./hooks/useGameState";
+import { WinningConditions } from "./hooks/useGameWinningConditions";
 
 const Container = styled.div``;
 
 type Props = {
-  groupBettingGame: GroupBettingGame;
-  rpsGame: RPSSpectatorGameView;
+  winningConditions: WinningConditions | undefined;
   gameState: RpsGameState;
 };
 
+const SPECTATOR_TARGET_SCORE = 4;
+
 export function GameStatusAnnouncement({
-  groupBettingGame,
-  rpsGame,
+  winningConditions,
   gameState,
 }: Props) {
   const { getName } = usePlayerNames();
 
   const gameStatusText = useMemo(() => {
-    const bettingPlayersRemaining = groupBettingGame.playerWallets.filter(
-      (w) => w.value > 0
-    );
-
-    if (bettingPlayersRemaining.length === 1) {
-      return `${getName(bettingPlayersRemaining[0]!.playerId)} wins!`;
+    if (!winningConditions) {
+      return "🤷‍♂️";
     }
 
-    if (bettingPlayersRemaining.length > 1) {
-      return `${bettingPlayersRemaining.length} players remaining`;
+    if (winningConditions.spectatorWinnerPlayerId) {
+      return `${getName(winningConditions.spectatorWinnerPlayerId)} wins!`;
     }
 
-    const player1Id = rpsGame.playerIds[0];
-    const player2Id = rpsGame.playerIds[1];
-
-    const player1Score =
-      rpsGame.scores.find((s) => s.playerId === player1Id)?.score || 0;
-    const player2Score =
-      rpsGame.scores.find((s) => s.playerId === player2Id)?.score || 0;
-
-    if (player1Score === player2Score) {
-      return "It's a draw";
-    } else if (player1Score > player2Score) {
-      return `${getName(player1Id)} wins!`;
-    } else {
-      return `${getName(player2Id)} wins!`;
+    if (winningConditions.playerWinnerPlayerId) {
+      return `${getName(winningConditions.playerWinnerPlayerId)} wins!`;
     }
 
-    return "Hello";
-  }, [groupBettingGame, rpsGame, getName]);
+    if (winningConditions.couldWinNextMovePlayerIds.length > 0) {
+      return `Could win next round: ${winningConditions.couldWinNextMovePlayerIds
+        .map(getName)
+        .join(", ")}`;
+    }
+
+    if (winningConditions.frontRunnerPlayerIds.length > 0) {
+      return `Front runners: ${winningConditions.frontRunnerPlayerIds
+        .map(getName)
+        .join(", ")}`;
+    }
+  }, [winningConditions, getName]);
 
   return (
     <Container>

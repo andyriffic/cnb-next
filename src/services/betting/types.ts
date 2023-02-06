@@ -31,6 +31,7 @@ export type BettingOption = {
   id: string;
   name: string;
   odds: number;
+  betReturn: "oddsOnly" | "multiply";
 };
 
 export type PlayerWallet = {

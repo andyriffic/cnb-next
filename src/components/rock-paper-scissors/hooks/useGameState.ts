@@ -12,9 +12,8 @@ export enum RpsGameState {
   SHOW_BETS = 3,
   SHOW_MOVES = 4,
   SHOW_GAME_RESULT = 5,
-  SHOW_BET_RESULT = 6,
-  REMOVE_BUSTED_PLAYERS = 7,
-  FINISHED = 8,
+  HIGHLIGHT_WINNING_SPECTATORS = 6,
+  FINISHED = 7,
 }
 
 const getGameInitialState = (
@@ -48,7 +47,7 @@ export const useGameState = (
 
   useEffect(() => {
     if (state === RpsGameState.HAS_RESULT) {
-      setTimeout(() => setState(RpsGameState.SHOW_BETS), 3000);
+      setTimeout(() => setState(RpsGameState.SHOW_BETS), 100);
     }
   }, [state]);
 
@@ -66,18 +65,15 @@ export const useGameState = (
 
   useEffect(() => {
     if (state === RpsGameState.SHOW_GAME_RESULT) {
-      setTimeout(() => setState(RpsGameState.SHOW_BET_RESULT), 3000);
+      setTimeout(
+        () => setState(RpsGameState.HIGHLIGHT_WINNING_SPECTATORS),
+        3000
+      );
     }
   }, [state]);
 
   useEffect(() => {
-    if (state === RpsGameState.SHOW_BET_RESULT) {
-      setTimeout(() => setState(RpsGameState.REMOVE_BUSTED_PLAYERS), 3000);
-    }
-  }, [state]);
-
-  useEffect(() => {
-    if (state === RpsGameState.REMOVE_BUSTED_PLAYERS) {
+    if (state === RpsGameState.HIGHLIGHT_WINNING_SPECTATORS) {
       setTimeout(() => setState(RpsGameState.FINISHED), 3000);
     }
   }, [state]);

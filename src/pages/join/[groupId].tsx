@@ -53,9 +53,14 @@ function Page() {
               const playerId1 = group.playerIds[0]!;
               const playerId2 = group.playerIds[1]!;
 
+              const STARTING_WALLET_BALANCE = 0;
+
               const bettingPlayerWallets = group.playerIds
                 .filter((pid) => pid !== playerId1 && pid !== playerId2)
-                .map<PlayerWallet>((pid) => ({ playerId: pid, value: 2 }));
+                .map<PlayerWallet>((pid) => ({
+                  playerId: pid,
+                  value: STARTING_WALLET_BALANCE,
+                }));
 
               rockPaperScissors.createRPSGame(
                 {
@@ -66,9 +71,24 @@ function Page() {
                   groupBetting.createGroupBettingGame(
                     gameId,
                     [
-                      { id: playerId1, name: getName(playerId1), odds: 0 },
-                      { id: "draw", name: "Draw", odds: 0 },
-                      { id: playerId2, name: getName(playerId2), odds: 0 },
+                      {
+                        id: playerId1,
+                        name: getName(playerId1),
+                        odds: 1,
+                        betReturn: "oddsOnly",
+                      },
+                      {
+                        id: "draw",
+                        name: "Draw",
+                        odds: 1,
+                        betReturn: "oddsOnly",
+                      },
+                      {
+                        id: playerId2,
+                        name: getName(playerId2),
+                        odds: 1,
+                        betReturn: "oddsOnly",
+                      },
                     ],
                     bettingPlayerWallets,
                     (bettingId) =>

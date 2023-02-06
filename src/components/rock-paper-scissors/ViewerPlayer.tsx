@@ -85,7 +85,9 @@ export const ViewerPlayer = ({
               wallets={bettingGame.playerWallets}
               betId={playerId}
               direction={direction}
-              explodeLosers={gameState >= RpsGameState.REMOVE_BUSTED_PLAYERS}
+              explodeLosers={
+                gameState >= RpsGameState.HIGHLIGHT_WINNING_SPECTATORS
+              }
             />
           )}
         </Positioned>

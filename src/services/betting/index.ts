@@ -87,6 +87,18 @@ function updatePlayerWalletsWithRoundResult({
   };
 }
 
+function getBetWinnings(betOption: BettingOption, betValue: number): number {
+  switch (betOption.betReturn) {
+    case "oddsOnly": {
+      return betOption.odds;
+    }
+    case "multiply":
+    default: {
+      return betOption.odds * betValue;
+    }
+  }
+}
+
 function applyResultToBettingRound(
   bettingRound: GroupPlayerBettingRound,
   winningOptionId: string
@@ -107,7 +119,9 @@ function applyResultToBettingRound(
         const won = bet.betOptionId === winingOption.id;
         return {
           playerId: bet.playerId,
-          totalWinnings: won ? bet.betValue * winingOption.odds : -bet.betValue,
+          totalWinnings: won
+            ? getBetWinnings(winingOption, bet.betValue)
+            : -bet.betValue,
         };
       }),
     },

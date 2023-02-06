@@ -72,7 +72,7 @@ function PlayersBettingOptions({
   makeBet: (playerBet: PlayerBet) => void;
 }) {
   const [betValue, setBetValue] = useState(1);
-  return wallet.value > 0 ? (
+  return (
     <div>
       {/* <div>
         <input
@@ -90,7 +90,7 @@ function PlayersBettingOptions({
             onClick={() =>
               makeBet({
                 playerId: wallet.playerId,
-                betValue,
+                betValue: 0,
                 betOptionId: bo.id,
               })
             }
@@ -100,5 +100,5 @@ function PlayersBettingOptions({
         ))}
       </div>
     </div>
-  ) : null;
+  );
 }

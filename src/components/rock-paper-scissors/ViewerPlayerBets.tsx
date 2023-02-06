@@ -65,9 +65,10 @@ export function ViewerPlayerBets({
   const displayedPlayers = useMemo(() => {
     return groupBettingRound.playerBets
       .filter((pb) => pb.betOptionId === betId)
-      .filter((pb) =>
+      .filter(() =>
         explodeLosers
-          ? wallets.find((w) => w.playerId === pb.playerId)?.value || 0 > 0
+          ? !!groupBettingRound.result &&
+            groupBettingRound.result.winningOptionId === betId
           : true
       );
   }, [groupBettingRound, betId, explodeLosers]);

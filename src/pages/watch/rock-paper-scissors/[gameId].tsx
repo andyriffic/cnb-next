@@ -22,6 +22,7 @@ import { BetTotal } from "../../../components/rock-paper-scissors/BetTotal";
 import { DrawBetTotal } from "../../../components/rock-paper-scissors/DrawBetTotal";
 import { ViewerPlayerBets } from "../../../components/rock-paper-scissors/ViewerPlayerBets";
 import { GameStatusAnnouncement } from "../../../components/rock-paper-scissors/GameStatusAnnouncement";
+import { useGameWinningConditions } from "../../../components/rock-paper-scissors/hooks/useGameWinningConditions";
 
 type Props = {};
 
@@ -32,6 +33,7 @@ function Page({}: Props) {
   const { bettingGame, currentBettingRound } = useBettingGame(gameId);
   useSyncRockPapersScissorsWithBettingGame(gameId);
   const gameState = useGameState(game);
+  const winningConditions = useGameWinningConditions(game, bettingGame);
 
   const gamePlayersReady = useMemo(() => {
     if (!game) {
@@ -49,8 +51,7 @@ function Page({}: Props) {
     const bettingRound = bettingGame.rounds[bettingGame.rounds.length - 1]!;
 
     const everyoneHasBet =
-      bettingRound.playerBets.length ===
-      bettingGame.playerWallets.filter((w) => w.value > 0).length;
+      bettingRound.playerBets.length === bettingGame.playerWallets.length;
 
     return everyoneHasBet;
   }, [bettingGame]);
@@ -121,7 +122,9 @@ function Page({}: Props) {
                 wallets={bettingGame.playerWallets}
                 betId="draw"
                 direction="right"
-                explodeLosers={gameState >= RpsGameState.REMOVE_BUSTED_PLAYERS}
+                explodeLosers={
+                  gameState >= RpsGameState.HIGHLIGHT_WINNING_SPECTATORS
+                }
               />
             </Positioned>
           )}
@@ -130,9 +133,8 @@ function Page({}: Props) {
               horizontalAlign={{ align: "center", bottomPercent: 20 }}
             >
               <GameStatusAnnouncement
+                winningConditions={winningConditions}
                 gameState={gameState}
-                groupBettingGame={bettingGame}
-                rpsGame={game}
               />
             </Positioned>
           )}
@@ -152,9 +154,9 @@ function Page({}: Props) {
               <ViewerWaitingToBetList
                 wallets={bettingGame.playerWallets}
                 bettingRound={currentBettingRound}
-                revealResult={gameState >= RpsGameState.SHOW_BET_RESULT}
+                revealResult={false}
                 removeBustedPlayers={
-                  gameState >= RpsGameState.REMOVE_BUSTED_PLAYERS
+                  gameState >= RpsGameState.HIGHLIGHT_WINNING_SPECTATORS
                 }
               />
             </div>

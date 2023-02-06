@@ -1,15 +1,11 @@
 import { animated, config, useTransition } from "@react-spring/web";
 import { useMemo, useRef } from "react";
-import { COLORS } from "../../colors";
 import { usePlayerNames } from "../../providers/PlayerNamesProvider";
 import {
   GroupPlayerBettingRound,
   PlayerWallet,
 } from "../../services/betting/types";
-import { CenteredCard, SubHeading, Heading, CaptionText } from "../Atoms";
-import { CenterSpaced } from "../Layouts";
 import { PlayerAvatar } from "../PlayerAvatar";
-import { RpsGameState } from "./hooks/useGameState";
 
 type BetState =
   | "broke"
@@ -80,11 +76,13 @@ export const ViewerWaitingToBetList = ({
   );
 
   const waitingPlayerWallets = useMemo(() => {
-    return wallets
-      .filter((w) => w.value > 0)
-      .filter(
-        (w) => !bettingRound.playerBets.find((b) => b.playerId === w.playerId)
-      );
+    return (
+      wallets
+        // .filter((w) => w.value > 0)
+        .filter(
+          (w) => !bettingRound.playerBets.find((b) => b.playerId === w.playerId)
+        )
+    );
   }, [wallets, bettingRound]);
 
   const transitions = useTransition(

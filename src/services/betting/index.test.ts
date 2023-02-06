@@ -11,7 +11,7 @@ test("Can add bet to game if have enough in wallet", () => {
   const result = pipe(
     createBettingGame(
       "game1",
-      [{ id: "b1", name: "Bet1", odds: 1 }],
+      [{ id: "b1", name: "Bet1", odds: 1, betReturn: "multiply" }],
       [{ playerId: "p1", value: 1 }]
     ),
     E.chain((game) =>
@@ -26,7 +26,7 @@ test("Can't bet twice in same round for same player", () => {
   const result = pipe(
     createBettingGame(
       "game1",
-      [{ id: "b1", name: "Bet1", odds: 1 }],
+      [{ id: "b1", name: "Bet1", odds: 1, betReturn: "multiply" }],
       [{ playerId: "p1", value: 1 }]
     ),
     E.chain((game) =>
@@ -44,7 +44,7 @@ test("Can't add bet for invalid betting option", () => {
   const result = pipe(
     createBettingGame(
       "game1",
-      [{ id: "b1", name: "Bet1", odds: 1 }],
+      [{ id: "b1", name: "Bet1", odds: 1, betReturn: "multiply" }],
       [{ playerId: "p1", value: 1 }]
     ),
     E.chain((game) =>
@@ -66,7 +66,7 @@ test("Can't add bet if not enough in wallet", () => {
   const result = pipe(
     createBettingGame(
       "game1",
-      [{ id: "b1", name: "Bet1", odds: 1 }],
+      [{ id: "b1", name: "Bet1", odds: 1, betReturn: "multiply" }],
       [{ playerId: "p1", value: STARTING_BALANCE }]
     ),
     E.chain((game) =>
@@ -81,15 +81,37 @@ test("Can't add bet if not enough in wallet", () => {
   expect(result).toEqualLeft("Not enough in wallet");
 });
 
-test("Can apply result to current betting round", () => {
+test("Can bet 0", () => {
+  const STARTING_BALANCE = 0;
+  const BETTING_VALUE = 0;
+
   const result = pipe(
     createBettingGame(
       "game1",
-      [{ id: "b1", name: "Bet1", odds: 1 }],
-      [{ playerId: "p1", value: 1 }]
+      [{ id: "b1", name: "Bet1", odds: 1, betReturn: "oddsOnly" }],
+      [{ playerId: "p1", value: STARTING_BALANCE }]
     ),
     E.chain((game) =>
-      makePlayerBet(game, { playerId: "p1", betOptionId: "b1", betValue: 1 })
+      makePlayerBet(game, {
+        playerId: "p1",
+        betOptionId: "b1",
+        betValue: BETTING_VALUE,
+      })
+    )
+  );
+
+  expect(result).toBeRight();
+});
+
+test("Can apply result to current betting round for multiply bets", () => {
+  const result = pipe(
+    createBettingGame(
+      "game1",
+      [{ id: "b1", name: "Bet1", odds: 3, betReturn: "multiply" }],
+      [{ playerId: "p1", value: 2 }]
+    ),
+    E.chain((game) =>
+      makePlayerBet(game, { playerId: "p1", betOptionId: "b1", betValue: 2 })
     ),
     E.chain((game) => applyBetResultToCurrentRound(game, "b1"))
   );
@@ -101,7 +123,61 @@ test("Can apply result to current betting round", () => {
         index: 0,
         result: {
           winningOptionId: "b1",
-          playerResults: [{ playerId: "p1", totalWinnings: 1 }],
+          playerResults: [{ playerId: "p1", totalWinnings: 6 }],
+        },
+      },
+    ],
+  });
+});
+
+test("Can apply result to current betting round for oddsOnly bets", () => {
+  const result = pipe(
+    createBettingGame(
+      "game1",
+      [{ id: "b1", name: "Bet1", odds: 2, betReturn: "oddsOnly" }],
+      [{ playerId: "p1", value: 3 }]
+    ),
+    E.chain((game) =>
+      makePlayerBet(game, { playerId: "p1", betOptionId: "b1", betValue: 3 })
+    ),
+    E.chain((game) => applyBetResultToCurrentRound(game, "b1"))
+  );
+
+  expect(result).toBeRight();
+  expect(result).toSubsetEqualRight({
+    rounds: [
+      {
+        index: 0,
+        result: {
+          winningOptionId: "b1",
+          playerResults: [{ playerId: "p1", totalWinnings: 2 }],
+        },
+      },
+    ],
+  });
+});
+
+test("Can bet 0 and get a return on oddsOnly bet", () => {
+  const result = pipe(
+    createBettingGame(
+      "game1",
+      [{ id: "b1", name: "Bet1", odds: 2, betReturn: "oddsOnly" }],
+      [{ playerId: "p1", value: 0 }]
+    ),
+    E.chain((game) =>
+      makePlayerBet(game, { playerId: "p1", betOptionId: "b1", betValue: 0 })
+    ),
+    E.chain((game) => applyBetResultToCurrentRound(game, "b1"))
+  );
+
+  expect(result).toBeRight();
+  expect(result).toSubsetEqualRight({
+    rounds: [
+      {
+        index: 0,
+        result: {
+          winningOptionId: "b1",
+          playerResults: [{ playerId: "p1", totalWinnings: 2 }],
         },
       },
     ],
@@ -112,7 +188,7 @@ test("Can't apply result to current betting round for invalid winning option", (
   const result = pipe(
     createBettingGame(
       "game1",
-      [{ id: "b1", name: "Bet1", odds: 1 }],
+      [{ id: "b1", name: "Bet1", odds: 1, betReturn: "multiply" }],
       [{ playerId: "p1", value: 1 }]
     ),
     E.chain((game) =>
@@ -128,7 +204,7 @@ test("Can add new betting round", () => {
   const result = pipe(
     createBettingGame(
       "game1",
-      [{ id: "b1", name: "Bet1", odds: 1 }],
+      [{ id: "b1", name: "Bet1", odds: 1, betReturn: "multiply" }],
       [{ playerId: "p1", value: 1 }]
     ),
     E.chain((game) => applyBetResultToCurrentRound(game, "b1")),
@@ -145,7 +221,7 @@ test("Can't add new betting round if current round does not have a result", () =
   const result = pipe(
     createBettingGame(
       "game1",
-      [{ id: "b1", name: "Bet1", odds: 1 }],
+      [{ id: "b1", name: "Bet1", odds: 1, betReturn: "multiply" }],
       [{ playerId: "p1", value: 1 }]
     ),
     E.chain((game) => addNewBettingRound(game))
