@@ -53,7 +53,7 @@ export function GameStatusAnnouncement({
 
   return (
     <Container>
-      {gameState >= RpsGameState.FINISHED && (
+      {gameState >= RpsGameState.SHOW_GAME_STATUS && (
         <Card>
           <Heading>
             <Attention animate={gameState === RpsGameState.SHOW_GAME_RESULT}>

@@ -60,6 +60,26 @@ function Page({}: Props) {
     game && RPSGameSubject.notify(game);
   }, [game]);
 
+  useEffect(() => {
+    if (
+      gameState === RpsGameState.FINISHED &&
+      winningConditions &&
+      !winningConditions.gameOver
+    ) {
+      newRound();
+    }
+  }, [gameState, winningConditions, newRound]);
+
+  useEffect(() => {
+    if (
+      gameState === RpsGameState.PLAYERS_READY &&
+      allPlayerHaveBet &&
+      gamePlayersReady
+    ) {
+      resolveRound();
+    }
+  }, [gameState, gamePlayersReady, allPlayerHaveBet, resolveRound]);
+
   return (
     <SpectatorPageLayout
       debug={
@@ -77,10 +97,7 @@ function Page({}: Props) {
       </Heading>
       {game && bettingGame?.currentRound ? (
         <div>
-          <div>
-            <button onClick={() => newRound()}>NEW ROUND</button>
-          </div>
-          {gameState <= RpsGameState.PLAYERS_READY && (
+          {/* {gameState <= RpsGameState.PLAYERS_READY && (
             <Positioned horizontalAlign={{ align: "center", topPercent: 5 }}>
               <CenterSpaced>
                 {gamePlayersReady ? (
@@ -95,7 +112,7 @@ function Page({}: Props) {
                 )}
               </CenterSpaced>
             </Positioned>
-          )}
+          )} */}
           <Positioned absolute={{ topPercent: 5, leftPercent: 10 }}>
             <ViewerPlayer
               playerId={game.playerIds[0]}

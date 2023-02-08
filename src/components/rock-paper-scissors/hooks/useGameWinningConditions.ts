@@ -10,6 +10,7 @@ export type WinningConditions = {
   playerWinnerPlayerId?: string;
   couldWinNextMovePlayerIds: string[];
   frontRunnerPlayerIds: string[];
+  gameOver: boolean;
 };
 
 export const useGameWinningConditions = (
@@ -30,6 +31,7 @@ export const useGameWinningConditions = (
         spectatorWinnerPlayerId: playersAtTargetScore[0]!.playerId,
         couldWinNextMovePlayerIds: [],
         frontRunnerPlayerIds: [],
+        gameOver: true,
       };
     }
 
@@ -48,18 +50,21 @@ export const useGameWinningConditions = (
           washout: true,
           couldWinNextMovePlayerIds: [],
           frontRunnerPlayerIds: [],
+          gameOver: true,
         };
       } else if (player1Score > player2Score) {
         return {
           playerWinnerPlayerId: player1Id,
           couldWinNextMovePlayerIds: [],
           frontRunnerPlayerIds: [],
+          gameOver: true,
         };
       } else {
         return {
           playerWinnerPlayerId: player2Id,
           couldWinNextMovePlayerIds: [],
           frontRunnerPlayerIds: [],
+          gameOver: true,
         };
       }
     }
@@ -77,6 +82,7 @@ export const useGameWinningConditions = (
         .filter((w) => w.value === SPECTATOR_TARGET_SCORE - 1)
         .map((w) => w.playerId),
       frontRunnerPlayerIds: playerIdsWithHighestScore,
+      gameOver: false,
     };
   }, [rpsGame, bettingGame]);
 

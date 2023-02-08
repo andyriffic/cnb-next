@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useRPSGame } from "../../providers/SocketIoProvider/useRockPaperScissorsSocket";
 import { RPSSpectatorGameView } from "../../services/rock-paper-scissors/types";
+import { selectRandomOneOf } from "../../utils/random";
 
 const Container = styled.div`
   display: flex;
@@ -14,8 +15,18 @@ type Props = {
 export const DebugPlayerMove = ({ game }: Props) => {
   const { makeMove } = useRPSGame(game.id);
 
+  const randomMoves = () => {
+    game.playerIds.forEach((pid) =>
+      makeMove({
+        playerId: pid,
+        moveName: selectRandomOneOf(["rock", "paper", "scissors"]),
+      })
+    );
+  };
+
   return (
     <Container>
+      <button onClick={randomMoves}>random moves</button>
       {game.playerIds.map((pid) => (
         <div key={pid}>
           <p>{pid}</p>

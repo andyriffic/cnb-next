@@ -13,7 +13,8 @@ export enum RpsGameState {
   SHOW_MOVES = 4,
   SHOW_GAME_RESULT = 5,
   HIGHLIGHT_WINNING_SPECTATORS = 6,
-  FINISHED = 7,
+  SHOW_GAME_STATUS = 7,
+  FINISHED = 8,
 }
 
 const getGameInitialState = (
@@ -74,6 +75,12 @@ export const useGameState = (
 
   useEffect(() => {
     if (state === RpsGameState.HIGHLIGHT_WINNING_SPECTATORS) {
+      setTimeout(() => setState(RpsGameState.SHOW_GAME_STATUS), 3000);
+    }
+  }, [state]);
+
+  useEffect(() => {
+    if (state === RpsGameState.SHOW_GAME_STATUS) {
       setTimeout(() => setState(RpsGameState.FINISHED), 3000);
     }
   }, [state]);

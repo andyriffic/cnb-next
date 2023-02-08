@@ -34,8 +34,12 @@ const Lives = styled.div`
   position: absolute;
   bottom: 0;
   left: 50%;
-  transform: translateX(-50%);
+  /* transform: translateX(-50%); */
   font-size: 1rem;
+  background: white;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.2rem;
+  border: 2px solid ${COLORS.borderPrimary};
 `;
 
 const hearts = (count: number) => new Array(count).fill("♥️").join();
@@ -73,24 +77,6 @@ export function ViewerPlayerBets({
       );
   }, [groupBettingRound, betId, explodeLosers]);
 
-  // const animationProps = useMemo(() => {
-  //   const loser =
-  //     explodeLosers &&
-  //     groupBettingRound.result &&
-  //     groupBettingRound.result.winningOptionId !== betId;
-  //   return {
-  //     opacity: loser ? 0 : 1,
-  //     rotate: 0,
-  //   };
-  // }, [explodeLosers, groupBettingRound, betId]);
-
-  // const trails = useTrail(players.length, {
-  //   from: { opacity: 0, y: -30 },
-  //   to: { opacity: animationProps.opacity, y: 0 },
-  //   delay: 1,
-  //   config: config.wobbly,
-  // });
-
   return (
     <Container>
       {/* <Value>
@@ -106,6 +92,7 @@ export function ViewerPlayerBets({
               size="thumbnail"
               facing={direction}
             />
+            {explodeLosers && <Lives>{livesRemaining}</Lives>}
             {/* {explodeLosers && <Lives>{hearts(livesRemaining)}</Lives>} */}
           </BetPill>
         );

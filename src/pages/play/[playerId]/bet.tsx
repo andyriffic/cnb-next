@@ -52,8 +52,8 @@ function Page() {
           <Heading>Round {bettingGame.roundHistory.length + 1}</Heading>
           {playerWallet && (
             <Card>
-              <SubHeading>Lives:</SubHeading>
-              <Heading>{playerWallet.value}♥️</Heading>
+              <SubHeading>Correct guesses</SubHeading>
+              <Heading>{playerWallet.value}</Heading>
             </Card>
           )}
           {!lockedInBet && playerWallet && playerWallet.value > 0 && (
