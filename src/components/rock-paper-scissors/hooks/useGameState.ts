@@ -48,7 +48,7 @@ export const useGameState = (
 
   useEffect(() => {
     if (state === RpsGameState.HAS_RESULT) {
-      setTimeout(() => setState(RpsGameState.SHOW_BETS), 100);
+      setTimeout(() => setState(RpsGameState.SHOW_BETS), 3000);
     }
   }, [state]);
 

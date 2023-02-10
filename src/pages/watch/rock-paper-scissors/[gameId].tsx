@@ -1,29 +1,26 @@
 import { useRouter } from "next/router";
-import { useEffect, useMemo } from "react";
-import { Card, Heading, PrimaryButton } from "../../../components/Atoms";
+import { useCallback, useEffect, useMemo } from "react";
+import { Card, Heading } from "../../../components/Atoms";
+import { useSound } from "../../../components/hooks/useSound";
 import { useSyncRockPapersScissorsWithBettingGame } from "../../../components/hooks/useSyncRockPaperScissorsWithBettingGame";
-import { CenterSpaced, EvenlySpaced } from "../../../components/Layouts";
-import { RPSGameSubject } from "../../../components/rock-paper-scissors/observers";
-import { SpectatorPageLayout } from "../../../components/SpectatorPageLayout";
-import { useBettingGame } from "../../../providers/SocketIoProvider/useGroupBetting";
-import { useRPSGame } from "../../../providers/SocketIoProvider/useRockPaperScissorsSocket";
-import { ViewerWaitingToBetList } from "../../../components/rock-paper-scissors/ViewerWaitingToBetList";
-import { roundReady as gameRoundReady } from "../../../services/rock-paper-scissors/helpers";
 import { Positioned } from "../../../components/Positioned";
+import { DebugPlayerBets } from "../../../components/rock-paper-scissors/DebugPlayerBets";
+import { DebugPlayerMove } from "../../../components/rock-paper-scissors/DebugPlayerMove";
+import { GameStatusAnnouncement } from "../../../components/rock-paper-scissors/GameStatusAnnouncement";
 import {
   RpsGameState,
   useGameState,
 } from "../../../components/rock-paper-scissors/hooks/useGameState";
-import { DebugPlayerMove } from "../../../components/rock-paper-scissors/DebugPlayerMove";
-import { DebugPlayerBets } from "../../../components/rock-paper-scissors/DebugPlayerBets";
-import { ViewerPlayer } from "../../../components/rock-paper-scissors/ViewerPlayer";
-import { Attention } from "../../../components/animations/Attention";
-import { BetTotal } from "../../../components/rock-paper-scissors/BetTotal";
-import { DrawBetTotal } from "../../../components/rock-paper-scissors/DrawBetTotal";
-import { ViewerPlayerBets } from "../../../components/rock-paper-scissors/ViewerPlayerBets";
-import { GameStatusAnnouncement } from "../../../components/rock-paper-scissors/GameStatusAnnouncement";
 import { useGameWinningConditions } from "../../../components/rock-paper-scissors/hooks/useGameWinningConditions";
+import { RPSGameSubject } from "../../../components/rock-paper-scissors/observers";
+import { ViewerPlayer } from "../../../components/rock-paper-scissors/ViewerPlayer";
+import { ViewerPlayerBets } from "../../../components/rock-paper-scissors/ViewerPlayerBets";
+import { ViewerWaitingToBetList } from "../../../components/rock-paper-scissors/ViewerWaitingToBetList";
+import { SpectatorPageLayout } from "../../../components/SpectatorPageLayout";
 import { SplashContent } from "../../../components/SplashContent";
+import { useBettingGame } from "../../../providers/SocketIoProvider/useGroupBetting";
+import { useRPSGame } from "../../../providers/SocketIoProvider/useRockPaperScissorsSocket";
+import { roundReady as gameRoundReady } from "../../../services/rock-paper-scissors/helpers";
 
 type Props = {};
 
@@ -35,6 +32,13 @@ function Page({}: Props) {
   useSyncRockPapersScissorsWithBettingGame(gameId);
   const gameState = useGameState(game);
   const winningConditions = useGameWinningConditions(game, bettingGame);
+  const { play, loop } = useSound();
+
+  useEffect(() => {
+    if (gameState === RpsGameState.WAITING) {
+      return loop("rps-waiting-music");
+    }
+  }, [gameState, loop]);
 
   const gamePlayersReady = useMemo(() => {
     if (!game) {
@@ -81,6 +85,10 @@ function Page({}: Props) {
     }
   }, [gameState, gamePlayersReady, allPlayerHaveBet, resolveRound]);
 
+  const playRoundStartMusic = useCallback(() => {
+    return play("rps-new-round");
+  }, [play]);
+
   return (
     <SpectatorPageLayout
       debug={
@@ -98,22 +106,6 @@ function Page({}: Props) {
       </Heading>
       {game && bettingGame?.currentRound ? (
         <div style={{ position: "relative" }}>
-          {/* {gameState <= RpsGameState.PLAYERS_READY && (
-            <Positioned horizontalAlign={{ align: "center", topPercent: 5 }}>
-              <CenterSpaced>
-                {gamePlayersReady ? (
-                  <PrimaryButton
-                    disabled={!allPlayerHaveBet}
-                    onClick={() => resolveRound()}
-                  >
-                    Go!
-                  </PrimaryButton>
-                ) : (
-                  <Heading>Waiting for players to move</Heading>
-                )}
-              </CenterSpaced>
-            </Positioned>
-          )} */}
           <Positioned absolute={{ topPercent: 5, leftPercent: 10 }}>
             <ViewerPlayer
               playerId={game.playerIds[0]}
@@ -157,9 +149,19 @@ function Page({}: Props) {
             </Positioned>
           )}
           {gameState === RpsGameState.WAITING && (
-            <SplashContent>
+            <SplashContent onShowEffect={playRoundStartMusic}>
               <Card>
                 <Heading>Round {game.roundHistory.length + 1}</Heading>
+              </Card>
+            </SplashContent>
+          )}
+          {gameState === RpsGameState.HAS_RESULT && (
+            <SplashContent
+              showForMilliseconds={300}
+              onShowEffect={playRoundStartMusic}
+            >
+              <Card>
+                <Heading>Let&squo;s go!</Heading>
               </Card>
             </SplashContent>
           )}

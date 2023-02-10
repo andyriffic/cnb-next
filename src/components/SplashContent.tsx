@@ -34,13 +34,19 @@ const AnimatedContent = styled.div<{ show: boolean }>`
 type Props = {
   children: ReactNode;
   showForMilliseconds?: number;
+  onShowEffect?: () => void;
 };
 
 export function SplashContent({
   children,
   showForMilliseconds = 2000,
+  onShowEffect,
 }: Props): JSX.Element {
   const [show, setShow] = useState(true);
+
+  useEffect(() => {
+    onShowEffect && onShowEffect();
+  }, [onShowEffect]);
 
   useEffect(() => {
     const timeout = setTimeout(
@@ -48,7 +54,7 @@ export function SplashContent({
       showForMilliseconds + ANIMATION_DURATION_MS
     );
     return () => clearTimeout(timeout);
-  }, []);
+  }, [showForMilliseconds]);
 
   return (
     <Container>
