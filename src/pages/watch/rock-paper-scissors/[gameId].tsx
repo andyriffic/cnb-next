@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect, useMemo } from "react";
-import { Heading, PrimaryButton } from "../../../components/Atoms";
+import { Card, Heading, PrimaryButton } from "../../../components/Atoms";
 import { useSyncRockPapersScissorsWithBettingGame } from "../../../components/hooks/useSyncRockPaperScissorsWithBettingGame";
 import { CenterSpaced, EvenlySpaced } from "../../../components/Layouts";
 import { RPSGameSubject } from "../../../components/rock-paper-scissors/observers";
@@ -23,6 +23,7 @@ import { DrawBetTotal } from "../../../components/rock-paper-scissors/DrawBetTot
 import { ViewerPlayerBets } from "../../../components/rock-paper-scissors/ViewerPlayerBets";
 import { GameStatusAnnouncement } from "../../../components/rock-paper-scissors/GameStatusAnnouncement";
 import { useGameWinningConditions } from "../../../components/rock-paper-scissors/hooks/useGameWinningConditions";
+import { SplashContent } from "../../../components/SplashContent";
 
 type Props = {};
 
@@ -96,7 +97,7 @@ function Page({}: Props) {
         Game: {gameId} | {RpsGameState[gameState]}
       </Heading>
       {game && bettingGame?.currentRound ? (
-        <div>
+        <div style={{ position: "relative" }}>
           {/* {gameState <= RpsGameState.PLAYERS_READY && (
             <Positioned horizontalAlign={{ align: "center", topPercent: 5 }}>
               <CenterSpaced>
@@ -154,6 +155,13 @@ function Page({}: Props) {
                 gameState={gameState}
               />
             </Positioned>
+          )}
+          {gameState === RpsGameState.WAITING && (
+            <SplashContent>
+              <Card>
+                <Heading>Round {game.roundHistory.length + 1}</Heading>
+              </Card>
+            </SplashContent>
           )}
         </div>
       ) : (
