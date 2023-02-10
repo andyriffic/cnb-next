@@ -5,6 +5,8 @@ import {
   GroupPlayerBettingRound,
   PlayerWallet,
 } from "../../services/betting/types";
+import { useSomethingWhenArraySizeChanges } from "../hooks/useSomethingWhenArraySizeChanges";
+import { useSound } from "../hooks/useSound";
 import { PlayerAvatar } from "../PlayerAvatar";
 
 type BetState =
@@ -74,6 +76,7 @@ export const ViewerWaitingToBetList = ({
   const previousWalletsRef = useRef(
     wallets.sort(sortWalletByBetMostToLeastBetAmount)
   );
+  const { play } = useSound();
 
   const waitingPlayerWallets = useMemo(() => {
     return (
@@ -84,6 +87,10 @@ export const ViewerWaitingToBetList = ({
         )
     );
   }, [wallets, bettingRound]);
+
+  useSomethingWhenArraySizeChanges(waitingPlayerWallets, () =>
+    play("rps-spectator-chooses-option")
+  );
 
   const transitions = useTransition(
     waitingPlayerWallets.map((w, i) => ({ ...w, x: i * WIDTH_PX })),

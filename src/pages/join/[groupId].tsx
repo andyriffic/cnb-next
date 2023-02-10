@@ -1,9 +1,11 @@
 import { useRouter } from "next/router";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import styled from "styled-components";
 import { Appear } from "../../components/animations/Appear";
 import { Heading, PrimaryButton, SubHeading } from "../../components/Atoms";
 import { DebugPlayerJoin } from "../../components/DebugPlayerJoin";
+import { useSomethingWhenArraySizeChanges } from "../../components/hooks/useSomethingWhenArraySizeChanges";
+import { useSound } from "../../components/hooks/useSound";
 import { CenterSpaced } from "../../components/Layouts";
 import { PlayerAvatar } from "../../components/PlayerAvatar";
 import { SpectatorPageLayout } from "../../components/SpectatorPageLayout";
@@ -22,13 +24,26 @@ const JoinedPlayerItem = styled.div``;
 
 function Page() {
   const router = useRouter();
+  const groupId = router.query.groupId as string;
   const { groupJoin, rockPaperScissors, groupBetting } = useSocketIo();
   const { getName } = usePlayerNames();
-  const groupId = router.query.groupId as string;
+  const { play, loop } = useSound();
+
+  useEffect(() => {
+    const joinMusic = loop("join-music");
+    joinMusic.play();
+    return () => {
+      joinMusic.stop();
+    };
+  }, [loop]);
 
   const group = useMemo(() => {
     return groupJoin.playerGroups.find((g) => g.id === groupId);
   }, [groupJoin.playerGroups, groupId]);
+
+  useSomethingWhenArraySizeChanges(group?.playerIds, () =>
+    play("join-player-joined")
+  );
 
   return (
     <SpectatorPageLayout debug={group && <DebugPlayerJoin group={group} />}>

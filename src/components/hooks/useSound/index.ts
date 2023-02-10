@@ -4,7 +4,7 @@ import { SOUND_MAP } from "./soundMap";
 
 type UseSound = {
   play: (soundName: SoundName) => void;
-  loop: (soundName: SoundName) => void;
+  loop: (soundName: SoundName) => Howl;
 };
 
 export const playSoundFromUrl = (url: string) => {
@@ -17,12 +17,9 @@ const play = (soundName: SoundName) => {
   sound.play();
 };
 
-const loop = (soundName: SoundName): (() => void) => {
+const loop = (soundName: SoundName): Howl => {
   const sound = new Howl({ src: SOUND_MAP[soundName], loop: true });
-  sound.play();
-  return () => {
-    sound.stop();
-  };
+  return sound;
 };
 
 export const useSound = (): UseSound => {

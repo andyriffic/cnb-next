@@ -15,6 +15,7 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   /* background-color: black; */
+  pointer-events: none;
   /* z-index: 100; */
 `;
 

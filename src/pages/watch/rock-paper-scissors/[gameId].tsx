@@ -36,7 +36,14 @@ function Page({}: Props) {
 
   useEffect(() => {
     if (gameState === RpsGameState.WAITING) {
-      return loop("rps-waiting-music");
+      const waitingMusic = loop("rps-waiting-music");
+      const timeout = setTimeout(() => {
+        waitingMusic.play();
+      }, 3000);
+      return () => {
+        waitingMusic.stop();
+        clearTimeout(timeout);
+      };
     }
   }, [gameState, loop]);
 
@@ -105,7 +112,7 @@ function Page({}: Props) {
         Game: {gameId} | {RpsGameState[gameState]}
       </Heading>
       {game && bettingGame?.currentRound ? (
-        <div style={{ position: "relative" }}>
+        <div>
           <Positioned absolute={{ topPercent: 5, leftPercent: 10 }}>
             <ViewerPlayer
               playerId={game.playerIds[0]}
@@ -161,7 +168,7 @@ function Page({}: Props) {
               onShowEffect={playRoundStartMusic}
             >
               <Card>
-                <Heading>Let&squo;s go!</Heading>
+                <Heading>Let &squo; s go!</Heading>
               </Card>
             </SplashContent>
           )}

@@ -1,1 +1,7 @@
-export type SoundName = "rps-show-move" | "rps-new-round" | "rps-waiting-music";
+export type SoundName =
+  | "join-music"
+  | "join-player-joined"
+  | "rps-show-move"
+  | "rps-new-round"
+  | "rps-waiting-music"
+  | "rps-spectator-chooses-option";
