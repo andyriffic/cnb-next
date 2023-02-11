@@ -83,12 +83,6 @@ export const useGameState = (
         []
       );
       const maxPlayerChoice = choiceTotals ? Math.max(...choiceTotals) : 0;
-      console.log(
-        "MAX PLAYER CHOICE",
-        betGame?.currentRound,
-        choiceTotals,
-        maxPlayerChoice
-      );
 
       // const maxPlayersChoice = betGame?.currentRound.playerBets.reduce((acc, pb) => return )
       setTimeout(

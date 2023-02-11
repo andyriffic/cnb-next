@@ -1,7 +1,9 @@
+import styled from "styled-components";
 import { GroupBettingGame } from "../../services/betting/types";
 import { RPSSpectatorGameView } from "../../services/rock-paper-scissors/types";
 import { Attention } from "../animations/Attention";
 import { Card, SubHeading } from "../Atoms";
+import { FeatureValue } from "../FeatureValue";
 import { FacingDirection } from "../PlayerAvatar";
 import { Positioned } from "../Positioned";
 import { RpsGameState } from "./hooks/useGameState";
@@ -48,6 +50,15 @@ export const ViewerPlayer = ({
         size="medium"
         facing={direction}
       />
+      <Positioned
+        absolute={{
+          topPercent: 1,
+          leftPercent: direction === "right" ? 1 : undefined,
+          rightPercent: direction === "left" ? 1 : undefined,
+        }}
+      >
+        <FeatureValue value={score.score} />
+      </Positioned>
       <Positioned
         absolute={{
           topPercent: 20,

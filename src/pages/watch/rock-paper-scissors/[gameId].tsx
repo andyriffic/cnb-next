@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { Card, Heading } from "../../../components/Atoms";
 import { useSound } from "../../../components/hooks/useSound";
 import { useSyncRockPapersScissorsWithBettingGame } from "../../../components/hooks/useSyncRockPaperScissorsWithBettingGame";
@@ -45,7 +45,7 @@ function Page({}: Props) {
         clearTimeout(timeout);
       };
     }
-  }, [gameState, loop]);
+  }, [gameState.state, loop]);
 
   const gamePlayersReady = useMemo(() => {
     if (!game) {
@@ -72,15 +72,15 @@ function Page({}: Props) {
     game && RPSGameSubject.notify(game);
   }, [game]);
 
-  // useEffect(() => {
-  //   if (
-  //     gameState === RpsGameState.FINISHED &&
-  //     winningConditions &&
-  //     !winningConditions.gameOver
-  //   ) {
-  //     newRound();
-  //   }
-  // }, [gameState, winningConditions, newRound]);
+  useEffect(() => {
+    if (
+      gameState.state === RpsGameState.FINISHED &&
+      winningConditions &&
+      !winningConditions.gameOver
+    ) {
+      newRound();
+    }
+  }, [gameState, winningConditions, newRound]);
 
   useEffect(() => {
     if (
@@ -109,9 +109,9 @@ function Page({}: Props) {
         )
       }
     >
-      <Heading>
+      {/* <Heading>
         Game: {gameId} | {RpsGameState[gameState.state]}
-      </Heading>
+      </Heading> */}
       {game && bettingGame?.currentRound ? (
         <div>
           <Positioned absolute={{ topPercent: 5, leftPercent: 10 }}>

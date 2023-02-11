@@ -101,7 +101,7 @@ export function ViewerPlayerBets({
           wallets.find((w) => w.playerId === player.playerId)?.value || 0;
         return (
           <Appear
-            key={i}
+            key={player.playerId}
             show={i <= displayedPlayerIndex}
             animation="roll-in-left"
           >
