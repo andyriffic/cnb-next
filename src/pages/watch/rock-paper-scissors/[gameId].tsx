@@ -35,7 +35,7 @@ function Page({}: Props) {
   const { play, loop } = useSound();
 
   useEffect(() => {
-    if (gameState === RpsGameState.WAITING) {
+    if (gameState.state === RpsGameState.WAITING) {
       const waitingMusic = loop("rps-waiting-music");
       const timeout = setTimeout(() => {
         waitingMusic.play();
@@ -72,19 +72,19 @@ function Page({}: Props) {
     game && RPSGameSubject.notify(game);
   }, [game]);
 
-  useEffect(() => {
-    if (
-      gameState === RpsGameState.FINISHED &&
-      winningConditions &&
-      !winningConditions.gameOver
-    ) {
-      newRound();
-    }
-  }, [gameState, winningConditions, newRound]);
+  // useEffect(() => {
+  //   if (
+  //     gameState === RpsGameState.FINISHED &&
+  //     winningConditions &&
+  //     !winningConditions.gameOver
+  //   ) {
+  //     newRound();
+  //   }
+  // }, [gameState, winningConditions, newRound]);
 
   useEffect(() => {
     if (
-      gameState === RpsGameState.READY_TO_PLAY &&
+      gameState.state === RpsGameState.READY_TO_PLAY &&
       allPlayerHaveBet &&
       gamePlayersReady
     ) {
@@ -101,7 +101,8 @@ function Page({}: Props) {
       debug={
         game &&
         bettingGame && (
-          <div style={{ display: "flex", gap: "2rem" }}>
+          <div style={{ display: "flex", gap: "1rem" }}>
+            <button onClick={() => newRound()}>New Round</button>
             <DebugPlayerMove game={game} />
             <DebugPlayerBets bettingGame={bettingGame} />
           </div>
@@ -109,7 +110,7 @@ function Page({}: Props) {
       }
     >
       <Heading>
-        Game: {gameId} | {RpsGameState[gameState]}
+        Game: {gameId} | {RpsGameState[gameState.state]}
       </Heading>
       {game && bettingGame?.currentRound ? (
         <div>
@@ -119,7 +120,7 @@ function Page({}: Props) {
               game={game}
               bettingGame={bettingGame}
               direction="right"
-              gameState={gameState}
+              gameState={gameState.state}
             />
           </Positioned>
           <Positioned absolute={{ topPercent: 5, rightPercent: 10 }}>
@@ -128,11 +129,11 @@ function Page({}: Props) {
               game={game}
               bettingGame={bettingGame}
               direction="left"
-              gameState={gameState}
+              gameState={gameState.state}
             />
           </Positioned>
 
-          {bettingGame && gameState >= RpsGameState.SHOW_BETS && (
+          {bettingGame && gameState.state >= RpsGameState.SHOW_BETS && (
             <Positioned horizontalAlign={{ align: "center", topPercent: 5 }}>
               <ViewerPlayerBets
                 groupBettingRound={bettingGame.currentRound}
@@ -140,7 +141,7 @@ function Page({}: Props) {
                 betId="draw"
                 direction="right"
                 explodeLosers={
-                  gameState >= RpsGameState.HIGHLIGHT_WINNING_SPECTATORS
+                  gameState.state >= RpsGameState.HIGHLIGHT_WINNING_SPECTATORS
                 }
               />
             </Positioned>
@@ -151,11 +152,11 @@ function Page({}: Props) {
             >
               <GameStatusAnnouncement
                 winningConditions={winningConditions}
-                gameState={gameState}
+                gameState={gameState.state}
               />
             </Positioned>
           )}
-          {gameState === RpsGameState.WAITING && (
+          {gameState.state === RpsGameState.WAITING && (
             <SplashContent
               showForMilliseconds={400}
               onShowEffect={playRoundStartMusic}
@@ -165,7 +166,7 @@ function Page({}: Props) {
               </Card>
             </SplashContent>
           )}
-          {gameState === RpsGameState.HAS_RESULT && (
+          {gameState.state === RpsGameState.HAS_RESULT && (
             <SplashContent
               showForMilliseconds={300}
               onShowEffect={playRoundStartMusic}
@@ -182,7 +183,7 @@ function Page({}: Props) {
       {bettingGame ? (
         <Positioned horizontalAlign={{ align: "center", bottomPercent: 30 }}>
           <div>
-            {gameState < RpsGameState.HAS_RESULT && !allPlayerHaveBet && (
+            {gameState.state < RpsGameState.HAS_RESULT && !allPlayerHaveBet && (
               <Heading style={{ textAlign: "center" }}>
                 Make your choice
               </Heading>
@@ -193,7 +194,7 @@ function Page({}: Props) {
                 bettingRound={bettingGame.currentRound}
                 revealResult={false}
                 removeBustedPlayers={
-                  gameState >= RpsGameState.HIGHLIGHT_WINNING_SPECTATORS
+                  gameState.state >= RpsGameState.HIGHLIGHT_WINNING_SPECTATORS
                 }
               />
             </div>

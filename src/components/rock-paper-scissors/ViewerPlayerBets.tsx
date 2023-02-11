@@ -8,12 +8,15 @@ import {
   PlayerWallet,
 } from "../../services/betting/types";
 import { FacingDirection, PlayerAvatar } from "../PlayerAvatar";
+import { Appear } from "../animations/Appear";
+import { useSound } from "../hooks/useSound";
+import { useGameState } from "./hooks/useGameState";
 
 const Container = styled.div`
   /* width: 5vw; */
   display: flex;
   align-items: center;
-  flex-direction: row-reverse;
+  flex-direction: row;
   gap: 0.5rem;
 `;
 
@@ -27,7 +30,7 @@ const BetPill = styled.div`
   position: relative;
   font-size: 2rem;
   width: 3vw;
-  overflow: visible;
+  /* overflow: visible; */
 `;
 
 const Lives = styled.div`
@@ -59,13 +62,7 @@ export function ViewerPlayerBets({
   direction,
   explodeLosers,
 }: Props): JSX.Element {
-  const [betOption] = useState(
-    groupBettingRound.bettingOptions.find((o) => o.id === betId)!
-  );
-  const [players] = useState(
-    groupBettingRound.playerBets.filter((bo) => bo.betOptionId === betId)
-  );
-
+  const { play } = useSound();
   const displayedPlayers = useMemo(() => {
     return groupBettingRound.playerBets
       .filter((pb) => pb.betOptionId === betId)
@@ -77,24 +74,47 @@ export function ViewerPlayerBets({
       );
   }, [groupBettingRound, betId, explodeLosers]);
 
+  const [displayedPlayerIndex, setDisplayedPlayerIndex] = useState(0);
+  const [betOption] = useState(
+    groupBettingRound.bettingOptions.find((o) => o.id === betId)!
+  );
+  const [players] = useState(
+    groupBettingRound.playerBets.filter((bo) => bo.betOptionId === betId)
+  );
+
+  useEffect(() => {
+    if (displayedPlayerIndex < displayedPlayers.length) {
+      play("rps-spectator-choice-reveal");
+      setTimeout(() => {
+        setDisplayedPlayerIndex(displayedPlayerIndex + 1);
+      }, 800);
+    }
+  }, [displayedPlayerIndex, displayedPlayers, play]);
+
   return (
     <Container>
       {/* <Value>
         {betValue}/{totalBetValue}
       </Value> */}
-      {displayedPlayers.map((player) => {
+      {displayedPlayers.map((player, i) => {
         const livesRemaining =
           wallets.find((w) => w.playerId === player.playerId)?.value || 0;
         return (
-          <BetPill key={player.playerId}>
-            <PlayerAvatar
-              playerId={player.playerId}
-              size="thumbnail"
-              facing={direction}
-            />
-            {explodeLosers && <Lives>{livesRemaining}</Lives>}
-            {/* {explodeLosers && <Lives>{hearts(livesRemaining)}</Lives>} */}
-          </BetPill>
+          <Appear
+            key={i}
+            show={i <= displayedPlayerIndex}
+            animation="roll-in-left"
+          >
+            <BetPill>
+              <PlayerAvatar
+                playerId={player.playerId}
+                size="thumbnail"
+                facing={direction}
+              />
+              {explodeLosers && <Lives>{livesRemaining}</Lives>}
+              {/* {explodeLosers && <Lives>{hearts(livesRemaining)}</Lives>} */}
+            </BetPill>
+          </Appear>
         );
       })}
     </Container>

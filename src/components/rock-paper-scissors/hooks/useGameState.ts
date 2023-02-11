@@ -43,7 +43,7 @@ const getGameInitialState = (
 export const useGameState = (
   game: RPSSpectatorGameView | undefined,
   betGame: GroupBettingGame | undefined
-): RpsGameState => {
+): { state: RpsGameState; setGameState: (state: RpsGameState) => void } => {
   const [state, setState] = useState(getGameInitialState(game, betGame));
 
   useEffect(() => {
@@ -71,9 +71,32 @@ export const useGameState = (
 
   useEffect(() => {
     if (state === RpsGameState.SHOW_BETS) {
-      setTimeout(() => setState(RpsGameState.SHOW_MOVES), 3000);
+      const choiceTotals = betGame?.currentRound.bettingOptions.reduce<
+        number[]
+      >(
+        (acc, bo) => [
+          ...acc,
+          betGame.currentRound.playerBets.filter(
+            (pb) => pb.betOptionId === bo.id
+          ).length,
+        ],
+        []
+      );
+      const maxPlayerChoice = choiceTotals ? Math.max(...choiceTotals) : 0;
+      console.log(
+        "MAX PLAYER CHOICE",
+        betGame?.currentRound,
+        choiceTotals,
+        maxPlayerChoice
+      );
+
+      // const maxPlayersChoice = betGame?.currentRound.playerBets.reduce((acc, pb) => return )
+      setTimeout(
+        () => setState(RpsGameState.SHOW_MOVES),
+        maxPlayerChoice * 800 + 1000
+      );
     }
-  }, [state]);
+  }, [betGame, state]);
 
   useEffect(() => {
     if (state === RpsGameState.SHOW_MOVES) {
@@ -108,7 +131,7 @@ export const useGameState = (
     }
   }, [game, state]);
 
-  return state;
+  return { state, setGameState: setState };
 };
 
 // const useTimedStateTransitionEffect = (state: RpsGameState, props: {from: RpsGameState, to: RpsGameState, milliseconds: number}): void => {

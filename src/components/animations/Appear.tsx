@@ -73,7 +73,7 @@ type Props = {
 export const Appear = ({
   children,
   show = true,
-  animation,
+  animation = "flip-in",
 }: Props): JSX.Element | null => {
   return show ? (
     <Container animation={animation && ANIMATION_CSS[animation]}>

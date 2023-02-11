@@ -7,4 +7,5 @@ export const SOUND_MAP: { [key in SoundName]: string } = {
   "rps-new-round": "/sounds/bally_slot_win.mp3",
   "rps-spectator-chooses-option": "/sounds/ding.mp3",
   "rps-waiting-music": "/sounds/bally_slot_big_win.mp3",
+  "rps-spectator-choice-reveal": "/sounds/bubble_pop.mp3",
 };

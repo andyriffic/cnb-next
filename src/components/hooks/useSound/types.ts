@@ -4,4 +4,5 @@ export type SoundName =
   | "rps-show-move"
   | "rps-new-round"
   | "rps-waiting-music"
-  | "rps-spectator-chooses-option";
+  | "rps-spectator-chooses-option"
+  | "rps-spectator-choice-reveal";
