@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 import {
+  GroupBettingGame,
+  GroupPlayerBettingRound,
+} from "../../../services/betting/types";
+import {
   roundHasResult,
   roundReady,
 } from "../../../services/rock-paper-scissors/helpers";
@@ -7,7 +11,7 @@ import { RPSSpectatorGameView } from "../../../services/rock-paper-scissors/type
 
 export enum RpsGameState {
   WAITING = 0,
-  PLAYERS_READY = 1,
+  READY_TO_PLAY = 1,
   HAS_RESULT = 2,
   SHOW_BETS = 3,
   SHOW_MOVES = 4,
@@ -17,34 +21,47 @@ export enum RpsGameState {
   FINISHED = 8,
 }
 
+const everyoneHasBet = (bettingGame: GroupBettingGame | undefined): boolean =>
+  bettingGame
+    ? bettingGame.currentRound.playerBets.length ===
+      bettingGame.playerWallets.length
+    : false;
+
 const getGameInitialState = (
-  game: RPSSpectatorGameView | undefined
+  game: RPSSpectatorGameView | undefined,
+  betGame: GroupBettingGame | undefined
 ): RpsGameState => {
-  if (game && roundReady(game)) {
+  if (game && roundReady(game) && everyoneHasBet(betGame)) {
     return roundHasResult(game)
       ? RpsGameState.HAS_RESULT
-      : RpsGameState.PLAYERS_READY;
+      : RpsGameState.READY_TO_PLAY;
   }
 
   return RpsGameState.WAITING;
 };
 
 export const useGameState = (
-  game: RPSSpectatorGameView | undefined
+  game: RPSSpectatorGameView | undefined,
+  betGame: GroupBettingGame | undefined
 ): RpsGameState => {
-  const [state, setState] = useState(getGameInitialState(game));
+  const [state, setState] = useState(getGameInitialState(game, betGame));
 
   useEffect(() => {
     if ([RpsGameState.WAITING].includes(state)) {
-      setState(getGameInitialState(game));
+      setState(getGameInitialState(game, betGame));
     }
-  }, [game, state]);
+  }, [game, state, betGame]);
 
   useEffect(() => {
-    if (game && roundHasResult(game) && state === RpsGameState.PLAYERS_READY) {
+    if (
+      game &&
+      roundHasResult(game) &&
+      everyoneHasBet(betGame) &&
+      state === RpsGameState.READY_TO_PLAY
+    ) {
       setState(RpsGameState.HAS_RESULT);
     }
-  }, [game, state]);
+  }, [game, betGame, state]);
 
   useEffect(() => {
     if (state === RpsGameState.HAS_RESULT) {

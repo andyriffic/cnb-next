@@ -30,7 +30,7 @@ function Page({}: Props) {
   const { game, resolveRound, newRound } = useRPSGame(gameId);
   const { bettingGame } = useBettingGame(gameId);
   useSyncRockPapersScissorsWithBettingGame(gameId);
-  const gameState = useGameState(game);
+  const gameState = useGameState(game, bettingGame);
   const winningConditions = useGameWinningConditions(game, bettingGame);
   const { play, loop } = useSound();
 
@@ -84,7 +84,7 @@ function Page({}: Props) {
 
   useEffect(() => {
     if (
-      gameState === RpsGameState.PLAYERS_READY &&
+      gameState === RpsGameState.READY_TO_PLAY &&
       allPlayerHaveBet &&
       gamePlayersReady
     ) {
@@ -156,7 +156,10 @@ function Page({}: Props) {
             </Positioned>
           )}
           {gameState === RpsGameState.WAITING && (
-            <SplashContent onShowEffect={playRoundStartMusic}>
+            <SplashContent
+              showForMilliseconds={400}
+              onShowEffect={playRoundStartMusic}
+            >
               <Card>
                 <Heading>Round {game.roundHistory.length + 1}</Heading>
               </Card>
@@ -168,7 +171,7 @@ function Page({}: Props) {
               onShowEffect={playRoundStartMusic}
             >
               <Card>
-                <Heading>Let &squo; s go!</Heading>
+                <Heading>Let&apos;s go!</Heading>
               </Card>
             </SplashContent>
           )}
