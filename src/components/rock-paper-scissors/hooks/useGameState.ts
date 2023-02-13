@@ -94,7 +94,7 @@ export const useGameState = (
 
   useEffect(() => {
     if (state === RpsGameState.SHOW_MOVES) {
-      setTimeout(() => setState(RpsGameState.SHOW_GAME_RESULT), 3000);
+      setTimeout(() => setState(RpsGameState.SHOW_GAME_RESULT), 1500);
     }
   }, [state]);
 
@@ -102,7 +102,7 @@ export const useGameState = (
     if (state === RpsGameState.SHOW_GAME_RESULT) {
       setTimeout(
         () => setState(RpsGameState.HIGHLIGHT_WINNING_SPECTATORS),
-        3000
+        1800
       );
     }
   }, [state]);

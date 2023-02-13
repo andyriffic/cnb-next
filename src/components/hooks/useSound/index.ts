@@ -18,7 +18,11 @@ const play = (soundName: SoundName) => {
 };
 
 const loop = (soundName: SoundName): Howl => {
-  const sound = new Howl({ src: SOUND_MAP[soundName], loop: true });
+  const sound = new Howl({
+    src: SOUND_MAP[soundName],
+    loop: true,
+    volume: 0.5,
+  });
   return sound;
 };
 

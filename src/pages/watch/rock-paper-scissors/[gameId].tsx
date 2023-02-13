@@ -172,7 +172,7 @@ function Page({}: Props) {
               onShowEffect={playRoundStartMusic}
             >
               <Card>
-                <Heading>Let&apos;s go!</Heading>
+                <Heading>Game on!</Heading>
               </Card>
             </SplashContent>
           )}
