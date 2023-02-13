@@ -172,12 +172,13 @@ function createGameRoundView(round: RPSRound): RPSSpectatorRoundView {
 }
 
 export function createGameView(game: RPSGame): RPSSpectatorGameView {
+  const allRounds = [{ ...game.currentRound }, ...game.roundHistory];
   return {
     id: game.id,
     playerIds: [...game.playerIds],
     scores: game.playerIds.map((pid) => ({
       playerId: pid,
-      score: game.roundHistory.filter(
+      score: allRounds.filter(
         (round) => round.result && round.result.winningPlayerId === pid
       ).length,
     })),

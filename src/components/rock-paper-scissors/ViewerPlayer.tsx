@@ -1,3 +1,4 @@
+import { useMemo, useRef } from "react";
 import styled from "styled-components";
 import { GroupBettingGame } from "../../services/betting/types";
 import { RPSSpectatorGameView } from "../../services/rock-paper-scissors/types";
@@ -18,6 +19,15 @@ type Props = {
   direction: FacingDirection;
   gameState: RpsGameState;
 };
+
+const getPlayersScore = (
+  playerId: string,
+  game: RPSSpectatorGameView
+): number => {
+  const score = game.scores.find((s) => s.playerId === playerId);
+  return score ? score.score : 0;
+};
+
 export const ViewerPlayer = ({
   playerId,
   game,
@@ -25,10 +35,20 @@ export const ViewerPlayer = ({
   direction,
   gameState,
 }: Props): JSX.Element | null => {
-  const currentRound = game.currentRound;
+  const initialScore = useRef(getPlayersScore(playerId, game));
+
+  const displayedScore = useMemo(() => {
+    if (gameState >= RpsGameState.SHOW_GAME_RESULT) {
+      initialScore.current = getPlayersScore(playerId, game);
+      console.log("NEW SCORE VALUE", initialScore.current, game);
+    }
+
+    return initialScore.current;
+  }, [game, playerId, gameState]);
+
   const score = game.scores.find((s) => s.playerId === playerId)!;
-  const didWin = currentRound.result?.winningPlayerId === playerId;
-  const isDraw = currentRound.result?.draw;
+  const didWin = game.currentRound.result?.winningPlayerId === playerId;
+  const isDraw = game.currentRound.result?.draw;
 
   const totalBetValue =
     bettingGame?.currentRound.playerBets
@@ -57,7 +77,7 @@ export const ViewerPlayer = ({
           rightPercent: direction === "left" ? 1 : undefined,
         }}
       >
-        <FeatureValue value={score.score} />
+        <FeatureValue value={displayedScore} />
       </Positioned>
       <Positioned
         absolute={{
@@ -68,7 +88,7 @@ export const ViewerPlayer = ({
       >
         <ViewerPlayersMove
           playerId={playerId}
-          currentRound={currentRound}
+          currentRound={game.currentRound}
           reveal={gameState >= RpsGameState.SHOW_MOVES}
           facingDirection={direction}
         />
