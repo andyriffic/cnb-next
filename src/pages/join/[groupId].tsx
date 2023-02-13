@@ -106,8 +106,7 @@ function Page() {
                       },
                     ],
                     bettingPlayerWallets,
-                    (bettingId) =>
-                      router.push(`/watch/rock-paper-scissors/${gameId}`)
+                    () => router.replace(`/watch/rock-paper-scissors/${gameId}`)
                   );
                 }
               );

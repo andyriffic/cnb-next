@@ -18,7 +18,7 @@ function Page() {
 
     groupJoin.createPlayerGroup((groupId) => {
       console.log("Group Created", groupId);
-      router.replace(`/join/${groupId}`);
+      router.push(`/join/${groupId}`);
     });
   }, [groupJoin, router]);
 
