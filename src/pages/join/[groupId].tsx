@@ -12,6 +12,7 @@ import { SpectatorPageLayout } from "../../components/SpectatorPageLayout";
 import { usePlayerNames } from "../../providers/PlayerNamesProvider";
 import { useSocketIo } from "../../providers/SocketIoProvider";
 import { PlayerWallet } from "../../services/betting/types";
+import { shuffleArray } from "../../utils/random";
 
 const JoinedPlayerContainer = styled.div`
   display: flex;
@@ -65,8 +66,9 @@ function Page() {
           <PrimaryButton
             disabled={group.playerIds.length < 2}
             onClick={() => {
-              const playerId1 = group.playerIds[0]!;
-              const playerId2 = group.playerIds[1]!;
+              const randomisedPlayerIds = shuffleArray(group.playerIds);
+              const playerId1 = randomisedPlayerIds[0]!;
+              const playerId2 = randomisedPlayerIds[1]!;
 
               const STARTING_WALLET_BALANCE = 0;
 

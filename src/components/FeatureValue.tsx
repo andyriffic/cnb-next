@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { COLORS } from "../colors";
+import { NumericValue } from "./NumericValue";
 
 const Container = styled.div`
   width: 5vw;
@@ -28,7 +29,9 @@ export function FeatureValue({ value, label = "" }: Props): JSX.Element {
   return (
     <Container>
       <Label>{label}</Label>
-      <Value>{value}</Value>
+      <Value>
+        <NumericValue> {value}</NumericValue>
+      </Value>
     </Container>
   );
 }

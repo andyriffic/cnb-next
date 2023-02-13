@@ -10,6 +10,7 @@ import {
 import { FacingDirection, PlayerAvatar } from "../PlayerAvatar";
 import { Appear } from "../animations/Appear";
 import { useSound } from "../hooks/useSound";
+import { NumericValue } from "../NumericValue";
 import { useGameState } from "./hooks/useGameState";
 
 const Container = styled.div`
@@ -43,6 +44,7 @@ const Lives = styled.div`
   padding: 0.2rem 0.4rem;
   border-radius: 0.2rem;
   border: 2px solid ${COLORS.borderPrimary};
+  z-index: 1;
 `;
 
 const hearts = (count: number) => new Array(count).fill("♥️").join();
@@ -64,14 +66,15 @@ export function ViewerPlayerBets({
 }: Props): JSX.Element {
   const { play } = useSound();
   const displayedPlayers = useMemo(() => {
-    return groupBettingRound.playerBets
-      .filter((pb) => pb.betOptionId === betId)
-      .filter(() =>
-        explodeLosers
-          ? !!groupBettingRound.result &&
-            groupBettingRound.result.winningOptionId === betId
-          : true
-      );
+    return groupBettingRound.playerBets.filter(
+      (pb) => pb.betOptionId === betId
+    );
+    // .filter(() =>
+    //   explodeLosers
+    //     ? !!groupBettingRound.result &&
+    //       groupBettingRound.result.winningOptionId === betId
+    //     : true
+    // );
   }, [groupBettingRound, betId, explodeLosers]);
 
   const [displayedPlayerIndex, setDisplayedPlayerIndex] = useState(0);
@@ -99,19 +102,32 @@ export function ViewerPlayerBets({
       {displayedPlayers.map((player, i) => {
         const livesRemaining =
           wallets.find((w) => w.playerId === player.playerId)?.value || 0;
+
+        const choseCorrectly =
+          !!groupBettingRound.result &&
+          groupBettingRound.result.winningOptionId === betId;
+
         return (
           <Appear
             key={player.playerId}
             show={i <= displayedPlayerIndex}
             animation="roll-in-left"
           >
-            <BetPill>
+            <BetPill
+              style={{
+                opacity: explodeLosers ? (choseCorrectly ? 1 : 0.7) : 1,
+              }}
+            >
               <PlayerAvatar
                 playerId={player.playerId}
                 size="thumbnail"
-                facing={direction}
+                // facing={direction}
               />
-              {explodeLosers && <Lives>{livesRemaining}</Lives>}
+              {explodeLosers && (
+                <Lives>
+                  <NumericValue>{livesRemaining}</NumericValue>{" "}
+                </Lives>
+              )}
               {/* {explodeLosers && <Lives>{hearts(livesRemaining)}</Lives>} */}
             </BetPill>
           </Appear>
