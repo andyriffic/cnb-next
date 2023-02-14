@@ -40,26 +40,27 @@ export const PlayerGameCurrentRound = ({
   }, [currentRound]);
 
   if (currentResult) {
-    return (
-      <Card style={{ textAlign: "center" }}>
-        {currentResult.draw ? (
-          <>
-            <SubHeading>Draw</SubHeading>
-            <RoundResultIcon>😅</RoundResultIcon>
-          </>
-        ) : currentResult.winningPlayerId === playerId ? (
-          <>
-            <SubHeading>Won</SubHeading>
-            <RoundResultIcon>🎉</RoundResultIcon>
-          </>
-        ) : (
-          <>
-            <SubHeading>Lost</SubHeading>
-            <RoundResultIcon>😭</RoundResultIcon>
-          </>
-        )}
-      </Card>
-    );
+    // return (
+    //   <Card style={{ textAlign: "center" }}>
+    //     {currentResult.draw ? (
+    //       <>
+    //         <SubHeading>Draw</SubHeading>
+    //         <RoundResultIcon>😅</RoundResultIcon>
+    //       </>
+    //     ) : currentResult.winningPlayerId === playerId ? (
+    //       <>
+    //         <SubHeading>Won</SubHeading>
+    //         <RoundResultIcon>🎉</RoundResultIcon>
+    //       </>
+    //     ) : (
+    //       <>
+    //         <SubHeading>Lost</SubHeading>
+    //         <RoundResultIcon>😭</RoundResultIcon>
+    //       </>
+    //     )}
+    //   </Card>
+    // );
+    return null;
   }
 
   return hasMoved ? (
