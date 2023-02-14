@@ -28,7 +28,11 @@ const ScoreCount = styled.div`
 `;
 
 export const PlayerGameScore = ({ playerId, game }: Props): JSX.Element => {
-  const opponentName = game.playerIds.find((pid) => pid !== playerId);
+  const opponentPlayerId = game.playerIds.find((pid) => pid !== playerId);
+  const opponentScore = game.scores.find(
+    (s) => s.playerId === opponentPlayerId
+  );
+
   return (
     <ScoreContainer>
       <Card style={{ textAlign: "center" }}>
@@ -44,7 +48,7 @@ export const PlayerGameScore = ({ playerId, game }: Props): JSX.Element => {
         </ScoreCount>
       </Card>
       <Card style={{ textAlign: "center" }}>
-        <SubHeading>{opponentName}</SubHeading>
+        <SubHeading>{opponentPlayerId}</SubHeading>
         <ScoreCount>
           {game.scores.find((s) => s.playerId !== playerId)?.score}
         </ScoreCount>

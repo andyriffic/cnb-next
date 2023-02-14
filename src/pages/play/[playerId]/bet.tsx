@@ -16,9 +16,10 @@ import { BettingOption } from "../../../services/betting/types";
 const BettingOptionContainer = styled.div`
   display: flex;
   gap: 1rem;
+  flex-direction: column;
 `;
 
-const FIXED_BET_VALUE = 1;
+const FIXED_BET_VALUE = 0;
 
 function Page() {
   const query = useRouter().query;
@@ -49,16 +50,20 @@ function Page() {
     <PlayerPageLayout playerId={playerId}>
       {bettingGame && (
         <>
-          <Heading>Round {bettingGame.roundHistory.length + 1}</Heading>
-          {playerWallet && (
+          <Heading style={{ marginBottom: "1rem" }}>
+            Round {bettingGame.roundHistory.length + 1}
+          </Heading>
+          {/* {playerWallet && (
             <Card>
               <SubHeading>Correct guesses</SubHeading>
               <Heading>{playerWallet.value}</Heading>
             </Card>
-          )}
-          {!lockedInBet && playerWallet && playerWallet.value > 0 && (
+          )} */}
+          {!lockedInBet && playerWallet && (
             <>
-              <SubHeading>Make your choice</SubHeading>
+              <SubHeading style={{ marginBottom: "1rem" }}>
+                Make your choice
+              </SubHeading>
               <BettingOptionContainer>
                 {bettingGame.currentRound.bettingOptions.map((option) => (
                   <PrimaryButton
@@ -91,9 +96,9 @@ function Page() {
           )}
         </>
       )}
-      <h5>
+      {/* <h5>
         <Link href={`/play/${playerId}`}>Back to home</Link>
-      </h5>
+      </h5> */}
     </PlayerPageLayout>
   );
 }

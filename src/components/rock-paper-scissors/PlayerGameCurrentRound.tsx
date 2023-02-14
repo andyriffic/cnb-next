@@ -69,7 +69,7 @@ export const PlayerGameCurrentRound = ({
     </Card>
   ) : (
     <Card>
-      <SubHeading>Select your move</SubHeading>
+      <SubHeading style={{ marginBottom: "1rem" }}>Select your move</SubHeading>
 
       <MoveOptionsContainer>
         <PrimaryButton onClick={() => makeMove({ playerId, moveName: "rock" })}>

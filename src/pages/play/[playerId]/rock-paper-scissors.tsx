@@ -21,19 +21,21 @@ function Page() {
       </p> */}
       {game && (
         <>
-          <Heading>Round {game.roundHistory.length + 1}</Heading>
+          <Heading style={{ marginBottom: "1rem" }}>
+            Round {game.roundHistory.length + 1}
+          </Heading>
           <PlayerGameCurrentRound
             currentRound={game.currentRound}
             playerId={playerId}
             makeMove={makeMove}
           />
-          <SubHeading>Score</SubHeading>
-          <PlayerGameScore playerId={playerId} game={game} />
+          {/* <SubHeading>Score</SubHeading>
+          <PlayerGameScore playerId={playerId} game={game} /> */}
         </>
       )}
-      <h5>
+      {/* <h5>
         <Link href={`/play/${playerId}`}>Back to home</Link>
-      </h5>
+      </h5> */}
     </PlayerPageLayout>
   );
 }
