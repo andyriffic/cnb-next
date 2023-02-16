@@ -1,10 +1,11 @@
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import styled from "styled-components";
 import { GroupBettingGame } from "../../services/betting/types";
 import { RPSSpectatorGameView } from "../../services/rock-paper-scissors/types";
 import { Attention } from "../animations/Attention";
 import { Card, SubHeading } from "../Atoms";
 import { FeatureValue } from "../FeatureValue";
+import { useSound } from "../hooks/useSound";
 import { FacingDirection } from "../PlayerAvatar";
 import { Positioned } from "../Positioned";
 import { RpsGameState } from "./hooks/useGameState";
@@ -36,6 +37,7 @@ export const ViewerPlayer = ({
   gameState,
 }: Props): JSX.Element | null => {
   const initialScore = useRef(getPlayersScore(playerId, game));
+  const { play } = useSound();
 
   const displayedScore = useMemo(() => {
     if (gameState >= RpsGameState.SHOW_GAME_RESULT) {
@@ -45,6 +47,20 @@ export const ViewerPlayer = ({
 
     return initialScore.current;
   }, [game, playerId, gameState]);
+
+  useEffect(() => {
+    const didWin = game.currentRound.result?.winningPlayerId === playerId;
+    const isDraw = game.currentRound.result?.draw;
+
+    if (gameState === RpsGameState.SHOW_GAME_RESULT) {
+      if (didWin) {
+        play("rps-result-win");
+      }
+      if (isDraw) {
+        play("rps-result-draw"); //This will play 2 draw sounds at the same time since two instances of this component but I don't care at the moment
+      }
+    }
+  }, [gameState, game, playerId, play]);
 
   const score = game.scores.find((s) => s.playerId === playerId)!;
   const didWin = game.currentRound.result?.winningPlayerId === playerId;

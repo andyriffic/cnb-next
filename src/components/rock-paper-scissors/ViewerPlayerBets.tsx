@@ -75,7 +75,7 @@ export function ViewerPlayerBets({
     //       groupBettingRound.result.winningOptionId === betId
     //     : true
     // );
-  }, [groupBettingRound, betId, explodeLosers]);
+  }, [groupBettingRound, betId]);
 
   const [displayedPlayerIndex, setDisplayedPlayerIndex] = useState(0);
   const [betOption] = useState(
@@ -121,7 +121,7 @@ export function ViewerPlayerBets({
               <PlayerAvatar
                 playerId={player.playerId}
                 size="thumbnail"
-                // facing={direction}
+                facing={direction}
               />
               {explodeLosers && (
                 <Lives>

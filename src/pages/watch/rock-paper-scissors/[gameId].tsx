@@ -72,15 +72,15 @@ function Page({}: Props) {
     game && RPSGameSubject.notify(game);
   }, [game]);
 
-  useEffect(() => {
-    if (
-      gameState.state === RpsGameState.FINISHED &&
-      winningConditions &&
-      !winningConditions.gameOver
-    ) {
-      newRound();
-    }
-  }, [gameState, winningConditions, newRound]);
+  // useEffect(() => {
+  //   if (
+  //     gameState.state === RpsGameState.FINISHED &&
+  //     winningConditions &&
+  //     !winningConditions.gameOver
+  //   ) {
+  //     newRound();
+  //   }
+  // }, [gameState, winningConditions, newRound]);
 
   useEffect(() => {
     if (
