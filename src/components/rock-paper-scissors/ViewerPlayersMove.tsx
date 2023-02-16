@@ -7,7 +7,7 @@ import { Appear } from "../animations/Appear";
 import { Attention } from "../animations/Attention";
 import { FeatureEmoji } from "../Atoms";
 import { FlipX } from "../FlipX";
-import { playSoundFromUrl, useSound } from "../hooks/useSound";
+import { useSound } from "../hooks/useSound";
 import { FacingDirection } from "../PlayerAvatar";
 
 type Props = {

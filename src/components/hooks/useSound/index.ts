@@ -7,13 +7,8 @@ type UseSound = {
   loop: (soundName: SoundName) => Howl;
 };
 
-export const playSoundFromUrl = (url: string) => {
-  const sound = new Howl({ src: url });
-  sound.play();
-};
-
 const play = (soundName: SoundName) => {
-  const sound = new Howl({ src: SOUND_MAP[soundName] });
+  const sound = new Howl({ src: SOUND_MAP[soundName], volume: 0.6 });
   sound.play();
 };
 
@@ -21,7 +16,7 @@ const loop = (soundName: SoundName): Howl => {
   const sound = new Howl({
     src: SOUND_MAP[soundName],
     loop: true,
-    volume: 0.5,
+    volume: 0.2,
   });
   return sound;
 };
