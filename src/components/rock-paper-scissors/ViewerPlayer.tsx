@@ -42,7 +42,6 @@ export const ViewerPlayer = ({
   const displayedScore = useMemo(() => {
     if (gameState >= RpsGameState.SHOW_GAME_RESULT) {
       initialScore.current = getPlayersScore(playerId, game);
-      console.log("NEW SCORE VALUE", initialScore.current, game);
     }
 
     return initialScore.current;

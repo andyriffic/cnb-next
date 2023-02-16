@@ -5,6 +5,9 @@ export type SoundName =
   | "rps-result-win"
   | "rps-result-draw"
   | "rps-new-round"
+  | "rps-front-runners"
+  | "rps-could-win-next-round"
+  | "rps-definite-winner"
   | "rps-waiting-music"
   | "rps-spectator-chooses-option"
   | "rps-spectator-choice-reveal";

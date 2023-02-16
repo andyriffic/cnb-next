@@ -3,7 +3,7 @@ import styled from "styled-components";
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
   width: 100vw;
   overflow: hidden;
   justify-content: center;
@@ -17,7 +17,7 @@ const Main = styled.div`
   width: 100vw;
   flex: 1;
   /* min-height: 100vh; */
-  overflow: scroll;
+  overflow: hidden;
 `;
 
 const DebugContainer = styled.div`
@@ -27,7 +27,7 @@ const DebugContainer = styled.div`
   width: 100vw;
   padding: 1rem;
   background-color: #f7e6b6;
-  overflow: scroll;
+  overflow: hidden;
 `;
 
 type Props = {

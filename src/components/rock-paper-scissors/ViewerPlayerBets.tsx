@@ -1,17 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
-import { useTrail, animated, config } from "@react-spring/web";
 import { COLORS } from "../../colors";
 import {
-  BettingOption,
   GroupPlayerBettingRound,
   PlayerWallet,
 } from "../../services/betting/types";
-import { FacingDirection, PlayerAvatar } from "../PlayerAvatar";
 import { Appear } from "../animations/Appear";
 import { useSound } from "../hooks/useSound";
 import { NumericValue } from "../NumericValue";
-import { useGameState } from "./hooks/useGameState";
+import { FacingDirection, PlayerAvatar } from "../PlayerAvatar";
 
 const Container = styled.div`
   /* width: 5vw; */
@@ -66,24 +63,23 @@ export function ViewerPlayerBets({
 }: Props): JSX.Element {
   const { play } = useSound();
   const displayedPlayers = useMemo(() => {
-    return groupBettingRound.playerBets.filter(
-      (pb) => pb.betOptionId === betId
-    );
-    // .filter(() =>
-    //   explodeLosers
-    //     ? !!groupBettingRound.result &&
-    //       groupBettingRound.result.winningOptionId === betId
-    //     : true
-    // );
-  }, [groupBettingRound, betId]);
+    return groupBettingRound.playerBets
+      .filter((pb) => pb.betOptionId === betId)
+      .filter(() =>
+        explodeLosers
+          ? !!groupBettingRound.result &&
+            groupBettingRound.result.winningOptionId === betId
+          : true
+      );
+  }, [groupBettingRound, betId, explodeLosers]);
 
   const [displayedPlayerIndex, setDisplayedPlayerIndex] = useState(0);
-  const [betOption] = useState(
-    groupBettingRound.bettingOptions.find((o) => o.id === betId)!
-  );
-  const [players] = useState(
-    groupBettingRound.playerBets.filter((bo) => bo.betOptionId === betId)
-  );
+  // const [betOption] = useState(
+  //   groupBettingRound.bettingOptions.find((o) => o.id === betId)!
+  // );
+  // const [players] = useState(
+  //   groupBettingRound.playerBets.filter((bo) => bo.betOptionId === betId)
+  // );
 
   useEffect(() => {
     if (displayedPlayerIndex < displayedPlayers.length) {
@@ -121,7 +117,7 @@ export function ViewerPlayerBets({
               <PlayerAvatar
                 playerId={player.playerId}
                 size="thumbnail"
-                facing={direction}
+                // facing={direction}
               />
               {explodeLosers && (
                 <Lives>
