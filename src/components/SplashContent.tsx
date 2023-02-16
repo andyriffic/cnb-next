@@ -16,6 +16,7 @@ const Container = styled.div`
   justify-content: center;
   /* background-color: black; */
   pointer-events: none;
+  overflow: hidden;
   /* z-index: 100; */
 `;
 
