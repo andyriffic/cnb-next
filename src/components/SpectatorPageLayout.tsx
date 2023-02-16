@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -30,16 +31,26 @@ const DebugContainer = styled.div`
   overflow: hidden;
 `;
 
+const SuperSecretDebugToggle = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+`;
+
 type Props = {
   children: React.ReactNode;
   debug?: React.ReactNode;
 };
 
 export function SpectatorPageLayout({ children, debug }: Props): JSX.Element {
+  const [showDebug, setShowDebug] = useState(false);
   return (
     <Container>
       <Main>{children}</Main>
-      {debug && <DebugContainer>{debug}</DebugContainer>}
+      <SuperSecretDebugToggle onClick={() => setShowDebug(!showDebug)} />
+      {showDebug && debug && <DebugContainer>{debug}</DebugContainer>}
     </Container>
   );
 }
