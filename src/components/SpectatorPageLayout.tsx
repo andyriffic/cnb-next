@@ -1,24 +1,24 @@
 import { useState } from "react";
 import styled from "styled-components";
 
-const Container = styled.div`
+const Container = styled.div<{ scrollable: boolean }>`
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
   width: 100vw;
-  overflow: hidden;
+  overflow: ${({ scrollable }) => (scrollable ? "visible" : "hidden")};
   justify-content: center;
   align-items: center;
   background-color: #f2d585;
   color: #b03461;
 `;
 
-const Main = styled.div`
+const Main = styled.div<{ scrollable: boolean }>`
   /* border: 1px solid black; */
   width: 100vw;
   flex: 1;
   /* min-height: 100vh; */
-  overflow: hidden;
+  overflow: ${({ scrollable }) => (scrollable ? "visible" : "hidden")};
 `;
 
 const DebugContainer = styled.div`
@@ -42,13 +42,18 @@ const SuperSecretDebugToggle = styled.div`
 type Props = {
   children: React.ReactNode;
   debug?: React.ReactNode;
+  scrollable?: boolean;
 };
 
-export function SpectatorPageLayout({ children, debug }: Props): JSX.Element {
+export function SpectatorPageLayout({
+  children,
+  debug,
+  scrollable = false,
+}: Props): JSX.Element {
   const [showDebug, setShowDebug] = useState(false);
   return (
-    <Container>
-      <Main>{children}</Main>
+    <Container scrollable={scrollable}>
+      <Main scrollable={scrollable}>{children}</Main>
       <SuperSecretDebugToggle onClick={() => setShowDebug(!showDebug)} />
       {showDebug && debug && <DebugContainer>{debug}</DebugContainer>}
     </Container>

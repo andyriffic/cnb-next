@@ -36,7 +36,7 @@ type Props = {
 
 function Page({ players }: Props) {
   return (
-    <SpectatorPageLayout>
+    <SpectatorPageLayout scrollable={true}>
       <PlayerList>
         {players.map((player) => (
           <Link
