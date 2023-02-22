@@ -9,10 +9,16 @@ type Props = {
 export const PlayerGamesList = ({ playerId }: Props): JSX.Element | null => {
   const {
     rockPaperScissors: { activeRPSGames },
+    groupBetting: { bettingGames },
   } = useSocketIo();
 
   const playersGames = useMemo(() => {
-    return activeRPSGames.filter((game) => game.playerIds.includes(playerId));
+    return [
+      ...activeRPSGames.filter((game) => game.playerIds.includes(playerId)),
+      ...bettingGames.filter((game) =>
+        game.playerWallets.map((pw) => pw.playerId).includes(playerId)
+      ),
+    ];
   }, [activeRPSGames, playerId]);
 
   return playersGames ? (

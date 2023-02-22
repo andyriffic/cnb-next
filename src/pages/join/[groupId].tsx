@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useMemo } from "react";
 import styled from "styled-components";
@@ -7,6 +8,7 @@ import { DebugPlayerJoin } from "../../components/DebugPlayerJoin";
 import { useSomethingWhenArraySizeChanges } from "../../components/hooks/useSomethingWhenArraySizeChanges";
 import { useSound } from "../../components/hooks/useSound";
 import { CenterSpaced } from "../../components/Layouts";
+import { NumericValue } from "../../components/NumericValue";
 import { PlayerAvatar } from "../../components/PlayerAvatar";
 import { SpectatorPageLayout } from "../../components/SpectatorPageLayout";
 import { usePlayerNames } from "../../providers/PlayerNamesProvider";
@@ -48,12 +50,19 @@ function Page() {
 
   return (
     <SpectatorPageLayout debug={group && <DebugPlayerJoin group={group} />}>
-      <SubHeading>Join Code:</SubHeading>
-      <Heading>{groupId}</Heading>
+      <CenterSpaced stacked={true} style={{ margin: "2rem 0 2rem" }}>
+        <SubHeading>test.finx-rocks.com/play</SubHeading>
+        <Heading style={{ fontSize: "5rem" }}>
+          <NumericValue>{groupId}</NumericValue>
+        </Heading>
+      </CenterSpaced>
       {!group && "Invalid group 😭"}
       {group && (
         <CenterSpaced stacked={true}>
-          <Heading>Joined players ({group.playerIds.length})</Heading>
+          <SubHeading>
+            Joined players (
+            <NumericValue>{group.playerIds.length}</NumericValue>)
+          </SubHeading>
           <JoinedPlayerContainer>
             {group.playerIds.map((pid) => (
               <JoinedPlayerItem key={pid}>
@@ -118,6 +127,11 @@ function Page() {
           </PrimaryButton>
         </CenterSpaced>
       )}
+      <div
+        style={{ position: "absolute", top: 0, width: "10vw", height: "10vw" }}
+      >
+        <Image layout="fill" src="/images/qr/join-game-url.png" alt="" />
+      </div>
     </SpectatorPageLayout>
   );
 }

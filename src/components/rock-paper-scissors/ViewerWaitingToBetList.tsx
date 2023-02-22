@@ -1,5 +1,7 @@
 import { animated, config, useTransition } from "@react-spring/web";
 import { useMemo, useRef } from "react";
+import styled from "styled-components";
+import { COLORS } from "../../colors";
 import { usePlayerNames } from "../../providers/PlayerNamesProvider";
 import {
   GroupPlayerBettingRound,
@@ -7,6 +9,7 @@ import {
 } from "../../services/betting/types";
 import { useSomethingWhenArraySizeChanges } from "../hooks/useSomethingWhenArraySizeChanges";
 import { useSound } from "../hooks/useSound";
+import { NumericValue } from "../NumericValue";
 import { PlayerAvatar } from "../PlayerAvatar";
 
 type BetState =
@@ -56,6 +59,19 @@ const getBetState = (
 
   return { state: "waiting" };
 };
+
+const Score = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  /* transform: translateX(-50%); */
+  font-size: 1rem;
+  background: white;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.2rem;
+  border: 2px solid ${COLORS.borderPrimary};
+  z-index: 1;
+`;
 
 type Props = {
   wallets: PlayerWallet[];
@@ -128,6 +144,9 @@ export const ViewerWaitingToBetList = ({
             <div key={wallet.playerId}>
               {/* <SubHeading>{names[wallet.playerId]}</SubHeading> */}
               <PlayerAvatar playerId={wallet.playerId} size="thumbnail" />
+              <Score>
+                <NumericValue>{wallet.value}</NumericValue>
+              </Score>
             </div>
           </animated.div>
         );

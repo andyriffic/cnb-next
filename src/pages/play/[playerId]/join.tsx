@@ -88,7 +88,7 @@ function Page({}: Props) {
               href={playersBettingGameUrl(playerId, relatedGroupBettingGame.id)}
               passHref={true}
             >
-              <PrimaryLinkButton>Bet</PrimaryLinkButton>
+              <PrimaryLinkButton>Play</PrimaryLinkButton>
             </Link>
           )}
         </div>
