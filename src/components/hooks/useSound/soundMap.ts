@@ -13,4 +13,7 @@ export const SOUND_MAP: { [key in SoundName]: string } = {
   "rps-spectator-chooses-option": "/sounds/bubble_pop.mp3",
   "rps-waiting-music": "/sounds/bally_slot_big_win.mp3",
   "rps-spectator-choice-reveal": "/sounds/bubble_pop.mp3",
+  "rps-award-winner": "/sounds/nfl.mp3",
+  "rps-award-loser": "/sounds/wah_wah_wah.mp3",
+  "rps-award-middle": "/sounds/meh.mp3",
 };

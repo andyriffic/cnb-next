@@ -87,7 +87,7 @@ export function GameStatusAnnouncement({
   return (
     <Container>
       {gameState >= RpsGameState.SHOW_GAME_STATUS && (
-        <SplashContent>
+        <SplashContent showForMilliseconds={1000}>
           <Card>
             <Heading>{gameStatusDisplay.title}</Heading>
             {gameStatusDisplay.playerIds.length > 0 && (

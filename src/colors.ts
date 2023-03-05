@@ -4,3 +4,7 @@ export const COLORS = {
   backgroundFailure: "#b03461",
   backgroundInactive: "#E5D2E0",
 };
+
+export const FONT_FAMILY = {
+  numeric: "'Kameron', serif",
+};

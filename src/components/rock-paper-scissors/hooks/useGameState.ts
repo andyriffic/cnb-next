@@ -8,6 +8,7 @@ import {
   roundReady,
 } from "../../../services/rock-paper-scissors/helpers";
 import { RPSSpectatorGameView } from "../../../services/rock-paper-scissors/types";
+import { PLAYER_BET_ANIMATION_MS } from "../ViewerPlayerBets";
 
 export enum RpsGameState {
   WAITING = 0,
@@ -65,7 +66,7 @@ export const useGameState = (
 
   useEffect(() => {
     if (state === RpsGameState.HAS_RESULT) {
-      setTimeout(() => setState(RpsGameState.SHOW_BETS), 3000);
+      setTimeout(() => setState(RpsGameState.SHOW_BETS), 1800);
     }
   }, [state]);
 
@@ -87,7 +88,7 @@ export const useGameState = (
       // const maxPlayersChoice = betGame?.currentRound.playerBets.reduce((acc, pb) => return )
       setTimeout(
         () => setState(RpsGameState.SHOW_MOVES),
-        maxPlayerChoice * 800 + 1000
+        maxPlayerChoice * PLAYER_BET_ANIMATION_MS + 1000
       );
     }
   }, [betGame, state]);
@@ -115,7 +116,7 @@ export const useGameState = (
 
   useEffect(() => {
     if (state === RpsGameState.SHOW_GAME_STATUS) {
-      setTimeout(() => setState(RpsGameState.FINISHED), 4500);
+      setTimeout(() => setState(RpsGameState.FINISHED), 3500);
     }
   }, [state]);
 

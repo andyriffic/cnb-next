@@ -19,7 +19,7 @@ export const PlayerGamesList = ({ playerId }: Props): JSX.Element | null => {
         game.playerWallets.map((pw) => pw.playerId).includes(playerId)
       ),
     ];
-  }, [activeRPSGames, playerId]);
+  }, [activeRPSGames, playerId, bettingGames]);
 
   return playersGames ? (
     <div>

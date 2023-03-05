@@ -44,7 +44,7 @@ const Lives = styled.div`
   z-index: 1;
 `;
 
-const hearts = (count: number) => new Array(count).fill("♥️").join();
+export const PLAYER_BET_ANIMATION_MS = 400;
 
 type Props = {
   groupBettingRound: GroupPlayerBettingRound;
@@ -86,7 +86,7 @@ export function ViewerPlayerBets({
       play("rps-spectator-choice-reveal");
       setTimeout(() => {
         setDisplayedPlayerIndex(displayedPlayerIndex + 1);
-      }, 800);
+      }, PLAYER_BET_ANIMATION_MS);
     }
   }, [displayedPlayerIndex, displayedPlayers, play]);
 

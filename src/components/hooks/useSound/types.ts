@@ -10,4 +10,7 @@ export type SoundName =
   | "rps-definite-winner"
   | "rps-waiting-music"
   | "rps-spectator-chooses-option"
-  | "rps-spectator-choice-reveal";
+  | "rps-spectator-choice-reveal"
+  | "rps-award-winner"
+  | "rps-award-loser"
+  | "rps-award-middle";

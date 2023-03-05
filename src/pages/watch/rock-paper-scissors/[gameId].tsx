@@ -7,12 +7,14 @@ import { Positioned } from "../../../components/Positioned";
 import { DebugPlayerBets } from "../../../components/rock-paper-scissors/DebugPlayerBets";
 import { DebugPlayerMove } from "../../../components/rock-paper-scissors/DebugPlayerMove";
 import { GameStatusAnnouncement } from "../../../components/rock-paper-scissors/GameStatusAnnouncement";
+import { useGameFinalPoints } from "../../../components/rock-paper-scissors/hooks/useGameFinalPoints";
 import {
   RpsGameState,
   useGameState,
 } from "../../../components/rock-paper-scissors/hooks/useGameState";
 import { useGameWinningConditions } from "../../../components/rock-paper-scissors/hooks/useGameWinningConditions";
 import { RPSGameSubject } from "../../../components/rock-paper-scissors/observers";
+import { PointsAwardCeremony } from "../../../components/rock-paper-scissors/PointsAwardCeremony";
 import { ViewerPlayer } from "../../../components/rock-paper-scissors/ViewerPlayer";
 import { ViewerPlayerBets } from "../../../components/rock-paper-scissors/ViewerPlayerBets";
 import { ViewerWaitingToBetList } from "../../../components/rock-paper-scissors/ViewerWaitingToBetList";
@@ -32,6 +34,7 @@ function Page({}: Props) {
   useSyncRockPapersScissorsWithBettingGame(gameId);
   const gameState = useGameState(game, bettingGame);
   const winningConditions = useGameWinningConditions(game, bettingGame);
+  const gameFinalPoints = useGameFinalPoints(bettingGame, winningConditions);
   const { play, loop } = useSound();
 
   useEffect(() => {
@@ -46,6 +49,13 @@ function Page({}: Props) {
       };
     }
   }, [gameState.state, loop]);
+
+  const showPointsCeremony = useMemo(() => {
+    if (gameState.state === RpsGameState.FINISHED && !!gameFinalPoints) {
+      return true;
+    }
+    return false;
+  }, [gameState.state, gameFinalPoints]);
 
   const gamePlayersReady = useMemo(() => {
     if (!game) {
@@ -112,7 +122,10 @@ function Page({}: Props) {
       {/* <Heading>
         Game: {gameId} | {RpsGameState[gameState.state]}
       </Heading> */}
-      {game && bettingGame?.currentRound ? (
+      {showPointsCeremony && gameFinalPoints && (
+        <PointsAwardCeremony gamePoints={gameFinalPoints} />
+      )}
+      {!showPointsCeremony && game && bettingGame?.currentRound && (
         <div>
           <Positioned absolute={{ topPercent: 5, leftPercent: 10 }}>
             <ViewerPlayer
@@ -173,10 +186,8 @@ function Page({}: Props) {
             </SplashContent>
           )}
         </div>
-      ) : (
-        <h2>{gameId} not found</h2>
       )}
-      {bettingGame ? (
+      {!showPointsCeremony && bettingGame && (
         <Positioned horizontalAlign={{ align: "center", bottomPercent: 30 }}>
           <div>
             {gameState.state < RpsGameState.HAS_RESULT && !allPlayerHaveBet && (
@@ -196,10 +207,6 @@ function Page({}: Props) {
             </div>
           </div>
         </Positioned>
-      ) : (
-        <>
-          <h2>No Betting game found</h2>
-        </>
       )}
     </SpectatorPageLayout>
   );
