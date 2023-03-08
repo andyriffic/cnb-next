@@ -32,15 +32,21 @@ const convertWalletsToPoints = (wallets: PlayerWallet[]): PlayerPoints[] => {
 };
 
 export const createPoints = (
+  game: RPSSpectatorGameView,
   bettingGame: GroupBettingGame,
   winningConditions: WinningConditions
 ): RockPaperScissorsPoints => {
   if (winningConditions.washout) {
     //Give everyone the same points
+    const allParticipatingPlayerIds = [
+      ...bettingGame.playerWallets.map((w) => w.playerId),
+      ...game.playerIds,
+    ];
     return {
-      middleOfThePack: convertWalletsToPoints(bettingGame.playerWallets).map(
-        (p) => ({ ...p, points: WASHOUT_POINTS })
-      ),
+      middleOfThePack: allParticipatingPlayerIds.map((playerId) => ({
+        playerId,
+        points: WASHOUT_POINTS,
+      })),
       zeroPointLosers: [],
     };
   }

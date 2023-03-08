@@ -59,8 +59,8 @@ export const PointsAwardCeremony = ({ gamePoints }: Props): JSX.Element => {
       {currentStoryboard >= STORYBOARD.SHOW_WINNER && (
         <Appear animation="flip-in">
           <CenterSpaced stacked={true} style={{ marginTop: "3vh" }}>
-            <Heading>Winner</Heading>
-            {gamePoints.outrightWinner && (
+            <Heading>Winner 優勝者</Heading>
+            {gamePoints.outrightWinner ? (
               <PlayerContainer>
                 <PlayerAvatar
                   playerId={gamePoints.outrightWinner.playerId}
@@ -68,6 +68,10 @@ export const PointsAwardCeremony = ({ gamePoints }: Props): JSX.Element => {
                 />
                 <Points>{gamePoints.outrightWinner.points}</Points>
               </PlayerContainer>
+            ) : (
+              <SubHeading style={{ fontSize: "4rem", lineHeight: "8rem" }}>
+                孤獨 😩
+              </SubHeading>
             )}
           </CenterSpaced>
         </Appear>
@@ -75,7 +79,7 @@ export const PointsAwardCeremony = ({ gamePoints }: Props): JSX.Element => {
       {currentStoryboard >= STORYBOARD.SHOW_MIDDLE && (
         <Appear animation="flip-in">
           <CenterSpaced stacked={true} style={{ marginTop: "4vh" }}>
-            <SubHeading>Others</SubHeading>
+            <SubHeading>Others 其他的</SubHeading>
             <PlayerList>
               {gamePoints.middleOfThePack.map((playerPoints) => (
                 <PlayerContainer key={playerPoints.playerId}>
@@ -93,7 +97,7 @@ export const PointsAwardCeremony = ({ gamePoints }: Props): JSX.Element => {
       {currentStoryboard >= STORYBOARD.SHOW_LOSER && (
         <Appear animation="flip-in">
           <CenterSpaced stacked={true} style={{ marginTop: "4vh" }}>
-            <SubHeading>Biggest losers</SubHeading>
+            <SubHeading>Biggest losers 大輸家</SubHeading>
             <PlayerList>
               {gamePoints.zeroPointLosers.map((playerPoints) => (
                 <PlayerContainer key={playerPoints.playerId}>

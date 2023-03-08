@@ -34,7 +34,11 @@ function Page({}: Props) {
   useSyncRockPapersScissorsWithBettingGame(gameId);
   const gameState = useGameState(game, bettingGame);
   const winningConditions = useGameWinningConditions(game, bettingGame);
-  const gameFinalPoints = useGameFinalPoints(bettingGame, winningConditions);
+  const gameFinalPoints = useGameFinalPoints(
+    game,
+    bettingGame,
+    winningConditions
+  );
   const { play, loop } = useSound();
 
   useEffect(() => {
