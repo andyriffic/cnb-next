@@ -59,7 +59,7 @@ export const PointsAwardCeremony = ({ gamePoints }: Props): JSX.Element => {
       {currentStoryboard >= STORYBOARD.SHOW_WINNER && (
         <Appear animation="flip-in">
           <CenterSpaced stacked={true} style={{ marginTop: "3vh" }}>
-            <Heading>Winner 優勝者</Heading>
+            <Heading>Winner 优胜者</Heading>
             {gamePoints.outrightWinner ? (
               <PlayerContainer>
                 <PlayerAvatar
@@ -97,7 +97,7 @@ export const PointsAwardCeremony = ({ gamePoints }: Props): JSX.Element => {
       {currentStoryboard >= STORYBOARD.SHOW_LOSER && (
         <Appear animation="flip-in">
           <CenterSpaced stacked={true} style={{ marginTop: "4vh" }}>
-            <SubHeading>Biggest losers 大輸家</SubHeading>
+            <SubHeading>Biggest losers 大输家</SubHeading>
             <PlayerList>
               {gamePoints.zeroPointLosers.map((playerPoints) => (
                 <PlayerContainer key={playerPoints.playerId}>
