@@ -46,7 +46,7 @@ function Page({}: Props) {
       const waitingMusic = loop("rps-waiting-music");
       const timeout = setTimeout(() => {
         waitingMusic.play();
-      }, 3000);
+      }, 2000);
       return () => {
         waitingMusic.stop();
         clearTimeout(timeout);
@@ -106,8 +106,12 @@ function Page({}: Props) {
     }
   }, [gameState, gamePlayersReady, allPlayerHaveBet, resolveRound]);
 
-  const playRoundStartMusic = useCallback(() => {
+  const playRoundStartSound = useCallback(() => {
     return play("rps-new-round");
+  }, [play]);
+
+  const playGameOnSound = useCallback(() => {
+    return play("rps-game-on");
   }, [play]);
 
   return (
@@ -172,7 +176,7 @@ function Page({}: Props) {
           {gameState.state === RpsGameState.WAITING && (
             <SplashContent
               showForMilliseconds={400}
-              onShowEffect={playRoundStartMusic}
+              onShowEffect={playRoundStartSound}
             >
               <Card>
                 <Heading>Round {game.roundHistory.length + 1}</Heading>
@@ -182,7 +186,7 @@ function Page({}: Props) {
           {gameState.state === RpsGameState.HAS_RESULT && (
             <SplashContent
               showForMilliseconds={300}
-              onShowEffect={playRoundStartMusic}
+              onShowEffect={playGameOnSound}
             >
               <Card>
                 <Heading>Game on!</Heading>

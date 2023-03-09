@@ -20,6 +20,7 @@ const getWinnerPoints = (
   const winningPlayerId =
     winningConditions.spectatorWinnerPlayerId ||
     winningConditions.playerWinnerPlayerId;
+
   if (winningPlayerId) {
     return { playerId: winningPlayerId, points };
   }
@@ -52,9 +53,41 @@ export const createPoints = (
   }
 
   const winnerPoints = getWinnerPoints(winningConditions, WINNER_POINTS);
+
+  if (winningConditions.spectatorWinnerPlayerId) {
+  }
+
   const everyoneElsePoints = convertWalletsToPoints(
     bettingGame.playerWallets
   ).filter((p) => p.playerId !== winnerPoints?.playerId);
+
+  if (winningConditions.spectatorWinnerPlayerId) {
+    //If spectator wins, make sure both game players are added to points
+    everyoneElsePoints.push({
+      playerId: game.playerIds[0],
+      points:
+        game.scores.find((s) => s.playerId === game.playerIds[0])?.score || 0,
+    });
+    everyoneElsePoints.push({
+      playerId: game.playerIds[1],
+      points:
+        game.scores.find((s) => s.playerId === game.playerIds[1])?.score || 0,
+    });
+  }
+
+  if (winningConditions.playerWinnerPlayerId) {
+    //If player wins, make sure the other player gets added to points
+    const otherPlayerId = game.playerIds.find(
+      (p) => p !== winningConditions.playerWinnerPlayerId
+    );
+    if (otherPlayerId) {
+      everyoneElsePoints.push({
+        playerId: otherPlayerId,
+        points:
+          game.scores.find((s) => s.playerId === otherPlayerId)?.score || 0,
+      });
+    }
+  }
 
   return {
     outrightWinner: winnerPoints,

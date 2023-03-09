@@ -5,6 +5,7 @@ export type SoundName =
   | "rps-result-win"
   | "rps-result-draw"
   | "rps-new-round"
+  | "rps-game-on"
   | "rps-front-runners"
   | "rps-could-win-next-round"
   | "rps-definite-winner"

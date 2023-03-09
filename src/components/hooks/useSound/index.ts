@@ -8,7 +8,7 @@ type UseSound = {
 };
 
 const play = (soundName: SoundName) => {
-  const sound = new Howl({ src: SOUND_MAP[soundName], volume: 0.4 });
+  const sound = new Howl({ src: SOUND_MAP[soundName], volume: 0.2 });
   sound.play();
 };
 
@@ -16,7 +16,7 @@ const loop = (soundName: SoundName): Howl => {
   const sound = new Howl({
     src: SOUND_MAP[soundName],
     loop: true,
-    volume: 0.2,
+    volume: 0.1,
   });
   return sound;
 };

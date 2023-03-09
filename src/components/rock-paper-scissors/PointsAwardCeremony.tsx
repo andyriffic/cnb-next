@@ -70,7 +70,7 @@ export const PointsAwardCeremony = ({ gamePoints }: Props): JSX.Element => {
               </PlayerContainer>
             ) : (
               <SubHeading style={{ fontSize: "4rem", lineHeight: "8rem" }}>
-                孤獨 😩
+                孤独 😩
               </SubHeading>
             )}
           </CenterSpaced>
