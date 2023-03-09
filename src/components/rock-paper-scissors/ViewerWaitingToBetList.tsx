@@ -101,6 +101,7 @@ export const ViewerWaitingToBetList = ({
         .filter(
           (w) => !bettingRound.playerBets.find((b) => b.playerId === w.playerId)
         )
+        .sort(sortWalletByBetMostToLeastBetAmount)
     );
   }, [wallets, bettingRound]);
 
@@ -151,40 +152,6 @@ export const ViewerWaitingToBetList = ({
           </animated.div>
         );
       })}
-      {/* {sortedWallets.map((wallet) => {
-          const currentResult = bettingRound!.result?.playerResults.find(
-            (r) => r.playerId === wallet.playerId
-          );
-
-          const betState = getBetState(
-            bettingRound,
-            wallet,
-            revealResult,
-            showNewWalletOrder
-          );
-
-          return (
-            <CenteredCard
-              key={wallet.playerId}
-              style={{ opacity: betState.state === "waiting" ? 0.65 : 1 }}
-            >
-              <SubHeading>{names[wallet.playerId]}</SubHeading>
-              <PlayerAvatar playerId={wallet.playerId} size="thumbnail" />
-              <Heading>
-                {currentResult && betState.state === "result-win" && (
-                  <>+{currentResult.totalWinnings}🍒</>
-                )}
-                {currentResult && betState.state === "result-lose" && (
-                  <>{currentResult.totalWinnings}🍒</>
-                )}
-                {betState.state === "waiting" && `${wallet.value}🍒`}
-                {betState.state === "show-wallet" && `${wallet.value}🍒`}
-                {betState.state === "broke" && "😩"}
-                {betState.state === "bet" && "✅"}
-              </Heading>
-            </CenteredCard>
-          );
-        })} */}
     </div>
   );
 };
