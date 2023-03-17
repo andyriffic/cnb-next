@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { SpectatorPageLayout } from "../../components/SpectatorPageLayout";
 import { Player } from "../../types/Player";
 import { getAllPlayers } from "../../utils/data/aws-dynamodb";
+import { sortByPlayerName } from "../../utils/sort";
 import { getPlayerHomeUrl } from "../../utils/url";
 
 const PlayerList = styled.div`
@@ -51,16 +52,6 @@ function Page({ players }: Props) {
     </SpectatorPageLayout>
   );
 }
-
-const sortByPlayerName = (a: Player, b: Player) => {
-  if (a.name < b.name) {
-    return -1;
-  }
-  if (a.name > b.name) {
-    return 1;
-  }
-  return 0;
-};
 
 const activePlayer = (player: Player): boolean => {
   return !player.tags.includes("retired");
