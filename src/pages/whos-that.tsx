@@ -36,9 +36,6 @@ const PlayerName = styled.div`
   font-size: 10rem;
   text-transform: uppercase;
   font-weight: bold;
-  position: fixed;
-  bottom: 0;
-  right: 10%;
   color: #fecb03;
   -webkit-text-stroke-width: 4px;
   -webkit-text-stroke-color: #38649d;
@@ -71,9 +68,11 @@ export default function Page({ player }: Props) {
       <PlayerContainer reveal={reveal}>
         <PlayerAvatar playerId={player.id} />
       </PlayerContainer>
-      <Appear show={reveal} animation="flip-in">
-        <PlayerName>{player.name}</PlayerName>
-      </Appear>
+      <div style={{ position: "fixed", bottom: "10%", right: "10%" }}>
+        <Appear show={reveal} animation="flip-in">
+          <PlayerName>{player.name}</PlayerName>
+        </Appear>
+      </div>
     </Background>
   );
 }
@@ -85,7 +84,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     const player = await getPlayer(playerId as string);
 
     return {
-      props: { player },
+      props: { player: player ? player : undefined },
     };
   }
 
@@ -93,6 +92,12 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   // const player = await getPlayer("andy");
 
   return {
-    props: { player: allPlayers ? selectRandomOneOf(allPlayers) : undefined },
+    props: {
+      player: allPlayers
+        ? selectRandomOneOf(
+            allPlayers.filter((p) => !p.tags.includes("no-whos-that"))
+          )
+        : undefined,
+    },
   };
 };
