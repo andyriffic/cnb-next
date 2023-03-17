@@ -52,7 +52,11 @@ export default class MyDocument extends Document {
           <link
             href="https://fonts.googleapis.com/css2?family=Kameron:wght@400;700&display=swap"
             rel="stylesheet"
-          ></link>
+          />
+          <link
+            href="http://fonts.cdnfonts.com/css/pokemon-solid"
+            rel="stylesheet"
+          />
         </Head>
         <body>
           <Main />

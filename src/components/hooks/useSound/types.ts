@@ -14,4 +14,5 @@ export type SoundName =
   | "rps-spectator-choice-reveal"
   | "rps-award-winner"
   | "rps-award-loser"
-  | "rps-award-middle";
+  | "rps-award-middle"
+  | "whos-that";
