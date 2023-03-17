@@ -1,3 +1,4 @@
+import { GetServerSideProps } from "next";
 import { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { Appear } from "../components/animations/Appear";
@@ -77,11 +78,21 @@ export default function Page({ player }: Props) {
   );
 }
 
-export async function getServerSideProps() {
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const { playerId } = query;
+
+  if (playerId) {
+    const player = await getPlayer(playerId as string);
+
+    return {
+      props: { player },
+    };
+  }
+
   const allPlayers = await getAllPlayers();
   // const player = await getPlayer("andy");
 
   return {
     props: { player: allPlayers ? selectRandomOneOf(allPlayers) : undefined },
   };
-}
+};
