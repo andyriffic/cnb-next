@@ -5,6 +5,7 @@ import { AnimateFadeInRight } from "../../../components/animations/FadeInRight";
 import { PlayerAvatar } from "../../../components/PlayerAvatar";
 import { SpectatorPageLayout } from "../../../components/SpectatorPageLayout";
 import { Player } from "../../../types/Player";
+import { updatePlayerDetails } from "../../../utils/api";
 import { getAllPlayers, getPlayer } from "../../../utils/data/aws-dynamodb";
 
 const CenterAlignContainer = styled.div`
@@ -35,9 +36,21 @@ type Props = {
   player: Player;
 };
 
+const updateDetails = (player: Player) => {
+  updatePlayerDetails(player.id, { gameMoves: 5 }).then(() =>
+    console.log("player updated")
+  );
+};
+
 function Page({ player }: Props) {
   return (
-    <SpectatorPageLayout>
+    <SpectatorPageLayout
+      debug={
+        <div>
+          <button onClick={() => updateDetails(player)}>Hello</button>
+        </div>
+      }
+    >
       <CenterAlignContainer>
         <PlayerProfileContainer>
           <AnimateFadeInLeft>
@@ -71,6 +84,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const player = await getPlayer(params!.playerId! as string);
+  console.log("PLAYER", player);
   return {
     props: { player },
   };

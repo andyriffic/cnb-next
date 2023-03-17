@@ -5,8 +5,10 @@ import {
   GetItemCommandOutput,
   ScanCommand,
   ScanCommandInput,
+  UpdateItemCommand,
+  UpdateItemCommandInput,
 } from "@aws-sdk/client-dynamodb";
-import { unmarshall } from "@aws-sdk/util-dynamodb";
+import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { AWS_REGION } from "../../constants";
 import {
   DB_TABLE_NAME_PLAYERS,
@@ -14,7 +16,7 @@ import {
   DYNAMO_DB_ACCESS_KEY_SECRET,
   ENVIRONMENT_NAME,
 } from "../../environment";
-import { Player } from "../../types/Player";
+import { Player, PlayerDetails } from "../../types/Player";
 
 const ddbClient = new DynamoDBClient({
   region: AWS_REGION,
@@ -33,7 +35,7 @@ export const getAllPlayers = (): Promise<Player[] | void> => {
     //  ExpressionAttributeValues: { ["#n"]: { S: "name" } },
     ExpressionAttributeNames: { ["#n"]: "name" },
     // Set the projection expression, which the the attributes that you want.
-    ProjectionExpression: "id, #n, tags",
+    ProjectionExpression: "id, #n, tags, details",
     TableName: DB_TABLE_NAME_PLAYERS,
   };
   return ddbClient
@@ -60,4 +62,31 @@ export const getPlayer = (
       return !data.Item ? undefined : (unmarshall(data.Item) as Player);
     })
     .catch((err) => console.log("dynamodb error", err));
+};
+
+export const updatePlayer = (
+  playerId: string,
+  details: PlayerDetails
+): Promise<void> => {
+  const params: UpdateItemCommandInput = {
+    TableName: DB_TABLE_NAME_PLAYERS,
+    Key: {
+      id: { S: playerId },
+    },
+    UpdateExpression: "set #d = :d",
+    ExpressionAttributeNames: { ["#d"]: "details" },
+    ExpressionAttributeValues: {
+      [":d"]: { M: marshall(details) },
+    },
+  };
+
+  return new Promise((resolve, reject) => {
+    ddbClient
+      .send(new UpdateItemCommand(params))
+      .then(() => resolve())
+      .catch((reason) => {
+        console.error("DYNAMODB ERROR", reason);
+        reject(reason);
+      });
+  });
 };
