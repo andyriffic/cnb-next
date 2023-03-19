@@ -130,8 +130,8 @@ function Page({}: Props) {
       {/* <Heading>
         Game: {gameId} | {RpsGameState[gameState.state]}
       </Heading> */}
-      {showPointsCeremony && gameFinalPoints && (
-        <PointsAwardCeremony gamePoints={gameFinalPoints} />
+      {game && showPointsCeremony && gameFinalPoints && (
+        <PointsAwardCeremony gameId={game.id} gamePoints={gameFinalPoints} />
       )}
       {!showPointsCeremony && game && bettingGame?.currentRound && (
         <div>

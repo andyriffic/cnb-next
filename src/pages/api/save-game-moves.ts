@@ -1,0 +1,35 @@
+import type { NextApiRequest, NextApiResponse } from "next";
+import {
+  PlayerGameMoves,
+  savePlayersGameMoves,
+} from "../../services/saveGameMoves";
+
+export default async function userHandler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const { query, method } = req;
+  const { gameId } = query;
+
+  if (!gameId) {
+    res.status(400).json({ reason: "No gameId supplied" });
+  }
+
+  const playerMoves = req.body as PlayerGameMoves[];
+
+  switch (method) {
+    case "PUT":
+      try {
+        console.info("Saving game moves for game", gameId, playerMoves);
+        await savePlayersGameMoves(gameId as string, playerMoves);
+        res.status(200).send("OK");
+      } catch (err) {
+        console.error("Error when saving player details", err);
+        res.status(500).json({ error: "Error when saving player details" });
+      }
+      break;
+    default:
+      res.setHeader("Allow", ["PUT"]);
+      res.status(405).end(`Method ${method} Not Allowed`);
+  }
+}

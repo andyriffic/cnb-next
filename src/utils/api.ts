@@ -1,3 +1,4 @@
+import { PlayerGameMoves } from "../services/saveGameMoves";
 import { PlayerDetails } from "../types/Player";
 
 export const updatePlayerDetails = (
@@ -17,5 +18,18 @@ export const updatePlayerDetails = (
         console.log(reason);
         reject(reason);
       });
+  });
+};
+
+export const savePlayerGameMovesFetch = (
+  gameId: string,
+  gameMoves: PlayerGameMoves[]
+): Promise<Response> => {
+  return fetch(`/api/save-game-moves?gameId=${gameId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(gameMoves),
   });
 };

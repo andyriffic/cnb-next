@@ -1,5 +1,6 @@
 import { WinningConditions } from "../../components/rock-paper-scissors/hooks/useGameWinningConditions";
 import { GroupBettingGame, PlayerWallet } from "../betting/types";
+import { PlayerGameMoves } from "../saveGameMoves";
 import { RPSSpectatorGameView } from "./types";
 
 const WINNER_POINTS = 6;
@@ -94,4 +95,29 @@ export const createPoints = (
     middleOfThePack: everyoneElsePoints.filter((p) => p.points > 0),
     zeroPointLosers: everyoneElsePoints.filter((p) => p.points === 0),
   };
+};
+
+export const toGameMoves = (
+  rpsPoints: RockPaperScissorsPoints
+): PlayerGameMoves[] => {
+  const gameMoves: PlayerGameMoves[] = [];
+  if (rpsPoints.outrightWinner) {
+    gameMoves.push({
+      playerId: rpsPoints.outrightWinner.playerId,
+      moves: rpsPoints.outrightWinner.points,
+    });
+  }
+  rpsPoints.middleOfThePack.forEach((p) => {
+    gameMoves.push({
+      playerId: p.playerId,
+      moves: p.points,
+    });
+  });
+  // rpsPoints.zeroPointLosers.forEach((p) => {
+  //   gameMoves.push({
+  //     playerId: p.playerId,
+  //     moves: p.points,
+  //   });
+  // });
+  return gameMoves;
 };

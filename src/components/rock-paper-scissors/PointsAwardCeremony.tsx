@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { COLORS, FONT_FAMILY } from "../../colors";
-import { RockPaperScissorsPoints } from "../../services/rock-paper-scissors/points";
+import {
+  RockPaperScissorsPoints,
+  toGameMoves,
+} from "../../services/rock-paper-scissors/points";
+import { savePlayerGameMovesFetch } from "../../utils/api";
 import { Appear } from "../animations/Appear";
 import { Heading, SubHeading } from "../Atoms";
 import { FeatureValue } from "../FeatureValue";
+import { useDoOnce } from "../hooks/useDoOnce";
 import { useSound } from "../hooks/useSound";
 import { CenterSpaced } from "../Layouts";
 import { PlayerAvatar } from "../PlayerAvatar";
@@ -46,12 +51,23 @@ const Points = styled.div`
 `;
 
 type Props = {
+  gameId: string;
   gamePoints: RockPaperScissorsPoints;
 };
 
-export const PointsAwardCeremony = ({ gamePoints }: Props): JSX.Element => {
+export const PointsAwardCeremony = ({
+  gameId,
+  gamePoints,
+}: Props): JSX.Element => {
   const currentStoryboard = useStoryBoardTiming({
     losers: gamePoints.zeroPointLosers.length > 0,
+  });
+
+  useDoOnce(() => {
+    const gameMoves = toGameMoves(gamePoints);
+    savePlayerGameMovesFetch(gameId, gameMoves)
+      .then(() => console.log("Updated games moves"))
+      .catch((err) => console.error(err));
   });
 
   return (
