@@ -12,12 +12,14 @@ import { FeatureValue } from "../FeatureValue";
 import { useDoOnce } from "../hooks/useDoOnce";
 import { useSound } from "../hooks/useSound";
 import { CenterSpaced } from "../Layouts";
+import { LinkToMiniGame } from "../LinkToMiniGame";
 import { PlayerAvatar } from "../PlayerAvatar";
 
 enum STORYBOARD {
   SHOW_WINNER = 0,
   SHOW_MIDDLE = 1,
   SHOW_LOSER = 2,
+  SHOW_MINIGAME_CTA = 3,
 }
 
 const Container = styled.div``;
@@ -59,8 +61,9 @@ export const PointsAwardCeremony = ({
   gameId,
   gamePoints,
 }: Props): JSX.Element => {
+  const hasLosers = gamePoints.zeroPointLosers.length > 0;
   const currentStoryboard = useStoryBoardTiming({
-    losers: gamePoints.zeroPointLosers.length > 0,
+    losers: hasLosers,
   });
 
   useDoOnce(() => {
@@ -110,7 +113,7 @@ export const PointsAwardCeremony = ({
           </CenterSpaced>
         </Appear>
       )}
-      {currentStoryboard >= STORYBOARD.SHOW_LOSER && (
+      {currentStoryboard >= STORYBOARD.SHOW_LOSER && hasLosers && (
         <Appear animation="flip-in">
           <CenterSpaced stacked={true} style={{ marginTop: "4vh" }}>
             <SubHeading>Biggest losers 大输家</SubHeading>
@@ -125,6 +128,14 @@ export const PointsAwardCeremony = ({
                 </PlayerContainer>
               ))}
             </PlayerList>
+          </CenterSpaced>
+        </Appear>
+      )}
+      {currentStoryboard >= STORYBOARD.SHOW_MINIGAME_CTA && (
+        <Appear animation="flip-in">
+          {" "}
+          <CenterSpaced stacked={true} style={{ marginTop: "4vh" }}>
+            <LinkToMiniGame />
           </CenterSpaced>
         </Appear>
       )}
@@ -158,6 +169,15 @@ function useStoryBoardTiming({ losers }: { losers: boolean }): STORYBOARD {
       play("rps-award-loser");
     }, 5000);
   }, [play, losers]);
+
+  useEffect(() => {
+    setTimeout(
+      () => {
+        setCurrentStoryboard(STORYBOARD.SHOW_MINIGAME_CTA);
+      },
+      losers ? 8000 : 5000
+    );
+  }, [losers]);
 
   return currentStoryboard;
 }

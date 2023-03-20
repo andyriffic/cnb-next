@@ -1,8 +1,43 @@
-import { getPlayer, updatePlayer } from "../utils/data/aws-dynamodb";
+import { Player } from "../types/Player";
+import {
+  getPlayer,
+  updatePlayer,
+  updatePlayerLegacyTags,
+} from "../utils/data/aws-dynamodb";
 
 export type PlayerGameMoves = {
   playerId: string;
   moves: number;
+};
+
+const incrementIntegerTag = (
+  tagPrefix: string,
+  by: number,
+  tags: string[]
+): string[] => {
+  const existingTag = tags.find((t) => t.startsWith(tagPrefix));
+
+  if (!existingTag) {
+    return [...tags, `${tagPrefix}${by}`];
+  }
+
+  const [tagName, tagValueStr] = existingTag.split(":");
+  const existingValue = tagValueStr ? parseInt(tagValueStr, 10) : 0;
+
+  return [
+    ...tags.filter((t) => !t.startsWith(tagPrefix)),
+    `${tagPrefix}${existingValue + by}`,
+  ];
+};
+
+const updateLegacyMovesTag = (player: Player, moves: number): Promise<void> => {
+  const newTags = [
+    ...incrementIntegerTag("sl_moves:", moves, player.tags).filter(
+      (t) => t !== "sl_participant"
+    ),
+    "sl_participant",
+  ];
+  return updatePlayerLegacyTags(player.id, newTags);
 };
 
 const updatePlayerGameMoves = (playerMoves: PlayerGameMoves): Promise<void> => {
@@ -19,7 +54,11 @@ const updatePlayerGameMoves = (playerMoves: PlayerGameMoves): Promise<void> => {
         updatePlayer(playerMoves.playerId, {
           gameMoves: currentGameMoves + playerMoves.moves,
         })
-          .then(resolve)
+          .then(() => {
+            updateLegacyMovesTag(player, playerMoves.moves)
+              .then(() => resolve())
+              .catch((err) => reject(err));
+          })
           .catch((err) => reject(err));
       })
       .catch((err) => reject(err));

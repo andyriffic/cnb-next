@@ -90,3 +90,30 @@ export const updatePlayer = (
       });
   });
 };
+
+export const updatePlayerLegacyTags = (
+  playerId: string,
+  tags: string[]
+): Promise<void> => {
+  const params: UpdateItemCommandInput = {
+    TableName: DB_TABLE_NAME_PLAYERS,
+    Key: {
+      id: { S: playerId },
+    },
+    UpdateExpression: "set #t = :t",
+    ExpressionAttributeNames: { ["#t"]: "tags" },
+    ExpressionAttributeValues: {
+      [":t"]: { SS: tags },
+    },
+  };
+
+  return new Promise((resolve, reject) => {
+    ddbClient
+      .send(new UpdateItemCommand(params))
+      .then(() => resolve())
+      .catch((reason) => {
+        console.error("DYNAMODB ERROR", reason);
+        reject(reason);
+      });
+  });
+};
