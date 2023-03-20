@@ -68,7 +68,7 @@ export default function Page({ player, continueUrl }: Props) {
     }
 
     const timeout = setTimeout(() => {
-      router.push(continueUrl);
+      router.replace(continueUrl);
     }, 6000);
 
     return () => clearTimeout(timeout);

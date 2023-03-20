@@ -1,6 +1,6 @@
 import { GetServerSideProps } from "next";
 import styled from "styled-components";
-import { Card } from "../components/Atoms";
+import { Card, SubHeading } from "../components/Atoms";
 import { NumericValue } from "../components/NumericValue";
 import { PlayerAvatar } from "../components/PlayerAvatar";
 import { SpectatorPageLayout } from "../components/SpectatorPageLayout";
@@ -21,14 +21,37 @@ const PlayerItem = styled.div`
 `;
 
 type Props = {
-  players: Player[];
+  activePlayers: Player[];
+  retiredPlayers: Player[];
 };
 
-export default function Page({ players }: Props) {
+export default function Page({ activePlayers, retiredPlayers }: Props) {
   return (
     <SpectatorPageLayout>
+      <SubHeading style={{ textAlign: "center", marginTop: "2rem" }}>
+        Active players
+      </SubHeading>
       <PlayerContainer>
-        {players.map((player) => (
+        {activePlayers.map((player) => (
+          <PlayerItem key={player.id}>
+            <Card
+              style={{
+                margin: 0,
+                opacity: player.tags.includes("retired") ? 0.7 : 1,
+              }}
+            >
+              <PlayerAvatar playerId={player.id} size="thumbnail" />
+              <p style={{ textAlign: "center" }}>{player.name}</p>
+              <p style={{ textAlign: "center", fontWeight: "bold" }}>
+                <NumericValue>{player.details?.gameMoves || 0}</NumericValue>
+              </p>
+            </Card>
+          </PlayerItem>
+        ))}
+      </PlayerContainer>
+      <SubHeading style={{ textAlign: "center" }}>Retired players</SubHeading>
+      <PlayerContainer>
+        {retiredPlayers.map((player) => (
           <PlayerItem key={player.id}>
             <Card
               style={{
@@ -52,9 +75,17 @@ export default function Page({ players }: Props) {
 export const getServerSideProps: GetServerSideProps = async () => {
   const allPlayers = await getAllPlayers();
 
+  const activePlayers = allPlayers
+    ? allPlayers.filter((p) => !p.tags.includes("retired"))
+    : [];
+  const retiredPlayers = allPlayers
+    ? allPlayers.filter((p) => p.tags.includes("retired"))
+    : [];
+
   return {
     props: {
-      players: allPlayers ? allPlayers.sort(sortByPlayerName) : [],
+      activePlayers: activePlayers.sort(sortByPlayerName),
+      retiredPlayers: retiredPlayers.sort(sortByPlayerName),
     },
   };
 };
