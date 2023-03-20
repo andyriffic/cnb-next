@@ -1,4 +1,5 @@
 import { GetServerSideProps } from "next";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { Appear } from "../components/animations/Appear";
@@ -44,10 +45,12 @@ const PlayerName = styled.div`
 
 type Props = {
   player?: Player;
+  continueUrl: string | null;
 };
 
-export default function Page({ player }: Props) {
+export default function Page({ player, continueUrl }: Props) {
   const [reveal, setReveal] = useState(false);
+  const router = useRouter();
   const { play } = useSound();
 
   useEffect(() => {
@@ -58,6 +61,18 @@ export default function Page({ player }: Props) {
 
     return () => clearTimeout(timeout);
   }, [play]);
+
+  useEffect(() => {
+    if (!continueUrl) {
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      router.push(continueUrl);
+    }, 6000);
+
+    return () => clearTimeout(timeout);
+  }, [continueUrl, router]);
 
   if (!player) {
     return <div>Soz</div>;
@@ -78,13 +93,16 @@ export default function Page({ player }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const { playerId } = query;
+  const { playerId, continueUrl } = query;
 
   if (playerId) {
     const player = await getPlayer(playerId as string);
 
     return {
-      props: { player: player ? player : undefined },
+      props: {
+        player: player ? player : undefined,
+        continueUrl: continueUrl ? (continueUrl as string) : null,
+      },
     };
   }
 
@@ -98,6 +116,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
             allPlayers.filter((p) => !p.tags.includes("no-whos-that"))
           )
         : undefined,
+      continueUrl: continueUrl ? (continueUrl as string) : null,
     },
   };
 };

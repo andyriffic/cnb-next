@@ -15,3 +15,7 @@ export const getPlayerAvatarUrl = (playerId: string): string => {
 export const getPlayerHomeUrl = (playerId: string): string => {
   return `/play/${playerId}`;
 };
+
+export const getWhosThatUrl = (continueUrl?: string): string => {
+  return `/whos-that${continueUrl ? `?continueUrl=${continueUrl}` : ""}`;
+};
