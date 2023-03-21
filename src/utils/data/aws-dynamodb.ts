@@ -101,9 +101,9 @@ export const updatePlayerLegacyTags = (
       id: { S: playerId },
     },
     UpdateExpression: "set #t = :t",
-    ExpressionAttributeNames: { ["#t"]: "tags" },
+    ExpressionAttributeNames: { "#t": "tags" },
     ExpressionAttributeValues: {
-      [":t"]: { SS: tags },
+      ":t": { L: tags.map((t) => ({ S: t })) },
     },
   };
 
