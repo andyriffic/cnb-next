@@ -1,5 +1,6 @@
 import { GetStaticPaths, GetStaticProps } from "next";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import styled from "styled-components";
 import {
   Card,
@@ -11,6 +12,7 @@ import { PlayerPageLayout } from "../../../components/PlayerPageLayout";
 import { PlayerGamesList } from "../../../components/rock-paper-scissors/PlayerGamesList";
 import { Player } from "../../../types/Player";
 import { getAllPlayers, getPlayer } from "../../../utils/data/aws-dynamodb";
+import { getPlayerJoinUrl } from "../../../utils/url";
 
 const CenterAlignContainer = styled.div`
   display: flex;
@@ -22,11 +24,15 @@ type Props = {
 };
 
 function Page({ player }: Props) {
+  const { query } = useRouter();
   return (
     <PlayerPageLayout headerContent={<>{player.name}</>} playerId={player.id}>
       <Card>
         <SubHeading>What to do</SubHeading>
-        <Link href={`/play/${player.id}/join`} passHref={true}>
+        <Link
+          href={getPlayerJoinUrl(player.id, query.autoJoinId as string)}
+          passHref={true}
+        >
           <PrimaryLinkButton>Join a game</PrimaryLinkButton>
         </Link>
       </Card>

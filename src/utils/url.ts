@@ -12,10 +12,28 @@ export const getPlayerAvatarUrl = (playerId: string): string => {
   return `/images/players/${playerId}.png`;
 };
 
-export const getPlayerHomeUrl = (playerId: string): string => {
-  return `/play/${playerId}`;
+export const getPlayerHomeUrl = (
+  playerId: string,
+  autoJoinGameId?: string
+): string => {
+  return `/play/${playerId}${
+    autoJoinGameId ? `?autoJoinId=${autoJoinGameId}` : ""
+  }`;
+};
+
+export const getPlayerJoinUrl = (
+  playerId: string,
+  autoJoinGameId?: string
+): string => {
+  return `/play/${playerId}/join${
+    autoJoinGameId ? `?autoJoinId=${autoJoinGameId}` : ""
+  }`;
 };
 
 export const getWhosThatUrl = (continueUrl?: string): string => {
   return `/whos-that${continueUrl ? `?continueUrl=${continueUrl}` : ""}`;
+};
+
+export const getPlayRootUrl = (autoJoinGameId?: string): string => {
+  return `/play${autoJoinGameId ? `?autoJoinId=${autoJoinGameId}` : ""}`;
 };

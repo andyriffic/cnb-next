@@ -1,7 +1,8 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
+import qrcode from "qrcode";
 import { Appear } from "../../components/animations/Appear";
 import { Heading, PrimaryButton, SubHeading } from "../../components/Atoms";
 import { DebugPlayerJoin } from "../../components/DebugPlayerJoin";
@@ -15,7 +16,7 @@ import { usePlayerNames } from "../../providers/PlayerNamesProvider";
 import { useSocketIo } from "../../providers/SocketIoProvider";
 import { PlayerWallet } from "../../services/betting/types";
 import { shuffleArray } from "../../utils/random";
-import { getWhosThatUrl } from "../../utils/url";
+import { getPlayRootUrl, getWhosThatUrl } from "../../utils/url";
 
 const JoinedPlayerContainer = styled.div`
   display: flex;
@@ -32,6 +33,7 @@ function Page() {
   const { groupJoin, rockPaperScissors, groupBetting } = useSocketIo();
   const { getName } = usePlayerNames();
   const { play, loop } = useSound();
+  const [qrCodeUrl, setQrCodeUrl] = useState("");
 
   useEffect(() => {
     const joinMusic = loop("join-music");
@@ -40,6 +42,17 @@ function Page() {
       joinMusic.stop();
     };
   }, [loop]);
+
+  useEffect(() => {
+    const joinUrl = `${window.location.protocol}//${
+      window.location.host
+    }${getPlayRootUrl(groupId)}`;
+    qrcode.toDataURL(joinUrl, (error, url) => {
+      console.info("URL", joinUrl);
+      console.info("QR generated URL", url);
+      setQrCodeUrl(url);
+    });
+  }, [groupId]);
 
   const group = useMemo(() => {
     return groupJoin.playerGroups.find((g) => g.id === groupId);
@@ -131,11 +144,18 @@ function Page() {
           </PrimaryButton>
         </CenterSpaced>
       )}
-      <div
-        style={{ position: "absolute", top: 0, width: "10vw", height: "10vw" }}
-      >
-        <Image layout="fill" src="/images/qr/join-game-url.png" alt="" />
-      </div>
+      {qrCodeUrl && (
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            width: "12vw",
+            height: "12vw",
+          }}
+        >
+          <Image layout="fill" src={qrCodeUrl} alt="" />
+        </div>
+      )}
     </SpectatorPageLayout>
   );
 }

@@ -31,10 +31,11 @@ type Props = {};
 
 function Page({}: Props) {
   const router = useRouter();
-  const { groupJoin, rockPaperScissors, groupBetting } = useSocketIo();
-  const [groupId, setGroupId] = useState("");
+  const autoJoinId = (router.query.autoJoinId as string) || "";
   const playerId = router.query.playerId as string;
   const joinedId = router.query.joinedId as string;
+  const { groupJoin, rockPaperScissors, groupBetting } = useSocketIo();
+  const [groupId, setGroupId] = useState(autoJoinId);
 
   const joinedGroup = useMemo(() => {
     if (joinedId && joinedId === groupId) {

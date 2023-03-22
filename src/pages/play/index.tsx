@@ -1,5 +1,6 @@
 import { GetStaticPaths, GetStaticProps } from "next";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import styled from "styled-components";
 import { SpectatorPageLayout } from "../../components/SpectatorPageLayout";
 import { Player } from "../../types/Player";
@@ -36,13 +37,14 @@ type Props = {
 };
 
 function Page({ players }: Props) {
+  const { query } = useRouter();
   return (
     <SpectatorPageLayout scrollable={true}>
       <PlayerList>
         {players.map((player) => (
           <Link
             key={player.id}
-            href={getPlayerHomeUrl(player.id)}
+            href={getPlayerHomeUrl(player.id, query.autoJoinId as string)}
             passHref={true}
           >
             <PlayerName>{player.name}</PlayerName>
