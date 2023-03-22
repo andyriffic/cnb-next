@@ -33,3 +33,14 @@ export const savePlayerGameMovesFetch = (
     body: JSON.stringify(gameMoves),
   });
 };
+
+export const incrementPlayersWhosThatCountFetch = (
+  playerId: string
+): Promise<Response> => {
+  return fetch(`/api/player/${playerId}/viewed-whos-that`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};

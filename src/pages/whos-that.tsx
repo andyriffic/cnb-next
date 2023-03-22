@@ -1,11 +1,12 @@
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 import { Appear } from "../components/animations/Appear";
 import { useSound } from "../components/hooks/useSound";
 import { PlayerAvatar } from "../components/PlayerAvatar";
 import { Player } from "../types/Player";
+import { incrementPlayersWhosThatCountFetch } from "../utils/api";
 import { getAllPlayers, getPlayer } from "../utils/data/aws-dynamodb";
 import { selectRandomOneOf } from "../utils/random";
 
@@ -49,6 +50,7 @@ type Props = {
 };
 
 export default function Page({ player, continueUrl }: Props) {
+  const updatedWhosThatCount = useRef(false);
   const [reveal, setReveal] = useState(false);
   const router = useRouter();
   const { play } = useSound();
@@ -73,6 +75,15 @@ export default function Page({ player, continueUrl }: Props) {
 
     return () => clearTimeout(timeout);
   }, [continueUrl, router]);
+
+  useEffect(() => {
+    if (!player || updatedWhosThatCount.current) {
+      return;
+    }
+    updatedWhosThatCount.current = true;
+    console.log("incrementing whos that count for", player.name);
+    incrementPlayersWhosThatCountFetch(player.id);
+  }, [player]);
 
   if (!player) {
     return <div>Soz</div>;
@@ -106,14 +117,23 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     };
   }
 
-  const allPlayers = await getAllPlayers();
-  // const player = await getPlayer("andy");
+  const allPlayers = (await getAllPlayers()) || [];
+  const lowestViewCount = allPlayers.reduce((acc, p) => {
+    const playerViewCount = p.details?.whosThatCount || 0;
+    return playerViewCount < acc ? playerViewCount : acc;
+  }, 0);
+
+  const lowestViewCountPlayers = allPlayers.filter(
+    (p) => p.details?.whosThatCount || 0 === lowestViewCount
+  );
 
   return {
     props: {
       player: allPlayers
         ? selectRandomOneOf(
-            allPlayers.filter((p) => !p.tags.includes("no-whos-that"))
+            lowestViewCountPlayers.filter(
+              (p) => !p.tags.includes("no-whos-that")
+            )
           )
         : undefined,
       continueUrl: continueUrl ? (continueUrl as string) : null,

@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { Player, PlayerDetails } from "../../../types/Player";
-import { getPlayer, updatePlayer } from "../../../utils/data/aws-dynamodb";
+import { Player, PlayerDetails } from "../../../../types/Player";
+import { getPlayer, updatePlayer } from "../../../../utils/data/aws-dynamodb";
 
 export default async function userHandler(
   req: NextApiRequest,

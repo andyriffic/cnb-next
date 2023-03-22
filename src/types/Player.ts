@@ -7,6 +7,7 @@ export type Player = {
 
 export type PlayerDetails = {
   gameMoves?: number;
+  whosThatCount?: number;
 };
 
 export type PlayerNames = { [playerId: string]: string };
