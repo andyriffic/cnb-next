@@ -16,7 +16,11 @@ import { usePlayerNames } from "../../providers/PlayerNamesProvider";
 import { useSocketIo } from "../../providers/SocketIoProvider";
 import { PlayerWallet } from "../../services/betting/types";
 import { shuffleArray } from "../../utils/random";
-import { getPlayRootUrl, getWhosThatUrl } from "../../utils/url";
+import {
+  getPlayRootUrl,
+  getRockPaperScissorsGameSpectatorUrl,
+  getWhosThatUrl,
+} from "../../utils/url";
 
 const JoinedPlayerContainer = styled.div`
   display: flex;
@@ -132,9 +136,7 @@ function Page() {
                     ],
                     bettingPlayerWallets,
                     () =>
-                      router.replace(
-                        getWhosThatUrl(`/watch/rock-paper-scissors/${gameId}`)
-                      )
+                      router.push(getRockPaperScissorsGameSpectatorUrl(gameId))
                   );
                 }
               );

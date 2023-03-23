@@ -37,3 +37,9 @@ export const getWhosThatUrl = (continueUrl?: string): string => {
 export const getPlayRootUrl = (autoJoinGameId?: string): string => {
   return `/play${autoJoinGameId ? `?autoJoinId=${autoJoinGameId}` : ""}`;
 };
+
+export const getRockPaperScissorsGameSpectatorUrl = (
+  gameId: string
+): string => {
+  return `/watch/rock-paper-scissors/${gameId}`;
+};
