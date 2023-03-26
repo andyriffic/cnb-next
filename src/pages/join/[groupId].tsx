@@ -151,8 +151,8 @@ function Page() {
           style={{
             position: "absolute",
             top: 0,
-            width: "12vw",
-            height: "12vw",
+            width: "10vw",
+            height: "10vw",
           }}
         >
           <Image layout="fill" src={qrCodeUrl} alt="" />

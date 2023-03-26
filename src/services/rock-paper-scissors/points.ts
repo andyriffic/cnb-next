@@ -105,6 +105,7 @@ export const toGameMoves = (
     gameMoves.push({
       playerId: rpsPoints.outrightWinner.playerId,
       moves: rpsPoints.outrightWinner.points,
+      winner: true,
     });
   }
   rpsPoints.middleOfThePack.forEach((p) => {

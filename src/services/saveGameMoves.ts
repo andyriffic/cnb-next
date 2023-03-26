@@ -8,6 +8,7 @@ import {
 export type PlayerGameMoves = {
   playerId: string;
   moves: number;
+  winner?: boolean;
 };
 
 const incrementIntegerTag = (
@@ -30,13 +31,32 @@ const incrementIntegerTag = (
   ];
 };
 
-const updateLegacyMovesTag = (player: Player, moves: number): Promise<void> => {
-  const newTags = [
-    ...incrementIntegerTag("sl_moves:", moves, player.tags).filter(
-      (t) => t !== "sl_participant"
-    ),
-    "sl_participant",
-  ];
+const tagsWithKongImmunity = (
+  tags: string[],
+  hasImmunity: boolean
+): string[] => {
+  if (!hasImmunity || tags.includes("kong_immunity")) {
+    return tags;
+  }
+
+  return [...tags, "kong_immunity"];
+};
+
+const updateLegacyMovesTag = (
+  player: Player,
+  playerMoves: PlayerGameMoves
+): Promise<void> => {
+  const newTags = tagsWithKongImmunity(
+    [
+      ...incrementIntegerTag(
+        "sl_moves:",
+        playerMoves.moves,
+        player.tags
+      ).filter((t) => t !== "sl_participant"),
+      "sl_participant",
+    ],
+    !!playerMoves.winner
+  );
   return updatePlayerLegacyTags(player.id, newTags);
 };
 
@@ -55,7 +75,7 @@ const updatePlayerGameMoves = (playerMoves: PlayerGameMoves): Promise<void> => {
           gameMoves: currentGameMoves + playerMoves.moves,
         })
           .then(() => {
-            updateLegacyMovesTag(player, playerMoves.moves)
+            updateLegacyMovesTag(player, playerMoves)
               .then(() => resolve())
               .catch((err) => reject(err));
           })
