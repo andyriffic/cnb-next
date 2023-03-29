@@ -1,6 +1,4 @@
 import * as E from "fp-ts/Either";
-import * as A from "fp-ts/Array";
-import * as O from "fp-ts/Option";
 import { pipe } from "fp-ts/function";
 import {
   RPSCreateGameProps,
