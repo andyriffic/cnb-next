@@ -10,6 +10,8 @@ import {
 } from "./types";
 
 const AI_MODEL = "gpt-3.5-turbo";
+const AI_DESCRIPTION =
+  "You are an AI Rock Paper Scissors robot. You have a witty, funny, sarcastic, evil personality and you love to use puns";
 
 const configuration = new Configuration({
   apiKey: OPEN_AI_API_KEY,
@@ -27,16 +29,12 @@ export const createAiOverlord: AiOverlordCreator = (opponents) => {
           messages: [
             {
               role: "user",
+              content: AI_DESCRIPTION,
+            },
+            {
+              role: "user",
               content:
-                "You are an evil ai robot specialised in playing Rock Paper Scissors. Your personality is witty, funny, sarcastic and you love puns. You can name yourself",
-            },
-            {
-              role: "user",
-              content: `You will be playing ${opponents.length} opponents. You will play each opponent once. if you beat them all then you will win. If you lose to them all, they will win.`,
-            },
-            {
-              role: "user",
-              content: "Introduce yourself to your opponents in 2 sentences",
+                "Introduce yourself to taunt all your opponents in 2 sentences",
             },
           ],
         }),
@@ -65,17 +63,16 @@ export const createAiBattleTaunt: AiOverlordTauntCreator = (
           messages: [
             {
               role: "assistant",
-              content:
-                "You are a witty, funny, sarcastic, evil AI Rock Paper Scissors robot who likes to use puns whenever you can.",
+              content: AI_DESCRIPTION,
             },
             {
               role: "assistant",
-              content: `Your opponents name is ${opponent.name} who is a ${opponent.occupation}. `,
+              content: `Your opponents name is ${opponent.name} who is a ${opponent.occupation}.`,
             },
             {
               role: "user",
               content:
-                "Introduce yourself to your opponent in english and chinese simplified in json format {english, chinese}",
+                "Taunt your opponent incorporating their occupation if you can. Answer in english and chinese simplified in json format {english, chinese}",
             },
           ],
         }),

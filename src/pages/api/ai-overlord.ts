@@ -24,7 +24,7 @@ export default async function userHandler(
   switch (method) {
     case "GET":
       if (game) {
-        const battle = await preparePlayerForBattle("andy", game)();
+        const battle = await preparePlayerForBattle("marion", game)();
         pipe(
           battle,
           E.fold(
@@ -37,6 +37,7 @@ export default async function userHandler(
       } else {
         const game = await createAiOverlordGame(openAiOverlord, [
           { playerId: "andy", name: "Andy", occupation: "Lead Developer" },
+          { playerId: "marion", name: "Marion", occupation: "Product Manager" },
         ])();
 
         pipe(
