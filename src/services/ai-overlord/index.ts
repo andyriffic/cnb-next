@@ -1,26 +1,48 @@
 import { pipe } from "fp-ts/lib/function";
 import * as TE from "fp-ts/lib/TaskEither";
-import { AiOverlord, AiOverlordCreator, AiOverlordGame } from "./types";
+import { createAiBattleTaunt } from "./openAi";
+import {
+  AiOverlord,
+  AiOverlordCreator,
+  AiOverlordGame,
+  AiOverlordOpponent,
+  TranslatedText,
+} from "./types";
 
-const createAiGame = (aiOverlord: AiOverlord): AiOverlordGame => ({
-  gameId: "123",
-  opponents: [],
-  aiOverlord,
-});
+const createAiGame =
+  (opponents: AiOverlordOpponent[]) =>
+  (aiOverlord: AiOverlord): AiOverlordGame => ({
+    gameId: "123",
+    opponents,
+    aiOverlord,
+    taunts: [],
+  });
+
+const addTauntToBattle =
+  (playerId: string, game: AiOverlordGame) =>
+  (taunt: TranslatedText): AiOverlordGame => {
+    return { ...game, taunts: [...game.taunts, { playerId, taunt }] };
+  };
 
 export const createAiOverlordGame = (
-  aiCreator: AiOverlordCreator
+  createAiOverlord: AiOverlordCreator,
+  opponents: AiOverlordOpponent[]
 ): TE.TaskEither<string, AiOverlordGame> => {
-  //   const aiOverlord = await aiCreator("123");
+  return pipe(createAiOverlord(opponents), TE.map(createAiGame(opponents)));
+};
 
-  return pipe(
-    aiCreator(),
-    TE.chain((aiOverlord) => TE.right(createAiGame(aiOverlord)))
+export const preparePlayerForBattle = (
+  playerId: string,
+  aiOverlordGame: AiOverlordGame
+): TE.TaskEither<string, AiOverlordGame> => {
+  const opponent = aiOverlordGame.opponents.find(
+    (opponent) => opponent.playerId === playerId
   );
-
-  //   return Promise.resolve({
-  //     gameId: "123",
-  //     opponents: [],
-  //     aiOverlord,
-  //   });
+  if (!opponent) {
+    return TE.left("Player not found");
+  }
+  return pipe(
+    createAiBattleTaunt(opponent, aiOverlordGame),
+    TE.map(addTauntToBattle(playerId, aiOverlordGame))
+  );
 };
