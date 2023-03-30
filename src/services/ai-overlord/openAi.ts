@@ -19,6 +19,10 @@ const configuration = new Configuration({
 
 const openAi = new OpenAIApi(configuration);
 
+const mapToTranslatedText = (response: string | undefined): TranslatedText => {
+  return JSON.parse(response || "{}") as TranslatedText;
+};
+
 export const createAiOverlord: AiOverlordCreator = (opponents) => {
   console.info("Creating AI Overlord");
   return pipe(
@@ -34,21 +38,25 @@ export const createAiOverlord: AiOverlordCreator = (opponents) => {
             {
               role: "user",
               content:
-                "Introduce yourself to taunt all your opponents in 2 sentences",
+                "Introduce yourself to taunt all your opponents in 2 sentences, answer in english and chinese simplified in json format {english, chinese}",
             },
           ],
         }),
       () => "Error creating AI Overlord"
     ),
     TE.map((response) => response?.data?.choices[0]?.message?.content),
-    TE.map((introduction) => ({ introduction, battles: [] } as AiOverlord))
+    TE.map((content) => {
+      console.log(content);
+      return content;
+    }),
+    TE.map(
+      (content) =>
+        ({
+          introduction: mapToTranslatedText(content),
+          battles: [],
+        } as AiOverlord)
+    )
   );
-};
-
-export const mapStringResponseToAiOverlordBattleMoveAndTaunt = (
-  response: string | undefined
-): TranslatedText => {
-  return JSON.parse(response || "{}") as TranslatedText;
 };
 
 export const createAiBattleTaunt: AiOverlordTauntCreator = (
@@ -83,6 +91,6 @@ export const createAiBattleTaunt: AiOverlordTauntCreator = (
       console.log(content);
       return content;
     }),
-    TE.map(mapStringResponseToAiOverlordBattleMoveAndTaunt)
+    TE.map(mapToTranslatedText)
   );
 };

@@ -39,7 +39,7 @@ export type AiOverlordOpponent = {
 };
 
 export type AiOverlord = {
-  introduction: string;
+  introduction: TranslatedText;
   battles: AiOverlordBattle[];
 };
 

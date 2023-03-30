@@ -3,7 +3,10 @@ import { AiOverlord, AiOverlordCreator } from "./types";
 import { createAiOverlordGame } from ".";
 
 const stubAiCreator: AiOverlordCreator = () =>
-  TE.right({ introduction: "Hi", battles: [] } as AiOverlord);
+  TE.right({
+    introduction: { english: "Hi", chinese: "" },
+    battles: [],
+  } as AiOverlord);
 
 test("Can create game successfully", async () => {
   const game = await createAiOverlordGame(stubAiCreator, [])();

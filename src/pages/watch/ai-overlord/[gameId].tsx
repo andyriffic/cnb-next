@@ -4,6 +4,8 @@ import { useRouter } from "next/router";
 import { Heading } from "../../../components/Atoms";
 import { SpectatorPageLayout } from "../../../components/SpectatorPageLayout";
 import { Positioned } from "../../../components/Positioned";
+import { OverlordRobot } from "../../../components/ai-overlord/OverlordRobot";
+import { CenterSpaced } from "../../../components/Layouts";
 
 type Props = {};
 
@@ -13,15 +15,12 @@ function Page({}: Props) {
 
   return (
     <SpectatorPageLayout>
-      <Heading>AI Overlord!</Heading>
-      <Positioned absolute={{ leftPercent: 10, topPercent: 10 }}>
-        <div style={{ position: "relative", width: "20vw", height: "40vw" }}>
-          <Image
-            src="/images/ai-overlords/overlord-01.png"
-            alt="Menacing robot"
-            fill={true}
-          />
-        </div>
+      <CenterSpaced>
+        <Heading>AI Overlord!</Heading>
+      </CenterSpaced>
+
+      <Positioned absolute={{ leftPercent: 10, bottomPercent: 10 }}>
+        <OverlordRobot />
       </Positioned>
     </SpectatorPageLayout>
   );
