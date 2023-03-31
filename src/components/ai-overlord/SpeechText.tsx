@@ -8,7 +8,10 @@ const SpeechBubble = styled.div`
   padding: 1rem;
 `;
 
-const Text = styled.div``;
+const Text = styled.p`
+  font-size: 1.3rem;
+  padding: 0.5rem;
+`;
 
 type Props = {
   text: TranslatedText;
@@ -18,6 +21,7 @@ export const SpeechText = ({ text }: Props) => {
   return (
     <SpeechBubble>
       <Text>{text.english}</Text>
+      <Text>{text.chinese}</Text>
     </SpeechBubble>
   );
 };
