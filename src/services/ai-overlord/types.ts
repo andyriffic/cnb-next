@@ -15,10 +15,12 @@ export type AiOverlordMoveCreator = (
   aiOverlordGame: AiOverlordGame
 ) => TE.TaskEither<string, RPSMoveName>;
 
-export type AiOverloardBattleResultCreator = (
+export type AiOverlordBattleOutcomeCreator = (
   opponent: AiOverlordOpponent,
+  opponentMove: RPSMoveName,
+  overlordMove: RPSMoveName,
   aiOverlordGame: AiOverlordGame
-) => TE.TaskEither<string, RPSMoveName>;
+) => TE.TaskEither<string, TranslatedText>;
 
 export type AiOverlordGame = {
   gameId: string;

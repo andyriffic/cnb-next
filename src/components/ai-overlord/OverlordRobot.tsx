@@ -9,14 +9,14 @@ const RobotLayout = styled.div`
 
 const RobotBody = styled.div`
   position: relative;
-  width: 20vw;
-  height: 40vw;
+  width: 25vh;
+  height: 50vh;
 `;
 
 const RobotSpeech = styled.div`
   position: absolute;
   width: 30vw;
-  top: -15vh;
+  top: -20vh;
   right: 0;
 `;
 
