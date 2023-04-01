@@ -1,8 +1,6 @@
 import styled from "styled-components";
-import {
-  AiOverlordGame,
-  TranslatedText,
-} from "../../services/ai-overlord/types";
+import { AiOverlordGame } from "../../services/ai-overlord/types";
+import { fetchStartAiOverlordBattle } from "../../utils/api";
 import { PlayerAvatar } from "../PlayerAvatar";
 
 const PlayerAvatarGroup = styled.div`
@@ -12,7 +10,10 @@ const PlayerAvatarGroup = styled.div`
 `;
 
 const Player = styled.div`
-  width: 10vw;
+  width: 3vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 type Props = {
@@ -23,9 +24,24 @@ export const OverlordOpponents = ({ aiOverlordGame }: Props) => {
   return (
     <PlayerAvatarGroup>
       {aiOverlordGame.opponents.map((opponent) => {
+        const hasBeenTaunted = aiOverlordGame.taunts.some(
+          (t) => t.playerId === opponent.playerId
+        );
         return (
           <Player key={opponent.playerId}>
-            <PlayerAvatar playerId={opponent.playerId} size="medium" />
+            <PlayerAvatar playerId={opponent.playerId} size="thumbnail" />
+            {!hasBeenTaunted && (
+              <button
+                onClick={() => {
+                  fetchStartAiOverlordBattle({
+                    gameId: aiOverlordGame.gameId,
+                    opponentId: opponent.playerId,
+                  });
+                }}
+              >
+                Choose
+              </button>
+            )}
           </Player>
         );
       })}

@@ -1,3 +1,8 @@
+import {
+  ApiAiOverlordNewOpponentRequest,
+  ApiGameCreationRequest,
+} from "../pages/api/ai-overlord";
+import { AiOverlordGame } from "../services/ai-overlord/types";
 import { PlayerGameMoves } from "../services/saveGameMoves";
 import { PlayerDetails } from "../types/Player";
 
@@ -43,4 +48,38 @@ export const incrementPlayersWhosThatCountFetch = (
       "Content-Type": "application/json",
     },
   });
+};
+
+export const fetchCreateAiOverlordGame = (
+  request: ApiGameCreationRequest
+): Promise<AiOverlordGame> => {
+  return fetch(`/api/ai-overlord`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(request),
+  }).then((response) => response.json());
+};
+
+export const fetchStartAiOverlordBattle = (
+  request: ApiAiOverlordNewOpponentRequest
+): Promise<AiOverlordGame> => {
+  return fetch(`/api/ai-overlord`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(request),
+  }).then((response) => response.json());
+};
+
+export const fetchGetAiOverlordGame = (
+  gameId: string
+): Promise<AiOverlordGame | undefined> => {
+  return fetch(`/api/ai-overlord?overlordId=${gameId}`, {
+    method: "GET",
+  }).then((response) =>
+    response.status === 200 ? response.json() : undefined
+  );
 };

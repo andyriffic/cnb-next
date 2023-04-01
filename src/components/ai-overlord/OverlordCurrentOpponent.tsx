@@ -17,14 +17,16 @@ type Props = {
 };
 
 export const OverlordCurrentOpponent = ({ aiOverlordGame }: Props) => {
-  return (
+  const currentOpponent =
+    aiOverlordGame.taunts[aiOverlordGame.taunts.length - 1];
+
+  return currentOpponent ? (
     <PlayerAvatarGroup>
       <Player>
-        <PlayerAvatar
-          playerId={aiOverlordGame.opponents[0]!.playerId}
-          size="medium"
-        />
+        <PlayerAvatar playerId={currentOpponent.playerId} size="medium" />
       </Player>
     </PlayerAvatarGroup>
+  ) : (
+    <div>Choose opponent</div>
   );
 };

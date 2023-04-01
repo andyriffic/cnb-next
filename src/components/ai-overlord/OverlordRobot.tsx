@@ -1,6 +1,6 @@
 import Image from "next/future/image";
 import styled from "styled-components";
-import { AiOverlord } from "../../services/ai-overlord/types";
+import { AiOverlord, AiOverlordGame } from "../../services/ai-overlord/types";
 import { SpeechText } from "./SpeechText";
 
 const RobotLayout = styled.div`
@@ -21,10 +21,13 @@ const RobotSpeech = styled.div`
 `;
 
 type Props = {
-  overlord: AiOverlord;
+  aiOverlordGame: AiOverlordGame;
 };
 
-export const OverlordRobot = ({ overlord }: Props) => {
+export const OverlordRobot = ({ aiOverlordGame }: Props) => {
+  const currentSpeech =
+    aiOverlordGame.taunts[aiOverlordGame.taunts.length - 1]?.taunt ||
+    aiOverlordGame.aiOverlord.introduction;
   return (
     <RobotLayout>
       <RobotBody>
@@ -35,7 +38,7 @@ export const OverlordRobot = ({ overlord }: Props) => {
         />
       </RobotBody>
       <RobotSpeech>
-        <SpeechText text={overlord.introduction} />
+        <SpeechText text={currentSpeech} />
       </RobotSpeech>
     </RobotLayout>
   );

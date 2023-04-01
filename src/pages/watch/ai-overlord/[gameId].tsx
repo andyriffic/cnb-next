@@ -1,6 +1,8 @@
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import AiOverloadGameScreen from "../../../components/ai-overlord";
 import { AiOverlordGame } from "../../../services/ai-overlord/types";
+import { fetchGetAiOverlordGame } from "../../../utils/api";
 
 type Props = {};
 
@@ -24,10 +26,19 @@ const fakeGame: AiOverlordGame = {
 };
 
 function Page({}: Props) {
+  const [loadedGame, setLoadedGame] = useState<AiOverlordGame | undefined>();
   const router = useRouter();
   const gameId = router.query.gameId as string;
 
-  return <AiOverloadGameScreen aiOverlordGame={fakeGame} />;
+  useEffect(() => {
+    fetchGetAiOverlordGame(gameId).then(setLoadedGame);
+  }, [gameId]);
+
+  return loadedGame ? (
+    <AiOverloadGameScreen aiOverlordGame={loadedGame} />
+  ) : (
+    <div>Loading</div>
+  );
 }
 
 export default Page;

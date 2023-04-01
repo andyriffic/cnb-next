@@ -19,11 +19,13 @@ const View = ({ aiOverlordGame }: Props) => {
       </CenterSpaced>
 
       <Positioned absolute={{ rightPercent: 10, bottomPercent: 10 }}>
-        <OverlordRobot overlord={aiOverlordGame.aiOverlord} />
+        <OverlordRobot aiOverlordGame={aiOverlordGame} />
       </Positioned>
       <Positioned absolute={{ leftPercent: 10, bottomPercent: 10 }}>
-        {/* <OverlordOpponents aiOverlordGame={aiOverlordGame} /> */}
         <OverlordCurrentOpponent aiOverlordGame={aiOverlordGame} />
+      </Positioned>
+      <Positioned absolute={{ leftPercent: 1, topPercent: 1 }}>
+        <OverlordOpponents aiOverlordGame={aiOverlordGame} />
       </Positioned>
     </SpectatorPageLayout>
   );

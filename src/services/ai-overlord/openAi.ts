@@ -41,7 +41,12 @@ export const createAiOverlord: AiOverlordCreator = (opponents) => {
             {
               role: "user",
               content:
-                "Introduce yourself to taunt all your opponents in 2 sentences, answer in english and chinese simplified in json format {english: string, chinese: string}",
+                "Start by introducing yourself to taunt all your opponents in 2 sentences, answer in english and chinese simplified in json format {english: string, chinese: string}",
+            },
+            {
+              role: "user",
+              content:
+                "Your answer is for a computer program so you must only respond in json format of {english: string, chinese: string}",
             },
           ],
         }),
@@ -78,12 +83,17 @@ export const createAiBattleTaunt: AiOverlordTauntCreator = (
             },
             {
               role: "assistant",
-              content: `Your opponents name is ${opponent.name} who is a ${opponent.occupation}.`,
+              content: `Your current opponent is ${opponent.name} who is a ${opponent.occupation}.`,
             },
             {
               role: "user",
               content:
-                "Taunt your opponent incorporating their occupation if you can. Answer in english and chinese simplified in json format {english: string, chinese: string}",
+                "Taunt your current opponent incorporating their occupation if you can. Answer in english and chinese simplified",
+            },
+            {
+              role: "user",
+              content:
+                "Your answer is for a computer program so you must respond in json format of {english: string, chinese: string}",
             },
           ],
         }),
