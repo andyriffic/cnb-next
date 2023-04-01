@@ -10,9 +10,9 @@ import {
 } from "./types";
 
 const createAiGame =
-  (opponents: AiOverlordOpponent[]) =>
+  (id: string, opponents: AiOverlordOpponent[]) =>
   (aiOverlord: AiOverlord): AiOverlordGame => ({
-    gameId: "123",
+    gameId: id,
     opponents,
     aiOverlord,
     taunts: [],
@@ -25,10 +25,11 @@ const addTauntToBattle =
   };
 
 export const createAiOverlordGame = (
+  id: string,
   createAiOverlord: AiOverlordCreator,
   opponents: AiOverlordOpponent[]
 ): TE.TaskEither<string, AiOverlordGame> => {
-  return pipe(createAiOverlord(opponents), TE.map(createAiGame(opponents)));
+  return pipe(createAiOverlord(opponents), TE.map(createAiGame(id, opponents)));
 };
 
 export const preparePlayerForBattle = (

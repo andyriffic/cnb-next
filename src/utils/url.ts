@@ -43,3 +43,7 @@ export const getRockPaperScissorsGameSpectatorUrl = (
 ): string => {
   return `/watch/rock-paper-scissors/${gameId}`;
 };
+
+export const getAiOverlordSpectatorUrl = (gameId: string): string => {
+  return `/watch/ai-overlord/${gameId}`;
+};

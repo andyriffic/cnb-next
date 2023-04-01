@@ -14,3 +14,7 @@ export const updateInMemoryAiOverlordGame = (game: AiOverlordGame): void => {
     game,
   ];
 };
+
+export const getAllInMemoryAiOverlordGames = (): AiOverlordGame[] => {
+  return aiOverlordGames;
+};

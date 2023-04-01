@@ -1,44 +1,60 @@
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
-import { Heading, PrimaryButton } from "../../../components/Atoms";
+import { Heading, PrimaryButton, SubHeading } from "../../../components/Atoms";
 import { CenterSpaced } from "../../../components/Layouts";
 import { SpectatorPageLayout } from "../../../components/SpectatorPageLayout";
+import { useSocketIo } from "../../../providers/SocketIoProvider";
 import { fetchCreateAiOverlordGame } from "../../../utils/api";
+import { generateShortNumericId } from "../../../utils/id";
+import { getAiOverlordSpectatorUrl } from "../../../utils/url";
 
 type Props = {};
 
 function Page({}: Props) {
   const router = useRouter();
   const [creatingGame, setCreatingGame] = useState(false);
+  const { aiOverlord } = useSocketIo();
 
   const createGame = useCallback(() => {
     setCreatingGame(true);
-    fetchCreateAiOverlordGame({
-      opponents: [
+    aiOverlord.createAiOverlordGame(
+      generateShortNumericId(),
+      [
         { playerId: "andy", name: "Andy", occupation: "Lead Developer" },
         { playerId: "marion", name: "Marion", occupation: "Product Manager" },
         { playerId: "nina", name: "Nina", occupation: "Delivery Lead" },
         { playerId: "kate", name: "Kate", occupation: "UX Designer" },
       ],
-    }).then((game) => {
-      console.log("Created game: ", game);
-      setTimeout(() => {
-        router.push(`/watch/ai-overlord/${game.gameId}`);
-      }, 100);
-    });
-  }, [router]);
+      (gameId) => {
+        router.push(getAiOverlordSpectatorUrl(gameId));
+        // setCreatingGame(false);
+      }
+    );
+  }, [aiOverlord, router]);
 
   return (
     <SpectatorPageLayout>
-      <CenterSpaced>
-        <Heading>AI Overlord!</Heading>
-      </CenterSpaced>
-
-      <CenterSpaced>
+      <CenterSpaced stacked={true}>
+        <Heading style={{ marginTop: "2rem" }}>AI Overlord!</Heading>
         <div style={{ margin: "2rem 0" }}>
-          <PrimaryButton onClick={createGame} disabled={creatingGame}>
+          <PrimaryButton
+            type="button"
+            onClick={createGame}
+            disabled={creatingGame}
+          >
             {creatingGame ? "Initialising AI" : "Create game"}
           </PrimaryButton>
+        </div>
+        <SubHeading style={{ marginTop: "2rem" }}>Other games</SubHeading>
+        <div>
+          {aiOverlord.aiOverlordGames.map((game) => (
+            <div key={game.gameId}>
+              <Link href={getAiOverlordSpectatorUrl(game.gameId)}>
+                {game.gameId}
+              </Link>
+            </div>
+          ))}
         </div>
       </CenterSpaced>
     </SpectatorPageLayout>

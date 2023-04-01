@@ -69,7 +69,11 @@ export default async function userHandler(
     case "PUT": {
       const { opponents } = req.body as ApiGameCreationRequest;
       console.log("Create Ai Overlord game", opponents);
-      const game = await createAiOverlordGame(openAiOverlord, opponents)();
+      const game = await createAiOverlordGame(
+        "123",
+        openAiOverlord,
+        opponents
+      )();
 
       pipe(
         game,
