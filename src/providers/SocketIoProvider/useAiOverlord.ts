@@ -3,15 +3,18 @@ import { Socket } from "socket.io-client";
 import {
   AI_OVERLORD_ACTIONS,
   CreateAiOverlordGameHandler,
+  makeAiOpponentMoveHandler,
   NewAiOverlordOpponentHandler,
 } from "../../services/ai-overlord/socket.io";
 import { AiOverlordGame } from "../../services/ai-overlord/types";
+import { RPSMoveName } from "../../services/rock-paper-scissors/types";
 import { useSocketIo } from ".";
 
 export type AiOverlordSocketService = {
   aiOverlordGames: AiOverlordGame[];
   createAiOverlordGame: CreateAiOverlordGameHandler;
   newOpponent: NewAiOverlordOpponentHandler;
+  makeOpponentMove: makeAiOpponentMoveHandler;
 };
 
 export function useAiOverlord(socket: Socket): AiOverlordSocketService {
@@ -38,6 +41,17 @@ export function useAiOverlord(socket: Socket): AiOverlordSocketService {
     [socket]
   );
 
+  const makeOpponentMove = useCallback<makeAiOpponentMoveHandler>(
+    (gameId, opponentId, move) =>
+      socket.emit(
+        AI_OVERLORD_ACTIONS.AI_OVERLORD_MAKE_OPPONENT_MOVE,
+        gameId,
+        opponentId,
+        move
+      ),
+    [socket]
+  );
+
   useEffect(() => {
     console.log("Setting up Ai Overlord socket connection");
     socket.on(
@@ -57,6 +71,7 @@ export function useAiOverlord(socket: Socket): AiOverlordSocketService {
     aiOverlordGames,
     createAiOverlordGame,
     newOpponent,
+    makeOpponentMove,
   };
 }
 
@@ -66,6 +81,7 @@ export const useAiOverlordGame = (
 ): {
   aiOverlordGame: AiOverlordGame | undefined;
   newOpponent: (opponentId: string) => void;
+  makeOpponentMove: (opponentId: string, move: RPSMoveName) => void;
 } => {
   const { aiOverlord } = useSocketIo();
 
@@ -81,8 +97,16 @@ export const useAiOverlordGame = (
     [aiOverlord, gameId]
   );
 
+  const makeOpponentMove = useCallback(
+    (opponentId: string, move: RPSMoveName) => {
+      aiOverlord.makeOpponentMove(gameId, opponentId, move);
+    },
+    [aiOverlord, gameId]
+  );
+
   return {
     aiOverlordGame,
     newOpponent,
+    makeOpponentMove,
   };
 };

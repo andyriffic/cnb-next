@@ -27,6 +27,7 @@ export type AiOverlordGame = {
   opponents: AiOverlordOpponent[];
   aiOverlord: AiOverlord;
   taunts: AiOverlordTaunt[];
+  opponentMoves: AiOverlordOpponentMove[];
 };
 
 export type AiOverlordTaunt = {

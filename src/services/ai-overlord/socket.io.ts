@@ -7,9 +7,14 @@ import {
   updateInMemoryAiOverlordGame,
 } from "../../utils/data/in-memory";
 import { sendClientMessage } from "../socket";
+import { RPSMoveName } from "../rock-paper-scissors/types";
 import { createAiOverlord } from "./openAi";
 import { AiOverlordOpponent } from "./types";
-import { createAiOverlordGame, preparePlayerForBattle } from ".";
+import {
+  createAiOverlordGame,
+  makeAiOpponentMove,
+  preparePlayerForBattle,
+} from ".";
 
 export enum AI_OVERLORD_ACTIONS {
   AI_OVERLORD_GAME_UPDATE = "AI_OVERLORD_GAME_UPDATE",
@@ -29,6 +34,12 @@ export type CreateAiOverlordGameHandler = (
 export type NewAiOverlordOpponentHandler = (
   gameId: string,
   opponentId: string
+) => void;
+
+export type makeAiOpponentMoveHandler = (
+  gameId: string,
+  opponentId: string,
+  move: RPSMoveName
 ) => void;
 
 export function initialiseAiOverlordSocket(
@@ -92,6 +103,35 @@ export function initialiseAiOverlordSocket(
     );
   };
 
+  const makeAiOpponentMoveHandler: makeAiOpponentMoveHandler = async (
+    gameId,
+    opponentId,
+    move
+  ) => {
+    const game = getInMemoryAiOverlordGame(gameId);
+    if (!game) {
+      console.error("Game not found", gameId);
+      return;
+    }
+    const result = await makeAiOpponentMove(opponentId, move, game)();
+    pipe(
+      result,
+      E.fold(
+        (err) => {
+          console.error(err);
+          sendClientMessage(socket, err);
+        },
+        (game) => {
+          updateInMemoryAiOverlordGame(game);
+          io.emit(
+            AI_OVERLORD_ACTIONS.AI_OVERLORD_GAME_UPDATE,
+            getAllInMemoryAiOverlordGames()
+          );
+        }
+      )
+    );
+  };
+
   console.log("Registering AiOverlord SocketIo 🔌");
 
   socket.on(
@@ -101,6 +141,10 @@ export function initialiseAiOverlordSocket(
   socket.on(
     AI_OVERLORD_ACTIONS.AI_OVERLORD_NEW_OPPONENT,
     newAiOverlordOpponentHandler
+  );
+  socket.on(
+    AI_OVERLORD_ACTIONS.AI_OVERLORD_MAKE_OPPONENT_MOVE,
+    makeAiOpponentMoveHandler
   );
   sendClientMessage(socket, "Welcome to AiOverlord 🤖");
 }
