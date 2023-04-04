@@ -1,20 +1,34 @@
 import * as E from "fp-ts/Either";
 import { pipe } from "fp-ts/lib/function";
 import { Server as SocketIOServer, Socket } from "socket.io";
-import {
-  getAllInMemoryAiOverlordGames,
-  getInMemoryAiOverlordGame,
-  updateInMemoryAiOverlordGame,
-} from "../../utils/data/in-memory";
 import { sendClientMessage } from "../socket";
 import { RPSMoveName } from "../rock-paper-scissors/types";
 import { createAiOverlord } from "./openAi";
-import { AiOverlordOpponent } from "./types";
+import { AiOverlordGame, AiOverlordOpponent } from "./types";
 import {
   createAiOverlordGame,
   makeAiOpponentMove,
   preparePlayerForBattle,
 } from ".";
+
+let aiOverlordGames: AiOverlordGame[] = [];
+
+const getInMemoryAiOverlordGame = (
+  gameId: string
+): AiOverlordGame | undefined => {
+  return aiOverlordGames.find((game) => game.gameId === gameId);
+};
+
+const updateInMemoryAiOverlordGame = (game: AiOverlordGame): void => {
+  aiOverlordGames = [
+    ...aiOverlordGames.filter((g) => g.gameId !== game.gameId),
+    game,
+  ];
+};
+
+const getAllInMemoryAiOverlordGames = (): AiOverlordGame[] => {
+  return aiOverlordGames;
+};
 
 export enum AI_OVERLORD_ACTIONS {
   AI_OVERLORD_GAME_UPDATE = "AI_OVERLORD_GAME_UPDATE",
