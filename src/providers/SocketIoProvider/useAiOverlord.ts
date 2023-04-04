@@ -3,6 +3,7 @@ import { Socket } from "socket.io-client";
 import {
   AI_OVERLORD_ACTIONS,
   CreateAiOverlordGameHandler,
+  NewAiOverlordOpponentHandler,
 } from "../../services/ai-overlord/socket.io";
 import { AiOverlordGame } from "../../services/ai-overlord/types";
 import { useSocketIo } from ".";
@@ -10,6 +11,7 @@ import { useSocketIo } from ".";
 export type AiOverlordSocketService = {
   aiOverlordGames: AiOverlordGame[];
   createAiOverlordGame: CreateAiOverlordGameHandler;
+  newOpponent: NewAiOverlordOpponentHandler;
 };
 
 export function useAiOverlord(socket: Socket): AiOverlordSocketService {
@@ -22,6 +24,16 @@ export function useAiOverlord(socket: Socket): AiOverlordSocketService {
         id,
         opponents,
         onCreated
+      ),
+    [socket]
+  );
+
+  const newOpponent = useCallback<NewAiOverlordOpponentHandler>(
+    (gameId, opponentId) =>
+      socket.emit(
+        AI_OVERLORD_ACTIONS.AI_OVERLORD_NEW_OPPONENT,
+        gameId,
+        opponentId
       ),
     [socket]
   );
@@ -44,13 +56,17 @@ export function useAiOverlord(socket: Socket): AiOverlordSocketService {
   return {
     aiOverlordGames,
     createAiOverlordGame,
+    newOpponent,
   };
 }
 
 //Helper for working with a single AiOverlord game
 export const useAiOverlordGame = (
   gameId: string
-): { aiOverlordGame: AiOverlordGame | undefined } => {
+): {
+  aiOverlordGame: AiOverlordGame | undefined;
+  newOpponent: (opponentId: string) => void;
+} => {
   const { aiOverlord } = useSocketIo();
 
   const aiOverlordGame = useMemo(
@@ -58,7 +74,15 @@ export const useAiOverlordGame = (
     [aiOverlord.aiOverlordGames, gameId]
   );
 
+  const newOpponent = useCallback(
+    (opponentId: string) => {
+      aiOverlord.newOpponent(gameId, opponentId);
+    },
+    [aiOverlord, gameId]
+  );
+
   return {
     aiOverlordGame,
+    newOpponent,
   };
 };

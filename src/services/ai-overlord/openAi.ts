@@ -88,7 +88,7 @@ export const createAiBattleTaunt: AiOverlordTauntCreator = (
             {
               role: "user",
               content:
-                "Taunt your current opponent incorporating their occupation if you can. Answer in english and chinese simplified",
+                "Taunt your current opponent incorporating their occupation if you can. You must always mention their name. Answer in english and chinese simplified",
             },
             {
               role: "user",
@@ -97,7 +97,7 @@ export const createAiBattleTaunt: AiOverlordTauntCreator = (
             },
           ],
         }),
-      () => "Error creating AI Overlord Tuant"
+      () => "Error creating AI Overlord Taunt"
     ),
     TE.map((response) => response?.data?.choices[0]?.message?.content),
     TE.map((content) => {
@@ -125,7 +125,7 @@ export const createAiBattleMove: AiOverlordMoveCreator = (
             {
               role: "user",
               content:
-                "choose a move of rock, paper or scissors. respond in json format {move: rock|paper|scissors}",
+                "choose a move of rock, paper or scissors. Your answer is for a computer program so you must respond in json format of {move: rock|paper|scissors}",
             },
           ],
         }),
@@ -171,7 +171,7 @@ export const createAiBattleOutcome: AiOverlordBattleOutcomeCreator = (
             {
               role: "user",
               content:
-                "Make a comment on the outcome of the game in no more than 2 sentences, Answer in english and chinese simplified in json format {english: string, chinese: string}",
+                "Make a comment on the outcome of the game in no more than 2 sentences, Your answer is for a computer program so you must respond in json format of {english: string, chinese: string}",
             },
           ],
         }),

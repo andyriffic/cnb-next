@@ -3,12 +3,13 @@ import { pipe } from "fp-ts/lib/function";
 import { Server as SocketIOServer, Socket } from "socket.io";
 import {
   getAllInMemoryAiOverlordGames,
+  getInMemoryAiOverlordGame,
   updateInMemoryAiOverlordGame,
 } from "../../utils/data/in-memory";
 import { sendClientMessage } from "../socket";
 import { createAiOverlord } from "./openAi";
 import { AiOverlordOpponent } from "./types";
-import { createAiOverlordGame } from ".";
+import { createAiOverlordGame, preparePlayerForBattle } from ".";
 
 export enum AI_OVERLORD_ACTIONS {
   AI_OVERLORD_GAME_UPDATE = "AI_OVERLORD_GAME_UPDATE",
@@ -23,6 +24,11 @@ export type CreateAiOverlordGameHandler = (
   id: string,
   opponents: AiOverlordOpponent[],
   onCreated: (gameId: string) => void
+) => void;
+
+export type NewAiOverlordOpponentHandler = (
+  gameId: string,
+  opponentId: string
 ) => void;
 
 export function initialiseAiOverlordSocket(
@@ -57,11 +63,44 @@ export function initialiseAiOverlordSocket(
     );
   };
 
+  const newAiOverlordOpponentHandler: NewAiOverlordOpponentHandler = async (
+    gameId,
+    opponentId
+  ) => {
+    const game = getInMemoryAiOverlordGame(gameId);
+    if (!game) {
+      console.error("Game not found", gameId);
+      return;
+    }
+
+    const battle = await preparePlayerForBattle(opponentId, game)();
+    pipe(
+      battle,
+      E.fold(
+        (err) => {
+          console.error(err);
+          sendClientMessage(socket, err);
+        },
+        (game) => {
+          updateInMemoryAiOverlordGame(game);
+          io.emit(
+            AI_OVERLORD_ACTIONS.AI_OVERLORD_GAME_UPDATE,
+            getAllInMemoryAiOverlordGames()
+          );
+        }
+      )
+    );
+  };
+
   console.log("Registering AiOverlord SocketIo 🔌");
 
   socket.on(
     AI_OVERLORD_ACTIONS.AI_OVERLORD_CREATE_GAME,
     createAiOverlordGameHandler
+  );
+  socket.on(
+    AI_OVERLORD_ACTIONS.AI_OVERLORD_NEW_OPPONENT,
+    newAiOverlordOpponentHandler
   );
   sendClientMessage(socket, "Welcome to AiOverlord 🤖");
 }
