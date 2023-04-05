@@ -32,18 +32,20 @@ export const OverlordRobot = ({ aiOverlordGame }: Props) => {
     aiOverlordGame.taunts[aiOverlordGame.taunts.length - 1];
 
   const moveAgainstCurrentOpponent = aiOverlordGame.aiOverlord.moves.find(
-    (m) => m.playerId === currentOpponent?.playerId
+    (m) => m.opponentId === currentOpponent?.playerId
   );
 
   const currentOpponentsMove = aiOverlordGame.opponentMoves.find(
     (m) => m.playerId === currentOpponent?.playerId
   );
 
-  const currentSpeech = currentOpponent
-    ? aiOverlordGame.taunts.find(
-        (t) => t.playerId === currentOpponent.playerId
-      )!.taunt
-    : aiOverlordGame.aiOverlord.introduction;
+  const currentSpeech =
+    moveAgainstCurrentOpponent?.text ||
+    (currentOpponent
+      ? aiOverlordGame.taunts.find(
+          (t) => t.playerId === currentOpponent.playerId
+        )!.taunt
+      : aiOverlordGame.aiOverlord.introduction);
 
   return (
     <RobotLayout>
@@ -57,7 +59,11 @@ export const OverlordRobot = ({ aiOverlordGame }: Props) => {
       <RobotSpeech>
         <SpeechText text={currentSpeech} />
       </RobotSpeech>
-      {moveAgainstCurrentOpponent && <p>{moveAgainstCurrentOpponent.move}</p>}
+      {moveAgainstCurrentOpponent && (
+        <>
+          <p>{moveAgainstCurrentOpponent.move}</p>
+        </>
+      )}
       {currentOpponent && currentOpponentsMove && (
         <button onClick={() => makeRobotMove(currentOpponent.playerId)}>
           Make move against {currentOpponent.playerId}

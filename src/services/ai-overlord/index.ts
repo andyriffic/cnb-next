@@ -1,12 +1,17 @@
 import { pipe } from "fp-ts/lib/function";
 import * as TE from "fp-ts/lib/TaskEither";
 import { RPSMoveName } from "../rock-paper-scissors/types";
-import { createAiBattleMove, createAiBattleTaunt } from "./openAi";
+import {
+  createAiBattleMove,
+  createAiBattleOutcome,
+  createAiBattleTaunt,
+} from "./openAi";
 import {
   AiOverlord,
   AiOverlordCreator,
   AiOverlordGame,
   AiOverlordOpponent,
+  AiOverlordOpponentMoveWithText,
   TranslatedText,
 } from "./types";
 
@@ -37,12 +42,12 @@ const addOpponentMoveToBattle =
 
 const addAiMoveForOpponent =
   (opponentId: string, game: AiOverlordGame) =>
-  (move: RPSMoveName): AiOverlordGame => {
+  (move: AiOverlordOpponentMoveWithText): AiOverlordGame => {
     return {
       ...game,
       aiOverlord: {
         ...game.aiOverlord,
-        moves: [...game.aiOverlord.moves, { playerId: opponentId, move }],
+        moves: [...game.aiOverlord.moves, move],
       },
     };
   };
@@ -97,8 +102,23 @@ export const makeAiMove = (
     return TE.left("Opponent not found");
   }
 
+  const opponentMove = aiOverlordGame.opponentMoves.find(
+    (m) => m.playerId === opponentId
+  );
+  if (!opponentMove) {
+    return TE.left("Opponent hasn't moved yet");
+  }
+
   return pipe(
     createAiBattleMove(opponent, aiOverlordGame),
+    TE.chain((robotMove) =>
+      createAiBattleOutcome(
+        opponent,
+        opponentMove.move,
+        robotMove,
+        aiOverlordGame
+      )
+    ),
     TE.map(addAiMoveForOpponent(opponentId, aiOverlordGame))
   );
 };

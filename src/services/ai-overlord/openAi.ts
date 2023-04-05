@@ -88,12 +88,7 @@ export const createAiBattleTaunt: AiOverlordTauntCreator = (
             {
               role: "user",
               content:
-                "Taunt your current opponent incorporating their occupation if you can. You must always mention their name. Answer in english and chinese simplified",
-            },
-            {
-              role: "user",
-              content:
-                "Your answer is for a computer program so you must respond in json format of {english: string, chinese: string}",
+                "Taunt your current opponent incorporating their occupation if you can. You must always mention their name. Answer in english and chinese simplified. Your answer is for a computer program so you must respond in json format of {english: string, chinese: string}",
             },
           ],
         }),
@@ -123,9 +118,15 @@ export const createAiBattleMove: AiOverlordMoveCreator = (
               content: AI_DESCRIPTION,
             },
             {
+              role: "assistant",
+              content: `Your previous move history from oldest to newest is ${aiOverlordGame.aiOverlord.moves
+                .map((m) => m.move)
+                .join(", ")}`,
+            },
+            {
               role: "user",
               content:
-                "Start by selecting one move of rock, paper or scissors. Your answer is for a computer program so you must only respond in json format of {move: rock|paper|scissors} with no other text or acknowledgement",
+                "Start by choosing a random move of rock, paper or scissors. Your answer is for a computer program so you must only respond in json format with your move of {move: string} and nothing else",
             },
           ],
         }),
@@ -144,8 +145,15 @@ export const createAiBattleMove: AiOverlordMoveCreator = (
 export const createAiBattleOutcome: AiOverlordBattleOutcomeCreator = (
   opponent,
   opponentMove,
-  overlordMove
+  overlordMove,
+  aiOverlordGame
 ) => {
+  console.log(
+    "[OpenAI] Creating outcome",
+    opponent.name,
+    opponentMove,
+    overlordMove
+  );
   return pipe(
     TE.tryCatch(
       () =>
@@ -162,16 +170,26 @@ export const createAiBattleOutcome: AiOverlordBattleOutcomeCreator = (
             },
             {
               role: "assistant",
-              content: `Your opponents move is ${opponentMove}`,
+              content: `Your opponents move was ${opponentMove}`,
             },
             {
               role: "assistant",
-              content: `Your move is ${overlordMove}`,
+              content: `Your move was ${overlordMove}`,
             },
             {
               role: "user",
               content:
-                "Make a comment on the outcome of the game in no more than 2 sentences, Your answer is for a computer program so you must respond in json format of {english: string, chinese: string}",
+                "State the outcome of the game stating your move and your opponents moves. Using your personality, make a comment on the outcome of the game in no more than 2 sentences.",
+            },
+            {
+              role: "user",
+              content:
+                "If you win, you like to make fun of your opponent, if you lose you like to make fun of yourself. If it's a draw you make up some cosmic reason why you are both winners or losers",
+            },
+            {
+              role: "user",
+              content:
+                "Your answer is for a computer program so you must respond in json format of {english: string, chinese: string}",
             },
           ],
         }),
@@ -182,6 +200,11 @@ export const createAiBattleOutcome: AiOverlordBattleOutcomeCreator = (
       console.log(content);
       return content;
     }),
-    TE.map((response) => parseToJson<TranslatedText>(response))
+    TE.map((response) => parseToJson<TranslatedText>(response)),
+    TE.map((translatedText) => ({
+      text: translatedText,
+      move: overlordMove,
+      opponentId: opponent.playerId,
+    }))
   );
 };
