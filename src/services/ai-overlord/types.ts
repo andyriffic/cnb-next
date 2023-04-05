@@ -55,7 +55,7 @@ export type AiOverlordOpponentMove = {
 
 export type AiOverlord = {
   introduction: TranslatedText;
-  battles: AiOverlordBattle[];
+  moves: AiOverlordOpponentMove[];
 };
 
 export type AiOverlordBattle = {

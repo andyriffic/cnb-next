@@ -1,5 +1,6 @@
 import Image from "next/future/image";
 import styled from "styled-components";
+import { useAiOverlordGame } from "../../providers/SocketIoProvider/useAiOverlord";
 import { AiOverlord, AiOverlordGame } from "../../services/ai-overlord/types";
 import { SpeechText } from "./SpeechText";
 
@@ -25,9 +26,25 @@ type Props = {
 };
 
 export const OverlordRobot = ({ aiOverlordGame }: Props) => {
-  const currentSpeech =
-    aiOverlordGame.taunts[aiOverlordGame.taunts.length - 1]?.taunt ||
-    aiOverlordGame.aiOverlord.introduction;
+  const { makeRobotMove } = useAiOverlordGame(aiOverlordGame.gameId);
+
+  const currentOpponent =
+    aiOverlordGame.taunts[aiOverlordGame.taunts.length - 1];
+
+  const moveAgainstCurrentOpponent = aiOverlordGame.aiOverlord.moves.find(
+    (m) => m.playerId === currentOpponent?.playerId
+  );
+
+  const currentOpponentsMove = aiOverlordGame.opponentMoves.find(
+    (m) => m.playerId === currentOpponent?.playerId
+  );
+
+  const currentSpeech = currentOpponent
+    ? aiOverlordGame.taunts.find(
+        (t) => t.playerId === currentOpponent.playerId
+      )!.taunt
+    : aiOverlordGame.aiOverlord.introduction;
+
   return (
     <RobotLayout>
       <RobotBody>
@@ -40,6 +57,12 @@ export const OverlordRobot = ({ aiOverlordGame }: Props) => {
       <RobotSpeech>
         <SpeechText text={currentSpeech} />
       </RobotSpeech>
+      {moveAgainstCurrentOpponent && <p>{moveAgainstCurrentOpponent.move}</p>}
+      {currentOpponent && currentOpponentsMove && (
+        <button onClick={() => makeRobotMove(currentOpponent.playerId)}>
+          Make move against {currentOpponent.playerId}
+        </button>
+      )}
     </RobotLayout>
   );
 };

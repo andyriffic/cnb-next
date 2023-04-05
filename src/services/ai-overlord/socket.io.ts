@@ -7,6 +7,7 @@ import { createAiOverlord } from "./openAi";
 import { AiOverlordGame, AiOverlordOpponent } from "./types";
 import {
   createAiOverlordGame,
+  makeAiMove,
   makeAiOpponentMove,
   preparePlayerForBattle,
 } from ".";
@@ -50,10 +51,15 @@ export type NewAiOverlordOpponentHandler = (
   opponentId: string
 ) => void;
 
-export type makeAiOpponentMoveHandler = (
+export type MakeAiOpponentMoveHandler = (
   gameId: string,
   opponentId: string,
   move: RPSMoveName
+) => void;
+
+export type MakeAiRobotMoveHandler = (
+  gameId: string,
+  opponentId: string
 ) => void;
 
 export function initialiseAiOverlordSocket(
@@ -117,7 +123,7 @@ export function initialiseAiOverlordSocket(
     );
   };
 
-  const makeAiOpponentMoveHandler: makeAiOpponentMoveHandler = async (
+  const makeAiOpponentMoveHandler: MakeAiOpponentMoveHandler = async (
     gameId,
     opponentId,
     move
@@ -128,6 +134,34 @@ export function initialiseAiOverlordSocket(
       return;
     }
     const result = await makeAiOpponentMove(opponentId, move, game)();
+    pipe(
+      result,
+      E.fold(
+        (err) => {
+          console.error(err);
+          sendClientMessage(socket, err);
+        },
+        (game) => {
+          updateInMemoryAiOverlordGame(game);
+          io.emit(
+            AI_OVERLORD_ACTIONS.AI_OVERLORD_GAME_UPDATE,
+            getAllInMemoryAiOverlordGames()
+          );
+        }
+      )
+    );
+  };
+
+  const makeAiRobotMoveHandler: MakeAiRobotMoveHandler = async (
+    gameId,
+    opponentId
+  ) => {
+    const game = getInMemoryAiOverlordGame(gameId);
+    if (!game) {
+      console.error("Game not found", gameId);
+      return;
+    }
+    const result = await makeAiMove(opponentId, game)();
     pipe(
       result,
       E.fold(
@@ -159,6 +193,10 @@ export function initialiseAiOverlordSocket(
   socket.on(
     AI_OVERLORD_ACTIONS.AI_OVERLORD_MAKE_OPPONENT_MOVE,
     makeAiOpponentMoveHandler
+  );
+  socket.on(
+    AI_OVERLORD_ACTIONS.AI_OVERLORD_MAKE_ROBOT_MOVE,
+    makeAiRobotMoveHandler
   );
   sendClientMessage(socket, "Welcome to AiOverlord 🤖");
 }

@@ -61,7 +61,7 @@ export const createAiOverlord: AiOverlordCreator = (opponents) => {
       (content) =>
         ({
           introduction: parseToJson<TranslatedText>(content),
-          battles: [],
+          moves: [],
         } as AiOverlord)
     )
   );
@@ -125,7 +125,7 @@ export const createAiBattleMove: AiOverlordMoveCreator = (
             {
               role: "user",
               content:
-                "choose a move of rock, paper or scissors. Your answer is for a computer program so you must respond in json format of {move: rock|paper|scissors}",
+                "Start by selecting one move of rock, paper or scissors. Your answer is for a computer program so you must only respond in json format of {move: rock|paper|scissors} with no other text or acknowledgement",
             },
           ],
         }),

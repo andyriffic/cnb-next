@@ -3,7 +3,8 @@ import { Socket } from "socket.io-client";
 import {
   AI_OVERLORD_ACTIONS,
   CreateAiOverlordGameHandler,
-  makeAiOpponentMoveHandler,
+  MakeAiOpponentMoveHandler,
+  MakeAiRobotMoveHandler,
   NewAiOverlordOpponentHandler,
 } from "../../services/ai-overlord/socket.io";
 import { AiOverlordGame } from "../../services/ai-overlord/types";
@@ -14,7 +15,8 @@ export type AiOverlordSocketService = {
   aiOverlordGames: AiOverlordGame[];
   createAiOverlordGame: CreateAiOverlordGameHandler;
   newOpponent: NewAiOverlordOpponentHandler;
-  makeOpponentMove: makeAiOpponentMoveHandler;
+  makeOpponentMove: MakeAiOpponentMoveHandler;
+  makeRobotMove: MakeAiRobotMoveHandler;
 };
 
 export function useAiOverlord(socket: Socket): AiOverlordSocketService {
@@ -41,13 +43,23 @@ export function useAiOverlord(socket: Socket): AiOverlordSocketService {
     [socket]
   );
 
-  const makeOpponentMove = useCallback<makeAiOpponentMoveHandler>(
+  const makeOpponentMove = useCallback<MakeAiOpponentMoveHandler>(
     (gameId, opponentId, move) =>
       socket.emit(
         AI_OVERLORD_ACTIONS.AI_OVERLORD_MAKE_OPPONENT_MOVE,
         gameId,
         opponentId,
         move
+      ),
+    [socket]
+  );
+
+  const makeRobotMove = useCallback<MakeAiRobotMoveHandler>(
+    (gameId, opponentId) =>
+      socket.emit(
+        AI_OVERLORD_ACTIONS.AI_OVERLORD_MAKE_ROBOT_MOVE,
+        gameId,
+        opponentId
       ),
     [socket]
   );
@@ -72,6 +84,7 @@ export function useAiOverlord(socket: Socket): AiOverlordSocketService {
     createAiOverlordGame,
     newOpponent,
     makeOpponentMove,
+    makeRobotMove,
   };
 }
 
@@ -82,6 +95,7 @@ export const useAiOverlordGame = (
   aiOverlordGame: AiOverlordGame | undefined;
   newOpponent: (opponentId: string) => void;
   makeOpponentMove: (opponentId: string, move: RPSMoveName) => void;
+  makeRobotMove: (opponentId: string) => void;
 } => {
   const { aiOverlord } = useSocketIo();
 
@@ -104,9 +118,17 @@ export const useAiOverlordGame = (
     [aiOverlord, gameId]
   );
 
+  const makeRobotMove = useCallback(
+    (opponentId: string) => {
+      aiOverlord.makeRobotMove(gameId, opponentId);
+    },
+    [aiOverlord, gameId]
+  );
+
   return {
     aiOverlordGame,
     newOpponent,
     makeOpponentMove,
+    makeRobotMove,
   };
 };
