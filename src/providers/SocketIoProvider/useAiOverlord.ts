@@ -13,14 +13,18 @@ import { useSocketIo } from ".";
 
 export type AiOverlordSocketService = {
   aiOverlordGames: AiOverlordGame[];
+  thinkingAis: string[];
   createAiOverlordGame: CreateAiOverlordGameHandler;
   newOpponent: NewAiOverlordOpponentHandler;
   makeOpponentMove: MakeAiOpponentMoveHandler;
   makeRobotMove: MakeAiRobotMoveHandler;
+  startThinking: (gameId: string) => void;
+  stopThinking: (gameId: string) => void;
 };
 
 export function useAiOverlord(socket: Socket): AiOverlordSocketService {
   const [aiOverlordGames, setAiOverlordGames] = useState<AiOverlordGame[]>([]);
+  const [thinkingAis, setThinkingAis] = useState<string[]>([]);
 
   const createAiOverlordGame = useCallback<CreateAiOverlordGameHandler>(
     (id, opponents, onCreated) =>
@@ -64,11 +68,26 @@ export function useAiOverlord(socket: Socket): AiOverlordSocketService {
     [socket]
   );
 
+  const startThinking = useCallback(
+    (gameId) => {
+      setThinkingAis([...thinkingAis.filter((id) => id !== gameId), gameId]);
+    },
+    [thinkingAis]
+  );
+
+  const stopThinking = useCallback(
+    (gameId) => {
+      setThinkingAis(thinkingAis.filter((id) => id !== gameId));
+    },
+    [thinkingAis]
+  );
+
   useEffect(() => {
     console.log("Setting up Ai Overlord socket connection");
     socket.on(
       AI_OVERLORD_ACTIONS.AI_OVERLORD_GAME_UPDATE,
       (aiOverlordGames: AiOverlordGame[]) => {
+        setThinkingAis([]);
         setAiOverlordGames(aiOverlordGames);
       }
     );
@@ -85,6 +104,9 @@ export function useAiOverlord(socket: Socket): AiOverlordSocketService {
     newOpponent,
     makeOpponentMove,
     makeRobotMove,
+    startThinking,
+    stopThinking,
+    thinkingAis,
   };
 }
 
@@ -96,6 +118,9 @@ export const useAiOverlordGame = (
   newOpponent: (opponentId: string) => void;
   makeOpponentMove: (opponentId: string, move: RPSMoveName) => void;
   makeRobotMove: (opponentId: string) => void;
+  startThinking: () => void;
+  stopThinking: () => void;
+  isThinking: boolean;
 } => {
   const { aiOverlord } = useSocketIo();
 
@@ -125,10 +150,25 @@ export const useAiOverlordGame = (
     [aiOverlord, gameId]
   );
 
+  const startThinking = useCallback(() => {
+    aiOverlord.startThinking(gameId);
+  }, [aiOverlord, gameId]);
+
+  const stopThinking = useCallback(() => {
+    aiOverlord.stopThinking(gameId);
+  }, [aiOverlord, gameId]);
+
+  const isThinking = useMemo(() => {
+    return aiOverlord.thinkingAis.includes(gameId);
+  }, [aiOverlord, gameId]);
+
   return {
     aiOverlordGame,
     newOpponent,
     makeOpponentMove,
     makeRobotMove,
+    startThinking,
+    stopThinking,
+    isThinking,
   };
 };

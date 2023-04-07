@@ -26,7 +26,9 @@ type Props = {
 };
 
 export const OverlordRobot = ({ aiOverlordGame }: Props) => {
-  const { makeRobotMove } = useAiOverlordGame(aiOverlordGame.gameId);
+  const { makeRobotMove, isThinking, startThinking } = useAiOverlordGame(
+    aiOverlordGame.gameId
+  );
 
   const currentOpponent =
     aiOverlordGame.taunts[aiOverlordGame.taunts.length - 1];
@@ -64,11 +66,20 @@ export const OverlordRobot = ({ aiOverlordGame }: Props) => {
           <p>{moveAgainstCurrentOpponent.move}</p>
         </>
       )}
-      {currentOpponent && currentOpponentsMove && (
-        <button onClick={() => makeRobotMove(currentOpponent.playerId)}>
-          Make move against {currentOpponent.playerId}
-        </button>
-      )}
+      {currentOpponent &&
+        currentOpponentsMove &&
+        !isThinking &&
+        !moveAgainstCurrentOpponent && (
+          <button
+            onClick={() => {
+              startThinking();
+              makeRobotMove(currentOpponent.playerId);
+            }}
+          >
+            Make move against {currentOpponent.playerId}
+          </button>
+        )}
+      {isThinking && <p>Robot is thinking...</p>}
     </RobotLayout>
   );
 };

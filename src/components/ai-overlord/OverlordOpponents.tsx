@@ -22,7 +22,9 @@ type Props = {
 };
 
 export const OverlordOpponents = ({ aiOverlordGame }: Props) => {
-  const { newOpponent } = useAiOverlordGame(aiOverlordGame.gameId);
+  const { newOpponent, isThinking, startThinking } = useAiOverlordGame(
+    aiOverlordGame.gameId
+  );
 
   return (
     <PlayerAvatarGroup>
@@ -33,9 +35,10 @@ export const OverlordOpponents = ({ aiOverlordGame }: Props) => {
         return (
           <Player key={opponent.playerId}>
             <PlayerAvatar playerId={opponent.playerId} size="thumbnail" />
-            {!hasBeenTaunted && (
+            {!hasBeenTaunted && !isThinking && (
               <button
                 onClick={() => {
+                  startThinking();
                   newOpponent(opponent.playerId);
                 }}
               >
