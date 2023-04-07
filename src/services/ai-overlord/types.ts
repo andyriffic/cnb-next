@@ -20,7 +20,7 @@ export type AiOverlordBattleOutcomeCreator = (
   opponentMove: RPSMoveName,
   overlordMove: RPSMoveName,
   aiOverlordGame: AiOverlordGame
-) => TE.TaskEither<string, AiOverlordOpponentMoveWithText>;
+) => TE.TaskEither<string, AiOverlordOpponentMoveWithTextAndOutcome>;
 
 export type AiOverlordGame = {
   gameId: string;
@@ -53,15 +53,16 @@ export type AiOverlordOpponentMove = {
   move: RPSMoveName;
 };
 
-export type AiOverlordOpponentMoveWithText = {
+export type AiOverlordOpponentMoveWithTextAndOutcome = {
   opponentId: string;
   move: RPSMoveName;
   text: TranslatedText;
+  outcome: AiOverlordOpponentResult;
 };
 
 export type AiOverlord = {
   introduction: TranslatedText;
-  moves: AiOverlordOpponentMoveWithText[];
+  moves: AiOverlordOpponentMoveWithTextAndOutcome[];
 };
 
 export type AiOverlordBattle = {

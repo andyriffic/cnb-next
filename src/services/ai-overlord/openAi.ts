@@ -1,6 +1,6 @@
 import { pipe } from "fp-ts/lib/function";
 import * as TE from "fp-ts/TaskEither";
-import { Configuration, OpenAIApi } from "openai";
+import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from "openai";
 import { OPEN_AI_API_KEY } from "../../environment";
 import { RPSMoveName } from "../rock-paper-scissors/types";
 import {
@@ -8,6 +8,7 @@ import {
   AiOverlordBattleOutcomeCreator,
   AiOverlordCreator,
   AiOverlordMoveCreator,
+  AiOverlordOpponentResult,
   AiOverlordTauntCreator,
   TranslatedText,
 } from "./types";
@@ -26,6 +27,18 @@ function parseToJson<T>(response: string | undefined): T {
   return JSON.parse(response || "{}") as T;
 }
 
+function trimLeftCurlyBrace(text: string): string {
+  return text.substring(text.indexOf("{"));
+}
+
+function trimRightCurlyBrace(text: string): string {
+  return text.substring(0, text.lastIndexOf("}") + 1);
+}
+
+function trimOutsidesOfCurlyBraces(text: string): string {
+  return pipe(text, trimLeftCurlyBrace, trimRightCurlyBrace);
+}
+
 export const createAiOverlord: AiOverlordCreator = (opponents) => {
   console.info("Creating AI Overlord");
   return pipe(
@@ -35,24 +48,20 @@ export const createAiOverlord: AiOverlordCreator = (opponents) => {
           model: AI_MODEL,
           messages: [
             {
-              role: "user",
+              role: "system",
               content: AI_DESCRIPTION,
             },
             {
               role: "user",
               content:
-                "Start by introducing yourself to taunt all your opponents in 2 sentences, answer in english and chinese simplified in json format {english: string, chinese: string}",
-            },
-            {
-              role: "user",
-              content:
-                "Your answer is for a computer program so you must only respond in json format of {english: string, chinese: string}",
+                "Start by introducing yourself to your opponents by using a pun or a joke in 2 sentences. Answer in english and chinese simplified. Your answer is for a computer program so you must only respond in json format of {english: string, chinese: string}",
             },
           ],
         }),
       () => "Error creating AI Overlord"
     ),
     TE.map((response) => response?.data?.choices[0]?.message?.content),
+    TE.map((response) => trimOutsidesOfCurlyBraces(response || "")),
     TE.map((content) => {
       console.log(content);
       return content;
@@ -78,7 +87,7 @@ export const createAiBattleTaunt: AiOverlordTauntCreator = (
           model: AI_MODEL,
           messages: [
             {
-              role: "assistant",
+              role: "system",
               content: AI_DESCRIPTION,
             },
             {
@@ -95,6 +104,7 @@ export const createAiBattleTaunt: AiOverlordTauntCreator = (
       () => "Error creating AI Overlord Taunt"
     ),
     TE.map((response) => response?.data?.choices[0]?.message?.content),
+    TE.map((response) => trimOutsidesOfCurlyBraces(response || "")),
     TE.map((content) => {
       console.log(content);
       return content;
@@ -114,25 +124,29 @@ export const createAiBattleMove: AiOverlordMoveCreator = (
           model: AI_MODEL,
           messages: [
             {
-              role: "assistant",
+              role: "system",
               content: AI_DESCRIPTION,
             },
             {
               role: "assistant",
-              content: `Your previous move history from oldest to newest is ${aiOverlordGame.aiOverlord.moves
-                .map((m) => m.move)
-                .join(", ")}`,
+              content:
+                aiOverlordGame.aiOverlord.moves.length > 0
+                  ? `Your previous move history from oldest to newest is ${aiOverlordGame.aiOverlord.moves
+                      .map((m) => m.move)
+                      .join(", ")}`
+                  : "This is your first move",
             },
             {
               role: "user",
               content:
-                "Start by choosing a random move of rock, paper or scissors. Your answer is for a computer program so you must only respond in json format with your move of {move: string} and nothing else",
+                "Choose one random move of rock, paper or scissors. Your answer is for a computer program so you must only respond in json format of {move: string}",
             },
           ],
         }),
       () => "Error creating AI Overlord Move"
     ),
     TE.map((response) => response?.data?.choices[0]?.message?.content),
+    TE.map((response) => trimOutsidesOfCurlyBraces(response || "")),
     TE.map((content) => {
       console.log(content);
       return content;
@@ -154,44 +168,43 @@ export const createAiBattleOutcome: AiOverlordBattleOutcomeCreator = (
     opponentMove,
     overlordMove
   );
+  const messages: ChatCompletionRequestMessage[] = [
+    {
+      role: "system",
+      content: AI_DESCRIPTION,
+    },
+    {
+      role: "assistant",
+      content: `Your opponents name is ${opponent.name} who is a ${opponent.occupation}`,
+    },
+    {
+      role: "assistant",
+      content: `Your opponents move was ${opponentMove}`,
+    },
+    {
+      role: "assistant",
+      content: `Your move was ${overlordMove}`,
+    },
+    {
+      role: "assistant",
+      content:
+        "If you win, you like to make fun of your opponent, if you lose you like to make fun of yourself. If it's a draw you make up some funny reason why you are both winners or losers",
+    },
+    {
+      role: "user",
+      content:
+        "Using your move and your opponents moves make a comment on the outcome of the game in no more than 2 sentences Answer in both english and chinese simplified language. Give an outcome if it is a win, lose or draw for you. Your answer is for a computer program so you must respond in json format of {english: string, chinese: string, outcome: string}",
+    },
+  ];
+
+  console.log("Messages", messages);
+
   return pipe(
     TE.tryCatch(
       () =>
         openAi.createChatCompletion({
           model: AI_MODEL,
-          messages: [
-            {
-              role: "assistant",
-              content: AI_DESCRIPTION,
-            },
-            {
-              role: "assistant",
-              content: `Your opponents name is ${opponent.name} who is a ${opponent.occupation}.`,
-            },
-            {
-              role: "assistant",
-              content: `Your opponents move was ${opponentMove}`,
-            },
-            {
-              role: "assistant",
-              content: `Your move was ${overlordMove}`,
-            },
-            {
-              role: "user",
-              content:
-                "State the outcome of the game stating your move and your opponents moves. Using your personality, make a comment on the outcome of the game in no more than 2 sentences.",
-            },
-            {
-              role: "user",
-              content:
-                "If you win, you like to make fun of your opponent, if you lose you like to make fun of yourself. If it's a draw you make up some cosmic reason why you are both winners or losers",
-            },
-            {
-              role: "user",
-              content:
-                "Your answer is for a computer program so you must respond in json format of {english: string, chinese: string}",
-            },
-          ],
+          messages,
         }),
       () => "Error creating AI Overlord Outcome"
     ),
@@ -200,11 +213,17 @@ export const createAiBattleOutcome: AiOverlordBattleOutcomeCreator = (
       console.log(content);
       return content;
     }),
-    TE.map((response) => parseToJson<TranslatedText>(response)),
+    TE.map((response) => trimOutsidesOfCurlyBraces(response || "")),
+    TE.map((cleanedResponse) =>
+      parseToJson<{ outcome: AiOverlordOpponentResult } & TranslatedText>(
+        cleanedResponse
+      )
+    ),
     TE.map((translatedText) => ({
       text: translatedText,
       move: overlordMove,
       opponentId: opponent.playerId,
+      outcome: translatedText.outcome,
     }))
   );
 };
