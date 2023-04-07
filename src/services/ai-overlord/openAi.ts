@@ -1,4 +1,5 @@
 import { pipe } from "fp-ts/lib/function";
+import * as E from "fp-ts/Either";
 import * as TE from "fp-ts/TaskEither";
 import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from "openai";
 import { OPEN_AI_API_KEY } from "../../environment";
@@ -23,8 +24,15 @@ const configuration = new Configuration({
 
 const openAi = new OpenAIApi(configuration);
 
-function parseToJson<T>(response: string | undefined): T {
-  return JSON.parse(response || "{}") as T;
+function parseToJson<T>(response: string | undefined): E.Either<string, T> {
+  try {
+    return E.right(JSON.parse(response || "{}") as T);
+  } catch (error) {
+    let message;
+    if (error instanceof Error) message = error.message;
+    else message = String(error);
+    return E.left(message);
+  }
 }
 
 function trimLeftCurlyBrace(text: string): string {
@@ -66,12 +74,13 @@ export const createAiOverlord: AiOverlordCreator = (opponents) => {
       console.log(content);
       return content;
     }),
-    TE.map(
-      (content) =>
-        ({
-          introduction: parseToJson<TranslatedText>(content),
-          moves: [],
-        } as AiOverlord)
+    TE.map((content) => parseToJson<TranslatedText>(content)),
+    TE.chain(
+      E.fold(
+        (parseError) => TE.left(parseError),
+        (translatedText) =>
+          TE.right({ introduction: translatedText, moves: [] } as AiOverlord)
+      )
     )
   );
 };
@@ -109,7 +118,13 @@ export const createAiBattleTaunt: AiOverlordTauntCreator = (
       console.log(content);
       return content;
     }),
-    TE.map((response) => parseToJson<TranslatedText>(response))
+    TE.map((response) => parseToJson<TranslatedText>(response)),
+    TE.chain(
+      E.fold(
+        (parseError) => TE.left(parseError),
+        (translatedText) => TE.right(translatedText)
+      )
+    )
   );
 };
 
@@ -152,7 +167,12 @@ export const createAiBattleMove: AiOverlordMoveCreator = (
       return content;
     }),
     TE.map((response) => parseToJson<{ move: RPSMoveName }>(response)),
-    TE.map((response) => response.move)
+    TE.chain(
+      E.fold(
+        (parseError) => TE.left(parseError),
+        (response) => TE.right(response.move)
+      )
+    )
   );
 };
 
@@ -219,11 +239,17 @@ export const createAiBattleOutcome: AiOverlordBattleOutcomeCreator = (
         cleanedResponse
       )
     ),
-    TE.map((translatedText) => ({
-      text: translatedText,
-      move: overlordMove,
-      opponentId: opponent.playerId,
-      outcome: translatedText.outcome,
-    }))
+    TE.chain(
+      E.fold(
+        (parseError) => TE.left(parseError),
+        (response) =>
+          TE.right({
+            text: response,
+            move: overlordMove,
+            opponentId: opponent.playerId,
+            outcome: response.outcome,
+          })
+      )
+    )
   );
 };
