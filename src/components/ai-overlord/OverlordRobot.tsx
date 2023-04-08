@@ -1,4 +1,5 @@
 import Image from "next/future/image";
+import { useEffect } from "react";
 import styled from "styled-components";
 import { useAiOverlordGame } from "../../providers/SocketIoProvider/useAiOverlord";
 import { AiOverlord, AiOverlordGame } from "../../services/ai-overlord/types";
@@ -56,6 +57,25 @@ export const OverlordRobot = ({ aiOverlordGame }: Props) => {
           (t) => t.playerId === currentOpponent.playerId
         )!.taunt
       : aiOverlordGame.aiOverlord.introduction);
+
+  useEffect(() => {
+    if (
+      currentOpponent &&
+      currentOpponentsMove &&
+      !isThinking &&
+      !moveAgainstCurrentOpponent
+    ) {
+      startThinking();
+      makeRobotMove(currentOpponent.playerId);
+    }
+  }, [
+    currentOpponent,
+    currentOpponentsMove,
+    isThinking,
+    makeRobotMove,
+    moveAgainstCurrentOpponent,
+    startThinking,
+  ]);
 
   return (
     <RobotLayout>

@@ -25,6 +25,9 @@ const configuration = new Configuration({
 const openAi = new OpenAIApi(configuration);
 
 function parseToJson<T>(response: string | undefined): E.Either<string, T> {
+  if (!response) {
+    return E.left("String to parse to json is is empty 😱");
+  }
   try {
     return E.right(JSON.parse(response || "{}") as T);
   } catch (error) {
