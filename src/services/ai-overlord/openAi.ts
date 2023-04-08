@@ -69,7 +69,12 @@ export const createAiOverlord: AiOverlordCreator = (opponents) => {
             },
           ],
         }),
-      () => "Error creating AI Overlord"
+      (error) => {
+        let message;
+        if (error instanceof Error) message = error.message;
+        else message = String(error);
+        return message;
+      }
     ),
     TE.map((response) => response?.data?.choices[0]?.message?.content),
     TE.map((response) => trimOutsidesOfCurlyBraces(response || "")),
