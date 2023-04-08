@@ -2,6 +2,8 @@ import Image from "next/future/image";
 import styled from "styled-components";
 import { useAiOverlordGame } from "../../providers/SocketIoProvider/useAiOverlord";
 import { AiOverlord, AiOverlordGame } from "../../services/ai-overlord/types";
+import { Appear } from "../animations/Appear";
+import { OverlordThinkingIndicator } from "./OverlordThinkingIndicator";
 import { SpeechText } from "./SpeechText";
 
 const RobotLayout = styled.div`
@@ -18,6 +20,12 @@ const RobotSpeech = styled.div`
   position: absolute;
   width: 30vw;
   top: -20vh;
+  right: 0;
+`;
+
+const GearsPosition = styled.div`
+  position: absolute;
+  top: 0;
   right: 0;
 `;
 
@@ -59,7 +67,9 @@ export const OverlordRobot = ({ aiOverlordGame }: Props) => {
         />
       </RobotBody>
       <RobotSpeech>
-        <SpeechText text={currentSpeech} />
+        <Appear show={!isThinking}>
+          <SpeechText text={currentSpeech} />
+        </Appear>
       </RobotSpeech>
       {moveAgainstCurrentOpponent && (
         <>
@@ -79,7 +89,9 @@ export const OverlordRobot = ({ aiOverlordGame }: Props) => {
             Make move against {currentOpponent.playerId}
           </button>
         )}
-      {isThinking && <p>Robot is thinking...</p>}
+      <GearsPosition>
+        <OverlordThinkingIndicator isThinking={isThinking} />
+      </GearsPosition>
     </RobotLayout>
   );
 };
