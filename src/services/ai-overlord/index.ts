@@ -11,7 +11,7 @@ import {
   AiOverlordCreator,
   AiOverlordGame,
   AiOverlordOpponent,
-  AiOverlordOpponentMoveWithText,
+  AiOverlordOpponentMoveWithTextAndOutcome,
   TranslatedText,
 } from "./types";
 
@@ -42,7 +42,7 @@ const addOpponentMoveToBattle =
 
 const addAiMoveForOpponent =
   (opponentId: string, game: AiOverlordGame) =>
-  (move: AiOverlordOpponentMoveWithText): AiOverlordGame => {
+  (move: AiOverlordOpponentMoveWithTextAndOutcome): AiOverlordGame => {
     return {
       ...game,
       aiOverlord: {
