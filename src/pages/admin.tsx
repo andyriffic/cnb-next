@@ -1,4 +1,5 @@
 import { GetServerSideProps } from "next";
+import Head from "next/head";
 import styled from "styled-components";
 import { AdminPlayerView } from "../components/admin/AdminPlayerView";
 import { Card, SubHeading } from "../components/Atoms";
@@ -33,26 +34,31 @@ type Props = {
 
 export default function Page({ activePlayers, retiredPlayers }: Props) {
   return (
-    <SpectatorPageLayout>
-      <SubHeading style={{ textAlign: "center", marginTop: "2rem" }}>
-        Active
-      </SubHeading>
-      <PlayerContainer>
-        {activePlayers.map((player) => (
-          <PlayerItem key={player.id}>
-            <AdminPlayerView player={player} />
-          </PlayerItem>
-        ))}
-      </PlayerContainer>
-      <SubHeading style={{ textAlign: "center" }}>Retired</SubHeading>
-      <PlayerContainer>
-        {retiredPlayers.map((player) => (
-          <PlayerItem key={player.id}>
-            <AdminPlayerView player={player} />
-          </PlayerItem>
-        ))}
-      </PlayerContainer>
-    </SpectatorPageLayout>
+    <>
+      <Head>
+        <title>Finx Rocks - Player Admin</title>
+      </Head>
+      <SpectatorPageLayout>
+        <SubHeading style={{ textAlign: "center", marginTop: "2rem" }}>
+          Active
+        </SubHeading>
+        <PlayerContainer>
+          {activePlayers.map((player) => (
+            <PlayerItem key={player.id}>
+              <AdminPlayerView player={player} />
+            </PlayerItem>
+          ))}
+        </PlayerContainer>
+        <SubHeading style={{ textAlign: "center" }}>Retired</SubHeading>
+        <PlayerContainer>
+          {retiredPlayers.map((player) => (
+            <PlayerItem key={player.id}>
+              <AdminPlayerView player={player} />
+            </PlayerItem>
+          ))}
+        </PlayerContainer>
+      </SpectatorPageLayout>
+    </>
   );
 }
 

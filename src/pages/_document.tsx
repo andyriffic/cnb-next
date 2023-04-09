@@ -38,6 +38,7 @@ export default class MyDocument extends Document {
     return (
       <Html>
         <Head>
+          <title>FINX ROCKS!!</title>
           <meta name="robots" content="noindex,nofollow" />
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link
