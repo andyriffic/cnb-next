@@ -1,6 +1,8 @@
 import { GetServerSideProps } from "next";
 import styled from "styled-components";
+import { AdminPlayerView } from "../components/admin/AdminPlayerView";
 import { Card, SubHeading } from "../components/Atoms";
+import { EvenlySpaced } from "../components/Layouts";
 import { NumericValue } from "../components/NumericValue";
 import { PlayerAvatar } from "../components/PlayerAvatar";
 import { SpectatorPageLayout } from "../components/SpectatorPageLayout";
@@ -11,13 +13,17 @@ import { sortByPlayerName } from "../utils/sort";
 const PlayerContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.7rem;
   justify-content: center;
   padding: 2rem;
 `;
 
 const PlayerItem = styled.div`
-  width: 10rem;
+  /* width: 30%; */
+`;
+
+const PlayerDetailsContainer = styled.div`
+  flex: 1;
 `;
 
 type Props = {
@@ -29,42 +35,20 @@ export default function Page({ activePlayers, retiredPlayers }: Props) {
   return (
     <SpectatorPageLayout>
       <SubHeading style={{ textAlign: "center", marginTop: "2rem" }}>
-        Active players
+        Active
       </SubHeading>
       <PlayerContainer>
         {activePlayers.map((player) => (
           <PlayerItem key={player.id}>
-            <Card
-              style={{
-                margin: 0,
-                opacity: player.tags.includes("retired") ? 0.7 : 1,
-              }}
-            >
-              <PlayerAvatar playerId={player.id} size="thumbnail" />
-              <p style={{ textAlign: "center" }}>{player.name}</p>
-              <p style={{ textAlign: "center", fontWeight: "bold" }}>
-                <NumericValue>{player.details?.gameMoves || 0}</NumericValue>
-              </p>
-            </Card>
+            <AdminPlayerView player={player} />
           </PlayerItem>
         ))}
       </PlayerContainer>
-      <SubHeading style={{ textAlign: "center" }}>Retired players</SubHeading>
+      <SubHeading style={{ textAlign: "center" }}>Retired</SubHeading>
       <PlayerContainer>
         {retiredPlayers.map((player) => (
           <PlayerItem key={player.id}>
-            <Card
-              style={{
-                margin: 0,
-                opacity: player.tags.includes("retired") ? 0.7 : 1,
-              }}
-            >
-              <PlayerAvatar playerId={player.id} size="thumbnail" />
-              <p style={{ textAlign: "center" }}>{player.name}</p>
-              <p style={{ textAlign: "center", fontWeight: "bold" }}>
-                <NumericValue>{player.details?.gameMoves || 0}</NumericValue>
-              </p>
-            </Card>
+            <AdminPlayerView player={player} />
           </PlayerItem>
         ))}
       </PlayerContainer>
