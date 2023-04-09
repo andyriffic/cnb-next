@@ -41,7 +41,7 @@ const addOpponentMoveToBattle =
   };
 
 const addAiMoveForOpponent =
-  (opponentId: string, game: AiOverlordGame) =>
+  (game: AiOverlordGame) =>
   (move: AiOverlordOpponentMoveWithTextAndOutcome): AiOverlordGame => {
     return {
       ...game,
@@ -119,6 +119,6 @@ export const makeAiMove = (
         aiOverlordGame
       )
     ),
-    TE.map(addAiMoveForOpponent(opponentId, aiOverlordGame))
+    TE.map(addAiMoveForOpponent(aiOverlordGame))
   );
 };
