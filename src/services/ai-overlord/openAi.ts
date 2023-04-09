@@ -37,10 +37,10 @@ const openAi = new OpenAIApi(configuration);
 
 function parseToJson<T>(response: string | undefined): E.Either<string, T> {
   if (!response) {
-    return E.left("String to parse to json is is empty 😱");
+    return E.left("String to parse to json is empty 😱");
   }
   try {
-    return E.right(JSON.parse(response || "{}") as T);
+    return E.right(JSON.parse(response) as T);
   } catch (error) {
     let message;
     if (error instanceof Error) message = error.message;
