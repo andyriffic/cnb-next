@@ -34,12 +34,13 @@ const getAllInMemoryAiOverlordGames = (): AiOverlordGame[] => {
 };
 
 export enum AI_OVERLORD_ACTIONS {
-  AI_OVERLORD_GAME_UPDATE = "AI_OVERLORD_GAME_UPDATE",
-  AI_OVERLORD_CREATE_GAME = "AI_OVERLORD_CREATE_GAME",
-  AI_OVERLORD_NEW_OPPONENT = "AI_OVERLORD_NEW_OPPONENT",
-  AI_OVERLORD_MAKE_ROBOT_MOVE = "AI_OVERLORD_MAKE_ROBOT_MOVE",
-  AI_OVERLORD_MAKE_OPPONENT_MOVE = "AI_OVERLORD_MAKE_OPPONENT_MOVE",
-  AI_OVERLORD_RESOLVE_OPPONENT_BATTLE = "AI_OVERLORD_RESOLVE_OPPONENT_BATTLE",
+  GAME_UPDATE = "AI_OVERLORD_GAME_UPDATE",
+  CREATE_GAME = "AI_OVERLORD_CREATE_GAME",
+  NEW_OPPONENT = "AI_OVERLORD_NEW_OPPONENT",
+  MAKE_ROBOT_MOVE = "AI_OVERLORD_MAKE_ROBOT_MOVE",
+  MAKE_OPPONENT_MOVE = "AI_OVERLORD_MAKE_OPPONENT_MOVE",
+  RESOLVE_OPPONENT_BATTLE = "AI_OVERLORD_RESOLVE_OPPONENT_BATTLE",
+  ROBOT_MESSAGE = "AI_OVERLORD_ROBOT_MESSAGE",
 }
 
 export type CreateAiOverlordGameHandler = (
@@ -93,7 +94,7 @@ export function initialiseAiOverlordSocket(
           console.log("Created game", game);
           updateInMemoryAiOverlordGame(game);
           io.emit(
-            AI_OVERLORD_ACTIONS.AI_OVERLORD_GAME_UPDATE,
+            AI_OVERLORD_ACTIONS.GAME_UPDATE,
             getAllInMemoryAiOverlordGames()
           );
           onCreated(game.gameId);
@@ -123,7 +124,7 @@ export function initialiseAiOverlordSocket(
         (game) => {
           updateInMemoryAiOverlordGame(game);
           io.emit(
-            AI_OVERLORD_ACTIONS.AI_OVERLORD_GAME_UPDATE,
+            AI_OVERLORD_ACTIONS.GAME_UPDATE,
             getAllInMemoryAiOverlordGames()
           );
         }
@@ -152,7 +153,7 @@ export function initialiseAiOverlordSocket(
         (game) => {
           updateInMemoryAiOverlordGame(game);
           io.emit(
-            AI_OVERLORD_ACTIONS.AI_OVERLORD_GAME_UPDATE,
+            AI_OVERLORD_ACTIONS.GAME_UPDATE,
             getAllInMemoryAiOverlordGames()
           );
         }
@@ -180,7 +181,7 @@ export function initialiseAiOverlordSocket(
         (game) => {
           updateInMemoryAiOverlordGame(game);
           io.emit(
-            AI_OVERLORD_ACTIONS.AI_OVERLORD_GAME_UPDATE,
+            AI_OVERLORD_ACTIONS.GAME_UPDATE,
             getAllInMemoryAiOverlordGames()
           );
         }
@@ -190,22 +191,10 @@ export function initialiseAiOverlordSocket(
 
   console.log("Registering AiOverlord SocketIo 🔌");
 
-  socket.on(
-    AI_OVERLORD_ACTIONS.AI_OVERLORD_CREATE_GAME,
-    createAiOverlordGameHandler
-  );
-  socket.on(
-    AI_OVERLORD_ACTIONS.AI_OVERLORD_NEW_OPPONENT,
-    newAiOverlordOpponentHandler
-  );
-  socket.on(
-    AI_OVERLORD_ACTIONS.AI_OVERLORD_MAKE_OPPONENT_MOVE,
-    makeAiOpponentMoveHandler
-  );
-  socket.on(
-    AI_OVERLORD_ACTIONS.AI_OVERLORD_MAKE_ROBOT_MOVE,
-    makeAiRobotMoveHandler
-  );
-  socket.emit(AI_OVERLORD_ACTIONS.AI_OVERLORD_GAME_UPDATE, aiOverlordGames);
+  socket.on(AI_OVERLORD_ACTIONS.CREATE_GAME, createAiOverlordGameHandler);
+  socket.on(AI_OVERLORD_ACTIONS.NEW_OPPONENT, newAiOverlordOpponentHandler);
+  socket.on(AI_OVERLORD_ACTIONS.MAKE_OPPONENT_MOVE, makeAiOpponentMoveHandler);
+  socket.on(AI_OVERLORD_ACTIONS.MAKE_ROBOT_MOVE, makeAiRobotMoveHandler);
+  socket.emit(AI_OVERLORD_ACTIONS.GAME_UPDATE, aiOverlordGames);
   sendClientMessage(socket, "Welcome to AiOverlord 🤖");
 }

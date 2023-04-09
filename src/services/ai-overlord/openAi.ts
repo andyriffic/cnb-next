@@ -25,7 +25,7 @@ const getOpponentDescription = (opponent: AiOverlordOpponent) =>
   }.`;
 
 const getOpponentInterests = (opponent: AiOverlordOpponent) =>
-  `${opponent.name} is interested in ${
+  `${opponent.name} has interests including ${
     opponent.interests || "nothing in particular"
   }`;
 

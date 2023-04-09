@@ -28,29 +28,20 @@ export function useAiOverlord(socket: Socket): AiOverlordSocketService {
 
   const createAiOverlordGame = useCallback<CreateAiOverlordGameHandler>(
     (id, opponents, onCreated) =>
-      socket.emit(
-        AI_OVERLORD_ACTIONS.AI_OVERLORD_CREATE_GAME,
-        id,
-        opponents,
-        onCreated
-      ),
+      socket.emit(AI_OVERLORD_ACTIONS.CREATE_GAME, id, opponents, onCreated),
     [socket]
   );
 
   const newOpponent = useCallback<NewAiOverlordOpponentHandler>(
     (gameId, opponentId) =>
-      socket.emit(
-        AI_OVERLORD_ACTIONS.AI_OVERLORD_NEW_OPPONENT,
-        gameId,
-        opponentId
-      ),
+      socket.emit(AI_OVERLORD_ACTIONS.NEW_OPPONENT, gameId, opponentId),
     [socket]
   );
 
   const makeOpponentMove = useCallback<MakeAiOpponentMoveHandler>(
     (gameId, opponentId, move) =>
       socket.emit(
-        AI_OVERLORD_ACTIONS.AI_OVERLORD_MAKE_OPPONENT_MOVE,
+        AI_OVERLORD_ACTIONS.MAKE_OPPONENT_MOVE,
         gameId,
         opponentId,
         move
@@ -60,11 +51,7 @@ export function useAiOverlord(socket: Socket): AiOverlordSocketService {
 
   const makeRobotMove = useCallback<MakeAiRobotMoveHandler>(
     (gameId, opponentId) =>
-      socket.emit(
-        AI_OVERLORD_ACTIONS.AI_OVERLORD_MAKE_ROBOT_MOVE,
-        gameId,
-        opponentId
-      ),
+      socket.emit(AI_OVERLORD_ACTIONS.MAKE_ROBOT_MOVE, gameId, opponentId),
     [socket]
   );
 
@@ -85,7 +72,7 @@ export function useAiOverlord(socket: Socket): AiOverlordSocketService {
   useEffect(() => {
     console.log("Setting up Ai Overlord socket connection");
     socket.on(
-      AI_OVERLORD_ACTIONS.AI_OVERLORD_GAME_UPDATE,
+      AI_OVERLORD_ACTIONS.GAME_UPDATE,
       (aiOverlordGames: AiOverlordGame[]) => {
         setThinkingAis([]);
         setAiOverlordGames(aiOverlordGames);
@@ -94,7 +81,7 @@ export function useAiOverlord(socket: Socket): AiOverlordSocketService {
 
     return () => {
       console.log("Disconnecting Ai Overlord Socket");
-      socket.off(AI_OVERLORD_ACTIONS.AI_OVERLORD_GAME_UPDATE);
+      socket.off(AI_OVERLORD_ACTIONS.GAME_UPDATE);
     };
   }, [socket]);
 
