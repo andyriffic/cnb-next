@@ -24,6 +24,11 @@ const getOpponentDescription = (opponent: AiOverlordOpponent) =>
     opponent.occupation || "General worker"
   }.`;
 
+const getOpponentInterests = (opponent: AiOverlordOpponent) =>
+  `${opponent.name} is interested in ${
+    opponent.interests || "nothing in particular"
+  }`;
+
 const configuration = new Configuration({
   apiKey: OPEN_AI_API_KEY,
 });
@@ -113,9 +118,13 @@ export const createAiBattleTaunt: AiOverlordTauntCreator = (
       content: getOpponentDescription(opponent),
     },
     {
+      role: "assistant",
+      content: getOpponentInterests(opponent),
+    },
+    {
       role: "user",
       content:
-        "Taunt your current opponent incorporating their occupation if you can. You must always mention their name. Answer in english and chinese simplified. Your answer is for a computer program so you must respond in json format of {english: string, chinese: string}",
+        "Taunt your current opponent with an opening sentence. You can incorporate something funny about their occupation or one of their interests if you like. You must always mention their name and do not use anything with quotation marks. Answer in english and chinese simplified. Your answer is for a computer program so you must respond in json format of {english: string, chinese: string}",
     },
   ];
 
@@ -150,31 +159,34 @@ export const createAiBattleMove: AiOverlordMoveCreator = (
   opponent,
   aiOverlordGame
 ) => {
+  const messages: ChatCompletionRequestMessage[] = [
+    {
+      role: "system",
+      content: AI_DESCRIPTION,
+    },
+    {
+      role: "assistant",
+      content:
+        aiOverlordGame.aiOverlord.moves.length > 0
+          ? `Your previous move history from oldest to newest is ${aiOverlordGame.aiOverlord.moves
+              .map((m) => m.move)
+              .join(", ")}`
+          : "This is your first move",
+    },
+    {
+      role: "user",
+      content:
+        "Choose one random move of rock, paper or scissors. Your answer is for a computer program so you must only respond in json format of {move: string}",
+    },
+  ];
+
+  console.log("[createAiBattleMove]: Messages", messages);
   return pipe(
     TE.tryCatch(
       () =>
         openAi.createChatCompletion({
           model: AI_MODEL,
-          messages: [
-            {
-              role: "system",
-              content: AI_DESCRIPTION,
-            },
-            {
-              role: "assistant",
-              content:
-                aiOverlordGame.aiOverlord.moves.length > 0
-                  ? `Your previous move history from oldest to newest is ${aiOverlordGame.aiOverlord.moves
-                      .map((m) => m.move)
-                      .join(", ")}`
-                  : "This is your first move",
-            },
-            {
-              role: "user",
-              content:
-                "Choose one random move of rock, paper or scissors. Your answer is for a computer program so you must only respond in json format of {move: string}",
-            },
-          ],
+          messages,
         }),
       () => "Error creating AI Overlord Move"
     ),
@@ -217,6 +229,10 @@ export const createAiBattleOutcome: AiOverlordBattleOutcomeCreator = (
     },
     {
       role: "assistant",
+      content: getOpponentInterests(opponent),
+    },
+    {
+      role: "assistant",
       content: `Your opponents move was ${opponentMove}`,
     },
     {
@@ -224,14 +240,9 @@ export const createAiBattleOutcome: AiOverlordBattleOutcomeCreator = (
       content: `Your move was ${overlordMove}`,
     },
     {
-      role: "assistant",
-      content:
-        "If you win, you like to make fun of your opponent, if you lose you like to make fun of yourself. If it's a draw you make up some funny reason why you are both winners or losers",
-    },
-    {
       role: "user",
       content:
-        "Using your move and your opponents moves make a comment on the outcome of the game in no more than 2 sentences Answer in both english and chinese simplified language. Give an outcome if it is a win, lose or draw for you. Your answer is for a computer program so you must respond in json format of {english: string, chinese: string, outcome: string}",
+        "Using your move and your opponents move make a comment on the outcome of the game. No more than 2 sentences. If you win, you like to make fun of your opponent, if you lose you like to make fun of yourself. If it's a draw you make up some funny reason why you are both winners or losers. You can incorporate your opponents occupation or one of their interests in your answer if you like. Answer in both english and chinese simplified language. Give an outcome if it is a win, lose or draw for you. Your answer is for a computer program so you must respond in json format of {english: string, chinese: string, outcome: string}",
     },
   ];
 

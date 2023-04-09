@@ -96,19 +96,6 @@ export const OverlordRobot = ({ aiOverlordGame }: Props) => {
           <p>{moveAgainstCurrentOpponent.move}</p>
         </>
       )}
-      {currentOpponent &&
-        currentOpponentsMove &&
-        !isThinking &&
-        !moveAgainstCurrentOpponent && (
-          <button
-            onClick={() => {
-              startThinking();
-              makeRobotMove(currentOpponent.playerId);
-            }}
-          >
-            Make move against {currentOpponent.playerId}
-          </button>
-        )}
       <GearsPosition>
         <OverlordThinkingIndicator isThinking={isThinking} />
       </GearsPosition>

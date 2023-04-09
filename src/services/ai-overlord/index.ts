@@ -59,6 +59,7 @@ const mapPlayerToOpponent = (player: Player): AiOverlordOpponent => ({
   playerId: player.id,
   name: player.name,
   occupation: getPlayerAttributeValueFromTags(player.tags, "role", ""),
+  interests: getPlayerAttributeValueFromTags(player.tags, "interests", ""),
 });
 
 export const createAiOpponents = (

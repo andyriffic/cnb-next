@@ -46,6 +46,7 @@ export type AiOverlordOpponent = {
   playerId: string;
   name: string;
   occupation: string;
+  interests: string;
 };
 
 export type AiOverlordOpponentMove = {
