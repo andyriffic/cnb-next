@@ -17,10 +17,12 @@ import { useSocketIo } from "../../providers/SocketIoProvider";
 import { PlayerWallet } from "../../services/betting/types";
 import { shuffleArray } from "../../utils/random";
 import {
+  getAiOverlordSpectatorUrl,
   getPlayRootUrl,
   getRockPaperScissorsGameSpectatorUrl,
   getWhosThatUrl,
 } from "../../utils/url";
+import { generateShortNumericId } from "../../utils/id";
 
 const JoinedPlayerContainer = styled.div`
   display: flex;
@@ -34,7 +36,8 @@ const JoinedPlayerItem = styled.div``;
 function Page() {
   const router = useRouter();
   const groupId = router.query.groupId as string;
-  const { groupJoin, rockPaperScissors, groupBetting } = useSocketIo();
+  const { groupJoin, rockPaperScissors, groupBetting, aiOverlord } =
+    useSocketIo();
   const { getName } = usePlayerNames();
   const { play, loop } = useSound();
   const [qrCodeUrl, setQrCodeUrl] = useState("");
@@ -67,7 +70,29 @@ function Page() {
   );
 
   return (
-    <SpectatorPageLayout debug={group && <DebugPlayerJoin group={group} />}>
+    <SpectatorPageLayout
+      debug={
+        group && (
+          <>
+            <DebugPlayerJoin group={group} />
+            <div>
+              <button
+                disabled={group.playerIds.length < 2}
+                onClick={() =>
+                  aiOverlord.createAiOverlordGame(
+                    generateShortNumericId(),
+                    group.playerIds,
+                    (gameId) => console.log(getAiOverlordSpectatorUrl(gameId))
+                  )
+                }
+              >
+                BETA! Create AI Overlord game ({group.playerIds.length} players)
+              </button>
+            </div>
+          </>
+        )
+      }
+    >
       <CenterSpaced stacked={true} style={{ margin: "2rem 0 2rem" }}>
         <SubHeading>test.finx-rocks.com/play</SubHeading>
         <Heading style={{ fontSize: "5rem" }}>
