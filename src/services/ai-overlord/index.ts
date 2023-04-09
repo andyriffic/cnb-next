@@ -1,5 +1,8 @@
 import { pipe } from "fp-ts/lib/function";
 import * as TE from "fp-ts/lib/TaskEither";
+import { Player } from "../../types/Player";
+import { getAllPlayersTE } from "../../utils/data/aws-dynamodb";
+import { getPlayerAttributeValueFromTags } from "../../utils/string";
 import { RPSMoveName } from "../rock-paper-scissors/types";
 import {
   createAiBattleMove,
@@ -51,6 +54,24 @@ const addAiMoveForOpponent =
       },
     };
   };
+
+const mapPlayerToOpponent = (player: Player): AiOverlordOpponent => ({
+  playerId: player.id,
+  name: player.name,
+  occupation: getPlayerAttributeValueFromTags(player.tags, "role", ""),
+});
+
+export const createAiOpponents = (
+  playerIds: string[]
+): TE.TaskEither<string, AiOverlordOpponent[]> => {
+  return pipe(
+    getAllPlayersTE(),
+    TE.map((players) =>
+      players.filter((player) => playerIds.includes(player.id))
+    ),
+    TE.map((players) => players.map(mapPlayerToOpponent))
+  );
+};
 
 export const createAiOverlordGame = (
   id: string,

@@ -1,3 +1,4 @@
+import * as TE from "fp-ts/TaskEither";
 import * as E from "fp-ts/Either";
 import { pipe } from "fp-ts/lib/function";
 import { Server as SocketIOServer, Socket } from "socket.io";
@@ -6,6 +7,7 @@ import { RPSMoveName } from "../rock-paper-scissors/types";
 import { createAiOverlord } from "./openAi";
 import { AiOverlordGame, AiOverlordOpponent } from "./types";
 import {
+  createAiOpponents,
   createAiOverlordGame,
   makeAiMove,
   makeAiOpponentMove,
@@ -42,7 +44,7 @@ export enum AI_OVERLORD_ACTIONS {
 
 export type CreateAiOverlordGameHandler = (
   id: string,
-  opponents: AiOverlordOpponent[],
+  playerIds: string[],
   onCreated: (gameId: string) => void
 ) => void;
 
@@ -68,11 +70,17 @@ export function initialiseAiOverlordSocket(
 ): void {
   const createAiOverlordGameHandler: CreateAiOverlordGameHandler = async (
     id,
-    opponents,
+    playerIds,
     onCreated
   ) => {
-    console.log("Create Ai Overlord game", opponents);
-    const game = await createAiOverlordGame(id, createAiOverlord, opponents)();
+    console.log("Create Ai Overlord game", playerIds);
+
+    const game = await pipe(
+      createAiOpponents(playerIds),
+      TE.chain((opponents) =>
+        createAiOverlordGame(id, createAiOverlord, opponents)
+      )
+    )();
 
     pipe(
       game,

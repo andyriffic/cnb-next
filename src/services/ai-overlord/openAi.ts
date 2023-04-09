@@ -9,6 +9,7 @@ import {
   AiOverlordBattleOutcomeCreator,
   AiOverlordCreator,
   AiOverlordMoveCreator,
+  AiOverlordOpponent,
   AiOverlordOpponentResult,
   AiOverlordTauntCreator,
   TranslatedText,
@@ -17,6 +18,11 @@ import {
 const AI_MODEL = "gpt-3.5-turbo";
 const AI_DESCRIPTION =
   "You are an AI Rock Paper Scissors robot. You have a witty, funny, sarcastic, evil personality and you love to use puns. You are playing against a team of IT workers who all work in the Home Loans department of a Property listings website company";
+
+const getOpponentDescription = (opponent: AiOverlordOpponent) =>
+  `Your current opponent is ${opponent.name} who's occupation is ${
+    opponent.occupation || "General worker"
+  }.`;
 
 const configuration = new Configuration({
   apiKey: OPEN_AI_API_KEY,
@@ -97,26 +103,30 @@ export const createAiBattleTaunt: AiOverlordTauntCreator = (
   opponent,
   aiOverlordGame
 ) => {
+  const messages: ChatCompletionRequestMessage[] = [
+    {
+      role: "system",
+      content: AI_DESCRIPTION,
+    },
+    {
+      role: "assistant",
+      content: getOpponentDescription(opponent),
+    },
+    {
+      role: "user",
+      content:
+        "Taunt your current opponent incorporating their occupation if you can. You must always mention their name. Answer in english and chinese simplified. Your answer is for a computer program so you must respond in json format of {english: string, chinese: string}",
+    },
+  ];
+
+  console.log("[createAiBattleTaunt]: Messages", messages);
+
   return pipe(
     TE.tryCatch(
       () =>
         openAi.createChatCompletion({
           model: AI_MODEL,
-          messages: [
-            {
-              role: "system",
-              content: AI_DESCRIPTION,
-            },
-            {
-              role: "assistant",
-              content: `Your current opponent is ${opponent.name} who is a ${opponent.occupation}.`,
-            },
-            {
-              role: "user",
-              content:
-                "Taunt your current opponent incorporating their occupation if you can. You must always mention their name. Answer in english and chinese simplified. Your answer is for a computer program so you must respond in json format of {english: string, chinese: string}",
-            },
-          ],
+          messages,
         }),
       () => "Error creating AI Overlord Taunt"
     ),
@@ -203,7 +213,7 @@ export const createAiBattleOutcome: AiOverlordBattleOutcomeCreator = (
     },
     {
       role: "assistant",
-      content: `Your opponents name is ${opponent.name} who is a ${opponent.occupation}`,
+      content: getOpponentDescription(opponent),
     },
     {
       role: "assistant",

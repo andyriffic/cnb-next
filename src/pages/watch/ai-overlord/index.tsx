@@ -11,6 +11,11 @@ import { getAiOverlordSpectatorUrl } from "../../../utils/url";
 
 type Props = {};
 
+// { playerId: "andy", name: "Andy", occupation: "Lead Developer" },
+// { playerId: "marion", name: "Marion", occupation: "Product Manager" },
+// { playerId: "nina", name: "Nina", occupation: "Delivery Lead" },
+// { playerId: "kate", name: "Kate", occupation: "UX Designer" },
+
 function Page({}: Props) {
   const router = useRouter();
   const [creatingGame, setCreatingGame] = useState(false);
@@ -20,12 +25,7 @@ function Page({}: Props) {
     setCreatingGame(true);
     aiOverlord.createAiOverlordGame(
       generateShortNumericId(),
-      [
-        { playerId: "andy", name: "Andy", occupation: "Lead Developer" },
-        { playerId: "marion", name: "Marion", occupation: "Product Manager" },
-        { playerId: "nina", name: "Nina", occupation: "Delivery Lead" },
-        { playerId: "kate", name: "Kate", occupation: "UX Designer" },
-      ],
+      ["andy", "marion", "nina", "kate"],
       (gameId) => {
         router.push(getAiOverlordSpectatorUrl(gameId));
         // setCreatingGame(false);

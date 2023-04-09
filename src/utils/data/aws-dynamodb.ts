@@ -8,7 +8,9 @@ import {
   UpdateItemCommand,
   UpdateItemCommandInput,
 } from "@aws-sdk/client-dynamodb";
+import * as TE from "fp-ts/TaskEither";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
+import { pipe } from "fp-ts/lib/function";
 import { AWS_REGION } from "../../constants";
 import {
   DB_TABLE_NAME_PLAYERS,
@@ -25,6 +27,23 @@ const ddbClient = new DynamoDBClient({
     secretAccessKey: DYNAMO_DB_ACCESS_KEY_SECRET,
   },
 });
+
+export const getAllPlayersTE = (): TE.TaskEither<string, Player[]> => {
+  return pipe(
+    TE.tryCatch(
+      () => getAllPlayers(),
+      (error) => {
+        let message;
+        if (error instanceof Error) message = error.message;
+        else message = String(error);
+        return message;
+      }
+    ),
+    TE.chain((playersOrVoid) =>
+      !playersOrVoid ? TE.left("No players found") : TE.right(playersOrVoid)
+    )
+  );
+};
 
 export const getAllPlayers = (): Promise<Player[] | void> => {
   // console.log("BUILDING FROM ENV:", ENVIRONMENT_NAME);
