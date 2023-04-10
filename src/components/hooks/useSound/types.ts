@@ -15,4 +15,5 @@ export type SoundName =
   | "rps-award-winner"
   | "rps-award-loser"
   | "rps-award-middle"
-  | "whos-that";
+  | "whos-that"
+  | "ai-thinking";
