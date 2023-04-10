@@ -233,16 +233,18 @@ export const createAiBattleOutcome: AiOverlordBattleOutcomeCreator = (
     },
     {
       role: "assistant",
-      content: `Your opponents move was ${opponentMove}`,
-    },
-    {
-      role: "assistant",
-      content: `Your move was ${overlordMove}`,
+      content: `You chose ${overlordMove} and ${opponent.name} chose ${opponentMove}}`,
     },
     {
       role: "user",
-      content:
-        "Using your move and your opponents move make a comment on the outcome of the game. No more than 2 sentences. If you win, you like to make fun of your opponent, if you lose you like to make fun of yourself. If it's a draw you make up some funny reason why you are both winners or losers. You can incorporate your opponents occupation or one of their interests in your answer if you like. Answer in both english and chinese simplified language. Give an outcome if it is a win, lose or draw for you. Your answer is for a computer program so you must respond in json format of {english: string, chinese: string, outcome: string}",
+      content: `Do the following steps:
+
+       1. Using your move and your opponents move make a comment on the outcome of the game. No more than 2 sentences. If you win, you like to make fun of your opponent, if you lose you like to make fun of yourself. If it's a draw you make up some funny reason why you both chose the same move. You can incorporate your opponents occupation or interests in your comment.
+       2. also translate your comment into chinese simplified language
+       3. Give an outcome if it is a win, lose or draw for you in lowercase
+       4. format the output in json format of {english: string, chinese: string, outcome: string}
+       
+       Only respond with the output of the last step`,
     },
   ];
 
