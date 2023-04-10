@@ -81,7 +81,7 @@ export const OverlordRobot = ({ aiOverlordGame }: Props) => {
     <RobotLayout>
       <RobotBody>
         <Image
-          src="/images/ai-overlords/overlord-01.png"
+          src="/images/ai-overlords/overlord-02.png"
           alt="Menacing robot"
           fill={true}
         />

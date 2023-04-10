@@ -17,7 +17,7 @@ type Props = {
   facingDirection: FacingDirection;
 };
 
-const getMoveEmoji = (moveName: RPSMoveName): string => {
+export const getMoveEmoji = (moveName: RPSMoveName): string => {
   switch (moveName) {
     case "rock":
       return "🪨";
