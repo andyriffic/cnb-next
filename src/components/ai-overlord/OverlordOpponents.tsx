@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import { useAiOverlordGame } from "../../providers/SocketIoProvider/useAiOverlord";
 import { AiOverlordGame } from "../../services/ai-overlord/types";
-import { fetchStartAiOverlordBattle } from "../../utils/api";
 import { PlayerAvatar } from "../PlayerAvatar";
+import { BattleResultIndicator } from "./BattleResultIndicator";
 
 const PlayerAvatarGroup = styled.div`
   display: flex;
@@ -32,6 +32,9 @@ export const OverlordOpponents = ({ aiOverlordGame }: Props) => {
         const hasBeenTaunted = aiOverlordGame.taunts.some(
           (t) => t.playerId === opponent.playerId
         );
+        const moveResult = aiOverlordGame.aiOverlord.moves.find(
+          (m) => m.opponentId === opponent.playerId
+        );
         return (
           <Player key={opponent.playerId}>
             <PlayerAvatar playerId={opponent.playerId} size="thumbnail" />
@@ -44,6 +47,9 @@ export const OverlordOpponents = ({ aiOverlordGame }: Props) => {
               >
                 Choose
               </button>
+            )}
+            {moveResult && (
+              <BattleResultIndicator result={moveResult.outcome} />
             )}
           </Player>
         );
