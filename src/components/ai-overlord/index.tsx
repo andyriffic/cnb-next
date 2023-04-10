@@ -17,7 +17,7 @@ type Props = {
 
 const View = ({ aiOverlordGame }: Props) => {
   const { isThinking } = useAiOverlordGame(aiOverlordGame.gameId);
-  const { loop } = useSound();
+  const { loop, play } = useSound();
 
   useEffect(() => {
     if (isThinking) {
@@ -26,8 +26,10 @@ const View = ({ aiOverlordGame }: Props) => {
       return () => {
         thinkingSound.stop();
       };
+    } else {
+      play("ai-speaking");
     }
-  }, [isThinking, loop]);
+  }, [isThinking, loop, play]);
 
   return (
     <SpectatorPageLayout>

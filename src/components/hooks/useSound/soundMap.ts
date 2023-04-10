@@ -19,4 +19,5 @@ export const SOUND_MAP: { [key in SoundName]: string } = {
   "rps-award-middle": "/sounds/meh.mp3",
   "whos-that": "/sounds/whos-that-pokemon.mp3",
   "ai-thinking": "/sounds/processing.mp3",
+  "ai-speaking": "/sounds/robot_beeps.mp3",
 };

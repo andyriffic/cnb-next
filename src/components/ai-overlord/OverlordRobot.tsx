@@ -1,9 +1,10 @@
 import Image from "next/future/image";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import styled from "styled-components";
 import { useAiOverlordGame } from "../../providers/SocketIoProvider/useAiOverlord";
 import { AiOverlord, AiOverlordGame } from "../../services/ai-overlord/types";
 import { Appear } from "../animations/Appear";
+import { useSound } from "../hooks/useSound";
 import { OverlordThinkingIndicator } from "./OverlordThinkingIndicator";
 import { SpeechText } from "./SpeechText";
 
