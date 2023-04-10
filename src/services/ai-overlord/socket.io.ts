@@ -69,6 +69,10 @@ export function initialiseAiOverlordSocket(
   io: SocketIOServer,
   socket: Socket
 ): void {
+  const sendRobotMessage = (message: string): void => {
+    socket.emit(AI_OVERLORD_ACTIONS.ROBOT_MESSAGE, message);
+  };
+
   const createAiOverlordGameHandler: CreateAiOverlordGameHandler = async (
     id,
     playerIds,
@@ -89,6 +93,7 @@ export function initialiseAiOverlordSocket(
         (err) => {
           console.error(err);
           sendClientMessage(socket, `🤖‼️: ${err}`);
+          sendRobotMessage(`🤖‼️: ${err}`);
         },
         (game) => {
           console.log("Created game", game);
@@ -120,6 +125,7 @@ export function initialiseAiOverlordSocket(
         (err) => {
           console.error(err);
           sendClientMessage(socket, `🤖‼️: ${err}`);
+          sendRobotMessage(`🤖‼️: ${err}`);
         },
         (game) => {
           updateInMemoryAiOverlordGame(game);
@@ -149,6 +155,7 @@ export function initialiseAiOverlordSocket(
         (err) => {
           console.error(err);
           sendClientMessage(socket, `🤖‼️: ${err}`);
+          sendRobotMessage(`🤖‼️: ${err}`);
         },
         (game) => {
           updateInMemoryAiOverlordGame(game);
@@ -177,6 +184,7 @@ export function initialiseAiOverlordSocket(
         (err) => {
           console.error(err);
           sendClientMessage(socket, `🤖‼️: ${err}`);
+          sendRobotMessage(`🤖‼️: ${err}`);
         },
         (game) => {
           updateInMemoryAiOverlordGame(game);

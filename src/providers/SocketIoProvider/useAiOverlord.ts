@@ -20,11 +20,14 @@ export type AiOverlordSocketService = {
   makeRobotMove: MakeAiRobotMoveHandler;
   startThinking: (gameId: string) => void;
   stopThinking: (gameId: string) => void;
+  lastRobotDebugMessage: string;
+  clearRobotDebugMessage: () => void;
 };
 
 export function useAiOverlord(socket: Socket): AiOverlordSocketService {
   const [aiOverlordGames, setAiOverlordGames] = useState<AiOverlordGame[]>([]);
   const [thinkingAis, setThinkingAis] = useState<string[]>([]);
+  const [lastRobotMessage, setLastRobotMessage] = useState(""); // TODO: can store history of messages as string[]
 
   const createAiOverlordGame = useCallback<CreateAiOverlordGameHandler>(
     (id, opponents, onCreated) =>
@@ -69,6 +72,10 @@ export function useAiOverlord(socket: Socket): AiOverlordSocketService {
     [thinkingAis]
   );
 
+  const clearRobotDebugMessage = useCallback(() => {
+    setLastRobotMessage("");
+  }, []);
+
   useEffect(() => {
     console.log("Setting up Ai Overlord socket connection");
     socket.on(
@@ -78,6 +85,10 @@ export function useAiOverlord(socket: Socket): AiOverlordSocketService {
         setAiOverlordGames(aiOverlordGames);
       }
     );
+
+    socket.on(AI_OVERLORD_ACTIONS.ROBOT_MESSAGE, (message: string) => {
+      setLastRobotMessage(message);
+    });
 
     return () => {
       console.log("Disconnecting Ai Overlord Socket");
@@ -94,6 +105,8 @@ export function useAiOverlord(socket: Socket): AiOverlordSocketService {
     startThinking,
     stopThinking,
     thinkingAis,
+    lastRobotDebugMessage: lastRobotMessage,
+    clearRobotDebugMessage,
   };
 }
 

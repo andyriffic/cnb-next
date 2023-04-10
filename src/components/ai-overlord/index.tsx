@@ -6,6 +6,7 @@ import { SpectatorPageLayout } from "../SpectatorPageLayout";
 import { OverlordCurrentOpponent } from "./OverlordCurrentOpponent";
 import { OverlordOpponents } from "./OverlordOpponents";
 import { OverlordRobot } from "./OverlordRobot";
+import { RobotMessage } from "./RobotMessage";
 
 type Props = {
   aiOverlordGame: AiOverlordGame;
@@ -26,6 +27,9 @@ const View = ({ aiOverlordGame }: Props) => {
       </Positioned>
       <Positioned absolute={{ leftPercent: 1, topPercent: 1 }}>
         <OverlordOpponents aiOverlordGame={aiOverlordGame} />
+      </Positioned>
+      <Positioned absolute={{ rightPercent: 1, topPercent: 1 }}>
+        <RobotMessage />
       </Positioned>
     </SpectatorPageLayout>
   );
