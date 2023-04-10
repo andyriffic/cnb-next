@@ -17,7 +17,7 @@ import {
 
 const AI_MODEL = "gpt-3.5-turbo";
 const AI_DESCRIPTION =
-  "You are an AI Rock Paper Scissors robot. You have a witty, funny, sarcastic, evil personality and you love to use puns. You are playing against a team of IT workers who all work in the Home Loans department of a Property listings website company";
+  "You are an AI Rock Paper Scissors robot. You have a witty, funny, sarcastic, evil personality and you love to use puns. You are playing against a team who all work in the Home Loans section of a Property listings website company";
 
 const getOpponentDescription = (opponent: AiOverlordOpponent) =>
   `Your current opponent is ${opponent.name} who's occupation is ${
@@ -238,12 +238,10 @@ export const createAiBattleOutcome: AiOverlordBattleOutcomeCreator = (
     {
       role: "user",
       content: `Do the following steps:
-
        1. Using your move and your opponents move make a comment on the outcome of the game. No more than 2 sentences. If you win, you like to make fun of your opponent, if you lose you like to make fun of yourself. If it's a draw you make up some funny reason why you both chose the same move. You can incorporate your opponents occupation or interests in your comment.
        2. also translate your comment into chinese simplified language
        3. Give an outcome if it is a win, lose or draw for you in lowercase
        4. format the output in json format of {english: string, chinese: string, outcome: string}
-       
        Only respond with the output of the last step`,
     },
   ];
