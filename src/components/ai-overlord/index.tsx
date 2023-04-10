@@ -1,21 +1,24 @@
 import { useEffect } from "react";
+import { useAiOverlordGame } from "../../providers/SocketIoProvider/useAiOverlord";
 import { AiOverlordGame } from "../../services/ai-overlord/types";
 import { Heading } from "../Atoms";
 import { CenterSpaced } from "../Layouts";
 import { Positioned } from "../Positioned";
 import { SpectatorPageLayout } from "../SpectatorPageLayout";
 import { useSound } from "../hooks/useSound";
-import { useAiOverlordGame } from "../../providers/SocketIoProvider/useAiOverlord";
+import { DebugAiOverlordGame } from "./DebugAiOverlordGame";
 import { OverlordCurrentOpponent } from "./OverlordCurrentOpponent";
 import { OverlordOpponents } from "./OverlordOpponents";
 import { OverlordRobot } from "./OverlordRobot";
 import { RobotMessage } from "./RobotMessage";
+import { useAiOverlordGameView } from "./hooks/useAiOverlordGameView";
 
 type Props = {
   aiOverlordGame: AiOverlordGame;
 };
 
 const View = ({ aiOverlordGame }: Props) => {
+  const gameView = useAiOverlordGameView(aiOverlordGame);
   const { isThinking } = useAiOverlordGame(aiOverlordGame.gameId);
   const { loop, play } = useSound();
 
@@ -32,7 +35,7 @@ const View = ({ aiOverlordGame }: Props) => {
   }, [isThinking, loop, play]);
 
   return (
-    <SpectatorPageLayout>
+    <SpectatorPageLayout debug={<DebugAiOverlordGame gameView={gameView} />}>
       <CenterSpaced>
         <Heading>AI Overlord!</Heading>
       </CenterSpaced>

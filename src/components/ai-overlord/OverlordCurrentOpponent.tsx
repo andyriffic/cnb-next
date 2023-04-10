@@ -1,16 +1,24 @@
 import styled from "styled-components";
-import { useAiOverlordGame } from "../../providers/SocketIoProvider/useAiOverlord";
 import { AiOverlordGame } from "../../services/ai-overlord/types";
 import { PlayerAvatar } from "../PlayerAvatar";
+import { Appear } from "../animations/Appear";
+import { AiMove } from "./AiMove";
 
 const PlayerAvatarGroup = styled.div`
   display: flex;
   gap: 1rem;
   flex-direction: row-reverse;
+  position: relative;
 `;
 
 const Player = styled.div`
-  width: 10vw;
+  /* width: 10vw; */
+`;
+
+const CurrentMove = styled.div`
+  position: absolute;
+  right: -20%;
+  top: 30%;
 `;
 
 type Props = {
@@ -18,7 +26,6 @@ type Props = {
 };
 
 export const OverlordCurrentOpponent = ({ aiOverlordGame }: Props) => {
-  const { makeOpponentMove } = useAiOverlordGame(aiOverlordGame.gameId);
   const currentOpponent =
     aiOverlordGame.taunts[aiOverlordGame.taunts.length - 1];
   const currentMove = aiOverlordGame.opponentMoves.find(
@@ -26,34 +33,20 @@ export const OverlordCurrentOpponent = ({ aiOverlordGame }: Props) => {
   );
 
   return currentOpponent ? (
-    <PlayerAvatarGroup>
-      <Player>
-        <PlayerAvatar playerId={currentOpponent.playerId} size="medium" />
-      </Player>
-      {currentMove ? (
-        <div>{currentMove.move}</div>
-      ) : (
-        <div>
-          <button
-            onClick={() => makeOpponentMove(currentOpponent.playerId, "rock")}
-          >
-            Rock
-          </button>
-          <button
-            onClick={() => makeOpponentMove(currentOpponent.playerId, "paper")}
-          >
-            Paper
-          </button>
-          <button
-            onClick={() =>
-              makeOpponentMove(currentOpponent.playerId, "scissors")
-            }
-          >
-            Scissors
-          </button>
-        </div>
-      )}
-    </PlayerAvatarGroup>
+    <Appear>
+      <PlayerAvatarGroup>
+        <Player>
+          <PlayerAvatar playerId={currentOpponent.playerId} size="medium" />
+        </Player>
+        {currentMove && (
+          <CurrentMove>
+            <Appear animation="roll-in-left">
+              <AiMove moveName={currentMove.move} />
+            </Appear>
+          </CurrentMove>
+        )}
+      </PlayerAvatarGroup>
+    </Appear>
   ) : (
     <div>Choose opponent</div>
   );

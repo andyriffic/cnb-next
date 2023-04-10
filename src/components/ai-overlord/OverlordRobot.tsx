@@ -1,10 +1,10 @@
 import Image from "next/future/image";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
 import { useAiOverlordGame } from "../../providers/SocketIoProvider/useAiOverlord";
-import { AiOverlord, AiOverlordGame } from "../../services/ai-overlord/types";
+import { AiOverlordGame } from "../../services/ai-overlord/types";
 import { Appear } from "../animations/Appear";
-import { useSound } from "../hooks/useSound";
+import { AiMove } from "./AiMove";
 import { OverlordThinkingIndicator } from "./OverlordThinkingIndicator";
 import { SpeechText } from "./SpeechText";
 
@@ -29,6 +29,12 @@ const GearsPosition = styled.div`
   position: absolute;
   top: 0;
   right: 0;
+`;
+
+const CurrentMovePosition = styled.div`
+  position: absolute;
+  left: -20%;
+  top: 40%;
 `;
 
 type Props = {
@@ -93,9 +99,11 @@ export const OverlordRobot = ({ aiOverlordGame }: Props) => {
         </Appear>
       </RobotSpeech>
       {moveAgainstCurrentOpponent && (
-        <>
-          <p>{moveAgainstCurrentOpponent.move}</p>
-        </>
+        <CurrentMovePosition>
+          <Appear animation="roll-in-right">
+            <AiMove moveName={moveAgainstCurrentOpponent.move} />
+          </Appear>
+        </CurrentMovePosition>
       )}
       <GearsPosition>
         <OverlordThinkingIndicator isThinking={isThinking} />
