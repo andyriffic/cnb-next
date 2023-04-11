@@ -48,24 +48,19 @@ export const SpeechText = ({ text, onFinishedSpeaking }: Props) => {
   const [speechStatus, setSpeechStatus] =
     useState<SpeechStatus>("speaking-english");
 
-  // useEffect(() => {
-  //   speakLanguage("en-GB", text.english, () => {
-  //     setSpeechStatus("speaking-chinese");
-  //     speakLanguage("zh-CN", text.chinese, () => {
-  //       setSpeechStatus("finished");
-  //       onFinishedSpeaking?.();
-  //     });
-  //   });
-  // }, []);
-
   useEffect(() => {
     if (speechStatus === "speaking-english" && !startedSpeaking.current) {
       startedSpeaking.current = true;
       speakLanguage("en-GB", text.english, () => {
-        setSpeechStatus("speaking-chinese");
+        if (window.location.href.includes("chinese=true")) {
+          setSpeechStatus("speaking-chinese");
+        } else {
+          setSpeechStatus("finished");
+          onFinishedSpeaking?.();
+        }
       });
     }
-  }, [speechStatus, text.english]);
+  }, [onFinishedSpeaking, speechStatus, text.english]);
 
   useEffect(() => {
     if (speechStatus === "speaking-chinese") {

@@ -1,4 +1,5 @@
 import { useAiOverlordGame } from "../../providers/SocketIoProvider/useAiOverlord";
+import { selectRandomOneOf } from "../../utils/random";
 import { AiOverlordGameView } from "./hooks/useAiOverlordGameView";
 
 type Props = {
@@ -51,6 +52,18 @@ export const DebugAiOverlordGame = ({ gameView }: Props) => {
       )}
       <p>
         Remaining Opponents:{" "}
+        {gameView.remainingOpponents.length > 0 && (
+          <button
+            onClick={() => {
+              startThinking();
+              newOpponent(
+                selectRandomOneOf(gameView.remainingOpponents).playerId
+              );
+            }}
+          >
+            RANDOM OPPONENT
+          </button>
+        )}
         {gameView.remainingOpponents.map((o) => (
           <button
             key={o.playerId}
