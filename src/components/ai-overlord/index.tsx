@@ -30,7 +30,7 @@ const View = ({ aiOverlordGame }: Props) => {
         thinkingSound.stop();
       };
     } else {
-      play("ai-speaking");
+      // play("ai-speaking");
     }
   }, [isThinking, loop, play]);
 
