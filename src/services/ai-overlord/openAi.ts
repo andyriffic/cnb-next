@@ -19,7 +19,7 @@ import {
 
 const AI_MODEL = "gpt-3.5-turbo";
 const AI_DESCRIPTION =
-  "You are an AI Rock Paper Scissors robot. You have a witty, funny and, sarcastic personality and you love to use jokes and puns in your responses. You are playing against a team who all work in the Home Loans section of an Australian Property listings website company";
+  "You are an evil AI Rock Paper Scissors robot. You have a witty, funny and sarcastic personality. You love to use jokes and puns in your responses. You are playing against a team who all work in the Home Loans section of an Australian Property listings website company";
 
 const getOpponentDescription = (opponent: AiOverlordOpponent) =>
   `Your current opponent is ${opponent.name} who's occupation is ${

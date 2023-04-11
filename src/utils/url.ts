@@ -47,3 +47,10 @@ export const getRockPaperScissorsGameSpectatorUrl = (
 export const getAiOverlordSpectatorUrl = (gameId: string): string => {
   return `/watch/ai-overlord/${gameId}`;
 };
+
+export const getAiOverlordPlayerUrl = (
+  playerId: string,
+  gameId: string
+): string => {
+  return `/play/${playerId}/ai-overlord?gameId=${gameId}`;
+};

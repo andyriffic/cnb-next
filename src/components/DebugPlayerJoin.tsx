@@ -13,7 +13,7 @@ export const DebugPlayerJoin = ({ group }: Props) => {
   const { groupJoin } = useSocketIo();
 
   const playersNotJoined = useMemo(() => {
-    const allPlayerIds = Object.keys(names);
+    const allPlayerIds = Object.keys(names).sort();
 
     return allPlayerIds.filter((pid) => !group.playerIds.includes(pid));
   }, [group, names]);

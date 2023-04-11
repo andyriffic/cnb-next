@@ -14,6 +14,7 @@ import {
 import { PlayerPageLayout } from "../../../components/PlayerPageLayout";
 import { useSocketIo } from "../../../providers/SocketIoProvider";
 import {
+  getAiOverlordPlayerUrl,
   playersBettingGameUrl,
   playersRockPaperScissorsGameUrl,
 } from "../../../utils/url";
@@ -34,7 +35,8 @@ function Page({}: Props) {
   const autoJoinId = (router.query.autoJoinId as string) || "";
   const playerId = router.query.playerId as string;
   const joinedId = router.query.joinedId as string;
-  const { groupJoin, rockPaperScissors, groupBetting } = useSocketIo();
+  const { groupJoin, rockPaperScissors, groupBetting, aiOverlord } =
+    useSocketIo();
   const [groupId, setGroupId] = useState(autoJoinId);
 
   const joinedGroup = useMemo(() => {
@@ -65,6 +67,17 @@ function Page({}: Props) {
     );
   }, [groupBetting.bettingGames, joinedGroup, playerId]);
 
+  const relatedAiOverlordGame = useMemo(() => {
+    return (
+      joinedGroup &&
+      aiOverlord.aiOverlordGames.find(
+        (game) =>
+          game.gameId === joinedGroup.id &&
+          game.opponents.map((o) => o.playerId).includes(playerId)
+      )
+    );
+  }, [aiOverlord.aiOverlordGames, joinedGroup, playerId]);
+
   return (
     <PlayerPageLayout headerContent={<>Header</>} playerId={playerId}>
       {joinedGroup ? (
@@ -79,7 +92,7 @@ function Page({}: Props) {
               )}
               passHref={true}
             >
-              <PrimaryLinkButton>Play</PrimaryLinkButton>
+              <PrimaryLinkButton>Play RPS</PrimaryLinkButton>
             </Link>
           ) : (
             <p>Waiting for game to start</p>
@@ -89,7 +102,18 @@ function Page({}: Props) {
               href={playersBettingGameUrl(playerId, relatedGroupBettingGame.id)}
               passHref={true}
             >
-              <PrimaryLinkButton>Play</PrimaryLinkButton>
+              <PrimaryLinkButton>Play Betting</PrimaryLinkButton>
+            </Link>
+          )}
+          {relatedAiOverlordGame && (
+            <Link
+              href={getAiOverlordPlayerUrl(
+                playerId,
+                relatedAiOverlordGame.gameId
+              )}
+              passHref={true}
+            >
+              <PrimaryLinkButton>Play Ai Overlord</PrimaryLinkButton>
             </Link>
           )}
         </div>
