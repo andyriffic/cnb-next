@@ -3,8 +3,13 @@ import styled, {
   FlattenSimpleInterpolation,
   keyframes,
 } from "styled-components";
+import { textFocusIn } from "./keyframes/textFocusIn";
 
-type AppearAnimation = "roll-in-left" | "roll-in-right" | "flip-in";
+type AppearAnimation =
+  | "roll-in-left"
+  | "roll-in-right"
+  | "flip-in"
+  | "text-focus-in";
 
 const Animation_RollInBlurredLeft = keyframes` {
   0% {
@@ -57,6 +62,9 @@ const ANIMATION_CSS: {
   "flip-in": css`
     animation: ${Animation_FlipIn} 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)
       both;
+  `,
+  "text-focus-in": css`
+    animation: ${textFocusIn} 0.5s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
   `,
 };
 

@@ -235,7 +235,7 @@ export const createAiBattleOutcome: AiOverlordBattleOutcomeCreator = (
     },
     {
       role: "assistant",
-      content: `You chose ${overlordMove} and ${opponent.name} chose ${opponentMove}}`,
+      content: `You chose ${overlordMove} and ${opponent.name} chose ${opponentMove}`,
     },
     {
       role: "user",

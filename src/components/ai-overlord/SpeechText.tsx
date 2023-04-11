@@ -1,7 +1,8 @@
 import styled from "styled-components";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TranslatedText } from "../../services/ai-overlord/types";
 import { useDoOnce } from "../hooks/useDoOnce";
+import { Appear } from "../animations/Appear";
 
 const SpeechBubble = styled.div`
   background: white;
@@ -40,24 +41,57 @@ const speakLanguage = (
   synth.speak(speech);
 };
 
+type SpeechStatus = "speaking-english" | "speaking-chinese" | "finished";
+
 export const SpeechText = ({ text, onFinishedSpeaking }: Props) => {
-  useDoOnce(() => {
-    // speakLanguage("en-GB", text.english, () => {
-    //   speakLanguage("zh-CN", text.chinese, onFinishedSpeaking);
-    // });
-    speakLanguage("en-GB", text.english, onFinishedSpeaking);
-  });
+  const startedSpeaking = useRef(false);
+  const [speechStatus, setSpeechStatus] =
+    useState<SpeechStatus>("speaking-english");
 
   // useEffect(() => {
-  //   const utterThis = new SpeechSynthesisUtterance(text.english);
-  //   synth.speak(utterThis);
-  // }, [text.english]);
+  //   speakLanguage("en-GB", text.english, () => {
+  //     setSpeechStatus("speaking-chinese");
+  //     speakLanguage("zh-CN", text.chinese, () => {
+  //       setSpeechStatus("finished");
+  //       onFinishedSpeaking?.();
+  //     });
+  //   });
+  // }, []);
+
+  useEffect(() => {
+    if (speechStatus === "speaking-english" && !startedSpeaking.current) {
+      startedSpeaking.current = true;
+      speakLanguage("en-GB", text.english, () => {
+        setSpeechStatus("speaking-chinese");
+      });
+    }
+  }, [speechStatus, text.english]);
+
+  useEffect(() => {
+    if (speechStatus === "speaking-chinese") {
+      speakLanguage("zh-CN", text.chinese, () => {
+        setSpeechStatus("finished");
+        onFinishedSpeaking?.();
+      });
+    }
+  }, [onFinishedSpeaking, speechStatus, text.chinese]);
 
   return (
     <SpeechBubble>
-      <Text>🔊</Text>
-      {/* <Text>{text.english}</Text> */}
-      <Text>{text.chinese}</Text>
+      {speechStatus === "speaking-chinese" || speechStatus === "finished" ? (
+        <Appear animation="text-focus-in">
+          <Text>{text.english}</Text>
+        </Appear>
+      ) : (
+        <Text>🔊 *English* 🔊</Text>
+      )}
+      {speechStatus === "speaking-english" || speechStatus === "finished" ? (
+        <Appear animation="text-focus-in">
+          <Text>{text.chinese}</Text>
+        </Appear>
+      ) : (
+        <Text>🔊 *Chinese* 🔊</Text>
+      )}
     </SpeechBubble>
   );
 };

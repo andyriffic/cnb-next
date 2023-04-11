@@ -30,34 +30,27 @@ const Animation_Vibrate = keyframes` {
 const Animation_ShakeBottom = keyframes` {
   0%,
   100% {
-    -webkit-transform: rotate(0deg);
             transform: rotate(0deg);
-    -webkit-transform-origin: 50% 100%;
             transform-origin: 50% 100%;
   }
   10% {
-    -webkit-transform: rotate(2deg);
-            transform: rotate(2deg);
+            transform: rotate(1deg);
   }
   20%,
   40%,
   60% {
-    -webkit-transform: rotate(-4deg);
-            transform: rotate(-4deg);
+            transform: rotate(-2deg);
   }
   30%,
   50%,
   70% {
-    -webkit-transform: rotate(4deg);
-            transform: rotate(4deg);
+            transform: rotate(2deg);
   }
   80% {
-    -webkit-transform: rotate(-2deg);
-            transform: rotate(-2deg);
+            transform: rotate(-1deg);
   }
   90% {
-    -webkit-transform: rotate(2deg);
-            transform: rotate(2deg);
+            transform: rotate(1deg);
   }
 }`;
 
@@ -68,7 +61,7 @@ const ANIMATION_CSS: {
     animation: ${Animation_Vibrate} 0.3s linear infinite both;
   `,
   shake: css`
-    animation: ${Animation_ShakeBottom} 3s
+    animation: ${Animation_ShakeBottom} 2.5s
       cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite both;
   `,
 };
