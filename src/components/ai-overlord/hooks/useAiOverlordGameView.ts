@@ -9,6 +9,7 @@ export type AiOverlordGameView = {
   currentOpponent?: AiOverlordOpponent;
   currentOpponentMove?: AiOverlordOpponentMove;
   remainingOpponents: AiOverlordOpponent[];
+  allPlayersHavePlayed: boolean;
 };
 
 export const useAiOverlordGameView = (
@@ -31,5 +32,8 @@ export const useAiOverlordGameView = (
           !aiOverlordGame.taunts.map((t) => t.playerId).includes(o.playerId)
       )
       .filter((o) => o.playerId !== currentOpponentId),
+    allPlayersHavePlayed:
+      aiOverlordGame.aiOverlord.moves.length ===
+      aiOverlordGame.opponents.length,
   };
 };

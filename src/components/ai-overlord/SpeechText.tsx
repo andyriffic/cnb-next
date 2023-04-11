@@ -32,7 +32,7 @@ const speakLanguage = (
   }
   console.log("synth", synth.getVoices());
   const speech = new SpeechSynthesisUtterance(text);
-  speech.rate = 1.1;
+  speech.rate = 1;
   speech.voice = voice;
   if (onComplete) {
     speech.onend = onComplete;

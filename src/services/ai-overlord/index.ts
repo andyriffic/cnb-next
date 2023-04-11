@@ -8,6 +8,7 @@ import {
   createAiBattleMove,
   createAiBattleOutcome,
   createAiBattleTaunt,
+  createAiOverlordGameSummary,
 } from "./openAi";
 import {
   AiOverlord,
@@ -142,5 +143,20 @@ export const makeAiMove = (
       )
     ),
     TE.map(addAiMoveForOpponent(aiOverlordGame))
+  );
+};
+
+export const finaliseAiGame = (
+  aiOverlordGame: AiOverlordGame
+): TE.TaskEither<string, AiOverlordGame> => {
+  return pipe(
+    createAiOverlordGameSummary(aiOverlordGame),
+    TE.map(
+      (summary) =>
+        ({
+          ...aiOverlordGame,
+          aiOverlord: { ...aiOverlordGame.aiOverlord, finalSummary: summary },
+        } as AiOverlordGame)
+    )
   );
 };

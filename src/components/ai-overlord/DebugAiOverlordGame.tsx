@@ -6,9 +6,8 @@ type Props = {
 };
 
 export const DebugAiOverlordGame = ({ gameView }: Props) => {
-  const { makeOpponentMove, newOpponent, startThinking } = useAiOverlordGame(
-    gameView.gameId
-  );
+  const { makeOpponentMove, newOpponent, startThinking, finaliseGame } =
+    useAiOverlordGame(gameView.gameId);
 
   return (
     <div>
@@ -63,6 +62,17 @@ export const DebugAiOverlordGame = ({ gameView }: Props) => {
             {o.name}
           </button>
         ))}
+      </p>
+      <p>
+        <button
+          disabled={!gameView.allPlayersHavePlayed}
+          onClick={() => {
+            startThinking();
+            finaliseGame();
+          }}
+        >
+          Finish game
+        </button>
       </p>
     </div>
   );

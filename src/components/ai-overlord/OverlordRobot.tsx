@@ -60,6 +60,7 @@ export const OverlordRobot = ({ aiOverlordGame }: Props) => {
   );
 
   const currentSpeech =
+    aiOverlordGame.aiOverlord.finalSummary ||
     moveAgainstCurrentOpponent?.text ||
     (currentOpponent
       ? aiOverlordGame.taunts.find(

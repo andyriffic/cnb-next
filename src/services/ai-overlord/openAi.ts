@@ -8,6 +8,8 @@ import {
   AiOverlord,
   AiOverlordBattleOutcomeCreator,
   AiOverlordCreator,
+  AiOverlordFinalSummaryTextCreator,
+  AiOverlordGame,
   AiOverlordMoveCreator,
   AiOverlordOpponent,
   AiOverlordOpponentResult,
@@ -278,6 +280,107 @@ export const createAiBattleOutcome: AiOverlordBattleOutcomeCreator = (
             opponentId: opponent.playerId,
             outcome: response.outcome,
           })
+      )
+    )
+  );
+};
+
+const winningOpponents = (
+  aiOverlordGame: AiOverlordGame
+): AiOverlordOpponent[] => {
+  const aiLosses = aiOverlordGame.aiOverlord.moves.filter(
+    (m) => m.outcome === "lose"
+  );
+  return aiOverlordGame.opponents.filter((o) =>
+    aiLosses.some((l) => l.opponentId === o.playerId)
+  );
+};
+
+const drawnOpponents = (
+  aiOverlordGame: AiOverlordGame
+): AiOverlordOpponent[] => {
+  const allDraws = aiOverlordGame.aiOverlord.moves.filter(
+    (m) => m.outcome === "draw"
+  );
+  return aiOverlordGame.opponents.filter((o) =>
+    allDraws.some((l) => l.opponentId === o.playerId)
+  );
+};
+
+const losingOpponents = (
+  aiOverlordGame: AiOverlordGame
+): AiOverlordOpponent[] => {
+  const aiWins = aiOverlordGame.aiOverlord.moves.filter(
+    (m) => m.outcome === "win"
+  );
+  return aiOverlordGame.opponents.filter((o) =>
+    aiWins.some((l) => l.opponentId === o.playerId)
+  );
+};
+
+export const createAiOverlordGameSummary: AiOverlordFinalSummaryTextCreator = (
+  aiOverlordGame
+) => {
+  console.log("[OpenAI] Creating final summary text");
+  const messages: ChatCompletionRequestMessage[] = [
+    {
+      role: "system",
+      content: AI_DESCRIPTION,
+    },
+    {
+      role: "assistant",
+      content: `You have just played ${
+        aiOverlordGame.opponents.length
+      } opponents and the outcomes are:
+      You won against ${
+        losingOpponents(aiOverlordGame)
+          .map((o) => o.name)
+          .join(", ") || "no one"
+      }
+      You drew against ${
+        drawnOpponents(aiOverlordGame)
+          .map((o) => o.name)
+          .join(", ") || "no one"
+      }
+      You lost against ${
+        winningOpponents(aiOverlordGame)
+          .map((o) => o.name)
+          .join(", ") || "no one"
+      }
+      `,
+    },
+    {
+      role: "user",
+      content: `Do the following steps:
+      1. Using the percentage of wins losses and draws make a funny comment on the outcome from your perspective. No more than 2 sentences. You comment can include a joke or a pun.
+      2. also translate your comment into chinese simplified language
+      3. format the output in json format of {english: string, chinese: string}
+      Only respond with the output of the last step`,
+    },
+  ];
+
+  console.log("Messages", messages);
+
+  return pipe(
+    TE.tryCatch(
+      () =>
+        openAi.createChatCompletion({
+          model: AI_MODEL,
+          messages,
+        }),
+      () => "Error creating AI Overlord Outcome"
+    ),
+    TE.map((response) => response?.data?.choices[0]?.message?.content),
+    TE.map((content) => {
+      console.log(content);
+      return content;
+    }),
+    TE.map((response) => trimOutsidesOfCurlyBraces(response || "")),
+    TE.map((cleanedResponse) => parseToJson<TranslatedText>(cleanedResponse)),
+    TE.chain(
+      E.fold(
+        (parseError) => TE.left(parseError),
+        (translatedText) => TE.right(translatedText)
       )
     )
   );

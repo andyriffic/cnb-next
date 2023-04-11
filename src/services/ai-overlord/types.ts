@@ -22,6 +22,10 @@ export type AiOverlordBattleOutcomeCreator = (
   aiOverlordGame: AiOverlordGame
 ) => TE.TaskEither<string, AiOverlordOpponentMoveWithTextAndOutcome>;
 
+export type AiOverlordFinalSummaryTextCreator = (
+  aiOverlordGame: AiOverlordGame
+) => TE.TaskEither<string, TranslatedText>;
+
 export type AiOverlordGame = {
   gameId: string;
   opponents: AiOverlordOpponent[];
@@ -63,6 +67,7 @@ export type AiOverlordOpponentMoveWithTextAndOutcome = {
 
 export type AiOverlord = {
   introduction: TranslatedText;
+  finalSummary?: TranslatedText;
   moves: AiOverlordOpponentMoveWithTextAndOutcome[];
 };
 

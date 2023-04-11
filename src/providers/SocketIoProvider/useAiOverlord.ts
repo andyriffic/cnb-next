@@ -5,6 +5,7 @@ import {
   CreateAiOverlordGameHandler,
   MakeAiOpponentMoveHandler,
   MakeAiRobotMoveHandler,
+  MakeFinalRobotSummaryHandler,
   NewAiOverlordOpponentHandler,
 } from "../../services/ai-overlord/socket.io";
 import { AiOverlordGame } from "../../services/ai-overlord/types";
@@ -18,6 +19,7 @@ export type AiOverlordSocketService = {
   newOpponent: NewAiOverlordOpponentHandler;
   makeOpponentMove: MakeAiOpponentMoveHandler;
   makeRobotMove: MakeAiRobotMoveHandler;
+  finaliseGame: MakeFinalRobotSummaryHandler;
   startThinking: (gameId: string) => void;
   stopThinking: (gameId: string) => void;
   lastRobotDebugMessage: string;
@@ -58,6 +60,12 @@ export function useAiOverlord(socket: Socket): AiOverlordSocketService {
     [socket]
   );
 
+  const finaliseGame = useCallback<MakeFinalRobotSummaryHandler>(
+    (gameId) =>
+      socket.emit(AI_OVERLORD_ACTIONS.MAKE_FINAL_ROBOT_SUMMARY, gameId),
+    [socket]
+  );
+
   const startThinking = useCallback(
     (gameId) => {
       setThinkingAis([...thinkingAis.filter((id) => id !== gameId), gameId]);
@@ -93,6 +101,7 @@ export function useAiOverlord(socket: Socket): AiOverlordSocketService {
     return () => {
       console.log("Disconnecting Ai Overlord Socket");
       socket.off(AI_OVERLORD_ACTIONS.GAME_UPDATE);
+      socket.off(AI_OVERLORD_ACTIONS.ROBOT_MESSAGE);
     };
   }, [socket]);
 
@@ -107,6 +116,7 @@ export function useAiOverlord(socket: Socket): AiOverlordSocketService {
     thinkingAis,
     lastRobotDebugMessage: lastRobotMessage,
     clearRobotDebugMessage,
+    finaliseGame,
   };
 }
 
@@ -118,6 +128,7 @@ export const useAiOverlordGame = (
   newOpponent: (opponentId: string) => void;
   makeOpponentMove: (opponentId: string, move: RPSMoveName) => void;
   makeRobotMove: (opponentId: string) => void;
+  finaliseGame: () => void;
   startThinking: () => void;
   stopThinking: () => void;
   isThinking: boolean;
@@ -150,6 +161,10 @@ export const useAiOverlordGame = (
     [aiOverlord, gameId]
   );
 
+  const finaliseGame = useCallback(() => {
+    aiOverlord.finaliseGame(gameId);
+  }, [aiOverlord, gameId]);
+
   const startThinking = useCallback(() => {
     aiOverlord.startThinking(gameId);
   }, [aiOverlord, gameId]);
@@ -170,5 +185,6 @@ export const useAiOverlordGame = (
     startThinking,
     stopThinking,
     isThinking,
+    finaliseGame,
   };
 };

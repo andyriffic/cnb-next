@@ -4,11 +4,12 @@ import { pipe } from "fp-ts/lib/function";
 import { Server as SocketIOServer, Socket } from "socket.io";
 import { sendClientMessage } from "../socket";
 import { RPSMoveName } from "../rock-paper-scissors/types";
-import { createAiOverlord } from "./openAi";
+import { createAiOverlord, createAiOverlordGameSummary } from "./openAi";
 import { AiOverlordGame, AiOverlordOpponent } from "./types";
 import {
   createAiOpponents,
   createAiOverlordGame,
+  finaliseAiGame,
   makeAiMove,
   makeAiOpponentMove,
   preparePlayerForBattle,
@@ -40,6 +41,7 @@ export enum AI_OVERLORD_ACTIONS {
   MAKE_ROBOT_MOVE = "AI_OVERLORD_MAKE_ROBOT_MOVE",
   MAKE_OPPONENT_MOVE = "AI_OVERLORD_MAKE_OPPONENT_MOVE",
   RESOLVE_OPPONENT_BATTLE = "AI_OVERLORD_RESOLVE_OPPONENT_BATTLE",
+  MAKE_FINAL_ROBOT_SUMMARY = "AI_OVERLORD_MAKE_FINAL_ROBOT_SUMMARY",
   ROBOT_MESSAGE = "AI_OVERLORD_ROBOT_MESSAGE",
 }
 
@@ -64,6 +66,8 @@ export type MakeAiRobotMoveHandler = (
   gameId: string,
   opponentId: string
 ) => void;
+
+export type MakeFinalRobotSummaryHandler = (gameId: string) => void;
 
 export function initialiseAiOverlordSocket(
   io: SocketIOServer,
@@ -197,12 +201,45 @@ export function initialiseAiOverlordSocket(
     );
   };
 
+  const makeFinalRobotSummaryHandler: MakeFinalRobotSummaryHandler = async (
+    gameId
+  ) => {
+    const game = getInMemoryAiOverlordGame(gameId);
+    if (!game) {
+      console.error("Game not found", gameId);
+      return;
+    }
+    const result = await finaliseAiGame(game)();
+
+    pipe(
+      result,
+      E.fold(
+        (err) => {
+          console.error(err);
+          sendClientMessage(socket, `🤖‼️: ${err}`);
+          sendRobotMessage(`🤖‼️: ${err}`);
+        },
+        (updatedGame) => {
+          updateInMemoryAiOverlordGame(updatedGame);
+          io.emit(
+            AI_OVERLORD_ACTIONS.GAME_UPDATE,
+            getAllInMemoryAiOverlordGames()
+          );
+        }
+      )
+    );
+  };
+
   console.log("Registering AiOverlord SocketIo 🔌");
 
   socket.on(AI_OVERLORD_ACTIONS.CREATE_GAME, createAiOverlordGameHandler);
   socket.on(AI_OVERLORD_ACTIONS.NEW_OPPONENT, newAiOverlordOpponentHandler);
   socket.on(AI_OVERLORD_ACTIONS.MAKE_OPPONENT_MOVE, makeAiOpponentMoveHandler);
   socket.on(AI_OVERLORD_ACTIONS.MAKE_ROBOT_MOVE, makeAiRobotMoveHandler);
+  socket.on(
+    AI_OVERLORD_ACTIONS.MAKE_FINAL_ROBOT_SUMMARY,
+    makeFinalRobotSummaryHandler
+  );
   socket.emit(AI_OVERLORD_ACTIONS.GAME_UPDATE, aiOverlordGames);
   sendClientMessage(socket, "Welcome to AiOverlord 🤖");
 }
