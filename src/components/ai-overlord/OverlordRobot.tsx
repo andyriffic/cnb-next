@@ -1,9 +1,10 @@
 import Image from "next/future/image";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useAiOverlordGame } from "../../providers/SocketIoProvider/useAiOverlord";
 import { AiOverlordGame } from "../../services/ai-overlord/types";
 import { Appear } from "../animations/Appear";
+import { Attention } from "../animations/Attention";
 import { AiMove } from "./AiMove";
 import { OverlordThinkingIndicator } from "./OverlordThinkingIndicator";
 import { SpeechText } from "./SpeechText";
@@ -45,6 +46,7 @@ export const OverlordRobot = ({ aiOverlordGame }: Props) => {
   const { makeRobotMove, isThinking, startThinking } = useAiOverlordGame(
     aiOverlordGame.gameId
   );
+  const [isSpeaking, setIsSpeaking] = useState(false);
 
   const currentOpponent =
     aiOverlordGame.taunts[aiOverlordGame.taunts.length - 1];
@@ -84,18 +86,29 @@ export const OverlordRobot = ({ aiOverlordGame }: Props) => {
     startThinking,
   ]);
 
+  useEffect(() => {
+    if (!isThinking) {
+      setIsSpeaking(true);
+    }
+  }, [isThinking]);
+
   return (
     <RobotLayout>
-      <RobotBody>
-        <Image
-          src="/images/ai-overlords/overlord-02.png"
-          alt="Menacing robot"
-          fill={true}
-        />
-      </RobotBody>
+      <Attention animate={isSpeaking} animation="shake">
+        <RobotBody>
+          <Image
+            src="/images/ai-overlords/overlord-02.png"
+            alt="Menacing robot"
+            fill={true}
+          />
+        </RobotBody>
+      </Attention>
       <RobotSpeech>
         <Appear show={!isThinking}>
-          <SpeechText text={currentSpeech} />
+          <SpeechText
+            text={currentSpeech}
+            onFinishedSpeaking={() => setIsSpeaking(false)}
+          />
         </Appear>
       </RobotSpeech>
       {moveAgainstCurrentOpponent && (

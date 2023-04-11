@@ -17,11 +17,12 @@ const Text = styled.p`
 
 type Props = {
   text: TranslatedText;
+  onFinishedSpeaking?: () => void;
 };
 
 const speakLanguage = (
   language: string,
-  speech: string,
+  text: string,
   onComplete?: (event: SpeechSynthesisEvent) => void
 ): void => {
   const synth = window.speechSynthesis;
@@ -30,20 +31,21 @@ const speakLanguage = (
     return;
   }
   console.log("synth", synth.getVoices());
-  const utterThis = new SpeechSynthesisUtterance(speech);
-  utterThis.rate = 1.1;
-  utterThis.voice = voice;
+  const speech = new SpeechSynthesisUtterance(text);
+  speech.rate = 1.1;
+  speech.voice = voice;
   if (onComplete) {
-    utterThis.onend = onComplete;
+    speech.onend = onComplete;
   }
-  synth.speak(utterThis);
+  synth.speak(speech);
 };
 
-export const SpeechText = ({ text }: Props) => {
+export const SpeechText = ({ text, onFinishedSpeaking }: Props) => {
   useDoOnce(() => {
-    speakLanguage("en-GB", text.english, () => {
-      speakLanguage("zh-CN", text.chinese);
-    });
+    // speakLanguage("en-GB", text.english, () => {
+    //   speakLanguage("zh-CN", text.chinese, onFinishedSpeaking);
+    // });
+    speakLanguage("en-GB", text.english, onFinishedSpeaking);
   });
 
   // useEffect(() => {
@@ -53,7 +55,8 @@ export const SpeechText = ({ text }: Props) => {
 
   return (
     <SpeechBubble>
-      <Text>{text.english}</Text>
+      <Text>🔊</Text>
+      {/* <Text>{text.english}</Text> */}
       <Text>{text.chinese}</Text>
     </SpeechBubble>
   );
