@@ -5,6 +5,7 @@ import { useAiOverlordGame } from "../../providers/SocketIoProvider/useAiOverlor
 import { AiOverlordGame } from "../../services/ai-overlord/types";
 import { Appear } from "../animations/Appear";
 import { Attention } from "../animations/Attention";
+import { getMoveEmoji } from "../rock-paper-scissors/ViewerPlayersMove";
 import { AiMove } from "./AiMove";
 import { OverlordThinkingIndicator } from "./OverlordThinkingIndicator";
 import { SpeechText } from "./SpeechText";
@@ -30,6 +31,13 @@ const GearsPosition = styled.div`
   position: absolute;
   top: 0;
   right: 0;
+`;
+
+const MoveHistoryPosition = styled.div`
+  position: absolute;
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: row-reverse;
 `;
 
 const CurrentMovePosition = styled.div`
@@ -122,6 +130,11 @@ export const OverlordRobot = ({ aiOverlordGame }: Props) => {
       <GearsPosition>
         <OverlordThinkingIndicator isThinking={isThinking} />
       </GearsPosition>
+      <MoveHistoryPosition>
+        {aiOverlordGame.aiOverlord.moves.map((move, i) => (
+          <div key={i}>{getMoveEmoji(move.move)}</div>
+        ))}
+      </MoveHistoryPosition>
     </RobotLayout>
   );
 };
