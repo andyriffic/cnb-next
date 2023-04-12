@@ -48,9 +48,15 @@ const CurrentMovePosition = styled.div`
 
 type Props = {
   aiOverlordGame: AiOverlordGame;
+  gameCanStart: boolean;
+  onRobotTurnedOn: () => void;
 };
 
-export const OverlordRobot = ({ aiOverlordGame }: Props) => {
+export const OverlordRobot = ({
+  aiOverlordGame,
+  onRobotTurnedOn,
+  gameCanStart,
+}: Props) => {
   const { makeRobotMove, isThinking, startThinking } = useAiOverlordGame(
     aiOverlordGame.gameId
   );
@@ -78,6 +84,7 @@ export const OverlordRobot = ({ aiOverlordGame }: Props) => {
 
   useEffect(() => {
     if (
+      gameCanStart &&
       currentOpponent &&
       currentOpponentsMove &&
       !isThinking &&
@@ -89,6 +96,7 @@ export const OverlordRobot = ({ aiOverlordGame }: Props) => {
   }, [
     currentOpponent,
     currentOpponentsMove,
+    gameCanStart,
     isThinking,
     makeRobotMove,
     moveAgainstCurrentOpponent,
@@ -96,10 +104,10 @@ export const OverlordRobot = ({ aiOverlordGame }: Props) => {
   ]);
 
   useEffect(() => {
-    if (!isThinking) {
+    if (!isThinking && gameCanStart) {
       setIsSpeaking(true);
     }
-  }, [isThinking]);
+  }, [gameCanStart, isThinking]);
 
   return (
     <RobotLayout>
@@ -112,14 +120,16 @@ export const OverlordRobot = ({ aiOverlordGame }: Props) => {
           />
         </RobotBody>
       </Attention>
-      <RobotSpeech>
-        <Appear show={!isThinking}>
-          <SpeechText
-            text={currentSpeech}
-            onFinishedSpeaking={() => setIsSpeaking(false)}
-          />
-        </Appear>
-      </RobotSpeech>
+      {gameCanStart && (
+        <RobotSpeech>
+          <Appear show={!isThinking}>
+            <SpeechText
+              text={currentSpeech}
+              onFinishedSpeaking={() => setIsSpeaking(false)}
+            />
+          </Appear>
+        </RobotSpeech>
+      )}
       {moveAgainstCurrentOpponent && (
         <CurrentMovePosition>
           <Appear animation="roll-in-right">
@@ -129,6 +139,7 @@ export const OverlordRobot = ({ aiOverlordGame }: Props) => {
       )}
       <GearsPosition>
         <OverlordThinkingIndicator isThinking={isThinking} />
+        {!gameCanStart && <button onClick={onRobotTurnedOn}>ON</button>}
       </GearsPosition>
       <MoveHistoryPosition>
         {aiOverlordGame.aiOverlord.moves.map((move, i) => (

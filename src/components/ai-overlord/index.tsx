@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAiOverlordGame } from "../../providers/SocketIoProvider/useAiOverlord";
 import { AiOverlordGame } from "../../services/ai-overlord/types";
 import { Heading } from "../Atoms";
@@ -19,6 +19,7 @@ type Props = {
 
 const View = ({ aiOverlordGame }: Props) => {
   const gameView = useAiOverlordGameView(aiOverlordGame);
+  const [gameCanStart, setGameCanStart] = useState(false); // For voice synthesis, the page needs interacting with first
   const { isThinking } = useAiOverlordGame(aiOverlordGame.gameId);
   const { loop, play } = useSound();
 
@@ -41,7 +42,11 @@ const View = ({ aiOverlordGame }: Props) => {
       </CenterSpaced>
 
       <Positioned absolute={{ rightPercent: 10, bottomPercent: 10 }}>
-        <OverlordRobot aiOverlordGame={aiOverlordGame} />
+        <OverlordRobot
+          aiOverlordGame={aiOverlordGame}
+          gameCanStart={gameCanStart}
+          onRobotTurnedOn={() => setGameCanStart(true)}
+        />
       </Positioned>
       <Positioned absolute={{ leftPercent: 10, bottomPercent: 10 }}>
         <OverlordCurrentOpponent aiOverlordGame={aiOverlordGame} />
