@@ -54,3 +54,7 @@ export const getAiOverlordPlayerUrl = (
 ): string => {
   return `/play/${playerId}/ai-overlord?gameId=${gameId}`;
 };
+
+export const getClassicCnbPlayerUrl = (playerId: string): string => {
+  return `http://cnb.finx-rocks.com/play/${playerId}`;
+};

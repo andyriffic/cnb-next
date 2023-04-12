@@ -1,6 +1,6 @@
 import Link from "next/link";
 import styled from "styled-components";
-import { getPlayerHomeUrl } from "../utils/url";
+import { getClassicCnbPlayerUrl, getPlayerHomeUrl } from "../utils/url";
 
 const Container = styled.div`
   display: flex;
@@ -39,6 +39,11 @@ const Footer = styled.div`
   background-color: #f7e6b6;
 `;
 
+const FooterContent = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
 type Props = {
   children: React.ReactNode;
   headerContent?: React.ReactNode;
@@ -55,7 +60,10 @@ export function PlayerPageLayout({
       {headerContent && <Header>{headerContent}</Header>}
       <Main>{children}</Main>
       <Footer>
-        <Link href={getPlayerHomeUrl(playerId)}>Home</Link>
+        <FooterContent>
+          <Link href={getPlayerHomeUrl(playerId)}>Home</Link>
+          <Link href={getClassicCnbPlayerUrl(playerId)}>Classic CNB</Link>
+        </FooterContent>
       </Footer>
     </Container>
   );
