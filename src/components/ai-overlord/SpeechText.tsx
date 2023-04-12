@@ -26,9 +26,11 @@ const speakLanguage = (
   text: string,
   onComplete?: (event: SpeechSynthesisEvent) => void
 ): void => {
+  // setTimeout(() => {
   const synth = window.speechSynthesis;
   const voice = synth.getVoices().find((v) => v.lang === language);
   if (!voice) {
+    console.log("no voice found");
     return;
   }
   console.log("synth", synth.getVoices());
@@ -39,6 +41,7 @@ const speakLanguage = (
     speech.onend = onComplete;
   }
   synth.speak(speech);
+  // }, 100);
 };
 
 type SpeechStatus = "speaking-english" | "speaking-chinese" | "finished";

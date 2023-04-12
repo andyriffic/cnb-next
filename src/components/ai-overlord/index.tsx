@@ -8,10 +8,11 @@ import { SpectatorPageLayout } from "../SpectatorPageLayout";
 import { useSound } from "../hooks/useSound";
 import { DebugAiOverlordGame } from "./DebugAiOverlordGame";
 import { OverlordCurrentOpponent } from "./OverlordCurrentOpponent";
-import { OverlordOpponents } from "./OverlordOpponents";
+import { OverlordWaitingOpponents } from "./OverlordWaitingOpponents";
 import { OverlordRobot } from "./OverlordRobot";
 import { RobotMessage } from "./RobotMessage";
 import { useAiOverlordGameView } from "./hooks/useAiOverlordGameView";
+import { OverlordFinishedOpponents } from "./OverlordFinishedOpponents";
 
 type Props = {
   aiOverlordGame: AiOverlordGame;
@@ -22,6 +23,22 @@ const View = ({ aiOverlordGame }: Props) => {
   const [gameCanStart, setGameCanStart] = useState(false); // For voice synthesis, the page needs interacting with first
   const { isThinking } = useAiOverlordGame(aiOverlordGame.gameId);
   const { loop, play } = useSound();
+
+  useEffect(() => {
+    console.log("speechSynthesis registering...");
+    const voices = speechSynthesis.getVoices();
+    if (voices.length === 0) {
+      setTimeout(() => {
+        window.speechSynthesis.onvoiceschanged = () => {
+          console.log("voiceschanged event");
+          setGameCanStart(true);
+        };
+      }, 500);
+    } else {
+      console.log("speechSynthesis initialised");
+      setGameCanStart(true);
+    }
+  }, []);
 
   useEffect(() => {
     if (isThinking) {
@@ -52,7 +69,10 @@ const View = ({ aiOverlordGame }: Props) => {
         <OverlordCurrentOpponent aiOverlordGame={aiOverlordGame} />
       </Positioned>
       <Positioned absolute={{ leftPercent: 1, topPercent: 1 }}>
-        <OverlordOpponents aiOverlordGame={aiOverlordGame} />
+        <OverlordWaitingOpponents aiOverlordGame={aiOverlordGame} />
+      </Positioned>
+      <Positioned absolute={{ rightPercent: 1, topPercent: 1 }}>
+        <OverlordFinishedOpponents aiOverlordGame={aiOverlordGame} />
       </Positioned>
       <Positioned absolute={{ rightPercent: 1, topPercent: 1 }}>
         <RobotMessage />

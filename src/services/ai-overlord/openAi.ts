@@ -125,8 +125,14 @@ export const createAiBattleTaunt: AiOverlordTauntCreator = (
     },
     {
       role: "user",
-      content:
-        "Taunt your current opponent with an opening sentence. You can incorporate something funny about their occupation or one of their interests if you like. You must always mention their name and do not use anything with quotation marks. Answer in english and chinese simplified. Your answer is for a computer program so you must respond in json format of {english: string, chinese: string}",
+      content: `You will make an opening comment to your opponent based on the following:
+        1. Make fun of your opponent with a pun or joke
+        2. You must always include your opponents name
+        3. Include a reference to your opponents occupation or one of their interests
+        4. Do not use quotation marks
+        5. No more than 2 sentences
+        6. Answer in english and chinese simplified. Your answer is for a computer program so you must respond in json format of {english: string, chinese: string}
+        Only respond with the output of the last step`,
     },
   ];
 
@@ -170,7 +176,7 @@ export const createAiBattleMove: AiOverlordMoveCreator = (
       role: "assistant",
       content:
         aiOverlordGame.aiOverlord.moves.length > 0
-          ? `Your previous move history from oldest to newest is ${aiOverlordGame.aiOverlord.moves
+          ? `Your previous move history from newest to oldest is ${aiOverlordGame.aiOverlord.moves
               .map((m) => m.move)
               .join(", ")}`
           : "This is your first move",

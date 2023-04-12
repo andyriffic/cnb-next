@@ -20,19 +20,21 @@ type Props = {
   aiOverlordGame: AiOverlordGame;
 };
 
-export const OverlordOpponents = ({ aiOverlordGame }: Props) => {
+export const OverlordWaitingOpponents = ({ aiOverlordGame }: Props) => {
+  const finishedOpponentIds = aiOverlordGame.aiOverlord.moves.map(
+    (p) => p.opponentId
+  );
+
+  const waitingOpponents = aiOverlordGame.opponents.filter(
+    (o) => !finishedOpponentIds.includes(o.playerId)
+  );
+
   return (
     <PlayerAvatarGroup>
-      {aiOverlordGame.opponents.map((opponent) => {
-        const moveResult = aiOverlordGame.aiOverlord.moves.find(
-          (m) => m.opponentId === opponent.playerId
-        );
+      {waitingOpponents.map((opponent) => {
         return (
           <Player key={opponent.playerId}>
             <PlayerAvatar playerId={opponent.playerId} size="thumbnail" />
-            {moveResult && (
-              <BattleResultIndicator result={moveResult.outcome} />
-            )}
           </Player>
         );
       })}
