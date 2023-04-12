@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { TranslatedText } from "../../services/ai-overlord/types";
 import { useDoOnce } from "../hooks/useDoOnce";
 import { Appear } from "../animations/Appear";
+import { retryFunction } from "../../utils/retry";
 
 const SpeechBubble = styled.div`
   background: white;
@@ -26,22 +27,27 @@ const speakLanguage = (
   text: string,
   onComplete?: (event: SpeechSynthesisEvent) => void
 ): void => {
-  // setTimeout(() => {
   const synth = window.speechSynthesis;
-  const voice = synth.getVoices().find((v) => v.lang === language);
-  if (!voice) {
-    console.log("no voice found");
-    return;
-  }
-  console.log("synth", synth.getVoices());
-  const speech = new SpeechSynthesisUtterance(text);
-  speech.rate = 1;
-  speech.voice = voice;
-  if (onComplete) {
-    speech.onend = onComplete;
-  }
-  synth.speak(speech);
-  // }, 100);
+  retryFunction(
+    () => Promise.resolve(synth.getVoices()),
+    5,
+    (voices) => voices.length > 0,
+    300
+  ).then((voices) => {
+    const voice = voices.find((v) => v.lang === language);
+    if (!voice) {
+      console.log("no voice found");
+      return;
+    }
+    console.log("synth", synth.getVoices());
+    const speech = new SpeechSynthesisUtterance(text);
+    speech.rate = 1;
+    speech.voice = voice;
+    if (onComplete) {
+      speech.onend = onComplete;
+    }
+    synth.speak(speech);
+  });
 };
 
 type SpeechStatus = "speaking-english" | "speaking-chinese" | "finished";

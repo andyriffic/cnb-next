@@ -20,25 +20,25 @@ type Props = {
 
 const View = ({ aiOverlordGame }: Props) => {
   const gameView = useAiOverlordGameView(aiOverlordGame);
-  const [gameCanStart, setGameCanStart] = useState(false); // For voice synthesis, the page needs interacting with first
+  const [gameCanStart, setGameCanStart] = useState(true); // For voice synthesis, the page needs interacting with first
   const { isThinking } = useAiOverlordGame(aiOverlordGame.gameId);
   const { loop, play } = useSound();
 
-  useEffect(() => {
-    console.log("speechSynthesis registering...");
-    const voices = speechSynthesis.getVoices();
-    if (voices.length === 0) {
-      setTimeout(() => {
-        window.speechSynthesis.onvoiceschanged = () => {
-          console.log("voiceschanged event");
-          setGameCanStart(true);
-        };
-      }, 500);
-    } else {
-      console.log("speechSynthesis initialised");
-      setGameCanStart(true);
-    }
-  }, []);
+  // useEffect(() => {
+  //   console.log("speechSynthesis registering...");
+  //   const voices = speechSynthesis.getVoices();
+  //   if (voices.length === 0) {
+  //     setTimeout(() => {
+  //       window.speechSynthesis.onvoiceschanged = () => {
+  //         console.log("voiceschanged event");
+  //         setGameCanStart(true);
+  //       };
+  //     }, 500);
+  //   } else {
+  //     console.log("speechSynthesis initialised");
+  //     setGameCanStart(true);
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (isThinking) {
