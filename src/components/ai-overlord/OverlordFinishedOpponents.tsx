@@ -53,33 +53,39 @@ export const OverlordFinishedOpponents = ({ aiOverlordGame }: Props) => {
 
   return (
     <PlayerAvatarGroup>
-      <OutcomeGrouping color="green">
-        {winningFinishedOutcomes.map((result) => (
-          <Player key={result.opponentId}>
-            <PlayerAvatar playerId={result.opponentId} size="thumbnail" />
-            {/* <BattleResultIndicator result={result.outcome} /> */}
-          </Player>
-        ))}
-        <Points>{winningFinishedOutcomes.length + 2}</Points>
-      </OutcomeGrouping>
-      <OutcomeGrouping color="goldenrod">
-        {drawnFinishedOutcomes.map((result) => (
-          <Player key={result.opponentId}>
-            <PlayerAvatar playerId={result.opponentId} size="thumbnail" />
-            {/* <BattleResultIndicator result={result.outcome} /> */}
-          </Player>
-        ))}
-        <Points>{drawnFinishedOutcomes.length + 1}</Points>
-      </OutcomeGrouping>
-      <OutcomeGrouping color="red">
-        {losingFinishedOutcomes.map((result) => (
-          <Player key={result.opponentId}>
-            <PlayerAvatar playerId={result.opponentId} size="thumbnail" />
-            {/* <BattleResultIndicator result={result.outcome} /> */}
-          </Player>
-        ))}
-        <Points>{losingFinishedOutcomes.length}</Points>
-      </OutcomeGrouping>
+      {winningFinishedOutcomes.length > 0 && (
+        <OutcomeGrouping color="green">
+          {winningFinishedOutcomes.map((result) => (
+            <Player key={result.opponentId}>
+              <PlayerAvatar playerId={result.opponentId} size="thumbnail" />
+              {/* <BattleResultIndicator result={result.outcome} /> */}
+            </Player>
+          ))}
+          <Points>{winningFinishedOutcomes.length + 2}</Points>
+        </OutcomeGrouping>
+      )}
+      {drawnFinishedOutcomes.length > 0 && (
+        <OutcomeGrouping color="goldenrod">
+          {drawnFinishedOutcomes.map((result) => (
+            <Player key={result.opponentId}>
+              <PlayerAvatar playerId={result.opponentId} size="thumbnail" />
+              {/* <BattleResultIndicator result={result.outcome} /> */}
+            </Player>
+          ))}
+          <Points>{drawnFinishedOutcomes.length + 1}</Points>
+        </OutcomeGrouping>
+      )}
+      {losingFinishedOutcomes.length > 0 && (
+        <OutcomeGrouping color="red">
+          {losingFinishedOutcomes.map((result) => (
+            <Player key={result.opponentId}>
+              <PlayerAvatar playerId={result.opponentId} size="thumbnail" />
+              {/* <BattleResultIndicator result={result.outcome} /> */}
+            </Player>
+          ))}
+          <Points>{losingFinishedOutcomes.length}</Points>
+        </OutcomeGrouping>
+      )}
     </PlayerAvatarGroup>
   );
 };
