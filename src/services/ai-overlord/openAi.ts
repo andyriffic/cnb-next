@@ -106,10 +106,7 @@ export const createAiOverlord: AiOverlordCreator = (opponents) => {
   );
 };
 
-export const createAiBattleTaunt: AiOverlordTauntCreator = (
-  opponent,
-  aiOverlordGame
-) => {
+export const createAiBattleTaunt: AiOverlordTauntCreator = (opponent) => {
   const messages: ChatCompletionRequestMessage[] = [
     {
       role: "system",

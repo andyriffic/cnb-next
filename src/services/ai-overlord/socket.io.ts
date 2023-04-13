@@ -12,6 +12,7 @@ import {
   finaliseAiGame,
   makeAiMove,
   makeAiOpponentMove,
+  prepareAllPlayerTaunts,
   preparePlayerForBattle,
 } from ".";
 
@@ -99,7 +100,7 @@ export function initialiseAiOverlordSocket(
           sendClientMessage(socket, `🤖‼️: ${err}`);
           sendRobotMessage(`🤖‼️: ${err}`);
         },
-        (game) => {
+        async (game) => {
           console.log("Created game", game);
           updateInMemoryAiOverlordGame(game);
           io.emit(
@@ -107,6 +108,26 @@ export function initialiseAiOverlordSocket(
             getAllInMemoryAiOverlordGames()
           );
           onCreated(game.gameId);
+
+          const result = await prepareAllPlayerTaunts(game)();
+          pipe(
+            result,
+            E.fold(
+              (err) => {
+                console.error(err);
+                sendClientMessage(socket, `🤖‼️: ${err}`);
+                sendRobotMessage(`🤖‼️: ${err}`);
+              },
+              (taunts) => {
+                console.log("Created all taunts!", taunts);
+                // updateInMemoryAiOverlordGame(game);
+                // io.emit(
+                //   AI_OVERLORD_ACTIONS.GAME_UPDATE,
+                //   getAllInMemoryAiOverlordGames()
+                // );
+              }
+            )
+          );
         }
       )
     );

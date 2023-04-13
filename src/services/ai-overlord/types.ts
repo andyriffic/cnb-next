@@ -6,8 +6,7 @@ export type AiOverlordCreator = (
 ) => TE.TaskEither<string, AiOverlord>;
 
 export type AiOverlordTauntCreator = (
-  opponent: AiOverlordOpponent,
-  aiOverlordGame: AiOverlordGame
+  opponent: AiOverlordOpponent
 ) => TE.TaskEither<string, TranslatedText>;
 
 export type AiOverlordMoveCreator = (
@@ -32,6 +31,7 @@ export type AiOverlordGame = {
   aiOverlord: AiOverlord;
   taunts: AiOverlordTaunt[];
   opponentMoves: AiOverlordOpponentMove[];
+  currentOpponentId?: string;
 };
 
 export type AiOverlordTaunt = {

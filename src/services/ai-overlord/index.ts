@@ -16,6 +16,7 @@ import {
   AiOverlordGame,
   AiOverlordOpponent,
   AiOverlordOpponentMoveWithTextAndOutcome,
+  AiOverlordTaunt,
   TranslatedText,
 } from "./types";
 
@@ -94,9 +95,28 @@ export const preparePlayerForBattle = (
     return TE.left("Player not found");
   }
   return pipe(
-    createAiBattleTaunt(opponent, aiOverlordGame),
+    createAiBattleTaunt(opponent),
     TE.map(addTauntToBattle(playerId, aiOverlordGame))
   );
+};
+
+export const prepareAllPlayerTaunts = (
+  aiOverlordGame: AiOverlordGame
+): TE.TaskEither<string, readonly AiOverlordTaunt[]> => {
+  const getPlayerTaunt = (
+    opponent: AiOverlordOpponent
+  ): TE.TaskEither<string, AiOverlordTaunt> => {
+    return pipe(
+      createAiBattleTaunt(opponent),
+      TE.map((taunt) => ({ playerId: opponent.playerId, taunt })),
+      TE.map((taunt) => {
+        console.log("taunt", taunt);
+        return taunt;
+      })
+    );
+  };
+
+  return pipe(aiOverlordGame.opponents.map(getPlayerTaunt), TE.sequenceArray);
 };
 
 export const makeAiOpponentMove = (
