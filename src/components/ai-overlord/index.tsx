@@ -20,25 +20,8 @@ type Props = {
 
 const View = ({ aiOverlordGame }: Props) => {
   const gameView = useAiOverlordGameView(aiOverlordGame);
-  const [gameCanStart, setGameCanStart] = useState(true); // For voice synthesis, the page needs interacting with first
   const { isThinking } = useAiOverlordGame(aiOverlordGame.gameId);
   const { loop, play } = useSound();
-
-  // useEffect(() => {
-  //   console.log("speechSynthesis registering...");
-  //   const voices = speechSynthesis.getVoices();
-  //   if (voices.length === 0) {
-  //     setTimeout(() => {
-  //       window.speechSynthesis.onvoiceschanged = () => {
-  //         console.log("voiceschanged event");
-  //         setGameCanStart(true);
-  //       };
-  //     }, 500);
-  //   } else {
-  //     console.log("speechSynthesis initialised");
-  //     setGameCanStart(true);
-  //   }
-  // }, []);
 
   useEffect(() => {
     if (isThinking) {
@@ -59,11 +42,7 @@ const View = ({ aiOverlordGame }: Props) => {
       </CenterSpaced>
 
       <Positioned absolute={{ rightPercent: 10, bottomPercent: 10 }}>
-        <OverlordRobot
-          aiOverlordGame={aiOverlordGame}
-          gameCanStart={gameCanStart}
-          onRobotTurnedOn={() => setGameCanStart(true)}
-        />
+        <OverlordRobot aiOverlordGame={aiOverlordGame} />
       </Positioned>
       <Positioned absolute={{ leftPercent: 10, bottomPercent: 10 }}>
         <OverlordCurrentOpponent aiOverlordGame={aiOverlordGame} />

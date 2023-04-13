@@ -48,15 +48,9 @@ const CurrentMovePosition = styled.div`
 
 type Props = {
   aiOverlordGame: AiOverlordGame;
-  gameCanStart: boolean;
-  onRobotTurnedOn: () => void;
 };
 
-export const OverlordRobot = ({
-  aiOverlordGame,
-  onRobotTurnedOn,
-  gameCanStart,
-}: Props) => {
+export const OverlordRobot = ({ aiOverlordGame }: Props) => {
   const { makeRobotMove, isThinking, startThinking } = useAiOverlordGame(
     aiOverlordGame.gameId
   );
@@ -85,7 +79,6 @@ export const OverlordRobot = ({
 
   useEffect(() => {
     if (
-      gameCanStart &&
       currentOpponent &&
       currentOpponentsMove &&
       !isThinking &&
@@ -97,7 +90,6 @@ export const OverlordRobot = ({
   }, [
     currentOpponent,
     currentOpponentsMove,
-    gameCanStart,
     isThinking,
     makeRobotMove,
     moveAgainstCurrentOpponent,
@@ -105,10 +97,10 @@ export const OverlordRobot = ({
   ]);
 
   useEffect(() => {
-    if (!isThinking && gameCanStart) {
+    if (!isThinking) {
       setIsSpeaking(true);
     }
-  }, [gameCanStart, isThinking]);
+  }, [isThinking]);
 
   return (
     <RobotLayout>
@@ -121,16 +113,14 @@ export const OverlordRobot = ({
           />
         </RobotBody>
       </Attention>
-      {gameCanStart && (
-        <RobotSpeech>
-          <Appear show={!isThinking}>
-            <SpeechText
-              text={currentSpeech}
-              onFinishedSpeaking={() => setIsSpeaking(false)}
-            />
-          </Appear>
-        </RobotSpeech>
-      )}
+      <RobotSpeech>
+        <Appear show={!isThinking}>
+          <SpeechText
+            text={currentSpeech}
+            onFinishedSpeaking={() => setIsSpeaking(false)}
+          />
+        </Appear>
+      </RobotSpeech>
       {moveAgainstCurrentOpponent && (
         <CurrentMovePosition>
           <Appear animation="roll-in-right">
@@ -140,7 +130,6 @@ export const OverlordRobot = ({
       )}
       <GearsPosition>
         <OverlordThinkingIndicator isThinking={isThinking} />
-        {!gameCanStart && <button onClick={onRobotTurnedOn}>ON</button>}
       </GearsPosition>
       <MoveHistoryPosition>
         {aiOverlordGame.aiOverlord.moves.map((move, i) => (
