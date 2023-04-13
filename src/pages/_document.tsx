@@ -38,7 +38,6 @@ export default class MyDocument extends Document {
     return (
       <Html>
         <Head>
-          <title>FINX ROCKS!!</title>
           <meta name="robots" content="noindex,nofollow" />
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link
@@ -51,7 +50,7 @@ export default class MyDocument extends Document {
             rel="stylesheet"
           />
           <link
-            href="https://fonts.googleapis.com/css2?family=Kameron:wght@400;700&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Kameron:wght@400;700&family=Noto+Sans+SC:wght@400;500&display=swap"
             rel="stylesheet"
           />
           <link

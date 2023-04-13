@@ -4,6 +4,7 @@ import { TranslatedText } from "../../services/ai-overlord/types";
 import { useDoOnce } from "../hooks/useDoOnce";
 import { Appear } from "../animations/Appear";
 import { retryFunction } from "../../utils/retry";
+import { ChineseText } from "../ChineseText";
 
 const SpeechBubble = styled.div`
   background: white;
@@ -91,7 +92,9 @@ export const SpeechText = ({ text, onFinishedSpeaking }: Props) => {
       )}
       {speechStatus === "speaking-english" || speechStatus === "finished" ? (
         <Appear animation="text-focus-in">
-          <Text>{text.chinese}</Text>
+          <Text>
+            <ChineseText>{text.chinese}</ChineseText>
+          </Text>
         </Appear>
       ) : (
         <Text>🔊 *Chinese* 🔊</Text>
