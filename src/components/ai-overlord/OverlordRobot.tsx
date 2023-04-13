@@ -6,9 +6,11 @@ import { AiOverlordGame } from "../../services/ai-overlord/types";
 import { Appear } from "../animations/Appear";
 import { Attention } from "../animations/Attention";
 import { getMoveEmoji } from "../rock-paper-scissors/ViewerPlayersMove";
+import { selectRandomOneOf } from "../../utils/random";
 import { AiMove } from "./AiMove";
 import { OverlordThinkingIndicator } from "./OverlordThinkingIndicator";
 import { SpeechText } from "./SpeechText";
+import { AiOverlordGameView } from "./hooks/useAiOverlordGameView";
 
 const RobotLayout = styled.div`
   position: relative;
@@ -48,51 +50,44 @@ const CurrentMovePosition = styled.div`
 
 type Props = {
   aiOverlordGame: AiOverlordGame;
+  gameView: AiOverlordGameView;
 };
 
-export const OverlordRobot = ({ aiOverlordGame }: Props) => {
-  const { makeRobotMove, isThinking, startThinking } = useAiOverlordGame(
-    aiOverlordGame.gameId
-  );
+export const OverlordRobot = ({ aiOverlordGame, gameView }: Props) => {
+  const {
+    makeRobotMove,
+    newOpponent,
+    isThinking,
+    startThinking,
+    finaliseGame,
+  } = useAiOverlordGame(aiOverlordGame.gameId);
   const [isSpeaking, setIsSpeaking] = useState(false);
-
-  const currentOpponent = aiOverlordGame.opponents.find(
-    (o) => o.playerId === aiOverlordGame.currentOpponentId
-  );
-
-  const moveAgainstCurrentOpponent = aiOverlordGame.aiOverlord.moves.find(
-    (m) => m.opponentId === currentOpponent?.playerId
-  );
-
-  const currentOpponentsMove = aiOverlordGame.opponentMoves.find(
-    (m) => m.playerId === currentOpponent?.playerId
-  );
 
   const currentSpeech =
     aiOverlordGame.aiOverlord.finalSummary ||
-    moveAgainstCurrentOpponent?.text ||
-    (currentOpponent
+    gameView.currentRobotOpponentMove?.text ||
+    (gameView.currentOpponent
       ? aiOverlordGame.taunts.find(
-          (t) => t.playerId === currentOpponent.playerId
+          (t) => t.playerId === gameView.currentOpponent!.playerId
         )!.taunt
       : aiOverlordGame.aiOverlord.introduction);
 
   useEffect(() => {
     if (
-      currentOpponent &&
-      currentOpponentsMove &&
+      gameView.currentOpponent &&
+      gameView.currentOpponentMove &&
       !isThinking &&
-      !moveAgainstCurrentOpponent
+      !gameView.currentRobotOpponentMove
     ) {
       startThinking();
-      makeRobotMove(currentOpponent.playerId);
+      makeRobotMove(gameView.currentOpponent.playerId);
     }
   }, [
-    currentOpponent,
-    currentOpponentsMove,
+    gameView.currentOpponent,
+    gameView.currentOpponentMove,
+    gameView.currentRobotOpponentMove,
     isThinking,
     makeRobotMove,
-    moveAgainstCurrentOpponent,
     startThinking,
   ]);
 
@@ -101,6 +96,52 @@ export const OverlordRobot = ({ aiOverlordGame }: Props) => {
       setIsSpeaking(true);
     }
   }, [isThinking]);
+
+  useEffect(() => {
+    if (
+      !(isSpeaking || gameView.currentOpponent) ||
+      (!isSpeaking &&
+        gameView.currentOpponentFinished &&
+        !gameView.allPlayersHavePlayed)
+    ) {
+      const timeout = setTimeout(() => {
+        startThinking();
+        setIsSpeaking(true);
+        newOpponent(selectRandomOneOf(gameView.remainingOpponents).playerId);
+      }, 3000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [
+    gameView.allPlayersHavePlayed,
+    gameView.currentOpponent,
+    gameView.currentOpponentFinished,
+    gameView.remainingOpponents,
+    isSpeaking,
+    newOpponent,
+    startThinking,
+  ]);
+
+  useEffect(() => {
+    if (
+      !isSpeaking &&
+      gameView.allPlayersHavePlayed &&
+      !gameView.finalRobotSummary
+    ) {
+      const timeout = setTimeout(() => {
+        startThinking();
+        setIsSpeaking(true);
+        finaliseGame();
+      }, 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [
+    finaliseGame,
+    gameView.allPlayersHavePlayed,
+    gameView.finalRobotSummary,
+    isSpeaking,
+    startThinking,
+  ]);
 
   return (
     <RobotLayout>
@@ -121,10 +162,10 @@ export const OverlordRobot = ({ aiOverlordGame }: Props) => {
           />
         </Appear>
       </RobotSpeech>
-      {moveAgainstCurrentOpponent && (
+      {gameView.currentRobotOpponentMove && (
         <CurrentMovePosition>
           <Appear animation="roll-in-right">
-            <AiMove moveName={moveAgainstCurrentOpponent.move} />
+            <AiMove moveName={gameView.currentRobotOpponentMove.move} />
           </Appear>
         </CurrentMovePosition>
       )}

@@ -50,43 +50,6 @@ export const DebugAiOverlordGame = ({ gameView }: Props) => {
           )}
         </div>
       )}
-      <p>
-        Remaining Opponents:{" "}
-        {gameView.remainingOpponents.length > 0 && (
-          <button
-            onClick={() => {
-              startThinking();
-              newOpponent(
-                selectRandomOneOf(gameView.remainingOpponents).playerId
-              );
-            }}
-          >
-            RANDOM OPPONENT
-          </button>
-        )}
-        {gameView.remainingOpponents.map((o) => (
-          <button
-            key={o.playerId}
-            onClick={() => {
-              startThinking();
-              newOpponent(o.playerId);
-            }}
-          >
-            {o.name}
-          </button>
-        ))}
-      </p>
-      <p>
-        <button
-          disabled={!gameView.allPlayersHavePlayed}
-          onClick={() => {
-            startThinking();
-            finaliseGame();
-          }}
-        >
-          Finish game
-        </button>
-      </p>
     </div>
   );
 };
