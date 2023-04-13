@@ -15,23 +15,22 @@ export type AiOverlordGameView = {
 export const useAiOverlordGameView = (
   aiOverlordGame: AiOverlordGame
 ): AiOverlordGameView => {
-  const currentOpponentId =
-    aiOverlordGame.taunts[aiOverlordGame.taunts.length - 1]?.playerId;
-
   return {
     gameId: aiOverlordGame.gameId,
     currentOpponent: aiOverlordGame.opponents.find(
-      (o) => o.playerId === currentOpponentId
+      (o) => o.playerId === aiOverlordGame.currentOpponentId
     ),
     currentOpponentMove: aiOverlordGame.opponentMoves.find(
-      (o) => o.playerId === currentOpponentId
+      (o) => o.playerId === aiOverlordGame.currentOpponentId
     ),
     remainingOpponents: aiOverlordGame.opponents
       .filter(
         (o) =>
-          !aiOverlordGame.taunts.map((t) => t.playerId).includes(o.playerId)
+          !aiOverlordGame.aiOverlord.moves
+            .map((t) => t.opponentId)
+            .includes(o.playerId)
       )
-      .filter((o) => o.playerId !== currentOpponentId),
+      .filter((o) => o.playerId !== aiOverlordGame.currentOpponentId),
     allPlayersHavePlayed:
       aiOverlordGame.aiOverlord.moves.length ===
       aiOverlordGame.opponents.length,

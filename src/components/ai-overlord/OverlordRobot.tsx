@@ -62,8 +62,9 @@ export const OverlordRobot = ({
   );
   const [isSpeaking, setIsSpeaking] = useState(false);
 
-  const currentOpponent =
-    aiOverlordGame.taunts[aiOverlordGame.taunts.length - 1];
+  const currentOpponent = aiOverlordGame.opponents.find(
+    (o) => o.playerId === aiOverlordGame.currentOpponentId
+  );
 
   const moveAgainstCurrentOpponent = aiOverlordGame.aiOverlord.moves.find(
     (m) => m.opponentId === currentOpponent?.playerId

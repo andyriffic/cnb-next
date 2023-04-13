@@ -120,11 +120,14 @@ export function initialiseAiOverlordSocket(
               },
               (taunts) => {
                 console.log("Created all taunts!", taunts);
-                // updateInMemoryAiOverlordGame(game);
-                // io.emit(
-                //   AI_OVERLORD_ACTIONS.GAME_UPDATE,
-                //   getAllInMemoryAiOverlordGames()
-                // );
+                updateInMemoryAiOverlordGame({
+                  ...game,
+                  taunts: [...game.taunts, ...taunts],
+                });
+                io.emit(
+                  AI_OVERLORD_ACTIONS.GAME_UPDATE,
+                  getAllInMemoryAiOverlordGames()
+                );
               }
             )
           );
@@ -143,24 +146,27 @@ export function initialiseAiOverlordSocket(
       return;
     }
 
-    const battle = await preparePlayerForBattle(opponentId, game)();
-    pipe(
-      battle,
-      E.fold(
-        (err) => {
-          console.error(err);
-          sendClientMessage(socket, `🤖‼️: ${err}`);
-          sendRobotMessage(`🤖‼️: ${err}`);
-        },
-        (game) => {
-          updateInMemoryAiOverlordGame(game);
-          io.emit(
-            AI_OVERLORD_ACTIONS.GAME_UPDATE,
-            getAllInMemoryAiOverlordGames()
-          );
-        }
-      )
-    );
+    updateInMemoryAiOverlordGame({ ...game, currentOpponentId: opponentId });
+    io.emit(AI_OVERLORD_ACTIONS.GAME_UPDATE, getAllInMemoryAiOverlordGames());
+
+    // const battle = await preparePlayerForBattle(opponentId, game)();
+    // pipe(
+    //   battle,
+    //   E.fold(
+    //     (err) => {
+    //       console.error(err);
+    //       sendClientMessage(socket, `🤖‼️: ${err}`);
+    //       sendRobotMessage(`🤖‼️: ${err}`);
+    //     },
+    //     (game) => {
+    //       updateInMemoryAiOverlordGame(game);
+    //       io.emit(
+    //         AI_OVERLORD_ACTIONS.GAME_UPDATE,
+    //         getAllInMemoryAiOverlordGames()
+    //       );
+    //     }
+    //   )
+    // );
   };
 
   const makeAiOpponentMoveHandler: MakeAiOpponentMoveHandler = async (

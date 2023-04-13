@@ -26,8 +26,9 @@ type Props = {
 };
 
 export const OverlordCurrentOpponent = ({ aiOverlordGame }: Props) => {
-  const currentOpponent =
-    aiOverlordGame.taunts[aiOverlordGame.taunts.length - 1];
+  const currentOpponent = aiOverlordGame.opponents.find(
+    (o) => o.playerId === aiOverlordGame.currentOpponentId
+  );
   const currentMove = aiOverlordGame.opponentMoves.find(
     (m) => m.playerId === currentOpponent?.playerId
   );
