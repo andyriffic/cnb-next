@@ -12,6 +12,9 @@ import {
 import { PlayerPageLayout } from "../../../components/PlayerPageLayout";
 import { useBettingGame } from "../../../providers/SocketIoProvider/useGroupBetting";
 import { BettingOption } from "../../../services/betting/types";
+import { useRPSGame } from "../../../providers/SocketIoProvider/useRockPaperScissorsSocket";
+import { useGameWinningConditions } from "../../../components/rock-paper-scissors/hooks/useGameWinningConditions";
+import { playerHasSpecialAdvantage } from "../../../components/rock-paper-scissors/rpsUtils";
 
 const BettingOptionContainer = styled.div`
   display: flex;
@@ -28,6 +31,9 @@ function Page() {
   const gameId = query.gameId as string;
 
   const { bettingGame, makePlayerBet } = useBettingGame(gameId);
+  const { game } = useRPSGame(gameId);
+  const winningConditions = useGameWinningConditions(game, bettingGame);
+
   const playerWallet = useMemo(() => {
     return (
       bettingGame &&
@@ -45,6 +51,8 @@ function Page() {
       bettingGame.currentRound.playerBets.find((b) => b.playerId === playerId)
     );
   }, [bettingGame, playerId]);
+
+  const showDrawOption = playerHasSpecialAdvantage(winningConditions, playerId);
 
   return (
     <PlayerPageLayout playerId={playerId}>
@@ -65,20 +73,22 @@ function Page() {
                 Make your choice
               </SubHeading>
               <BettingOptionContainer>
-                {bettingGame.currentRound.bettingOptions.map((option) => (
-                  <PrimaryButton
-                    key={option.id}
-                    onClick={() =>
-                      makePlayerBet({
-                        playerId,
-                        betOptionId: option.id,
-                        betValue: FIXED_BET_VALUE,
-                      })
-                    }
-                  >
-                    {option.name}
-                  </PrimaryButton>
-                ))}
+                {bettingGame.currentRound.bettingOptions
+                  .filter((bo) => (bo.id !== "draw" ? true : showDrawOption))
+                  .map((option) => (
+                    <PrimaryButton
+                      key={option.id}
+                      onClick={() =>
+                        makePlayerBet({
+                          playerId,
+                          betOptionId: option.id,
+                          betValue: FIXED_BET_VALUE,
+                        })
+                      }
+                    >
+                      {option.name}
+                    </PrimaryButton>
+                  ))}
               </BettingOptionContainer>
             </>
           )}

@@ -122,7 +122,7 @@ function Page({}: Props) {
           <div style={{ display: "flex", gap: "1rem" }}>
             <button onClick={() => newRound()}>New Round</button>
             <DebugPlayerMove game={game} />
-            <DebugPlayerBets bettingGame={bettingGame} />
+            <DebugPlayerBets bettingGame={bettingGame} rpsGameView={game} />
           </div>
         )
       }

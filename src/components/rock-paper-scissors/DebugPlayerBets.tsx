@@ -8,6 +8,9 @@ import {
   PlayerWallet,
 } from "../../services/betting/types";
 import { selectRandomOneOf } from "../../utils/random";
+import { RPSSpectatorGameView } from "../../services/rock-paper-scissors/types";
+import { playerHasSpecialAdvantage } from "./rpsUtils";
+import { useGameWinningConditions } from "./hooks/useGameWinningConditions";
 
 const Container = styled.div`
   display: flex;
@@ -16,10 +19,12 @@ const Container = styled.div`
 
 type Props = {
   bettingGame: GroupBettingGame;
+  rpsGameView: RPSSpectatorGameView;
 };
 
-export const DebugPlayerBets = ({ bettingGame }: Props) => {
+export const DebugPlayerBets = ({ bettingGame, rpsGameView }: Props) => {
   const { makePlayerBet } = useBettingGame(bettingGame.id);
+  const winningConditions = useGameWinningConditions(rpsGameView, bettingGame);
 
   const randomBets = () => {
     bettingGame.playerWallets.forEach((w) => {
@@ -38,20 +43,26 @@ export const DebugPlayerBets = ({ bettingGame }: Props) => {
         <button onClick={randomBets}>random bets</button>
       </div>
 
-      {bettingGame.playerWallets.map((wallet) => (
-        <div key={wallet.playerId}>
-          <p>
-            {wallet.playerId}: {wallet.value}
-          </p>
-          <div>
-            <PlayersBettingOptions
-              wallet={wallet}
-              betOptions={bettingGame.currentRound.bettingOptions}
-              makeBet={makePlayerBet}
-            />
-            {/* <button onClick={() => makePlayerBet({ playerId })}>1</button> */}
-          </div>
-          {/* <div>
+      {bettingGame.playerWallets.map((wallet) => {
+        const specialPlayer = playerHasSpecialAdvantage(
+          winningConditions,
+          wallet.playerId
+        );
+        return (
+          <div key={wallet.playerId}>
+            <p>
+              {wallet.playerId}: {wallet.value}
+            </p>
+            <div>
+              <PlayersBettingOptions
+                wallet={wallet}
+                betOptions={bettingGame.currentRound.bettingOptions}
+                makeBet={makePlayerBet}
+                special={specialPlayer}
+              />
+              {/* <button onClick={() => makePlayerBet({ playerId })}>1</button> */}
+            </div>
+            {/* <div>
             <button
               onClick={() => makeMove({ playerId: pid, moveName: "rock" })}
             >
@@ -68,8 +79,9 @@ export const DebugPlayerBets = ({ bettingGame }: Props) => {
               ✂️
             </button>
           </div> */}
-        </div>
-      ))}
+          </div>
+        );
+      })}
     </Container>
   );
 };
@@ -78,12 +90,13 @@ function PlayersBettingOptions({
   wallet,
   betOptions,
   makeBet,
+  special,
 }: {
   wallet: PlayerWallet;
   betOptions: BettingOption[];
   makeBet: (playerBet: PlayerBet) => void;
+  special: boolean;
 }) {
-  const [betValue, setBetValue] = useState(1);
   return (
     <div>
       {/* <div>
@@ -96,20 +109,22 @@ function PlayersBettingOptions({
         />
       </div> */}
       <div>
-        {betOptions.map((bo) => (
-          <button
-            key={bo.id}
-            onClick={() =>
-              makeBet({
-                playerId: wallet.playerId,
-                betValue: 0,
-                betOptionId: bo.id,
-              })
-            }
-          >
-            {bo.name}
-          </button>
-        ))}
+        {betOptions
+          .filter((bo) => (bo.id !== "draw" ? true : special))
+          .map((bo) => (
+            <button
+              key={bo.id}
+              onClick={() =>
+                makeBet({
+                  playerId: wallet.playerId,
+                  betValue: 0,
+                  betOptionId: bo.id,
+                })
+              }
+            >
+              {bo.name}
+            </button>
+          ))}
       </div>
     </div>
   );
