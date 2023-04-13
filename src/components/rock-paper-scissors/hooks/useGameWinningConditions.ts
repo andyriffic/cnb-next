@@ -11,6 +11,7 @@ export type WinningConditions = {
   couldWinNextMovePlayerIds: string[];
   frontRunnerPlayerIds: string[];
   gameOver: boolean;
+  hotPlayerIds: string[];
 };
 
 export const useGameWinningConditions = (
@@ -22,6 +23,18 @@ export const useGameWinningConditions = (
       return;
     }
 
+    console.log("useGameWinningConditions", rpsGame, bettingGame);
+
+    const playersWhoHaventLostABet = bettingGame.playerWallets
+      .filter((w) => w.value > 0)
+      .filter(
+        (w) =>
+          w.value ===
+          bettingGame.roundHistory.length +
+            (rpsGame.currentRound.result ? 1 : 0)
+      )
+      .map((w) => w.playerId);
+
     const playersAtTargetScore = bettingGame.playerWallets.filter(
       (w) => w.value >= SPECTATOR_TARGET_SCORE
     );
@@ -32,6 +45,7 @@ export const useGameWinningConditions = (
         couldWinNextMovePlayerIds: [],
         frontRunnerPlayerIds: [],
         gameOver: true,
+        hotPlayerIds: playersWhoHaventLostABet,
       };
     }
 
@@ -51,6 +65,7 @@ export const useGameWinningConditions = (
           couldWinNextMovePlayerIds: [],
           frontRunnerPlayerIds: [],
           gameOver: true,
+          hotPlayerIds: playersWhoHaventLostABet,
         };
       } else if (player1Score > player2Score) {
         return {
@@ -58,6 +73,7 @@ export const useGameWinningConditions = (
           couldWinNextMovePlayerIds: [],
           frontRunnerPlayerIds: [],
           gameOver: true,
+          hotPlayerIds: playersWhoHaventLostABet,
         };
       } else {
         return {
@@ -65,6 +81,7 @@ export const useGameWinningConditions = (
           couldWinNextMovePlayerIds: [],
           frontRunnerPlayerIds: [],
           gameOver: true,
+          hotPlayerIds: playersWhoHaventLostABet,
         };
       }
     }
@@ -83,6 +100,7 @@ export const useGameWinningConditions = (
         .map((w) => w.playerId),
       frontRunnerPlayerIds: playerIdsWithHighestScore,
       gameOver: false,
+      hotPlayerIds: playersWhoHaventLostABet,
     };
   }, [rpsGame, bettingGame]);
 

@@ -14,6 +14,7 @@ import { useSound } from "../hooks/useSound";
 import { CenterSpaced } from "../Layouts";
 import { LinkToMiniGame } from "../LinkToMiniGame";
 import { PlayerAvatar } from "../PlayerAvatar";
+import { WinningConditions } from "./hooks/useGameWinningConditions";
 
 enum STORYBOARD {
   SHOW_WINNER = 0,
@@ -55,11 +56,13 @@ const Points = styled.div`
 type Props = {
   gameId: string;
   gamePoints: RockPaperScissorsPoints;
+  winningConditions: WinningConditions | undefined;
 };
 
 export const PointsAwardCeremony = ({
   gameId,
   gamePoints,
+  winningConditions,
 }: Props): JSX.Element => {
   const hasLosers = gamePoints.zeroPointLosers.length > 0;
   const currentStoryboard = useStoryBoardTiming({
@@ -86,6 +89,13 @@ export const PointsAwardCeremony = ({
                   size="small"
                 />
                 <Points>{gamePoints.outrightWinner.points}</Points>
+                {winningConditions?.hotPlayerIds.includes(
+                  gamePoints.outrightWinner.playerId
+                ) && (
+                  <div style={{ position: "absolute", bottom: 0, left: 0 }}>
+                    🔥
+                  </div>
+                )}
               </PlayerContainer>
             ) : (
               <SubHeading style={{ fontSize: "4rem", lineHeight: "8rem" }}>

@@ -18,6 +18,12 @@ const PlayerContainer = styled.div`
   display: flex;
   gap: 0.4rem;
   justify-content: center;
+  position: relative;
+`;
+
+const HotIcon = styled.div`
+  position: absolute;
+  font-size: 1.2rem;
 `;
 
 type Props = {
@@ -30,6 +36,8 @@ export function GameStatusAnnouncement({
   gameState,
 }: Props) {
   const { play } = useSound();
+
+  console.log("GameStatusAnnouncement", winningConditions);
 
   useEffect(() => {
     if (gameState !== RpsGameState.SHOW_GAME_STATUS) {
@@ -93,7 +101,12 @@ export function GameStatusAnnouncement({
             {gameStatusDisplay.playerIds.length > 0 && (
               <PlayerContainer>
                 {gameStatusDisplay.playerIds.map((pid) => (
-                  <PlayerAvatar key={pid} playerId={pid} size="thumbnail" />
+                  <div key={pid} style={{ position: "relative" }}>
+                    <PlayerAvatar playerId={pid} size="thumbnail" />
+                    {winningConditions?.hotPlayerIds.includes(pid) && (
+                      <HotIcon>🔥</HotIcon>
+                    )}
+                  </div>
                 ))}
               </PlayerContainer>
             )}

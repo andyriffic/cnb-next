@@ -86,15 +86,15 @@ function Page({}: Props) {
     game && RPSGameSubject.notify(game);
   }, [game]);
 
-  useEffect(() => {
-    if (
-      gameState.state === RpsGameState.FINISHED &&
-      winningConditions &&
-      !winningConditions.gameOver
-    ) {
-      newRound();
-    }
-  }, [gameState, winningConditions, newRound]);
+  // useEffect(() => {
+  //   if (
+  //     gameState.state === RpsGameState.FINISHED &&
+  //     winningConditions &&
+  //     !winningConditions.gameOver
+  //   ) {
+  //     newRound();
+  //   }
+  // }, [gameState, winningConditions, newRound]);
 
   useEffect(() => {
     if (
@@ -131,7 +131,11 @@ function Page({}: Props) {
         Game: {gameId} | {RpsGameState[gameState.state]}
       </Heading> */}
       {game && showPointsCeremony && gameFinalPoints && (
-        <PointsAwardCeremony gameId={game.id} gamePoints={gameFinalPoints} />
+        <PointsAwardCeremony
+          gameId={game.id}
+          gamePoints={gameFinalPoints}
+          winningConditions={winningConditions}
+        />
       )}
       {!showPointsCeremony && game && bettingGame?.currentRound && (
         <div>
@@ -164,6 +168,7 @@ function Page({}: Props) {
                 explodeLosers={
                   gameState.state >= RpsGameState.HIGHLIGHT_WINNING_SPECTATORS
                 }
+                winningConditions={winningConditions}
               />
             </Positioned>
           )}
@@ -211,6 +216,7 @@ function Page({}: Props) {
                 removeBustedPlayers={
                   gameState.state >= RpsGameState.HIGHLIGHT_WINNING_SPECTATORS
                 }
+                winningConditions={winningConditions}
               />
             </div>
           </div>

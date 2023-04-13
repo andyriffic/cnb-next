@@ -9,6 +9,7 @@ import { Appear } from "../animations/Appear";
 import { useSound } from "../hooks/useSound";
 import { NumericValue } from "../NumericValue";
 import { FacingDirection, PlayerAvatar } from "../PlayerAvatar";
+import { WinningConditions } from "./hooks/useGameWinningConditions";
 
 const Container = styled.div`
   /* width: 5vw; */
@@ -44,6 +45,14 @@ const Lives = styled.div`
   z-index: 1;
 `;
 
+const Hot = styled.div`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  /* transform: translateX(-50%); */
+  font-size: 1.3rem;
+`;
+
 export const PLAYER_BET_ANIMATION_MS = 400;
 
 type Props = {
@@ -52,6 +61,7 @@ type Props = {
   betId: string;
   direction: FacingDirection;
   explodeLosers: boolean;
+  winningConditions: WinningConditions | undefined;
 };
 
 export function ViewerPlayerBets({
@@ -60,6 +70,7 @@ export function ViewerPlayerBets({
   betId,
   direction,
   explodeLosers,
+  winningConditions,
 }: Props): JSX.Element {
   const { play } = useSound();
   const displayedPlayers = useMemo(() => {
@@ -124,6 +135,9 @@ export function ViewerPlayerBets({
                   <NumericValue>{livesRemaining}</NumericValue>{" "}
                 </Lives>
               )}
+              {/* {winningConditions?.hotPlayerIds.includes(player.playerId) && (
+                <Hot>🔥</Hot>
+              )} */}
               {/* {explodeLosers && <Lives>{hearts(livesRemaining)}</Lives>} */}
             </BetPill>
           </Appear>

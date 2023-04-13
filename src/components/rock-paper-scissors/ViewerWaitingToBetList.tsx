@@ -11,6 +11,7 @@ import { useSomethingWhenArraySizeChanges } from "../hooks/useSomethingWhenArray
 import { useSound } from "../hooks/useSound";
 import { NumericValue } from "../NumericValue";
 import { PlayerAvatar } from "../PlayerAvatar";
+import { WinningConditions } from "./hooks/useGameWinningConditions";
 
 type BetState =
   | "broke"
@@ -78,6 +79,7 @@ type Props = {
   bettingRound: GroupPlayerBettingRound;
   revealResult: boolean;
   removeBustedPlayers: boolean;
+  winningConditions: WinningConditions | undefined;
 };
 
 const WIDTH_PX = 100;
@@ -87,6 +89,7 @@ export const ViewerWaitingToBetList = ({
   bettingRound,
   revealResult,
   removeBustedPlayers,
+  winningConditions,
 }: Props): JSX.Element => {
   const { names } = usePlayerNames();
   const previousWalletsRef = useRef(
@@ -146,7 +149,11 @@ export const ViewerWaitingToBetList = ({
               {/* <SubHeading>{names[wallet.playerId]}</SubHeading> */}
               <PlayerAvatar playerId={wallet.playerId} size="thumbnail" />
               <Score>
-                <NumericValue>{wallet.value}</NumericValue>
+                <NumericValue>
+                  {wallet.value}
+                  {winningConditions?.hotPlayerIds.includes(wallet.playerId) &&
+                    "🔥"}
+                </NumericValue>
               </Score>
             </div>
           </animated.div>
