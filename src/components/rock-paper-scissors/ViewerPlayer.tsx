@@ -12,6 +12,7 @@ import { RpsGameState } from "./hooks/useGameState";
 import { ViewerPlayersAvatar } from "./ViewerPlayerAvatar";
 import { ViewerPlayerBets } from "./ViewerPlayerBets";
 import { ViewerPlayersMove } from "./ViewerPlayersMove";
+import { WinningConditions } from "./hooks/useGameWinningConditions";
 
 type Props = {
   playerId: string;
@@ -19,6 +20,7 @@ type Props = {
   bettingGame?: GroupBettingGame;
   direction: FacingDirection;
   gameState: RpsGameState;
+  winningConditions: WinningConditions | undefined;
 };
 
 const getPlayersScore = (
@@ -35,6 +37,7 @@ export const ViewerPlayer = ({
   bettingGame,
   direction,
   gameState,
+  winningConditions,
 }: Props): JSX.Element | null => {
   const initialScore = useRef(getPlayersScore(playerId, game));
   const { play } = useSound();
@@ -128,6 +131,7 @@ export const ViewerPlayer = ({
               explodeLosers={
                 gameState >= RpsGameState.HIGHLIGHT_WINNING_SPECTATORS
               }
+              winningConditions={winningConditions}
             />
           )}
         </Positioned>

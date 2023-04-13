@@ -132,7 +132,7 @@ export function ViewerPlayerBets({
               />
               {explodeLosers && (
                 <Lives>
-                  <NumericValue>{livesRemaining}</NumericValue>{" "}
+                  <NumericValue>{livesRemaining}</NumericValue>
                 </Lives>
               )}
               {/* {winningConditions?.hotPlayerIds.includes(player.playerId) && (

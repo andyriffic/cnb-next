@@ -86,15 +86,15 @@ function Page({}: Props) {
     game && RPSGameSubject.notify(game);
   }, [game]);
 
-  // useEffect(() => {
-  //   if (
-  //     gameState.state === RpsGameState.FINISHED &&
-  //     winningConditions &&
-  //     !winningConditions.gameOver
-  //   ) {
-  //     newRound();
-  //   }
-  // }, [gameState, winningConditions, newRound]);
+  useEffect(() => {
+    if (
+      gameState.state === RpsGameState.FINISHED &&
+      winningConditions &&
+      !winningConditions.gameOver
+    ) {
+      newRound();
+    }
+  }, [gameState, winningConditions, newRound]);
 
   useEffect(() => {
     if (
@@ -146,6 +146,7 @@ function Page({}: Props) {
               bettingGame={bettingGame}
               direction="right"
               gameState={gameState.state}
+              winningConditions={winningConditions}
             />
           </Positioned>
           <Positioned absolute={{ topPercent: 5, rightPercent: 10 }}>
@@ -155,6 +156,7 @@ function Page({}: Props) {
               bettingGame={bettingGame}
               direction="left"
               gameState={gameState.state}
+              winningConditions={winningConditions}
             />
           </Positioned>
 
