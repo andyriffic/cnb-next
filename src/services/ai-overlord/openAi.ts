@@ -355,7 +355,7 @@ export const createAiOverlordGameSummary: AiOverlordFinalSummaryTextCreator = (
     {
       role: "user",
       content: `Do the following steps:
-      1. Using the percentage of wins losses and draws make a funny comment on the outcome from your perspective. No more than 2 sentences. You comment can include a joke or a pun.
+      1. using the percentage of wins losses and draws make a humorous poem about the outcome of the game
       2. also translate your comment into chinese simplified language
       3. format the output in json format of {english: string, chinese: string}
       Only respond with the output of the last step`,
