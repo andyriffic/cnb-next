@@ -24,7 +24,11 @@ const AI_DESCRIPTION =
 const getOpponentDescription = (opponent: AiOverlordOpponent) =>
   `Your current opponent is ${opponent.name} who's occupation is ${
     opponent.occupation || "General worker"
-  }.`;
+  }. ${
+    opponent.interests
+      ? `They have interests including ${opponent.interests}`
+      : "they have no interests"
+  }`;
 
 const getOpponentInterests = (opponent: AiOverlordOpponent) =>
   `${opponent.name} has interests including ${
@@ -113,13 +117,13 @@ export const createAiBattleTaunt: AiOverlordTauntCreator = (opponent) => {
       content: AI_DESCRIPTION,
     },
     {
-      role: "assistant",
+      role: "user",
       content: getOpponentDescription(opponent),
     },
-    {
-      role: "assistant",
-      content: getOpponentInterests(opponent),
-    },
+    // {
+    //   role: "assistant",
+    //   content: getOpponentInterests(opponent),
+    // },
     {
       role: "user",
       content: `You will make an opening comment to your opponent based on the following:
@@ -229,13 +233,13 @@ export const createAiBattleOutcome: AiOverlordBattleOutcomeCreator = (
       content: AI_DESCRIPTION,
     },
     {
-      role: "assistant",
+      role: "user",
       content: getOpponentDescription(opponent),
     },
-    {
-      role: "assistant",
-      content: getOpponentInterests(opponent),
-    },
+    // {
+    //   role: "assistant",
+    //   content: getOpponentInterests(opponent),
+    // },
     {
       role: "assistant",
       content: `You chose ${overlordMove} and ${opponent.name} chose ${opponentMove}`,
