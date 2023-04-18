@@ -80,7 +80,7 @@ function Page() {
                 disabled={group.playerIds.length < 2}
                 onClick={() =>
                   aiOverlord.createAiOverlordGame(
-                    generateShortNumericId(),
+                    groupId,
                     group.playerIds,
                     (gameId) => router.push(getAiOverlordSpectatorUrl(gameId))
                   )

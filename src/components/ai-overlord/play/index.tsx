@@ -1,7 +1,14 @@
+import styled from "styled-components";
 import { useAiOverlordGame } from "../../../providers/SocketIoProvider/useAiOverlord";
 import { AiOverlordGame } from "../../../services/ai-overlord/types";
-import { Heading, PrimaryButton, SubHeading } from "../../Atoms";
+import { Card, Heading, PrimaryButton, SubHeading } from "../../Atoms";
 import { getMoveEmoji } from "../../rock-paper-scissors/ViewerPlayersMove";
+import { useAiOverlordGameView } from "../hooks/useAiOverlordGameView";
+
+const RobotText = styled.p`
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+`;
 
 type Props = {
   aiOverlordGame: AiOverlordGame;
@@ -9,6 +16,8 @@ type Props = {
 };
 
 const View = ({ aiOverlordGame, playerId }: Props) => {
+  const gameView = useAiOverlordGameView(aiOverlordGame);
+
   const { makeOpponentMove } = useAiOverlordGame(aiOverlordGame.gameId);
   const currentTaunt = aiOverlordGame.taunts.find(
     (t) => t.playerId === playerId
@@ -20,30 +29,56 @@ const View = ({ aiOverlordGame, playerId }: Props) => {
     (m) => m.opponentId === playerId
   );
 
+  const hasntHadTurnYet =
+    aiOverlordGame.currentOpponentId !== playerId && !currentMove;
+  const showTaunt =
+    currentTaunt &&
+    (aiOverlordGame.currentOpponentId === playerId || currentOutcome);
+
   return (
     <>
       <SubHeading>{aiOverlordGame.gameId}</SubHeading>
-      {!currentTaunt && <Heading>Waiting for your turn</Heading>}
-      {currentTaunt && (
-        <div>
-          <p>{currentTaunt.taunt.english}</p>
-          <p>{currentTaunt.taunt.chinese}</p>
-        </div>
+      {hasntHadTurnYet && <Heading>Waiting for your turn</Heading>}
+      {showTaunt && (
+        <Card>
+          <RobotText>{currentTaunt.taunt.english}</RobotText>
+          <RobotText>{currentTaunt.taunt.chinese}</RobotText>
+        </Card>
       )}
-      {currentTaunt && !currentMove && (
-        <div>
-          <PrimaryButton onClick={() => makeOpponentMove(playerId, "rock")}>
+      {gameView.currentOpponent?.playerId === playerId && !currentMove && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-evenly",
+            gap: "0.8rem",
+          }}
+        >
+          <PrimaryButton
+            style={{ display: "block", flex: 1 }}
+            onClick={() => makeOpponentMove(playerId, "rock")}
+          >
             {getMoveEmoji("rock")}
           </PrimaryButton>
-          <PrimaryButton onClick={() => makeOpponentMove(playerId, "paper")}>
+          <PrimaryButton
+            style={{ display: "block", flex: 1 }}
+            onClick={() => makeOpponentMove(playerId, "paper")}
+          >
             {getMoveEmoji("paper")}
           </PrimaryButton>
-          <PrimaryButton onClick={() => makeOpponentMove(playerId, "scissors")}>
+          <PrimaryButton
+            style={{ display: "block", flex: 1 }}
+            onClick={() => makeOpponentMove(playerId, "scissors")}
+          >
             {getMoveEmoji("scissors")}
           </PrimaryButton>
         </div>
       )}
-      {currentOutcome && <div>{currentOutcome.text.english}</div>}
+      {currentOutcome && (
+        <Card>
+          <RobotText> {currentOutcome.text.english}</RobotText>
+          <RobotText> {currentOutcome.text.chinese}</RobotText>
+        </Card>
+      )}
     </>
   );
 };
