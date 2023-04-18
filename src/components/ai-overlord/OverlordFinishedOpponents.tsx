@@ -61,7 +61,7 @@ export const OverlordFinishedOpponents = ({ aiOverlordGame }: Props) => {
               {/* <BattleResultIndicator result={result.outcome} /> */}
             </Player>
           ))}
-          <Points>{winningFinishedOutcomes.length + 2}</Points>
+          <Points>{winningFinishedOutcomes.length + 4}</Points>
         </OutcomeGrouping>
       )}
       {drawnFinishedOutcomes.length > 0 && (
@@ -72,7 +72,7 @@ export const OverlordFinishedOpponents = ({ aiOverlordGame }: Props) => {
               {/* <BattleResultIndicator result={result.outcome} /> */}
             </Player>
           ))}
-          <Points>{drawnFinishedOutcomes.length + 1}</Points>
+          <Points>{drawnFinishedOutcomes.length + 2}</Points>
         </OutcomeGrouping>
       )}
       {losingFinishedOutcomes.length > 0 && (
