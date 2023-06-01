@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import styled from "styled-components";
 import { useAiOverlordGame } from "../../providers/SocketIoProvider/useAiOverlord";
 import { AiOverlordGame } from "../../services/ai-overlord/types";
 import { Heading } from "../Atoms";
@@ -13,6 +14,20 @@ import { OverlordRobot } from "./OverlordRobot";
 import { RobotMessage } from "./RobotMessage";
 import { useAiOverlordGameView } from "./hooks/useAiOverlordGameView";
 import { OverlordFinishedOpponents } from "./OverlordFinishedOpponents";
+
+const Background = styled.div`
+  background: no-repeat url("/images/ai-overlords/background-robot-lab-01.png")
+    center center;
+  background-size: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  /* width: 100vw;
+  height: 100vh; */
+`;
 
 type Props = {
   aiOverlordGame: AiOverlordGame;
@@ -36,6 +51,9 @@ const View = ({ aiOverlordGame }: Props) => {
 
   return (
     <SpectatorPageLayout debug={<DebugAiOverlordGame gameView={gameView} />}>
+      {/* <Background /> */}
+
+      {/* <div style={{ position: "relative", display: "flex" }}> */}
       <CenterSpaced>
         <Heading>AI Overlord!</Heading>
       </CenterSpaced>
@@ -55,6 +73,7 @@ const View = ({ aiOverlordGame }: Props) => {
       <Positioned absolute={{ rightPercent: 1, topPercent: 1 }}>
         <RobotMessage />
       </Positioned>
+      {/* </div> */}
     </SpectatorPageLayout>
   );
 };

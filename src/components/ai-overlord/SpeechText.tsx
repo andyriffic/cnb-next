@@ -1,10 +1,9 @@
-import styled from "styled-components";
 import { useEffect, useRef, useState } from "react";
+import styled from "styled-components";
 import { TranslatedText } from "../../services/ai-overlord/types";
-import { useDoOnce } from "../hooks/useDoOnce";
-import { Appear } from "../animations/Appear";
 import { retryFunction } from "../../utils/retry";
 import { ChineseText } from "../ChineseText";
+import { Appear } from "../animations/Appear";
 
 const SpeechBubble = styled.div`
   background: white;
@@ -37,10 +36,9 @@ const speakLanguage = (
   ).then((voices) => {
     const voice = voices.find((v) => v.lang === language);
     if (!voice) {
-      console.log("no voice found");
+      console.info("no voice found");
       return;
     }
-    console.log("synth", synth.getVoices());
     const speech = new SpeechSynthesisUtterance(text);
     speech.rate = 1;
     speech.voice = voice;
@@ -83,7 +81,8 @@ export const SpeechText = ({ text, onFinishedSpeaking }: Props) => {
 
   return (
     <SpeechBubble>
-      {speechStatus === "speaking-chinese" || speechStatus === "finished" ? (
+      {/* {speechStatus === "speaking-chinese" || speechStatus === "finished" ? ( */}
+      {true === true ? (
         <Appear animation="text-focus-in">
           <Text>{text.english}</Text>
         </Appear>

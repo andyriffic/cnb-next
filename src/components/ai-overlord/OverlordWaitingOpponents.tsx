@@ -29,12 +29,16 @@ export const OverlordWaitingOpponents = ({ aiOverlordGame }: Props) => {
     (o) => !finishedOpponentIds.includes(o.playerId)
   );
 
+  const loadedPlayerIds = aiOverlordGame.taunts.map((t) => t.playerId);
+
   return (
     <PlayerAvatarGroup>
       {waitingOpponents.map((opponent) => {
+        const hasLoaded = loadedPlayerIds.includes(opponent.playerId);
         return (
           <Player key={opponent.playerId}>
             <PlayerAvatar playerId={opponent.playerId} size="thumbnail" />
+            {hasLoaded && <span>✅</span>}
           </Player>
         );
       })}

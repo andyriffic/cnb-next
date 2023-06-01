@@ -55,7 +55,11 @@ export function SpectatorPageLayout({
     <Container scrollable={scrollable}>
       <Main scrollable={scrollable}>{children}</Main>
       <SuperSecretDebugToggle onClick={() => setShowDebug(!showDebug)} />
-      {showDebug && debug && <DebugContainer>{debug}</DebugContainer>}
+      {showDebug && debug && (
+        <DebugContainer style={{ zIndex: 1, border: "1px solid white" }}>
+          {debug}
+        </DebugContainer>
+      )}
     </Container>
   );
 }
