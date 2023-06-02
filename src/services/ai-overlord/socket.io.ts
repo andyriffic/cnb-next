@@ -38,6 +38,8 @@ const getAllInMemoryAiOverlordGames = (): AiOverlordGame[] => {
 export enum AI_OVERLORD_ACTIONS {
   GAME_UPDATE = "AI_OVERLORD_GAME_UPDATE",
   CREATE_GAME = "AI_OVERLORD_CREATE_GAME",
+  INITIALISE_AI = "AI_OVERLORD_INITIALISE_AI",
+  INITIALISE_OPPONENT = "AI_OVERLORD_INITIALISE_OPPONENT",
   NEW_OPPONENT = "AI_OVERLORD_NEW_OPPONENT",
   MAKE_ROBOT_MOVE = "AI_OVERLORD_MAKE_ROBOT_MOVE",
   MAKE_OPPONENT_MOVE = "AI_OVERLORD_MAKE_OPPONENT_MOVE",
@@ -100,40 +102,59 @@ export function initialiseAiOverlordSocket(
           sendClientMessage(socket, `🤖‼️: ${err}`);
           sendRobotMessage(`🤖‼️: ${err}`);
         },
-        async (game) => {
-          console.log("Created game", game);
+        (game) => {
           updateInMemoryAiOverlordGame(game);
           io.emit(
             AI_OVERLORD_ACTIONS.GAME_UPDATE,
             getAllInMemoryAiOverlordGames()
           );
           onCreated(game.gameId);
-
-          const result = await prepareAllPlayerTaunts(game)();
-          pipe(
-            result,
-            E.fold(
-              (err) => {
-                console.error(err);
-                sendClientMessage(socket, `🤖‼️: ${err}`);
-                sendRobotMessage(`🤖‼️: ${err}`);
-              },
-              (taunts) => {
-                console.log("Created all taunts!", taunts);
-                updateInMemoryAiOverlordGame({
-                  ...game,
-                  taunts: [...game.taunts, ...taunts],
-                });
-                io.emit(
-                  AI_OVERLORD_ACTIONS.GAME_UPDATE,
-                  getAllInMemoryAiOverlordGames()
-                );
-              }
-            )
-          );
         }
       )
     );
+
+    // pipe(
+    //   game,
+    //   E.fold(
+    //     (err) => {
+    //       console.error(err);
+    //       sendClientMessage(socket, `🤖‼️: ${err}`);
+    //       sendRobotMessage(`🤖‼️: ${err}`);
+    //     },
+    //     async (game) => {
+    //       console.log("Created game", game);
+    //       updateInMemoryAiOverlordGame(game);
+    //       io.emit(
+    //         AI_OVERLORD_ACTIONS.GAME_UPDATE,
+    //         getAllInMemoryAiOverlordGames()
+    //       );
+    //       onCreated(game.gameId);
+
+    //       const result = await prepareAllPlayerTaunts(game)();
+    //       pipe(
+    //         result,
+    //         E.fold(
+    //           (err) => {
+    //             console.error(err);
+    //             sendClientMessage(socket, `🤖‼️: ${err}`);
+    //             sendRobotMessage(`🤖‼️: ${err}`);
+    //           },
+    //           (taunts) => {
+    //             console.log("Created all taunts!", taunts);
+    //             updateInMemoryAiOverlordGame({
+    //               ...game,
+    //               taunts: [...game.taunts, ...taunts],
+    //             });
+    //             io.emit(
+    //               AI_OVERLORD_ACTIONS.GAME_UPDATE,
+    //               getAllInMemoryAiOverlordGames()
+    //             );
+    //           }
+    //         )
+    //       );
+    //     }
+    //   )
+    // );
   };
 
   const newAiOverlordOpponentHandler: NewAiOverlordOpponentHandler = async (

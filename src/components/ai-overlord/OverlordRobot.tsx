@@ -97,51 +97,51 @@ export const OverlordRobot = ({ aiOverlordGame, gameView }: Props) => {
     }
   }, [isThinking]);
 
-  useEffect(() => {
-    if (
-      !(isSpeaking || gameView.currentOpponent) ||
-      (!isSpeaking &&
-        gameView.currentOpponentFinished &&
-        !gameView.allPlayersHavePlayed)
-    ) {
-      const timeout = setTimeout(() => {
-        startThinking();
-        setIsSpeaking(true);
-        newOpponent(selectRandomOneOf(gameView.remainingOpponents).playerId);
-      }, 3000);
+  // useEffect(() => {
+  //   if (
+  //     !(isSpeaking || gameView.currentOpponent) ||
+  //     (!isSpeaking &&
+  //       gameView.currentOpponentFinished &&
+  //       !gameView.allPlayersHavePlayed)
+  //   ) {
+  //     const timeout = setTimeout(() => {
+  //       startThinking();
+  //       setIsSpeaking(true);
+  //       newOpponent(selectRandomOneOf(gameView.remainingOpponents).playerId);
+  //     }, 3000);
 
-      return () => clearTimeout(timeout);
-    }
-  }, [
-    gameView.allPlayersHavePlayed,
-    gameView.currentOpponent,
-    gameView.currentOpponentFinished,
-    gameView.remainingOpponents,
-    isSpeaking,
-    newOpponent,
-    startThinking,
-  ]);
+  //     return () => clearTimeout(timeout);
+  //   }
+  // }, [
+  //   gameView.allPlayersHavePlayed,
+  //   gameView.currentOpponent,
+  //   gameView.currentOpponentFinished,
+  //   gameView.remainingOpponents,
+  //   isSpeaking,
+  //   newOpponent,
+  //   startThinking,
+  // ]);
 
-  useEffect(() => {
-    if (
-      !isSpeaking &&
-      gameView.allPlayersHavePlayed &&
-      !gameView.finalRobotSummary
-    ) {
-      const timeout = setTimeout(() => {
-        startThinking();
-        setIsSpeaking(true);
-        finaliseGame();
-      }, 3000);
-      return () => clearTimeout(timeout);
-    }
-  }, [
-    finaliseGame,
-    gameView.allPlayersHavePlayed,
-    gameView.finalRobotSummary,
-    isSpeaking,
-    startThinking,
-  ]);
+  // useEffect(() => {
+  //   if (
+  //     !isSpeaking &&
+  //     gameView.allPlayersHavePlayed &&
+  //     !gameView.finalRobotSummary
+  //   ) {
+  //     const timeout = setTimeout(() => {
+  //       startThinking();
+  //       setIsSpeaking(true);
+  //       finaliseGame();
+  //     }, 3000);
+  //     return () => clearTimeout(timeout);
+  //   }
+  // }, [
+  //   finaliseGame,
+  //   gameView.allPlayersHavePlayed,
+  //   gameView.finalRobotSummary,
+  //   isSpeaking,
+  //   startThinking,
+  // ]);
 
   return (
     <RobotLayout>
