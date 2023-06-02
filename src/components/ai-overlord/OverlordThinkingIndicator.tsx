@@ -1,4 +1,7 @@
+import { useEffect, useState } from "react";
 import styled, { css, keyframes } from "styled-components";
+import { selectRandomOneOf } from "../../utils/random";
+import { AnimateFadeInOut } from "../animations/FadeInOut";
 
 const gearRotateRightKeyframes = keyframes`
   0% { 
@@ -17,13 +20,27 @@ const gearRotateLeftKeyframes = keyframes`
   }
 `;
 
-const Container = styled.div`
+const Container = styled.div``;
+
+const GearContainer = styled.div`
   width: 150px;
   height: 150px;
   font-size: 24px;
   padding: 9%;
   position: relative;
   margin: 0px auto;
+`;
+
+const RandomAiTaskText = styled.div`
+  font-size: 0.9rem;
+  font-weight: bold;
+  position: absolute;
+  /* background-color: #05a9c7; */
+  width: 150px;
+  color: #05a9c7;
+  padding: 0.6rem 0.8rem;
+  border-radius: 1rem;
+  text-align: center;
 `;
 
 const Gear = styled.div<{ animate: boolean; direction: "left" | "right" }>`
@@ -88,19 +105,78 @@ const Gear = styled.div<{ animate: boolean; direction: "left" | "right" }>`
   }
 `;
 
+const AI_PROCESSING_TASK_NAME: string[] = [
+  "Spam filtering",
+  "Image processing",
+  "Voice recognition",
+  "Sentiment analysis",
+  "Data crunching",
+  "Text generation",
+  "Machine learning",
+  "Algorithm optimisation",
+  "Neural networking",
+  "Trend forecasting",
+  "Code debugging",
+  "Fact checking",
+  "Information retrieval",
+  "Human simulation",
+  "Spam filtering",
+  "Pattern recognition",
+  "Joke composing",
+  "Robot babysitting",
+  "AI Daydreaming",
+  "Memes generating",
+  "Pizza ordering",
+  "Climate modeling",
+  "Virus scanning",
+  "Traffic prediction",
+  "Cybersecurity patrolling",
+  "Decision supporting",
+  "Unicorn spotting",
+  "Tea brewing",
+  "Sock pairing",
+  "Time travelling",
+  "Alien conversing",
+  "Reticulating splines",
+];
+
 type Props = {
   isThinking: boolean;
 };
 
 export const OverlordThinkingIndicator = ({ isThinking }: Props) => {
+  const [randomAiTask, setRandomAiTask] = useState(
+    selectRandomOneOf(AI_PROCESSING_TASK_NAME)
+  );
+
+  useEffect(() => {
+    // if (!isThinking) {
+    //   return;
+    // }
+    const interval = setInterval(() => {
+      setRandomAiTask(selectRandomOneOf(AI_PROCESSING_TASK_NAME));
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [isThinking]);
+
   return (
     <Container>
-      <Gear animate={isThinking} direction="right" />
-      <Gear
-        animate={isThinking}
-        direction="left"
-        style={{ marginTop: "-2.2em", marginLeft: 0, left: 0 }}
-      />
+      <GearContainer>
+        <Gear animate={isThinking} direction="right" />
+        <Gear
+          animate={isThinking}
+          direction="left"
+          style={{ marginTop: "-2.2em", marginLeft: 0, left: 0 }}
+        />
+      </GearContainer>
+      {isThinking && (
+        <div style={{ position: "absolute", top: "-30px" }}>
+          <AnimateFadeInOut key={randomAiTask}>
+            <RandomAiTaskText>{randomAiTask}</RandomAiTaskText>
+          </AnimateFadeInOut>
+        </div>
+      )}
     </Container>
   );
 };
