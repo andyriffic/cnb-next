@@ -14,6 +14,9 @@ import { OverlordRobot } from "./OverlordRobot";
 import { RobotMessage } from "./RobotMessage";
 import { useAiOverlordGameView } from "./hooks/useAiOverlordGameView";
 import { OverlordFinishedOpponents } from "./OverlordFinishedOpponents";
+import { useDoOnce } from "../hooks/useDoOnce";
+import { Appear } from "../animations/Appear";
+import { RobotCreating } from "./RobotCreating";
 
 const Background = styled.div`
   background: no-repeat url("/images/ai-overlords/background-robot-lab-01.png")
@@ -35,9 +38,12 @@ type Props = {
 
 const View = ({ aiOverlordGame }: Props) => {
   const gameView = useAiOverlordGameView(aiOverlordGame);
-  const { isThinking } = useAiOverlordGame(aiOverlordGame.gameId);
+  const { isThinking, initialiseAi } = useAiOverlordGame(aiOverlordGame.gameId);
   const [robotSpeaking, setRobotSpeaking] = useState(false);
+  const [aiTurnedOn, setAiTurnedOn] = useState(false);
   const { loop, play } = useSound();
+
+  useDoOnce(initialiseAi);
 
   useEffect(() => {
     if (isThinking) {
@@ -59,7 +65,17 @@ const View = ({ aiOverlordGame }: Props) => {
       </CenterSpaced>
 
       <Positioned absolute={{ rightPercent: 10, bottomPercent: 10 }}>
-        <OverlordRobot aiOverlordGame={aiOverlordGame} gameView={gameView} />
+        {!aiTurnedOn && (
+          <RobotCreating
+            isInitialised={aiOverlordGame.aiOverlord.initialised}
+            onAiUnleashed={() => {
+              setAiTurnedOn(true);
+            }}
+          />
+        )}
+        <Appear show={aiTurnedOn}>
+          <OverlordRobot aiOverlordGame={aiOverlordGame} gameView={gameView} />
+        </Appear>
       </Positioned>
       <Positioned absolute={{ leftPercent: 10, bottomPercent: 10 }}>
         <OverlordCurrentOpponent aiOverlordGame={aiOverlordGame} />

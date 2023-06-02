@@ -30,6 +30,25 @@ const createAiGame =
     opponentMoves: [],
   });
 
+export const createEmptyAiOverlord = (): TE.TaskEither<string, AiOverlord> => {
+  return TE.right({
+    initialised: false,
+    introduction: { english: "", chinese: "" },
+    moves: [],
+    finalSummary: { english: "", chinese: "" },
+  });
+};
+
+export const setAiOverlordOnGame = (
+  aiOverlord: AiOverlord,
+  game: AiOverlordGame
+): AiOverlordGame => {
+  return {
+    ...game,
+    aiOverlord,
+  };
+};
+
 const addTauntToBattle =
   (playerId: string, game: AiOverlordGame) =>
   (taunt: TranslatedText): AiOverlordGame => {
@@ -81,7 +100,7 @@ export const createAiOverlordGame = (
   createAiOverlord: AiOverlordCreator,
   opponents: AiOverlordOpponent[]
 ): TE.TaskEither<string, AiOverlordGame> => {
-  return pipe(createAiOverlord(opponents), TE.map(createAiGame(id, opponents)));
+  return pipe(createAiOverlord(), TE.map(createAiGame(id, opponents)));
 };
 
 export const preparePlayerForBattle = (

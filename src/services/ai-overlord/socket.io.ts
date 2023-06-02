@@ -4,16 +4,18 @@ import { pipe } from "fp-ts/lib/function";
 import { Server as SocketIOServer, Socket } from "socket.io";
 import { sendClientMessage } from "../socket";
 import { RPSMoveName } from "../rock-paper-scissors/types";
-import { createAiOverlord, createAiOverlordGameSummary } from "./openAi";
+import { createOpenAiOverlord, createAiOverlordGameSummary } from "./openAi";
 import { AiOverlordGame, AiOverlordOpponent } from "./types";
 import {
   createAiOpponents,
   createAiOverlordGame,
+  createEmptyAiOverlord,
   finaliseAiGame,
   makeAiMove,
   makeAiOpponentMove,
   prepareAllPlayerTaunts,
   preparePlayerForBattle,
+  setAiOverlordOnGame,
 } from ".";
 
 let aiOverlordGames: AiOverlordGame[] = [];
@@ -54,6 +56,8 @@ export type CreateAiOverlordGameHandler = (
   onCreated: (gameId: string) => void
 ) => void;
 
+export type InitialiseAiOverlordHandler = (gameId: string) => void;
+
 export type NewAiOverlordOpponentHandler = (
   gameId: string,
   opponentId: string
@@ -90,7 +94,7 @@ export function initialiseAiOverlordSocket(
     const game = await pipe(
       createAiOpponents(playerIds),
       TE.chain((opponents) =>
-        createAiOverlordGame(id, createAiOverlord, opponents)
+        createAiOverlordGame(id, createEmptyAiOverlord, opponents)
       )
     )();
 
@@ -155,6 +159,49 @@ export function initialiseAiOverlordSocket(
     //     }
     //   )
     // );
+  };
+
+  const initialseAiOverlordHandler: InitialiseAiOverlordHandler = async (
+    gameId
+  ) => {
+    const game = getInMemoryAiOverlordGame(gameId);
+    if (!game) {
+      console.error("Game not found", gameId);
+      return;
+    }
+
+    if (game.aiOverlord.initialised) {
+      console.info("Ai Overlord already initialised on game", gameId);
+      return;
+    }
+
+    const overlord = await createOpenAiOverlord()();
+
+    pipe(
+      overlord,
+      E.chain((createdOverlord) => {
+        const game = getInMemoryAiOverlordGame(gameId);
+        if (!game) {
+          return E.left(`Game ${gameId} not found`);
+        }
+
+        return E.right(setAiOverlordOnGame(createdOverlord, game));
+      }),
+      E.fold(
+        (err) => {
+          console.error(err);
+          sendClientMessage(socket, `🤖‼️: ${err}`);
+          sendRobotMessage(`🤖‼️: ${err}`);
+        },
+        (game) => {
+          updateInMemoryAiOverlordGame(game);
+          io.emit(
+            AI_OVERLORD_ACTIONS.GAME_UPDATE,
+            getAllInMemoryAiOverlordGames()
+          );
+        }
+      )
+    );
   };
 
   const newAiOverlordOpponentHandler: NewAiOverlordOpponentHandler = async (
@@ -281,6 +328,7 @@ export function initialiseAiOverlordSocket(
   console.log("Registering AiOverlord SocketIo 🔌");
 
   socket.on(AI_OVERLORD_ACTIONS.CREATE_GAME, createAiOverlordGameHandler);
+  socket.on(AI_OVERLORD_ACTIONS.INITIALISE_AI, initialseAiOverlordHandler);
   socket.on(AI_OVERLORD_ACTIONS.NEW_OPPONENT, newAiOverlordOpponentHandler);
   socket.on(AI_OVERLORD_ACTIONS.MAKE_OPPONENT_MOVE, makeAiOpponentMoveHandler);
   socket.on(AI_OVERLORD_ACTIONS.MAKE_ROBOT_MOVE, makeAiRobotMoveHandler);

@@ -3,6 +3,7 @@ import { Socket } from "socket.io-client";
 import {
   AI_OVERLORD_ACTIONS,
   CreateAiOverlordGameHandler,
+  InitialiseAiOverlordHandler,
   MakeAiOpponentMoveHandler,
   MakeAiRobotMoveHandler,
   MakeFinalRobotSummaryHandler,
@@ -16,6 +17,7 @@ export type AiOverlordSocketService = {
   aiOverlordGames: AiOverlordGame[];
   thinkingAis: string[];
   createAiOverlordGame: CreateAiOverlordGameHandler;
+  initialiseAiOverlord: InitialiseAiOverlordHandler;
   newOpponent: NewAiOverlordOpponentHandler;
   makeOpponentMove: MakeAiOpponentMoveHandler;
   makeRobotMove: MakeAiRobotMoveHandler;
@@ -34,6 +36,11 @@ export function useAiOverlord(socket: Socket): AiOverlordSocketService {
   const createAiOverlordGame = useCallback<CreateAiOverlordGameHandler>(
     (id, opponents, onCreated) =>
       socket.emit(AI_OVERLORD_ACTIONS.CREATE_GAME, id, opponents, onCreated),
+    [socket]
+  );
+
+  const initialiseAiOverlord = useCallback<InitialiseAiOverlordHandler>(
+    (gameId) => socket.emit(AI_OVERLORD_ACTIONS.INITIALISE_AI, gameId),
     [socket]
   );
 
@@ -108,6 +115,7 @@ export function useAiOverlord(socket: Socket): AiOverlordSocketService {
   return {
     aiOverlordGames,
     createAiOverlordGame,
+    initialiseAiOverlord,
     newOpponent,
     makeOpponentMove,
     makeRobotMove,
@@ -125,6 +133,7 @@ export const useAiOverlordGame = (
   gameId: string
 ): {
   aiOverlordGame: AiOverlordGame | undefined;
+  initialiseAi: () => void;
   newOpponent: (opponentId: string) => void;
   makeOpponentMove: (opponentId: string, move: RPSMoveName) => void;
   makeRobotMove: (opponentId: string) => void;
@@ -139,6 +148,10 @@ export const useAiOverlordGame = (
     () => aiOverlord.aiOverlordGames.find((game) => game.gameId === gameId),
     [aiOverlord.aiOverlordGames, gameId]
   );
+
+  const initialiseAi = useCallback(() => {
+    aiOverlord.initialiseAiOverlord(gameId);
+  }, [aiOverlord, gameId]);
 
   const newOpponent = useCallback(
     (opponentId: string) => {
@@ -179,6 +192,7 @@ export const useAiOverlordGame = (
 
   return {
     aiOverlordGame,
+    initialiseAi,
     newOpponent,
     makeOpponentMove,
     makeRobotMove,

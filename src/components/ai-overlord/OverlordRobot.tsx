@@ -2,7 +2,11 @@ import Image from "next/future/image";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useAiOverlordGame } from "../../providers/SocketIoProvider/useAiOverlord";
-import { AiOverlordGame } from "../../services/ai-overlord/types";
+import {
+  AiOverlord,
+  AiOverlordGame,
+  TranslatedText,
+} from "../../services/ai-overlord/types";
 import { Appear } from "../animations/Appear";
 import { Attention } from "../animations/Attention";
 import { getMoveEmoji } from "../rock-paper-scissors/ViewerPlayersMove";
@@ -48,6 +52,16 @@ const CurrentMovePosition = styled.div`
   top: 40%;
 `;
 
+function getSpeechText(
+  aiOverlord: AiOverlord,
+  gameView: AiOverlordGameView
+): TranslatedText {
+  if (!gameView.currentOpponent) {
+    return aiOverlord.introduction;
+  }
+  return aiOverlord.introduction;
+}
+
 type Props = {
   aiOverlordGame: AiOverlordGame;
   gameView: AiOverlordGameView;
@@ -61,35 +75,37 @@ export const OverlordRobot = ({ aiOverlordGame, gameView }: Props) => {
     startThinking,
     finaliseGame,
   } = useAiOverlordGame(aiOverlordGame.gameId);
-  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(true);
 
-  const currentSpeech =
-    aiOverlordGame.aiOverlord.finalSummary ||
-    gameView.currentRobotOpponentMove?.text ||
-    (gameView.currentOpponent
-      ? aiOverlordGame.taunts.find(
-          (t) => t.playerId === gameView.currentOpponent!.playerId
-        )!.taunt
-      : aiOverlordGame.aiOverlord.introduction);
+  // const currentSpeech =
+  //   aiOverlordGame.aiOverlord.finalSummary ||
+  //   gameView.currentRobotOpponentMove?.text ||
+  //   (gameView.currentOpponent
+  //     ? aiOverlordGame.taunts.find(
+  //         (t) => t.playerId === gameView.currentOpponent!.playerId
+  //       )!.taunt
+  //     : aiOverlordGame.aiOverlord.introduction);
 
-  useEffect(() => {
-    if (
-      gameView.currentOpponent &&
-      gameView.currentOpponentMove &&
-      !isThinking &&
-      !gameView.currentRobotOpponentMove
-    ) {
-      startThinking();
-      makeRobotMove(gameView.currentOpponent.playerId);
-    }
-  }, [
-    gameView.currentOpponent,
-    gameView.currentOpponentMove,
-    gameView.currentRobotOpponentMove,
-    isThinking,
-    makeRobotMove,
-    startThinking,
-  ]);
+  const currentSpeech = getSpeechText(aiOverlordGame.aiOverlord, gameView);
+
+  // useEffect(() => {
+  //   if (
+  //     gameView.currentOpponent &&
+  //     gameView.currentOpponentMove &&
+  //     !isThinking &&
+  //     !gameView.currentRobotOpponentMove
+  //   ) {
+  //     startThinking();
+  //     makeRobotMove(gameView.currentOpponent.playerId);
+  //   }
+  // }, [
+  //   gameView.currentOpponent,
+  //   gameView.currentOpponentMove,
+  //   gameView.currentRobotOpponentMove,
+  //   isThinking,
+  //   makeRobotMove,
+  //   startThinking,
+  // ]);
 
   useEffect(() => {
     if (!isThinking) {
@@ -158,7 +174,10 @@ export const OverlordRobot = ({ aiOverlordGame, gameView }: Props) => {
         <Appear show={!isThinking}>
           <SpeechText
             text={currentSpeech}
-            onFinishedSpeaking={() => setIsSpeaking(false)}
+            onFinishedSpeaking={() => {
+              console.log("Robot finished speaking");
+              setIsSpeaking(false);
+            }}
           />
         </Appear>
       </RobotSpeech>

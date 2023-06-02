@@ -5,7 +5,7 @@ import {
   createAiOverlordGame,
   preparePlayerForBattle,
 } from "../../services/ai-overlord";
-import { createAiOverlord as openAiOverlord } from "../../services/ai-overlord/openAi";
+import { createOpenAiOverlord as openAiOverlord } from "../../services/ai-overlord/openAi";
 import { AiOverlordOpponent } from "../../services/ai-overlord/types";
 import {
   getInMemoryAiOverlordGame,

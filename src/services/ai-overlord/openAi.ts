@@ -67,7 +67,7 @@ function trimOutsidesOfCurlyBraces(text: string): string {
   return pipe(text, trimLeftCurlyBrace, trimRightCurlyBrace);
 }
 
-export const createAiOverlord: AiOverlordCreator = (opponents) => {
+export const createOpenAiOverlord: AiOverlordCreator = () => {
   console.info("Creating AI Overlord");
   return pipe(
     TE.tryCatch(
@@ -104,7 +104,11 @@ export const createAiOverlord: AiOverlordCreator = (opponents) => {
       E.fold(
         (parseError) => TE.left(parseError),
         (translatedText) =>
-          TE.right({ introduction: translatedText, moves: [] } as AiOverlord)
+          TE.right({
+            initialised: true,
+            introduction: translatedText,
+            moves: [],
+          } as AiOverlord)
       )
     )
   );

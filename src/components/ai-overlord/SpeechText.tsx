@@ -36,10 +36,11 @@ const speakLanguage = (
   ).then((voices) => {
     const voice = voices.find((v) => v.lang === language);
     if (!voice) {
-      console.info("no voice found");
+      console.info("no voice found for language", language);
       return;
     }
     const speech = new SpeechSynthesisUtterance(text);
+    console.log("Robot should be speaking", speech, voice);
     speech.rate = 1;
     speech.voice = voice;
     if (onComplete) {
@@ -64,6 +65,7 @@ export const SpeechText = ({ text, onFinishedSpeaking }: Props) => {
           setSpeechStatus("speaking-chinese");
         } else {
           setSpeechStatus("finished");
+          startedSpeaking.current = false;
           onFinishedSpeaking?.();
         }
       });
@@ -74,6 +76,7 @@ export const SpeechText = ({ text, onFinishedSpeaking }: Props) => {
     if (speechStatus === "speaking-chinese") {
       speakLanguage("zh-CN", text.chinese, () => {
         setSpeechStatus("finished");
+        startedSpeaking.current = false;
         onFinishedSpeaking?.();
       });
     }

@@ -1,9 +1,7 @@
 import * as TE from "fp-ts/TaskEither";
 import { RPSMoveName } from "../rock-paper-scissors/types";
 
-export type AiOverlordCreator = (
-  opponents: AiOverlordOpponent[]
-) => TE.TaskEither<string, AiOverlord>;
+export type AiOverlordCreator = () => TE.TaskEither<string, AiOverlord>;
 
 export type AiOverlordTauntCreator = (
   opponent: AiOverlordOpponent
@@ -66,6 +64,7 @@ export type AiOverlordOpponentMoveWithTextAndOutcome = {
 };
 
 export type AiOverlord = {
+  initialised: boolean;
   introduction: TranslatedText;
   finalSummary?: TranslatedText;
   moves: AiOverlordOpponentMoveWithTextAndOutcome[];

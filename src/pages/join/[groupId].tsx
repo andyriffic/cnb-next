@@ -82,7 +82,9 @@ function Page() {
                   aiOverlord.createAiOverlordGame(
                     groupId,
                     group.playerIds,
-                    (gameId) => router.push(getAiOverlordSpectatorUrl(gameId))
+                    (gameId) => {
+                      router.push(getAiOverlordSpectatorUrl(gameId));
+                    }
                   )
                 }
               >
