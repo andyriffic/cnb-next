@@ -49,10 +49,16 @@ export const setAiOverlordOnGame = (
   };
 };
 
-const addTauntToBattle =
+export const addTauntToBattle =
   (playerId: string, game: AiOverlordGame) =>
   (taunt: TranslatedText): AiOverlordGame => {
-    return { ...game, taunts: [...game.taunts, { playerId, taunt }] };
+    return {
+      ...game,
+      taunts: [
+        ...game.taunts.filter((t) => t.playerId !== playerId),
+        { playerId, taunt },
+      ],
+    };
   };
 
 const addOpponentMoveToBattle =
@@ -111,7 +117,7 @@ export const preparePlayerForBattle = (
     (opponent) => opponent.playerId === playerId
   );
   if (!opponent) {
-    return TE.left("Player not found");
+    return TE.left(`Player '${playerId}' not found`);
   }
   return pipe(
     createAiBattleTaunt(opponent),
@@ -147,7 +153,7 @@ export const makeAiOpponentMove = (
     (opponent) => opponent.playerId === playerId
   );
   if (!opponent) {
-    return TE.left("Player not found");
+    return TE.left(`Player '${playerId}' not found`);
   }
 
   return TE.right(addOpponentMoveToBattle(playerId, aiOverlordGame)(move));

@@ -3,6 +3,7 @@ import { AiOverlordGame } from "../../services/ai-overlord/types";
 import { PlayerAvatar } from "../PlayerAvatar";
 import { Appear } from "../animations/Appear";
 import { AiMove } from "./AiMove";
+import { AiOverlordGameView } from "./hooks/useAiOverlordGameView";
 
 const PlayerAvatarGroup = styled.div`
   display: flex;
@@ -23,26 +24,26 @@ const CurrentMove = styled.div`
 
 type Props = {
   aiOverlordGame: AiOverlordGame;
+  gameView: AiOverlordGameView;
 };
 
-export const OverlordCurrentOpponent = ({ aiOverlordGame }: Props) => {
-  const currentOpponent = aiOverlordGame.opponents.find(
-    (o) => o.playerId === aiOverlordGame.currentOpponentId
-  );
-  const currentMove = aiOverlordGame.opponentMoves.find(
-    (m) => m.playerId === currentOpponent?.playerId
-  );
-
-  return currentOpponent ? (
+export const OverlordCurrentOpponent = ({
+  aiOverlordGame,
+  gameView,
+}: Props) => {
+  return gameView.currentOpponent ? (
     <Appear>
       <PlayerAvatarGroup>
         <Player>
-          <PlayerAvatar playerId={currentOpponent.playerId} size="medium" />
+          <PlayerAvatar
+            playerId={gameView.currentOpponent.playerId}
+            size="medium"
+          />
         </Player>
-        {currentMove && (
+        {gameView.currentOpponentMove && (
           <CurrentMove>
             <Appear animation="roll-in-left">
-              <AiMove moveName={currentMove.move} />
+              <AiMove moveName={gameView.currentOpponentMove.move} />
             </Appear>
           </CurrentMove>
         )}

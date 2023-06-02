@@ -40,7 +40,7 @@ const View = ({ aiOverlordGame }: Props) => {
   const gameView = useAiOverlordGameView(aiOverlordGame);
   const { isThinking, initialiseAi } = useAiOverlordGame(aiOverlordGame.gameId);
   const [robotSpeaking, setRobotSpeaking] = useState(false);
-  const [aiTurnedOn, setAiTurnedOn] = useState(false);
+  const [aiTurnedOn, setAiTurnedOn] = useState(gameView.gameStarted);
   const { loop, play } = useSound();
 
   useDoOnce(initialiseAi);
@@ -78,10 +78,16 @@ const View = ({ aiOverlordGame }: Props) => {
         </Appear>
       </Positioned>
       <Positioned absolute={{ leftPercent: 10, bottomPercent: 10 }}>
-        <OverlordCurrentOpponent aiOverlordGame={aiOverlordGame} />
+        <OverlordCurrentOpponent
+          aiOverlordGame={aiOverlordGame}
+          gameView={gameView}
+        />
       </Positioned>
       <Positioned absolute={{ leftPercent: 1, topPercent: 1 }}>
-        <OverlordWaitingOpponents aiOverlordGame={aiOverlordGame} />
+        <OverlordWaitingOpponents
+          aiOverlordGame={aiOverlordGame}
+          gameView={gameView}
+        />
       </Positioned>
       <Positioned absolute={{ rightPercent: 1, topPercent: 1 }}>
         <OverlordFinishedOpponents aiOverlordGame={aiOverlordGame} />

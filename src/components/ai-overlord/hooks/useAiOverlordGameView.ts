@@ -4,14 +4,17 @@ import {
   AiOverlordOpponentMove,
   AiOverlordOpponentMoveWithTextAndOutcome,
   AiOverlordOpponentResult,
+  AiOverlordTaunt,
   TranslatedText,
 } from "../../../services/ai-overlord/types";
 
 export type AiOverlordGameView = {
   gameId: string;
+  gameStarted: boolean;
   currentOpponent?: AiOverlordOpponent;
   currentOpponentMove?: AiOverlordOpponentMove;
   currentRobotOpponentMove?: AiOverlordOpponentMoveWithTextAndOutcome;
+  currentRobotOpponentTaunt?: AiOverlordTaunt;
   remainingOpponents: AiOverlordOpponent[];
   currentOpponentFinished: boolean;
   allPlayersHavePlayed: boolean;
@@ -22,14 +25,21 @@ export type AiOverlordGameView = {
 export const useAiOverlordGameView = (
   aiOverlordGame: AiOverlordGame
 ): AiOverlordGameView => {
+  const currentOpponent = aiOverlordGame.opponents.find(
+    (o) => o.playerId === aiOverlordGame.currentOpponentId
+  );
   return {
     gameId: aiOverlordGame.gameId,
-    currentOpponent: aiOverlordGame.opponents.find(
-      (o) => o.playerId === aiOverlordGame.currentOpponentId
-    ),
+    gameStarted: !!aiOverlordGame.currentOpponentId,
+    currentOpponent,
     currentOpponentMove: aiOverlordGame.opponentMoves.find(
       (o) => o.playerId === aiOverlordGame.currentOpponentId
     ),
+    currentRobotOpponentTaunt:
+      currentOpponent &&
+      aiOverlordGame.taunts.find(
+        (t) => t.playerId === currentOpponent.playerId
+      ),
     remainingOpponents: aiOverlordGame.opponents
       .filter(
         (o) =>

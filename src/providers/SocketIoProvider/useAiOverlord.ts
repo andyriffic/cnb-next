@@ -3,6 +3,7 @@ import { Socket } from "socket.io-client";
 import {
   AI_OVERLORD_ACTIONS,
   CreateAiOverlordGameHandler,
+  InitialiseAiOpponentHandler,
   InitialiseAiOverlordHandler,
   MakeAiOpponentMoveHandler,
   MakeAiRobotMoveHandler,
@@ -18,6 +19,7 @@ export type AiOverlordSocketService = {
   thinkingAis: string[];
   createAiOverlordGame: CreateAiOverlordGameHandler;
   initialiseAiOverlord: InitialiseAiOverlordHandler;
+  initialiseOpponent: InitialiseAiOpponentHandler;
   newOpponent: NewAiOverlordOpponentHandler;
   makeOpponentMove: MakeAiOpponentMoveHandler;
   makeRobotMove: MakeAiRobotMoveHandler;
@@ -41,6 +43,12 @@ export function useAiOverlord(socket: Socket): AiOverlordSocketService {
 
   const initialiseAiOverlord = useCallback<InitialiseAiOverlordHandler>(
     (gameId) => socket.emit(AI_OVERLORD_ACTIONS.INITIALISE_AI, gameId),
+    [socket]
+  );
+
+  const initialiseOpponent = useCallback<InitialiseAiOpponentHandler>(
+    (gameId, opponentId) =>
+      socket.emit(AI_OVERLORD_ACTIONS.INITIALISE_OPPONENT, gameId, opponentId),
     [socket]
   );
 
@@ -116,6 +124,7 @@ export function useAiOverlord(socket: Socket): AiOverlordSocketService {
     aiOverlordGames,
     createAiOverlordGame,
     initialiseAiOverlord,
+    initialiseOpponent,
     newOpponent,
     makeOpponentMove,
     makeRobotMove,
@@ -134,6 +143,7 @@ export const useAiOverlordGame = (
 ): {
   aiOverlordGame: AiOverlordGame | undefined;
   initialiseAi: () => void;
+  initialiseOpponent: (opponentId: string) => void;
   newOpponent: (opponentId: string) => void;
   makeOpponentMove: (opponentId: string, move: RPSMoveName) => void;
   makeRobotMove: (opponentId: string) => void;
@@ -152,6 +162,13 @@ export const useAiOverlordGame = (
   const initialiseAi = useCallback(() => {
     aiOverlord.initialiseAiOverlord(gameId);
   }, [aiOverlord, gameId]);
+
+  const initialiseOpponent = useCallback(
+    (opponentId: string) => {
+      aiOverlord.initialiseOpponent(gameId, opponentId);
+    },
+    [aiOverlord, gameId]
+  );
 
   const newOpponent = useCallback(
     (opponentId: string) => {
@@ -193,6 +210,7 @@ export const useAiOverlordGame = (
   return {
     aiOverlordGame,
     initialiseAi,
+    initialiseOpponent,
     newOpponent,
     makeOpponentMove,
     makeRobotMove,

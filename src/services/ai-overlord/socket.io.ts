@@ -4,9 +4,14 @@ import { pipe } from "fp-ts/lib/function";
 import { Server as SocketIOServer, Socket } from "socket.io";
 import { sendClientMessage } from "../socket";
 import { RPSMoveName } from "../rock-paper-scissors/types";
-import { createOpenAiOverlord, createAiOverlordGameSummary } from "./openAi";
+import {
+  createOpenAiOverlord,
+  createAiOverlordGameSummary,
+  createAiBattleTaunt,
+} from "./openAi";
 import { AiOverlordGame, AiOverlordOpponent } from "./types";
 import {
+  addTauntToBattle,
   createAiOpponents,
   createAiOverlordGame,
   createEmptyAiOverlord,
@@ -57,6 +62,10 @@ export type CreateAiOverlordGameHandler = (
 ) => void;
 
 export type InitialiseAiOverlordHandler = (gameId: string) => void;
+export type InitialiseAiOpponentHandler = (
+  gameId: string,
+  opponentId: string
+) => void;
 
 export type NewAiOverlordOpponentHandler = (
   gameId: string,
@@ -204,6 +213,57 @@ export function initialiseAiOverlordSocket(
     );
   };
 
+  const initialiseOpponentHandler: InitialiseAiOpponentHandler = async (
+    gameId,
+    opponentId
+  ) => {
+    const game = getInMemoryAiOverlordGame(gameId);
+    if (!game) {
+      console.error("Game not found", gameId);
+      return;
+    }
+
+    const opponent = game.opponents.find(
+      (opponent) => opponent.playerId === opponentId
+    );
+    if (!opponent) {
+      console.error(`Player '${opponentId}' not found`);
+      return;
+    }
+
+    if (game.taunts.find((t) => t.playerId === opponentId)) {
+      console.info(`Player '${opponentId}' already initialised`);
+      return;
+    }
+
+    const taunt = await createAiBattleTaunt(opponent)();
+    pipe(
+      taunt,
+      E.chain((createdTaunt) => {
+        const game = getInMemoryAiOverlordGame(gameId);
+        if (!game) {
+          return E.left(`Game ${gameId} not found`);
+        }
+
+        return E.right(addTauntToBattle(opponentId, game)(createdTaunt));
+      }),
+      E.fold(
+        (err) => {
+          console.error(err);
+          sendClientMessage(socket, `🤖‼️: ${err}`);
+          sendRobotMessage(`🤖‼️: ${err}`);
+        },
+        (game) => {
+          updateInMemoryAiOverlordGame(game);
+          io.emit(
+            AI_OVERLORD_ACTIONS.GAME_UPDATE,
+            getAllInMemoryAiOverlordGames()
+          );
+        }
+      )
+    );
+  };
+
   const newAiOverlordOpponentHandler: NewAiOverlordOpponentHandler = async (
     gameId,
     opponentId
@@ -211,6 +271,11 @@ export function initialiseAiOverlordSocket(
     const game = getInMemoryAiOverlordGame(gameId);
     if (!game) {
       console.error("Game not found", gameId);
+      return;
+    }
+
+    if (!game.taunts.find((taunt) => taunt.playerId === opponentId)) {
+      console.error("Opponent is not ready to play", gameId);
       return;
     }
 
@@ -276,6 +341,12 @@ export function initialiseAiOverlordSocket(
       console.error("Game not found", gameId);
       return;
     }
+
+    if (game.aiOverlord.moves.find((m) => m.opponentId === opponentId)) {
+      console.info("Robot has already moved for opponent", opponentId);
+      return;
+    }
+
     const result = await makeAiMove(opponentId, game)();
     pipe(
       result,
@@ -329,6 +400,7 @@ export function initialiseAiOverlordSocket(
 
   socket.on(AI_OVERLORD_ACTIONS.CREATE_GAME, createAiOverlordGameHandler);
   socket.on(AI_OVERLORD_ACTIONS.INITIALISE_AI, initialseAiOverlordHandler);
+  socket.on(AI_OVERLORD_ACTIONS.INITIALISE_OPPONENT, initialiseOpponentHandler);
   socket.on(AI_OVERLORD_ACTIONS.NEW_OPPONENT, newAiOverlordOpponentHandler);
   socket.on(AI_OVERLORD_ACTIONS.MAKE_OPPONENT_MOVE, makeAiOpponentMoveHandler);
   socket.on(AI_OVERLORD_ACTIONS.MAKE_ROBOT_MOVE, makeAiRobotMoveHandler);

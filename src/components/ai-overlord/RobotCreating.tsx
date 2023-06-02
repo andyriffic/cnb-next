@@ -43,8 +43,8 @@ export const RobotCreating = ({ isInitialised, onAiUnleashed }: Props) => {
       </SizedImage>
       <SpeechBubble>
         <Text>
-          An IT worker is experimenting with AI, not knowing what terror it is
-          about to unleash to the world!
+          An IT worker is experimenting with Rock, Paper, Scissors, AI, not
+          knowing what terror it is about to unleash to the world!
         </Text>
       </SpeechBubble>
       <div style={{ position: "absolute", bottom: 0 }}>

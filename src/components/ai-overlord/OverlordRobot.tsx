@@ -56,8 +56,11 @@ function getSpeechText(
   aiOverlord: AiOverlord,
   gameView: AiOverlordGameView
 ): TranslatedText {
-  if (!gameView.currentOpponent) {
-    return aiOverlord.introduction;
+  if (gameView.currentRobotOpponentMove) {
+    return gameView.currentRobotOpponentMove.text;
+  }
+  if (gameView.currentRobotOpponentTaunt) {
+    return gameView.currentRobotOpponentTaunt.taunt;
   }
   return aiOverlord.introduction;
 }
@@ -88,24 +91,24 @@ export const OverlordRobot = ({ aiOverlordGame, gameView }: Props) => {
 
   const currentSpeech = getSpeechText(aiOverlordGame.aiOverlord, gameView);
 
-  // useEffect(() => {
-  //   if (
-  //     gameView.currentOpponent &&
-  //     gameView.currentOpponentMove &&
-  //     !isThinking &&
-  //     !gameView.currentRobotOpponentMove
-  //   ) {
-  //     startThinking();
-  //     makeRobotMove(gameView.currentOpponent.playerId);
-  //   }
-  // }, [
-  //   gameView.currentOpponent,
-  //   gameView.currentOpponentMove,
-  //   gameView.currentRobotOpponentMove,
-  //   isThinking,
-  //   makeRobotMove,
-  //   startThinking,
-  // ]);
+  useEffect(() => {
+    if (
+      gameView.currentOpponent &&
+      gameView.currentOpponentMove &&
+      !isThinking &&
+      !gameView.currentRobotOpponentMove
+    ) {
+      startThinking();
+      makeRobotMove(gameView.currentOpponent.playerId);
+    }
+  }, [
+    gameView.currentOpponent,
+    gameView.currentOpponentMove,
+    gameView.currentRobotOpponentMove,
+    isThinking,
+    makeRobotMove,
+    startThinking,
+  ]);
 
   useEffect(() => {
     if (!isThinking) {
@@ -171,7 +174,7 @@ export const OverlordRobot = ({ aiOverlordGame, gameView }: Props) => {
         </RobotBody>
       </Attention>
       <RobotSpeech>
-        <Appear show={!isThinking}>
+        <Appear key={currentSpeech.english} show={!isThinking}>
           <SpeechText
             text={currentSpeech}
             onFinishedSpeaking={() => {
