@@ -1,7 +1,12 @@
 import { pipe } from "fp-ts/lib/function";
 import * as E from "fp-ts/Either";
 import * as TE from "fp-ts/TaskEither";
-import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from "openai";
+import {
+  ChatCompletionRequestMessage,
+  Configuration,
+  CreateChatCompletionResponse,
+  OpenAIApi,
+} from "openai";
 import { OPEN_AI_API_KEY } from "../../environment";
 import { RPSMoveName } from "../rock-paper-scissors/types";
 import {
@@ -93,13 +98,10 @@ export const createOpenAiOverlord: AiOverlordCreator = () => {
         return message;
       }
     ),
-    TE.map((response) => response?.data?.choices[0]?.message?.content),
-    TE.map((response) => trimOutsidesOfCurlyBraces(response || "")),
-    TE.map((content) => {
-      console.log(content);
-      return content;
-    }),
-    TE.map((content) => parseToJson<TranslatedText>(content)),
+    TE.map(getApiResponseString),
+    TE.map(trimOutsidesOfCurlyBraces),
+    TE.map(logStringContent),
+    TE.map(parseToJson<TranslatedText>),
     TE.chain(
       E.fold(
         (parseError) => TE.left(parseError),
@@ -152,13 +154,10 @@ export const createAiBattleTaunt: AiOverlordTauntCreator = (opponent) => {
         }),
       () => "Error creating AI Overlord Taunt"
     ),
-    TE.map((response) => response?.data?.choices[0]?.message?.content),
-    TE.map((response) => trimOutsidesOfCurlyBraces(response || "")),
-    TE.map((content) => {
-      console.log(content);
-      return content;
-    }),
-    TE.map((response) => parseToJson<TranslatedText>(response)),
+    TE.map(getApiResponseString),
+    TE.map(trimOutsidesOfCurlyBraces),
+    TE.map(logStringContent),
+    TE.map(parseToJson<TranslatedText>),
     TE.chain(
       E.fold(
         (parseError) => TE.left(parseError),
@@ -203,13 +202,10 @@ export const createAiBattleMove: AiOverlordMoveCreator = (
         }),
       () => "Error creating AI Overlord Move"
     ),
-    TE.map((response) => response?.data?.choices[0]?.message?.content),
-    TE.map((response) => trimOutsidesOfCurlyBraces(response || "")),
-    TE.map((content) => {
-      console.log(content);
-      return content;
-    }),
-    TE.map((response) => parseToJson<{ move: RPSMoveName }>(response)),
+    TE.map(getApiResponseString),
+    TE.map(trimOutsidesOfCurlyBraces),
+    TE.map(logStringContent),
+    TE.map(parseToJson<{ move: RPSMoveName }>),
     TE.chain(
       E.fold(
         (parseError) => TE.left(parseError),
@@ -251,7 +247,7 @@ export const createAiBattleOutcome: AiOverlordBattleOutcomeCreator = (
     {
       role: "user",
       content: `Do the following steps:
-       1. Using your move and your opponents move make a comment on the outcome of the game. No more than 2 sentences. If you win, you like to make fun of your opponent, if you lose you like to make fun of yourself. If it's a draw you make up some funny reason why you both chose the same move. You can incorporate your opponents occupation or interests in your comment.
+       1. Using your move and your opponents move make a comment on the outcome of the game. No more than 2 sentences. If you win, you like to make fun of your opponent, if you lose you like to make fun of yourself and your programming. If it's a draw you make up some funny reason why you both chose the same move. You can incorporate your opponents occupation or interests in your comment.
        2. also translate your comment into chinese simplified language
        3. Give an outcome if it is a win, lose or draw for you in lowercase
        4. format the output in json format of {english: string, chinese: string, outcome: string}
@@ -270,17 +266,10 @@ export const createAiBattleOutcome: AiOverlordBattleOutcomeCreator = (
         }),
       () => "Error creating AI Overlord Outcome"
     ),
-    TE.map((response) => response?.data?.choices[0]?.message?.content),
-    TE.map((content) => {
-      console.log(content);
-      return content;
-    }),
-    TE.map((response) => trimOutsidesOfCurlyBraces(response || "")),
-    TE.map((cleanedResponse) =>
-      parseToJson<{ outcome: AiOverlordOpponentResult } & TranslatedText>(
-        cleanedResponse
-      )
-    ),
+    TE.map(getApiResponseString),
+    TE.map(trimOutsidesOfCurlyBraces),
+    TE.map(logStringContent),
+    TE.map(parseToJson<{ outcome: AiOverlordOpponentResult } & TranslatedText>),
     TE.chain(
       E.fold(
         (parseError) => TE.left(parseError),
@@ -381,13 +370,10 @@ export const createAiOverlordGameSummary: AiOverlordFinalSummaryTextCreator = (
         }),
       () => "Error creating AI Overlord Outcome"
     ),
-    TE.map((response) => response?.data?.choices[0]?.message?.content),
-    TE.map((content) => {
-      console.log(content);
-      return content;
-    }),
-    TE.map((response) => trimOutsidesOfCurlyBraces(response || "")),
-    TE.map((cleanedResponse) => parseToJson<TranslatedText>(cleanedResponse)),
+    TE.map(getApiResponseString),
+    TE.map(trimOutsidesOfCurlyBraces),
+    TE.map(logStringContent),
+    TE.map(parseToJson<TranslatedText>),
     TE.chain(
       E.fold(
         (parseError) => TE.left(parseError),
@@ -396,3 +382,18 @@ export const createAiOverlordGameSummary: AiOverlordFinalSummaryTextCreator = (
     )
   );
 };
+
+type OpenAiResponse<T> = {
+  data?: T;
+};
+
+function getApiResponseString(
+  response: OpenAiResponse<CreateChatCompletionResponse>
+) {
+  return response?.data?.choices[0]?.message?.content || "";
+}
+
+function logStringContent(content: string) {
+  console.log(content);
+  return content;
+}
