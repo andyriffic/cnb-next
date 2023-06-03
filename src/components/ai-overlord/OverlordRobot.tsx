@@ -56,6 +56,9 @@ function getSpeechText(
   aiOverlord: AiOverlord,
   gameView: AiOverlordGameView
 ): TranslatedText {
+  if (gameView.finalRobotSummary) {
+    return gameView.finalRobotSummary;
+  }
   if (gameView.currentRobotOpponentMove) {
     return gameView.currentRobotOpponentMove.text;
   }
@@ -141,26 +144,26 @@ export const OverlordRobot = ({ aiOverlordGame, gameView }: Props) => {
   //   startThinking,
   // ]);
 
-  // useEffect(() => {
-  //   if (
-  //     !isSpeaking &&
-  //     gameView.allPlayersHavePlayed &&
-  //     !gameView.finalRobotSummary
-  //   ) {
-  //     const timeout = setTimeout(() => {
-  //       startThinking();
-  //       setIsSpeaking(true);
-  //       finaliseGame();
-  //     }, 3000);
-  //     return () => clearTimeout(timeout);
-  //   }
-  // }, [
-  //   finaliseGame,
-  //   gameView.allPlayersHavePlayed,
-  //   gameView.finalRobotSummary,
-  //   isSpeaking,
-  //   startThinking,
-  // ]);
+  useEffect(() => {
+    if (
+      !isSpeaking &&
+      gameView.allPlayersHavePlayed &&
+      !gameView.finalRobotSummary
+    ) {
+      const timeout = setTimeout(() => {
+        startThinking();
+        setIsSpeaking(true);
+        finaliseGame();
+      }, 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [
+    finaliseGame,
+    gameView.allPlayersHavePlayed,
+    gameView.finalRobotSummary,
+    isSpeaking,
+    startThinking,
+  ]);
 
   return (
     <RobotLayout>

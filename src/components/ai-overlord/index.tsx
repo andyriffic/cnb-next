@@ -7,6 +7,8 @@ import { CenterSpaced } from "../Layouts";
 import { Positioned } from "../Positioned";
 import { SpectatorPageLayout } from "../SpectatorPageLayout";
 import { useSound } from "../hooks/useSound";
+import { useDoOnce } from "../hooks/useDoOnce";
+import { Appear } from "../animations/Appear";
 import { DebugAiOverlordGame } from "./DebugAiOverlordGame";
 import { OverlordCurrentOpponent } from "./OverlordCurrentOpponent";
 import { OverlordWaitingOpponents } from "./OverlordWaitingOpponents";
@@ -14,9 +16,8 @@ import { OverlordRobot } from "./OverlordRobot";
 import { RobotMessage } from "./RobotMessage";
 import { useAiOverlordGameView } from "./hooks/useAiOverlordGameView";
 import { OverlordFinishedOpponents } from "./OverlordFinishedOpponents";
-import { useDoOnce } from "../hooks/useDoOnce";
-import { Appear } from "../animations/Appear";
 import { RobotCreating } from "./RobotCreating";
+import { useAiOverlordGameFlowHelper } from "./hooks/useAiOverlordGameFlowHelper";
 
 const Background = styled.div`
   background: no-repeat url("/images/ai-overlords/background-robot-lab-01.png")
@@ -38,6 +39,7 @@ type Props = {
 
 const View = ({ aiOverlordGame }: Props) => {
   const gameView = useAiOverlordGameView(aiOverlordGame);
+  // useAiOverlordGameFlowHelper(aiOverlordGame);
   const { isThinking, initialiseAi } = useAiOverlordGame(aiOverlordGame.gameId);
   const [robotSpeaking, setRobotSpeaking] = useState(false);
   const [aiTurnedOn, setAiTurnedOn] = useState(gameView.gameStarted);

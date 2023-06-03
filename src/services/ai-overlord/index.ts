@@ -4,6 +4,7 @@ import { Player } from "../../types/Player";
 import { getAllPlayersTE } from "../../utils/data/aws-dynamodb";
 import { getPlayerAttributeValueFromTags } from "../../utils/string";
 import { RPSMoveName } from "../rock-paper-scissors/types";
+import { selectRandomOneOf } from "../../utils/random";
 import {
   createAiBattleMove,
   createAiBattleOutcome,
@@ -14,6 +15,7 @@ import {
   AiOverlord,
   AiOverlordCreator,
   AiOverlordGame,
+  AiOverlordMoveCreator,
   AiOverlordOpponent,
   AiOverlordOpponentMoveWithTextAndOutcome,
   AiOverlordTaunt,
@@ -37,6 +39,13 @@ export const createEmptyAiOverlord = (): TE.TaskEither<string, AiOverlord> => {
     moves: [],
     finalSummary: { english: "", chinese: "" },
   });
+};
+
+export const createRandomMove: AiOverlordMoveCreator = (
+  opponent: AiOverlordOpponent,
+  aiOverlordGame: AiOverlordGame
+): TE.TaskEither<string, RPSMoveName> => {
+  return TE.right(selectRandomOneOf(["rock", "paper", "scissors"]));
 };
 
 export const setAiOverlordOnGame = (
@@ -178,7 +187,8 @@ export const makeAiMove = (
   }
 
   return pipe(
-    createAiBattleMove(opponent, aiOverlordGame),
+    createRandomMove(opponent, aiOverlordGame),
+    // createAiBattleMove(opponent, aiOverlordGame),
     TE.chain((robotMove) =>
       createAiBattleOutcome(
         opponent,
