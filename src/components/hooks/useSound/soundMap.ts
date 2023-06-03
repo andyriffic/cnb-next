@@ -20,4 +20,5 @@ export const SOUND_MAP: { [key in SoundName]: string } = {
   "whos-that": "/sounds/whos-that-pokemon.mp3",
   "ai-thinking": "/sounds/processing.mp3",
   "ai-speaking": "/sounds/robot_beeps.mp3",
+  "ai-typing": "/sounds/keyboard_typing.mp3",
 };

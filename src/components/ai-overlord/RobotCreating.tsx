@@ -1,6 +1,9 @@
+import { type } from "os";
 import Image from "next/future/image";
 import styled from "styled-components";
+import { useEffect } from "react";
 import { PrimaryButton } from "../Atoms";
+import { useSound } from "../hooks/useSound";
 
 const Layout = styled.div`
   position: relative;
@@ -32,6 +35,17 @@ type Props = {
 };
 
 export const RobotCreating = ({ isInitialised, onAiUnleashed }: Props) => {
+  const { loop } = useSound();
+
+  useEffect(() => {
+    const typingSound = loop("ai-typing");
+    typingSound.play();
+
+    return () => {
+      typingSound.stop();
+    };
+  }, [loop]);
+
   return (
     <Layout>
       <SizedImage>
