@@ -15,6 +15,7 @@ export type AiOverlordGameView = {
   currentOpponentMove?: AiOverlordOpponentMove;
   currentRobotOpponentMove?: AiOverlordOpponentMoveWithTextAndOutcome;
   currentRobotOpponentTaunt?: AiOverlordTaunt;
+  preloadedOpponentsWaitingToPlay: AiOverlordOpponent[];
   remainingOpponents: AiOverlordOpponent[];
   currentOpponentFinished: boolean;
   allPlayersHavePlayed: boolean;
@@ -28,6 +29,15 @@ export const useAiOverlordGameView = (
   const currentOpponent = aiOverlordGame.opponents.find(
     (o) => o.playerId === aiOverlordGame.currentOpponentId
   );
+
+  const opponentIdsWithAiMoves = aiOverlordGame.aiOverlord.moves.map(
+    (t) => t.opponentId
+  );
+
+  const remainingOpponents = aiOverlordGame.opponents
+    .filter((o) => !opponentIdsWithAiMoves.includes(o.playerId))
+    .filter((o) => o.playerId !== aiOverlordGame.currentOpponentId);
+
   return {
     gameId: aiOverlordGame.gameId,
     gameStarted: !!aiOverlordGame.currentOpponentId,
@@ -40,14 +50,13 @@ export const useAiOverlordGameView = (
       aiOverlordGame.taunts.find(
         (t) => t.playerId === currentOpponent.playerId
       ),
-    remainingOpponents: aiOverlordGame.opponents
-      .filter(
-        (o) =>
-          !aiOverlordGame.aiOverlord.moves
-            .map((t) => t.opponentId)
-            .includes(o.playerId)
-      )
-      .filter((o) => o.playerId !== aiOverlordGame.currentOpponentId),
+    remainingOpponents,
+    preloadedOpponentsWaitingToPlay: remainingOpponents.filter((o) => {
+      return (
+        aiOverlordGame.taunts.map((t) => t.playerId).includes(o.playerId) &&
+        !opponentIdsWithAiMoves.includes(o.playerId)
+      );
+    }),
     allPlayersHavePlayed:
       aiOverlordGame.aiOverlord.moves.length ===
       aiOverlordGame.opponents.length,

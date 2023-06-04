@@ -70,11 +70,11 @@ export const OverlordWaitingOpponents = ({
                 </button>
               </div>
             )} */}
-            <button onClick={() => newOpponent(opponent.playerId)}>Next</button>
+            {/* <button onClick={() => newOpponent(opponent.playerId)}>Next</button> */}
           </Player>
         );
       })}
-      {gameView.remainingOpponents.length > 0 && (
+      {/* {gameView.remainingOpponents.length > 0 && (
         <button
           onClick={() =>
             newOpponent(selectRandomOneOf(gameView.remainingOpponents).playerId)
@@ -82,7 +82,7 @@ export const OverlordWaitingOpponents = ({
         >
           Next opponent
         </button>
-      )}
+      )} */}
     </PlayerAvatarGroup>
   );
 };

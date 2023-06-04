@@ -5,6 +5,9 @@ import {
   AiOverlordOpponentResult,
 } from "../../services/ai-overlord/types";
 import { PlayerAvatar } from "../PlayerAvatar";
+import { useDoOnce } from "../hooks/useDoOnce";
+import { finishedAiOverlordGameToPoints } from "../../services/ai-overlord/points";
+import { savePlayerGameMovesFetch } from "../../utils/api";
 import { BattleResultIndicator } from "./BattleResultIndicator";
 
 const PlayerAvatarGroup = styled.div`
@@ -41,6 +44,13 @@ type Props = {
 };
 
 export const OverlordFinishedOpponents = ({ aiOverlordGame }: Props) => {
+  useDoOnce(() => {
+    const gameMoves = finishedAiOverlordGameToPoints(aiOverlordGame);
+    savePlayerGameMovesFetch(aiOverlordGame.gameId, gameMoves)
+      .then(() => console.log("Updated AI games moves"))
+      .catch((err) => console.error(err));
+  }, !!aiOverlordGame.aiOverlord.finalSummary);
+
   const winningFinishedOutcomes = aiOverlordGame.aiOverlord.moves.filter(
     (m) => m.outcome === "lose"
   );

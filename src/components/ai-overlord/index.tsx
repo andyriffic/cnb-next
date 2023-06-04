@@ -45,6 +45,8 @@ const View = ({ aiOverlordGame }: Props) => {
   const [aiTurnedOn, setAiTurnedOn] = useState(gameView.gameStarted);
   const { loop, play } = useSound();
 
+  console.log("Game View", gameView);
+
   useDoOnce(initialiseAi);
 
   useEffect(() => {
