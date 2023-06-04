@@ -96,6 +96,7 @@ export const OverlordRobot = ({ aiOverlordGame, gameView }: Props) => {
 
   useEffect(() => {
     if (
+      !isSpeaking &&
       gameView.currentOpponent &&
       gameView.currentOpponentMove &&
       !isThinking &&
@@ -108,6 +109,7 @@ export const OverlordRobot = ({ aiOverlordGame, gameView }: Props) => {
     gameView.currentOpponent,
     gameView.currentOpponentMove,
     gameView.currentRobotOpponentMove,
+    isSpeaking,
     isThinking,
     makeRobotMove,
     startThinking,
