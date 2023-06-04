@@ -182,6 +182,16 @@ export const OverlordRobot = ({ aiOverlordGame, gameView }: Props) => {
           />
         </RobotBody>
       </Attention>
+      {gameView.currentRobotOpponentMove && (
+        <CurrentMovePosition>
+          <Appear animation="roll-in-right">
+            <AiMove moveName={gameView.currentRobotOpponentMove.move} />
+          </Appear>
+        </CurrentMovePosition>
+      )}
+      <GearsPosition>
+        <OverlordThinkingIndicator isThinking={isThinking} />
+      </GearsPosition>
       <RobotSpeech>
         <Appear key={currentSpeech.english} show={!isThinking}>
           <SpeechText
@@ -193,16 +203,7 @@ export const OverlordRobot = ({ aiOverlordGame, gameView }: Props) => {
           />
         </Appear>
       </RobotSpeech>
-      {gameView.currentRobotOpponentMove && (
-        <CurrentMovePosition>
-          <Appear animation="roll-in-right">
-            <AiMove moveName={gameView.currentRobotOpponentMove.move} />
-          </Appear>
-        </CurrentMovePosition>
-      )}
-      <GearsPosition>
-        <OverlordThinkingIndicator isThinking={isThinking} />
-      </GearsPosition>
+
       <MoveHistoryPosition>
         {aiOverlordGame.aiOverlord.moves.map((move, i) => (
           <div key={i}>{getMoveEmoji(move.move)}</div>
