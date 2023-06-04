@@ -23,6 +23,7 @@ import {
   getWhosThatUrl,
 } from "../../utils/url";
 import { generateShortNumericId } from "../../utils/id";
+import { EvenlySpaced } from "../../components/Layouts";
 
 const JoinedPlayerContainer = styled.div`
   display: flex;
@@ -70,31 +71,7 @@ function Page() {
   );
 
   return (
-    <SpectatorPageLayout
-      debug={
-        group && (
-          <>
-            <DebugPlayerJoin group={group} />
-            <div>
-              <button
-                disabled={group.playerIds.length < 2}
-                onClick={() =>
-                  aiOverlord.createAiOverlordGame(
-                    groupId,
-                    group.playerIds,
-                    (gameId) => {
-                      router.push(getAiOverlordSpectatorUrl(gameId));
-                    }
-                  )
-                }
-              >
-                BETA! Create AI Overlord game ({group.playerIds.length} players)
-              </button>
-            </div>
-          </>
-        )
-      }
-    >
+    <SpectatorPageLayout debug={group && <DebugPlayerJoin group={group} />}>
       <CenterSpaced stacked={true} style={{ margin: "2rem 0 2rem" }}>
         <SubHeading>test.finx-rocks.com/play</SubHeading>
         <Heading style={{ fontSize: "5rem" }}>
@@ -117,60 +94,78 @@ function Page() {
               </JoinedPlayerItem>
             ))}
           </JoinedPlayerContainer>
-          <PrimaryButton
-            disabled={group.playerIds.length < 2}
-            onClick={() => {
-              const randomisedPlayerIds = shuffleArray(group.playerIds);
-              const playerId1 = randomisedPlayerIds[0]!;
-              const playerId2 = randomisedPlayerIds[1]!;
+          <EvenlySpaced>
+            <PrimaryButton
+              disabled={group.playerIds.length < 2}
+              onClick={() => {
+                const randomisedPlayerIds = shuffleArray(group.playerIds);
+                const playerId1 = randomisedPlayerIds[0]!;
+                const playerId2 = randomisedPlayerIds[1]!;
 
-              const STARTING_WALLET_BALANCE = 0;
+                const STARTING_WALLET_BALANCE = 0;
 
-              const bettingPlayerWallets = group.playerIds
-                .filter((pid) => pid !== playerId1 && pid !== playerId2)
-                .map<PlayerWallet>((pid) => ({
-                  playerId: pid,
-                  value: STARTING_WALLET_BALANCE,
-                }));
+                const bettingPlayerWallets = group.playerIds
+                  .filter((pid) => pid !== playerId1 && pid !== playerId2)
+                  .map<PlayerWallet>((pid) => ({
+                    playerId: pid,
+                    value: STARTING_WALLET_BALANCE,
+                  }));
 
-              rockPaperScissors.createRPSGame(
-                {
-                  id: group.id,
-                  playerIds: [playerId1, playerId2],
-                },
-                (gameId) => {
-                  groupBetting.createGroupBettingGame(
-                    gameId,
-                    [
-                      {
-                        id: playerId1,
-                        name: getName(playerId1),
-                        odds: 1,
-                        betReturn: "oddsOnly",
-                      },
-                      {
-                        id: "draw",
-                        name: "Draw",
-                        odds: 1,
-                        betReturn: "oddsOnly",
-                      },
-                      {
-                        id: playerId2,
-                        name: getName(playerId2),
-                        odds: 1,
-                        betReturn: "oddsOnly",
-                      },
-                    ],
-                    bettingPlayerWallets,
-                    () =>
-                      router.push(getRockPaperScissorsGameSpectatorUrl(gameId))
-                  );
-                }
-              );
-            }}
-          >
-            Start Game
-          </PrimaryButton>
+                rockPaperScissors.createRPSGame(
+                  {
+                    id: group.id,
+                    playerIds: [playerId1, playerId2],
+                  },
+                  (gameId) => {
+                    groupBetting.createGroupBettingGame(
+                      gameId,
+                      [
+                        {
+                          id: playerId1,
+                          name: getName(playerId1),
+                          odds: 1,
+                          betReturn: "oddsOnly",
+                        },
+                        {
+                          id: "draw",
+                          name: "Draw",
+                          odds: 1,
+                          betReturn: "oddsOnly",
+                        },
+                        {
+                          id: playerId2,
+                          name: getName(playerId2),
+                          odds: 1,
+                          betReturn: "oddsOnly",
+                        },
+                      ],
+                      bettingPlayerWallets,
+                      () =>
+                        router.push(
+                          getRockPaperScissorsGameSpectatorUrl(gameId)
+                        )
+                    );
+                  }
+                );
+              }}
+            >
+              Betting game
+            </PrimaryButton>
+            <PrimaryButton
+              disabled={group.playerIds.length < 2}
+              onClick={() =>
+                aiOverlord.createAiOverlordGame(
+                  groupId,
+                  group.playerIds,
+                  (gameId) => {
+                    router.push(getAiOverlordSpectatorUrl(gameId));
+                  }
+                )
+              }
+            >
+              AI Overlord (BETA ⚠️)
+            </PrimaryButton>
+          </EvenlySpaced>
         </CenterSpaced>
       )}
       {qrCodeUrl && (

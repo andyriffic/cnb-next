@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 export const EvenlySpaced = styled.div`
   display: flex;
   justify-content: space-evenly;
+  gap: 1rem;
 `;
 
 export const CenterSpaced = styled.div<{ stacked?: boolean }>`
