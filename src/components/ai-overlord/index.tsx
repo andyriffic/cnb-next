@@ -9,6 +9,7 @@ import { SpectatorPageLayout } from "../SpectatorPageLayout";
 import { useSound } from "../hooks/useSound";
 import { useDoOnce } from "../hooks/useDoOnce";
 import { Appear } from "../animations/Appear";
+import { LinkToMiniGame } from "../LinkToMiniGame";
 import { DebugAiOverlordGame } from "./DebugAiOverlordGame";
 import { OverlordCurrentOpponent } from "./OverlordCurrentOpponent";
 import { OverlordWaitingOpponents } from "./OverlordWaitingOpponents";
@@ -99,7 +100,11 @@ const View = ({ aiOverlordGame }: Props) => {
       <Positioned absolute={{ rightPercent: 1, topPercent: 1 }}>
         <RobotMessage />
       </Positioned>
-      {/* </div> */}
+      {!!aiOverlordGame.aiOverlord.finalSummary && (
+        <Positioned horizontalAlign={{ align: "center", topPercent: 15 }}>
+          <LinkToMiniGame />
+        </Positioned>
+      )}
     </SpectatorPageLayout>
   );
 };
