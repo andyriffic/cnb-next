@@ -37,7 +37,6 @@ export const createEmptyAiOverlord = (): TE.TaskEither<string, AiOverlord> => {
     initialised: false,
     introduction: { english: "", chinese: "" },
     moves: [],
-    finalSummary: { english: "", chinese: "" },
   });
 };
 

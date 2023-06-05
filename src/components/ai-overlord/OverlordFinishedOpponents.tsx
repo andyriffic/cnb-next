@@ -47,7 +47,7 @@ export const OverlordFinishedOpponents = ({ aiOverlordGame }: Props) => {
   useDoOnce(() => {
     const gameMoves = finishedAiOverlordGameToPoints(aiOverlordGame);
     savePlayerGameMovesFetch(aiOverlordGame.gameId, gameMoves)
-      .then(() => console.log("Updated AI games moves"))
+      .then(() => console.log("Updated AI games moves", gameMoves))
       .catch((err) => console.error(err));
   }, !!aiOverlordGame.aiOverlord.finalSummary);
 
