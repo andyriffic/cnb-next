@@ -92,7 +92,8 @@ export const SpeechText = ({ text, onFinishedSpeaking }: Props) => {
       ) : (
         <Text>🔊 *English* 🔊</Text>
       )}
-      {speechStatus === "speaking-english" || speechStatus === "finished" ? (
+      {/* {speechStatus === "speaking-english" || speechStatus === "finished" ? ( */}
+      {true ? (
         <Appear animation="text-focus-in">
           <Text>
             <ChineseText>{text.chinese}</ChineseText>
