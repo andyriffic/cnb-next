@@ -17,7 +17,7 @@ const SizedImage = styled.div`
 
 const SpeechBubble = styled.div`
   position: absolute;
-  top: -10vh;
+  top: -14vh;
   background: white;
   border-radius: 1rem;
   border: 2px solid black;
