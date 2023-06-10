@@ -5,6 +5,7 @@ import { initialiseGroupJoinSocket } from "../../services/player-join/socket.io"
 import { initialiseRockPaperScissorsSocket } from "../../services/rock-paper-scissors/socket.io";
 import { initialiseGroupBettingSocket } from "../../services/betting/socket.io";
 import { initialiseAiOverlordSocket } from "../../services/ai-overlord/socket.io";
+import { initialiseGasOutSocket } from "../../services/migrated/gas-out/socket";
 
 type NextApiResponseServerIO = NextApiResponse & {
   socket: Socket & {
@@ -33,6 +34,7 @@ export default function SocketHandler(
       initialiseGroupJoinSocket(io, socket);
       initialiseGroupBettingSocket(io, socket);
       initialiseAiOverlordSocket(io, socket);
+      initialiseGasOutSocket(io, socket);
 
       socket.on("hello", (message: string) => {
         console.log("🔈", message);

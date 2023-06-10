@@ -18,6 +18,7 @@ import { PlayerWallet } from "../../services/betting/types";
 import { shuffleArray } from "../../utils/random";
 import {
   getAiOverlordSpectatorUrl,
+  getGasOutSpectatorUrl,
   getPlayRootUrl,
   getRockPaperScissorsGameSpectatorUrl,
   getWhosThatUrl,
@@ -37,7 +38,7 @@ const JoinedPlayerItem = styled.div``;
 function Page() {
   const router = useRouter();
   const groupId = router.query.groupId as string;
-  const { groupJoin, rockPaperScissors, groupBetting, aiOverlord } =
+  const { groupJoin, rockPaperScissors, groupBetting, aiOverlord, gasGame } =
     useSocketIo();
   const { getName } = usePlayerNames();
   const { play, loop } = useSound();
@@ -150,6 +151,16 @@ function Page() {
               }}
             >
               Betting game
+            </PrimaryButton>
+            <PrimaryButton
+              disabled={group.playerIds.length < 2}
+              onClick={() =>
+                gasGame.createGasGame(group.playerIds, (gameId) => {
+                  router.push(getGasOutSpectatorUrl(gameId));
+                })
+              }
+            >
+              Balloon game
             </PrimaryButton>
             <PrimaryButton
               disabled={group.playerIds.length < 2}

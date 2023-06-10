@@ -11,7 +11,7 @@ export type PlayerGameMoves = {
   winner?: boolean;
 };
 
-const incrementIntegerTag = (
+export const incrementIntegerTag = (
   tagPrefix: string,
   by: number,
   tags: string[]

@@ -11,12 +11,14 @@ import {
   RPSSocketService,
   useRockPaperScissorsSocket,
 } from "./useRockPaperScissorsSocket";
+import { GasGameSocketService, useGasGame } from "./useGasGame";
 
 type SocketIoService = {
   rockPaperScissors: RPSSocketService;
   groupJoin: GroupJoinSocketService;
   groupBetting: GroupBettingSocketService;
   aiOverlord: AiOverlordSocketService;
+  gasGame: GasGameSocketService;
 };
 
 type Props = {
@@ -69,6 +71,7 @@ export const SocketIoProvider = ({ children }: Props): JSX.Element => {
   const groupJoinSocket = useGroupPlayerJoin(socket);
   const groupBettingSocket = useGroupBetting(socket);
   const aiOverlordSocket = useAiOverlord(socket);
+  const gasGameSocket = useGasGame(socket);
 
   return (
     <SocketIoContent.Provider
@@ -77,6 +80,7 @@ export const SocketIoProvider = ({ children }: Props): JSX.Element => {
         groupJoin: groupJoinSocket,
         groupBetting: groupBettingSocket,
         aiOverlord: aiOverlordSocket,
+        gasGame: gasGameSocket,
       }}
     >
       {/* <button onClick={() => socket.emit("hello", "are you there?")}>

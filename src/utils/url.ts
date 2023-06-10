@@ -58,3 +58,7 @@ export const getAiOverlordPlayerUrl = (
 export const getClassicCnbPlayerUrl = (playerId: string): string => {
   return `http://cnb.finx-rocks.com/play/${playerId}`;
 };
+
+export const getGasOutSpectatorUrl = (gameId: string): string => {
+  return `/watch/gas-out/${gameId}`;
+};
