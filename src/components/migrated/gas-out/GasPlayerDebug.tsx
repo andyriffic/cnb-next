@@ -8,21 +8,21 @@ const getAlivePlayers = (game: GasGame): GasPlayer[] => {
 };
 
 const PlayerListContainer = styled.div`
-  position: absolute;
+  /* position: absolute;
   top: 0;
-  right: 0;
+  right: 0; */
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
   justify-content: center;
   align-items: center;
   gap: 20px;
 `;
 
 const PlayerListItem = styled.div<{ active: boolean }>`
-  ${({ theme, active }) =>
+  ${({ active }) =>
     active &&
     css`
-      background-color: ${theme.color.background03};
+      background-color: blue;
     `}
 `;
 

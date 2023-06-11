@@ -1,12 +1,13 @@
-import React, { useMemo } from "react";
-import styled, { css } from "styled-components";
+import { useMemo } from "react";
+import styled from "styled-components";
+import { FONT_FAMILY } from "../../../colors";
 import { GasGame } from "../../../services/migrated/gas-out/types";
+import { SubHeading } from "../../Atoms";
+import { PlayerAvatar } from "../../PlayerAvatar";
 import {
   fadeInDownAnimation,
   fadeInLeftAnimation,
 } from "../../animations/keyframes/fade";
-import { PlayerAvatar } from "../../PlayerAvatar";
-import { SubHeading } from "../../Atoms";
 import { PlayerListPlayer } from "./PlayerListPlayer";
 
 const Container = styled.div`
@@ -29,7 +30,7 @@ const PlayerContainer = styled.div`
 const Number = styled.div`
   font-size: 0.9rem;
   color: #222;
-  font-family: ${({ theme }) => theme.fontFamily.numbers};
+  font-family: ${FONT_FAMILY.numeric};
   text-align: center;
 `;
 

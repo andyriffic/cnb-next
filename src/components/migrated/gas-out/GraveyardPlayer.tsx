@@ -1,9 +1,9 @@
-import React from "react";
-import styled, { css } from "styled-components";
-import { fadeInAnimation } from "../../animations/keyframes/fade";
+import styled from "styled-components";
+import { FONT_FAMILY } from "../../../colors";
 import { GasGame, GasPlayer } from "../../../services/migrated/gas-out/types";
-import { PlayerAvatar } from "../../PlayerAvatar";
 import { getOrdinal } from "../../../utils/string";
+import { PlayerAvatar } from "../../PlayerAvatar";
+import { fadeInAnimation } from "../../animations/keyframes/fade";
 import { PlayerBonusPoints } from "./PlayerBonusPoints";
 
 const CardContainer = styled.div`
@@ -26,41 +26,26 @@ const PlayerListItem = styled.div<{ active: boolean }>`
 const PlayerFinishedPosition = styled.div`
   font-size: 0.9rem;
   position: absolute;
-  top: -40%;
+  top: -20%;
   left: 50%;
   transform: translateX(-50%);
   color: #333;
-  font-family: ${({ theme }) => theme.fontFamily.numbers};
+  font-family: ${FONT_FAMILY.numeric};
 `;
 
 const PlayerPoints = styled.div`
   font-size: 1rem;
   position: absolute;
-  bottom: -30%;
+  bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  font-family: ${({ theme }) => theme.fontFamily.numbers};
+  font-family: ${FONT_FAMILY.numeric};
   border: 2px solid #444;
   background-color: crimson;
   color: white;
   padding: 3px;
   border-radius: 4px;
   animation: ${fadeInAnimation} 1000ms ease-in-out 2000ms both;
-`;
-
-const PlayerName = styled.div`
-  position: absolute;
-  bottom: -50%;
-  left: 50%;
-  transform: translateX(-50%);
-  border: 2px solid white;
-  color: ${({ theme }) => theme.color.text02};
-  background-color: ${({ theme }) => theme.color.background02};
-  padding: 5px;
-  border-radius: 5px;
-  text-transform: uppercase;
-  font-size: ${({ theme }) => theme.fontSize.smallish};
-  white-space: nowrap;
 `;
 
 const DeathIcon = styled.div``;
@@ -125,7 +110,7 @@ export function GraveyardPlayer({ player, game }: Props): JSX.Element {
         </PlayerFinishedPosition>
       )}
       <PlayerAvatarContainer>
-        <PlayerAvatar playerId={player.player.id} size="small" />
+        <PlayerAvatar playerId={player.player.id} size="thumbnail" />
       </PlayerAvatarContainer>
       {(!notDead || winner) && <PlayerPoints>{player.points}</PlayerPoints>}
       {player.killedBy === "timeout" && <TimedOutIcon>⏰</TimedOutIcon>}

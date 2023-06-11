@@ -3,24 +3,25 @@ import styled from "styled-components";
 import { GasCard } from "../../../services/migrated/gas-out/types";
 import { useSound } from "../../hooks/useSound";
 import { Appear } from "../../animations/Appear";
+import { COLORS, FONT_FAMILY } from "../../../colors";
 
 const CardContainer = styled.div<{ special: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 20px;
-  border: 5px solid ${({ theme }) => theme.color.gasGame.cardBorderColor};
+  border: 5px solid ${COLORS.gasGame.cardBorderColor};
   border-radius: 10px;
   width: 70px;
   height: 100px;
-  background-color: ${({ theme, special }) =>
+  background-color: ${({ special }) =>
     special
-      ? theme.color.gasGame.cardBackgroundColorSpecial
-      : theme.color.gasGame.cardBackgroundColor};
-  color: ${({ theme, special }) =>
+      ? COLORS.gasGame.cardBackgroundColorSpecial
+      : COLORS.gasGame.cardBackgroundColor};
+  color: ${({ special }) =>
     special
-      ? theme.color.gasGame.cardTextColorSpecial
-      : theme.color.gasGame.cardTextColor01};
+      ? COLORS.gasGame.cardTextColorSpecial
+      : COLORS.gasGame.cardTextColor01};
   box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px,
     rgba(6, 24, 44, 0.65) 0px 4px 6px -1px,
     rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
@@ -28,12 +29,11 @@ const CardContainer = styled.div<{ special: boolean }>`
 
 const CardNumber = styled.div`
   font-size: 2rem;
-  font-family: ${({ theme }) => theme.fontFamily.numbers};
+  font-family: ${FONT_FAMILY.numeric};
 `;
 
 const CardText = styled.div`
   font-size: 1.2rem;
-  font-family: ${({ theme }) => theme.fontFamily.feature};
 `;
 
 const CardIcon = styled.div`

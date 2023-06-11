@@ -5,6 +5,7 @@ import { fadeInAnimation } from "../../animations/keyframes/fade";
 import { GasGame, GasPlayer } from "../../../services/migrated/gas-out/types";
 import { AvatarSize, PlayerAvatar } from "../../PlayerAvatar";
 import { getOrdinal } from "../../../utils/string";
+import { COLORS, FONT_FAMILY } from "../../../colors";
 import { PlayerBonusPoints } from "./PlayerBonusPoints";
 import { Card } from "./Card";
 
@@ -37,7 +38,7 @@ const PlayerFinishedPosition = styled.div`
   left: 50%;
   transform: translateX(-50%);
   color: #333;
-  font-family: ${({ theme }) => theme.fontFamily.numbers};
+  font-family: ${FONT_FAMILY.numeric};
 `;
 
 const PlayerPoints = styled.div`
@@ -46,7 +47,7 @@ const PlayerPoints = styled.div`
   bottom: -30%;
   left: 50%;
   transform: translateX(-50%);
-  font-family: ${({ theme }) => theme.fontFamily.numbers};
+  font-family: ${FONT_FAMILY.numeric};
   border: 2px solid #444;
   background-color: crimson;
   color: white;
@@ -61,12 +62,12 @@ const PlayerName = styled.div`
   left: 50%;
   transform: translateX(-50%);
   border: 2px solid white;
-  color: ${({ theme }) => theme.color.text02};
-  background-color: ${({ theme }) => theme.color.background02};
+  color: ${COLORS.gasGame.cardTextColor01};
+  background-color: ${COLORS.gasGame.cardBackgroundColor};
   padding: 5px;
   border-radius: 5px;
   text-transform: uppercase;
-  font-size: ${({ theme }) => theme.fontSize.smallish};
+  font-size: 0.8rem;
   white-space: nowrap;
 `;
 
