@@ -16,6 +16,10 @@ export type SoundName =
   | "rps-award-loser"
   | "rps-award-middle"
   | "whos-that"
+  | "gas-play-number-card"
+  | "gas-play-reverse-card"
+  | "gas-play-skip-card"
+  | "gas-play-risky-card"
   | "ai-thinking"
   | "ai-speaking"
   | "ai-typing";

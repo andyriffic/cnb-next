@@ -7,7 +7,7 @@ import { selectRandomOneOf } from "../../../../utils/random";
 export function useGasSound(game: GasGame | undefined) {
   const playingSounds = useRef<{ [id: string]: Howl }>({});
 
-  const { play } = useSound();
+  const { play, loop } = useSound();
   const lastPlayerPlayedCardRef = useRef<string | undefined>();
 
   const pressedCount = useMemo<number>(() => {
@@ -104,24 +104,23 @@ export function useGasSound(game: GasGame | undefined) {
   useEffect(() => {
     if (pressedCount > 0) {
       const intensity = pressedCount / 100 + 0.5;
-      play("GasCloudPress", { rate: intensity });
+      // play("gas-inflate", { rate: intensity });
+      play("gas-inflate"); //TODO: intensity not here when migrating game, can add in the future
     }
-  }, [pressedCount]);
+  }, [play, pressedCount]);
 
   useEffect(() => {
     if (cursed) {
-      play("SelectPrizeEmpty");
+      play("gas-cursed");
     }
-  }, [cursed]);
+  }, [cursed, play]);
 
   useEffect(() => {
     if (exploded) {
       playingSounds.current["background-music"] &&
         playingSounds.current["background-music"].stop();
-      play("GasCloudExplode01");
-      play(
-        selectRandomOneOf(["GasPlayerDie1", "GasPlayerDie2", "GasPlayerDie3"])
-      );
+      play("gas-explode");
+      play("gas-player-die");
     }
   }, [exploded, play]);
 
@@ -133,15 +132,15 @@ export function useGasSound(game: GasGame | undefined) {
 
   useEffect(() => {
     if (hasWinner) {
-      play("GasWinner");
+      play("gas-winner");
     }
-  }, [hasWinner]);
+  }, [hasWinner, play]);
 
   useEffect(() => {
     if (finishedPressingRiskyCard) {
-      play("GasPlaySurvivedRisk");
+      play("gas-play-survived-risk");
     }
-  }, [finishedPressingRiskyCard]);
+  }, [finishedPressingRiskyCard, play]);
 
   useEffect(() => {
     if (!!playingSounds.current["head-to-head"]) {
@@ -149,16 +148,14 @@ export function useGasSound(game: GasGame | undefined) {
     }
 
     if (headToHead) {
-      playingSounds.current["head-to-head"] = play("PowerMode");
+      playingSounds.current["head-to-head"] = play("gas-head-to-head-round");
     }
-  }, [headToHead]);
+  }, [headToHead, play]);
 
   useEffect(() => {
     if (gameInProgress) {
-      playingSounds.current["background-music"] = play(
-        "GasCloudGameBackgroundMusic",
-        { loop: true }
-      );
+      playingSounds.current["background-music"] = loop("gas-background-music");
+      playingSounds.current["background-music"].play();
     }
-  }, [gameInProgress, play]);
+  }, [gameInProgress, loop]);
 }

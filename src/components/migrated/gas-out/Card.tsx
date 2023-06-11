@@ -68,16 +68,16 @@ export function Card({ card, pressesRemaining }: Props): JSX.Element | null {
   useEffect(() => {
     switch (card.type) {
       case "press":
-        play("GasPlayNumberCard");
+        play("gas-play-number-card");
         break;
       case "reverse":
-        play("GasPlayReverseCard");
+        play("gas-play-reverse-card");
         break;
       case "skip":
-        play("GasPlaySkipCard");
+        play("gas-play-skip-card");
         break;
       case "risky":
-        play("GasPlayRiskCard");
+        play("gas-play-risky-card");
         break;
       default:
         break;
