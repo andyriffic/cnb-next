@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { useSocketIo } from "../../../providers/SocketIoProvider";
+import GasOutGameScreen from "../../../components/migrated/gas-out";
 
 type Props = {};
 
@@ -9,7 +10,7 @@ function Page({}: Props) {
   const { gasGame } = useSocketIo();
   const game = gasGame.gasGames.find((game) => game.id === gameId);
 
-  return game ? <h1>Game found</h1> : <div>Loading</div>;
+  return game ? <GasOutGameScreen gasGame={game} /> : <div>Loading</div>;
 }
 
 export default Page;

@@ -27,7 +27,7 @@ export type GasGame = {
 
 export type CardHistory = { playerId: string; cardPlayed: GasCard };
 
-type GasCloud = {
+export type GasCloud = {
   pressed: number;
   exploded: boolean;
 };
