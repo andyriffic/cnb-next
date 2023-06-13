@@ -1,17 +1,26 @@
 import Link from "next/link";
 import { useMemo } from "react";
+import styled from "styled-components";
 import { useSocketIo } from "../../providers/SocketIoProvider";
 import { Card, SubHeading } from "../Atoms";
-import { getAiOverlordPlayerUrl } from "../../utils/url";
+import { getAiOverlordPlayerUrl, getGasOutPlayerUrl } from "../../utils/url";
+
+const TappableLink = styled.a`
+  display: block;
+  padding: 1rem 0;
+  margin: 1rem 0;
+`;
 
 type Props = {
   playerId: string;
 };
+
 export const PlayerGamesList = ({ playerId }: Props): JSX.Element | null => {
   const {
     rockPaperScissors: { activeRPSGames },
     groupBetting: { bettingGames },
     aiOverlord: { aiOverlordGames },
+    gasGame: { gasGames },
   } = useSocketIo();
 
   const playersGames = useMemo(() => {
@@ -29,6 +38,12 @@ export const PlayerGamesList = ({ playerId }: Props): JSX.Element | null => {
     );
   }, [aiOverlordGames, playerId]);
 
+  const playerGasGames = useMemo(() => {
+    return gasGames.filter((game) =>
+      game.allPlayers.map((p) => p.player.id).includes(playerId)
+    );
+  }, [gasGames, playerId]);
+
   return playersGames ? (
     <div>
       <Card>
@@ -38,8 +53,9 @@ export const PlayerGamesList = ({ playerId }: Props): JSX.Element | null => {
             <li key={game.id}>
               <Link
                 href={`/play/${playerId}/rock-paper-scissors?gameId=${game.id}`}
+                passHref={true}
               >
-                {game.id}
+                <TappableLink>RPS: {game.id}</TappableLink>
               </Link>
             </li>
           ))}
@@ -47,8 +63,23 @@ export const PlayerGamesList = ({ playerId }: Props): JSX.Element | null => {
         <ul>
           {overlordGames.map((game) => (
             <li key={game.gameId}>
-              <Link href={getAiOverlordPlayerUrl(playerId, game.gameId)}>
-                {game.gameId}
+              <Link
+                href={getAiOverlordPlayerUrl(playerId, game.gameId)}
+                passHref={true}
+              >
+                <TappableLink>AI Overlord: {game.gameId}</TappableLink>
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <ul>
+          {playerGasGames.map((game) => (
+            <li key={game.id}>
+              <Link
+                href={getGasOutPlayerUrl(playerId, game.id)}
+                passHref={true}
+              >
+                <TappableLink>Balloon: {game.id}</TappableLink>
               </Link>
             </li>
           ))}

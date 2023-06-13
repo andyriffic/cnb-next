@@ -62,3 +62,10 @@ export const getClassicCnbPlayerUrl = (playerId: string): string => {
 export const getGasOutSpectatorUrl = (gameId: string): string => {
   return `/watch/gas-out/${gameId}`;
 };
+
+export const getGasOutPlayerUrl = (
+  playerId: string,
+  gameId: string
+): string => {
+  return `/play/${playerId}/gas-out?gameId=${gameId}`;
+};
