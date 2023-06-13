@@ -51,6 +51,7 @@ const PlayerPoints = styled.div`
 const DeathIcon = styled.div``;
 const TimedOutIcon = styled.div`
   position: absolute;
+  bottom: 0;
 `;
 
 const PlayerStatsContainer = styled.div`

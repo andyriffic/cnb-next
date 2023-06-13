@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import styled, { css, keyframes } from "styled-components";
 
 const fillAnimation = keyframes`
@@ -33,13 +34,13 @@ export const PlayerGasTimeoutTimer = ({
   onTimedOut,
   timeOutMilliseconds,
 }: Props): JSX.Element => {
-  // useEffect(() => {
-  //   const timeout = setTimeout(onTimedOut, timeOutMilliseconds);
+  useEffect(() => {
+    const timeout = setTimeout(onTimedOut, timeOutMilliseconds);
 
-  //   return () => {
-  //     clearTimeout(timeout);
-  //   };
-  // }, []);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, []);
 
   return (
     <Container>

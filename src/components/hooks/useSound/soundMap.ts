@@ -27,6 +27,7 @@ export const SOUND_MAP: { [key in SoundName]: string } = {
   "gas-play-risky-card": "/sounds/fall_scream.mp3",
   "gas-play-survived-risk": "/sounds/phew.mp3",
   "gas-cursed": "/sounds/mission_failed.mp3",
+  "gas-boomerang": "/sounds/smack_aaa_oh.mp3",
   "gas-inflate": "/sounds/air_inflate.mp3",
   "gas-explode": "/sounds/balloon_pop_sound_loud.mp3",
   "gas-player-die": "/sounds/wilhelm_scream.mp3",

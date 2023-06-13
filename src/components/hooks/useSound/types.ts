@@ -24,6 +24,7 @@ export type SoundName =
   | "gas-cursed"
   | "gas-inflate"
   | "gas-explode"
+  | "gas-boomerang"
   | "gas-player-die"
   | "gas-winner"
   | "gas-head-to-head-round"

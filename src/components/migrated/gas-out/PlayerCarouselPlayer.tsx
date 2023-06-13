@@ -147,7 +147,7 @@ export function PlayerCarouselPlayer({
 
       <PlayerAvatarContainer alive={alive}>
         <PlayerAvatar playerId={player.player.id} size={size} />
-        {player.curse === "double-press" && <Curse>Double Press ‼️</Curse>}
+        {/* {player.curse === "double-press" && <Curse>Double Press ‼️</Curse>} */}
       </PlayerAvatarContainer>
       {active &&
         game.currentPlayer.cardPlayed &&
@@ -161,7 +161,7 @@ export function PlayerCarouselPlayer({
           </CardContainer>
         )}
       {markedForDeath(player, active)}
-      {player.curse === "double-press" && <Curse>Double Press ‼️</Curse>}
+      {player.curse === "double-press" && <Curse>Cursed ‼️</Curse>}
     </PlayerListItem>
   ) : null;
 }

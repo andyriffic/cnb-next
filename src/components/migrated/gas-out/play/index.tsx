@@ -11,7 +11,7 @@ import { PlayerGasChosenNextOutPlayer } from "./PlayerGasChosenNextOutPlayer";
 const PlayerStatus = styled.div`
   margin: 30px 0;
   text-align: center;
-  font-size: 3rem;
+  font-size: 2rem;
 `;
 
 const PlayerFinishedPosition = styled.div`
@@ -60,14 +60,19 @@ const View = ({ playerId, gasGameId }: Props) => {
             player={gasPlayer}
           />
           {gasPlayer.curse === "double-press" && (
-            <PlayerStatus>Presses are doubled for your turn 😭</PlayerStatus>
+            <PlayerStatus>
+              Presses are doubled for your turn, and you must pick a number card
+              😭
+            </PlayerStatus>
           )}
-          {playersTurn && !game.currentPlayer.cardPlayed && (
-            <PlayerGasTimeoutTimer
-              timeOutMilliseconds={3000}
-              onTimedOut={timeOut}
-            />
-          )}
+          {playersTurn &&
+            !game.currentPlayer.cardPlayed &&
+            !!gasPlayer?.curse && (
+              <PlayerGasTimeoutTimer
+                timeOutMilliseconds={3000}
+                onTimedOut={timeOut}
+              />
+            )}
         </>
       )}
       {showCloudPresser && gasPlayer.status === "alive" && (

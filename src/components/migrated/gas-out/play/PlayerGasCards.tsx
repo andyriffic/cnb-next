@@ -28,6 +28,10 @@ const Card = styled.button<{ special: boolean }>`
       ? COLORS.gasGame.cardBackgroundColorSpecial
       : COLORS.gasGame.cardBackgroundColor};
   font-family: ${FONT_FAMILY.numeric};
+
+  &:disabled {
+    opacity: 0.5;
+  }
 `;
 
 const CardNumber = styled.div`
@@ -35,7 +39,7 @@ const CardNumber = styled.div`
 `;
 
 const CardText = styled.div`
-  font-size: 0.8rem;
+  font-size: 2rem;
 `;
 
 const applyCurse = (card: GasCard, curse: CurseType | undefined): number => {
@@ -50,6 +54,20 @@ const applyCurse = (card: GasCard, curse: CurseType | undefined): number => {
   }
 
   return card.presses;
+};
+
+const isCardDisabled = (
+  card: GasCard,
+  curse: CurseType | undefined
+): boolean => {
+  if (!curse) {
+    return false;
+  }
+
+  if (card.type === "skip" || card.type === "reverse") {
+    return true;
+  }
+  return false;
 };
 
 type Props = {
@@ -70,7 +88,7 @@ export const PlayerGasCards = ({
       {cards.map((c, i) => (
         <Card
           key={i}
-          disabled={!enabled}
+          disabled={!enabled || isCardDisabled(c, player.curse)}
           onClick={() => playCard(i)}
           special={c.type === "risky"}
         >

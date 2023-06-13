@@ -45,7 +45,7 @@ export function ExplodingPlayer({ game }: Props): JSX.Element {
 
   useEffect(() => {
     if (currentPlayer.killedBy === "boomerang") {
-      play("GasBoomerang");
+      play("gas-boomerang");
     }
   }, [currentPlayer.killedBy, play]);
 
