@@ -25,6 +25,7 @@ import {
 } from "../../utils/url";
 import { generateShortNumericId } from "../../utils/id";
 import { EvenlySpaced } from "../../components/Layouts";
+import { isClientSideFeatureEnabled } from "../../utils/feature";
 
 const JoinedPlayerContainer = styled.div`
   display: flex;
@@ -34,6 +35,8 @@ const JoinedPlayerContainer = styled.div`
 `;
 
 const JoinedPlayerItem = styled.div``;
+
+// const gasGameEnabled = isClientSideFeatureEnabled("balloon");
 
 function Page() {
   const router = useRouter();
@@ -152,16 +155,18 @@ function Page() {
             >
               Betting game
             </PrimaryButton>
-            <PrimaryButton
-              disabled={group.playerIds.length < 2}
-              onClick={() =>
-                gasGame.createGasGame(group.playerIds, (gameId) => {
-                  router.push(getGasOutSpectatorUrl(gameId));
-                })
-              }
-            >
-              Balloon game
-            </PrimaryButton>
+            {isClientSideFeatureEnabled("balloon") && (
+              <PrimaryButton
+                disabled={group.playerIds.length < 2}
+                onClick={() =>
+                  gasGame.createGasGame(group.playerIds, (gameId) => {
+                    router.push(getGasOutSpectatorUrl(gameId));
+                  })
+                }
+              >
+                Balloon game
+              </PrimaryButton>
+            )}
             <PrimaryButton
               disabled={group.playerIds.length < 2}
               onClick={() =>
