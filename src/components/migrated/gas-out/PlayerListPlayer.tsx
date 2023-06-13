@@ -174,10 +174,6 @@ export function PlayerListPlayer({
         <PlayerAvatar playerId={player.player.id} size={size} />
       </PlayerAvatarContainer>
       {(!notDead || winner) && <PlayerPoints>{player.points}</PlayerPoints>}
-      {/* {p.status === 'winner' && <PlayerIcon>🎉</PlayerIcon>} */}
-      {/* <PlayerStatsContainer>
-              <PlayerStatsSummary gasPlayer={p} />
-            </PlayerStatsContainer> */}
     </PlayerListItem>
   ) : null;
 }

@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import styled, { css } from "styled-components";
-import { spinAwayAnimationUp } from "../../animations/keyframes/spinAnimations";
-import { fadeInAnimation } from "../../animations/keyframes/fade";
-import { shakeAnimationLeft } from "../../animations/keyframes/extreme";
+import { COLORS } from "../../../colors";
 import { GasGame, GasPlayer } from "../../../services/migrated/gas-out/types";
 import { AvatarSize, PlayerAvatar } from "../../PlayerAvatar";
+import { shakeAnimationLeft } from "../../animations/keyframes/extreme";
+import { spinAwayAnimationUp } from "../../animations/keyframes/spinAnimations";
 import { Card } from "./Card";
 
 const usePlayerCarousel = true;
@@ -33,44 +33,18 @@ const PlayerListItem = styled.div<{ active: boolean }>`
   justify-content: center;
 `;
 
-const PlayerFinishedPosition = styled.div`
-  font-size: 0.9rem;
-  position: absolute;
-  top: -40%;
-  left: 50%;
-  transform: translateX(-50%);
-  color: #333;
-  font-family: ${({ theme }) => theme.fontFamily.numbers};
-`;
-
-const PlayerPoints = styled.div`
-  font-size: 1rem;
-  position: absolute;
-  bottom: -30%;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: ${({ theme }) => theme.fontFamily.numbers};
-  border: 2px solid #444;
-  background-color: crimson;
-  color: white;
-  padding: 3px;
-  border-radius: 4px;
-  animation: ${fadeInAnimation} 1000ms ease-in-out 2000ms both;
-`;
-
 const Curse = styled.div`
   position: absolute;
   bottom: 20%;
   left: 50%;
   transform: translateX(-50%);
   border: 2px solid white;
-  color: ${({ theme }) => theme.color.gasGame.cardTextColorSpecial};
-  background-color: ${({ theme }) =>
-    theme.color.gasGame.cardBackgroundColorSpecial};
+  color: ${COLORS.gasGame.cardTextColorSpecial};
+  background-color: ${COLORS.gasGame.cardBackgroundColorSpecial};
   padding: 5px;
   border-radius: 5px;
   text-transform: uppercase;
-  font-size: ${({ theme }) => theme.fontSize.smallish};
+  font-size: 0.7rem;
   white-space: nowrap;
   animation: ${shakeAnimationLeft} 800ms ease-in infinite both;
 `;
