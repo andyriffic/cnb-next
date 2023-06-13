@@ -28,10 +28,11 @@ const PlayerContainer = styled.div`
 `;
 
 const Number = styled.div`
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: #222;
   font-family: ${FONT_FAMILY.numeric};
   text-align: center;
+  font-weight: bold;
 `;
 
 type Props = {
@@ -81,7 +82,9 @@ export function FinalPodium({ game }: Props): JSX.Element | null {
         />
       </div>
       <PlacingContainer>
-        <SubHeading style={{ fontSize: "0.8rem" }}>Most Guesses</SubHeading>
+        <SubHeading style={{ fontSize: "0.8rem", textAlign: "center" }}>
+          Most Guesses
+        </SubHeading>
         <Number>
           {topGuessPlayers[0] && topGuessPlayers[0].guesses.correctGuessCount}
         </Number>
@@ -90,20 +93,22 @@ export function FinalPodium({ game }: Props): JSX.Element | null {
             <PlayerAvatar
               key={p.player.id}
               playerId={p.player.id}
-              size="small"
+              size="thumbnail"
             />
           ))}
         </PlayerContainer>
       </PlacingContainer>
       <PlacingContainer>
-        <SubHeading style={{ fontSize: "0.8rem" }}>Most Presses</SubHeading>
+        <SubHeading style={{ fontSize: "0.8rem", textAlign: "center" }}>
+          Most Presses
+        </SubHeading>
         <Number>{topPressPlayers[0] && topPressPlayers[0].totalPresses}</Number>
         <PlayerContainer>
           {topPressPlayers.map((p) => (
             <PlayerAvatar
               key={p.player.id}
               playerId={p.player.id}
-              size="small"
+              size="thumbnail"
             />
           ))}
         </PlayerContainer>
