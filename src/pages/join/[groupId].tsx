@@ -15,7 +15,6 @@ import { useSound } from "../../components/hooks/useSound";
 import { usePlayerNames } from "../../providers/PlayerNamesProvider";
 import { useSocketIo } from "../../providers/SocketIoProvider";
 import { PlayerWallet } from "../../services/betting/types";
-import { isClientSideFeatureEnabled } from "../../utils/feature";
 import { shuffleArray } from "../../utils/random";
 import {
   getAiOverlordSpectatorUrl,
@@ -152,18 +151,16 @@ function Page() {
             >
               Betting game
             </PrimaryButton>
-            {isClientSideFeatureEnabled("balloon") && (
-              <PrimaryButton
-                disabled={group.playerIds.length < 2}
-                onClick={() =>
-                  gasGame.createGasGame(group.playerIds, (gameId) => {
-                    router.push(getGasOutSpectatorUrl(gameId));
-                  })
-                }
-              >
-                Balloon game
-              </PrimaryButton>
-            )}
+            <PrimaryButton
+              disabled={group.playerIds.length < 2}
+              onClick={() =>
+                gasGame.createGasGame(group.playerIds, (gameId) => {
+                  router.push(getGasOutSpectatorUrl(gameId));
+                })
+              }
+            >
+              Balloon game
+            </PrimaryButton>
             <PrimaryButton
               disabled={group.playerIds.length < 2}
               onClick={() =>
