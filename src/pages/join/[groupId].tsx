@@ -1,31 +1,28 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useRef, useState } from "react";
-import styled from "styled-components";
 import qrcode from "qrcode";
-import { Appear } from "../../components/animations/Appear";
+import { useEffect, useMemo, useState } from "react";
+import styled from "styled-components";
 import { Heading, PrimaryButton, SubHeading } from "../../components/Atoms";
 import { DebugPlayerJoin } from "../../components/DebugPlayerJoin";
-import { useSomethingWhenArraySizeChanges } from "../../components/hooks/useSomethingWhenArraySizeChanges";
-import { useSound } from "../../components/hooks/useSound";
-import { CenterSpaced } from "../../components/Layouts";
+import { CenterSpaced, EvenlySpaced } from "../../components/Layouts";
 import { NumericValue } from "../../components/NumericValue";
 import { PlayerAvatar } from "../../components/PlayerAvatar";
 import { SpectatorPageLayout } from "../../components/SpectatorPageLayout";
+import { Appear } from "../../components/animations/Appear";
+import { useSomethingWhenArraySizeChanges } from "../../components/hooks/useSomethingWhenArraySizeChanges";
+import { useSound } from "../../components/hooks/useSound";
 import { usePlayerNames } from "../../providers/PlayerNamesProvider";
 import { useSocketIo } from "../../providers/SocketIoProvider";
 import { PlayerWallet } from "../../services/betting/types";
+import { isClientSideFeatureEnabled } from "../../utils/feature";
 import { shuffleArray } from "../../utils/random";
 import {
   getAiOverlordSpectatorUrl,
   getGasOutSpectatorUrl,
   getPlayRootUrl,
   getRockPaperScissorsGameSpectatorUrl,
-  getWhosThatUrl,
 } from "../../utils/url";
-import { generateShortNumericId } from "../../utils/id";
-import { EvenlySpaced } from "../../components/Layouts";
-import { isClientSideFeatureEnabled } from "../../utils/feature";
 
 const JoinedPlayerContainer = styled.div`
   display: flex;
