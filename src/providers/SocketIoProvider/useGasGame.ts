@@ -1,12 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
-import {
-  GasPlayer,
-  GasCard,
-  GlobalEffect,
-  GasGame,
-} from "../../services/migrated/gas-out/types";
-import { RPSMoveName } from "../../services/rock-paper-scissors/types";
 import {
   CREATE_GAS_GAME,
   GAS_GAMES_UPDATE,
@@ -17,12 +10,15 @@ import {
   PLAY_GAS_CARD,
   PRESS_GAS,
 } from "../../services/migrated/gas-out/socket";
-import { Player } from "../../types/Player";
-import { useSocketIo } from ".";
+import { GasGame, GlobalEffect } from "../../services/migrated/gas-out/types";
 
 export type GasGameSocketService = {
   gasGames: GasGame[];
-  createGasGame: (playerIds: string[], onCreated: (id: string) => void) => void;
+  createGasGame: (
+    playerIds: string[],
+    gameId: string,
+    onCreated: (id: string) => void
+  ) => void;
   playCard: (gameId: string, playerId: string, cardIndex: number) => void;
   pressGas: (gameId: string) => void;
   nextPlayer: (gameId: string) => void;
@@ -39,8 +35,8 @@ export function useGasGame(socket: Socket): GasGameSocketService {
   const [gasGames, setGasGames] = useState<GasGame[]>([]);
 
   const createGasGame = useCallback(
-    (playerIds: string[], onCreated: (id: string) => void) => {
-      socket.emit(CREATE_GAS_GAME, playerIds, onCreated);
+    (playerIds: string[], gameId: string, onCreated: (id: string) => void) => {
+      socket.emit(CREATE_GAS_GAME, playerIds, gameId, onCreated);
     },
     [socket]
   );

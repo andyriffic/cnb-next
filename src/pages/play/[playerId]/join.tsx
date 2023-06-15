@@ -15,6 +15,7 @@ import { PlayerPageLayout } from "../../../components/PlayerPageLayout";
 import { useSocketIo } from "../../../providers/SocketIoProvider";
 import {
   getAiOverlordPlayerUrl,
+  getGasOutPlayerUrl,
   playersBettingGameUrl,
   playersRockPaperScissorsGameUrl,
 } from "../../../utils/url";
@@ -35,7 +36,7 @@ function Page({}: Props) {
   const autoJoinId = (router.query.autoJoinId as string) || "";
   const playerId = router.query.playerId as string;
   const joinedId = router.query.joinedId as string;
-  const { groupJoin, rockPaperScissors, groupBetting, aiOverlord } =
+  const { groupJoin, rockPaperScissors, groupBetting, aiOverlord, gasGame } =
     useSocketIo();
   const [groupId, setGroupId] = useState(autoJoinId);
 
@@ -78,6 +79,17 @@ function Page({}: Props) {
     );
   }, [aiOverlord.aiOverlordGames, joinedGroup, playerId]);
 
+  const relatedGasGame = useMemo(() => {
+    return (
+      joinedGroup &&
+      gasGame.gasGames.find(
+        (g) =>
+          g.id === joinedGroup.id &&
+          g.allPlayers.map((p) => p.player.id).includes(playerId)
+      )
+    );
+  }, [joinedGroup, gasGame.gasGames, playerId]);
+
   return (
     <PlayerPageLayout headerContent={<>Header</>} playerId={playerId}>
       {joinedGroup ? (
@@ -114,6 +126,14 @@ function Page({}: Props) {
               passHref={true}
             >
               <PrimaryLinkButton>Play Ai Overlord</PrimaryLinkButton>
+            </Link>
+          )}
+          {relatedGasGame && (
+            <Link
+              href={getGasOutPlayerUrl(playerId, relatedGasGame.id)}
+              passHref={true}
+            >
+              <PrimaryLinkButton>Play Balloon</PrimaryLinkButton>
             </Link>
           )}
         </div>

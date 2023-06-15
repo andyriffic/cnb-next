@@ -154,7 +154,7 @@ function Page() {
             <PrimaryButton
               disabled={group.playerIds.length < 2}
               onClick={() =>
-                gasGame.createGasGame(group.playerIds, (gameId) => {
+                gasGame.createGasGame(group.playerIds, groupId, (gameId) => {
                   router.push(getGasOutSpectatorUrl(gameId));
                 })
               }
