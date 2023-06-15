@@ -17,11 +17,17 @@ function giveKongImmunity(player: Player): Player {
 }
 
 function giveWinnerBonus(player: Player, game: GasGame): Player {
-  if (player.id !== game.winningPlayerId) {
-    return player;
+  const isWinner = player.id === game.winningPlayerId;
+  const isMostPresses = game.mvpPlayerIds?.mostPresses?.includes(player.id);
+  const isMostGuesses = game.mvpPlayerIds?.mostCorrectGuesses?.includes(
+    player.id
+  );
+
+  if (isWinner || isMostGuesses || isMostPresses) {
+    return giveKongImmunity(player);
   }
 
-  return giveKongImmunity(player);
+  return player;
 }
 
 function givePoints(player: Player, points: number): void {
@@ -37,6 +43,8 @@ function givePoints(player: Player, points: number): void {
   });
 }
 
+const MOST_PRESSESS_BONUS_POINTS = 2;
+
 export function pointsToPlayersKong(game: GasGame) {
   getAllPlayers().then((allPlayers) => {
     if (!allPlayers) return;
@@ -45,7 +53,12 @@ export function pointsToPlayersKong(game: GasGame) {
 
       if (!player) return;
 
-      givePoints(giveWinnerBonus(player, game), gasPlayer.points);
+      const isMostPresses = game.mvpPlayerIds?.mostPresses?.includes(player.id);
+
+      givePoints(
+        giveWinnerBonus(player, game),
+        gasPlayer.points + (isMostPresses ? MOST_PRESSESS_BONUS_POINTS : 0)
+      );
     });
   });
 }
