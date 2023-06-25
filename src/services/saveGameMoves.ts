@@ -72,6 +72,7 @@ const updatePlayerGameMoves = (playerMoves: PlayerGameMoves): Promise<void> => {
         const currentGameMoves = player.details?.gameMoves || 0;
 
         updatePlayer(playerMoves.playerId, {
+          ...player.details,
           gameMoves: currentGameMoves + playerMoves.moves,
         })
           .then(() => {
