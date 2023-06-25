@@ -3,6 +3,7 @@ import { Player } from "../../types/Player";
 import { Card } from "../Atoms";
 import { EvenlySpaced } from "../Layouts";
 import { PlayerAvatar } from "../PlayerAvatar";
+import { COLORS } from "../../colors";
 
 const PlayerDetailsContainer = styled.div`
   flex: 1;
@@ -23,8 +24,16 @@ export const AdminPlayerView = ({ player }: Props) => {
       <EvenlySpaced style={{ gap: "0.5rem" }}>
         <div>
           <PlayerAvatar playerId={player.id} size="thumbnail" />
-          <p style={{ textAlign: "center", fontWeight: "bold" }}>
-            {player.name} ({player.details?.gameMoves || 0})
+          <p
+            style={{
+              textAlign: "center",
+              padding: "0.2rem",
+              // fontWeight: "bold",
+              color: "white",
+              backgroundColor: COLORS.borderPrimary,
+            }}
+          >
+            {player.name}
           </p>
           {/* <p style={{ textAlign: "center", fontWeight: "bold" }}>
             <NumericValue>
@@ -38,6 +47,8 @@ export const AdminPlayerView = ({ player }: Props) => {
               <li key={i}>{tag}</li>
             ))}
           </ul>
+          <hr />
+          <div>{JSON.stringify(player.details, null, 2)}</div>
         </PlayerDetailsContainer>
       </EvenlySpaced>
     </Card>
