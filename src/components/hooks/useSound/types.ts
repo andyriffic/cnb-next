@@ -29,6 +29,9 @@ export type SoundName =
   | "gas-winner"
   | "gas-head-to-head-round"
   | "gas-background-music"
+  | "pacman-move-pacman"
+  | "pacman-move-player"
+  | "pacman-eat-player"
   | "ai-thinking"
   | "ai-speaking"
   | "ai-typing";
