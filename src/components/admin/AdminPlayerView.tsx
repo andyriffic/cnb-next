@@ -24,7 +24,7 @@ export const AdminPlayerView = ({ player }: Props) => {
         <div>
           <PlayerAvatar playerId={player.id} size="thumbnail" />
           <p style={{ textAlign: "center", fontWeight: "bold" }}>
-            {player.name}
+            {player.name} ({player.details?.gameMoves || 0})
           </p>
           {/* <p style={{ textAlign: "center", fontWeight: "bold" }}>
             <NumericValue>

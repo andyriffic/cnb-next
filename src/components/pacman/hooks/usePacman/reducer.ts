@@ -34,7 +34,7 @@ function createPacManPlayer(player: Player): PacManPlayer {
     player,
     status: "",
     offset: 0,
-    movesRemaining: getPlayerIntegerAttributeValue(player.tags, "pac_moves", 0),
+    movesRemaining: player.details?.gameMoves ?? 0,
     pathIndex: getPlayerIntegerAttributeValue(player.tags, "pac_square", 0),
     color: getPlayerAttributeValueFromTags(player.tags, "rt_color", "red"),
     jailTurnsCount: getPlayerIntegerAttributeValue(player.tags, "pac_jail", 0),

@@ -1,8 +1,10 @@
 import styled from "styled-components";
-import { Player } from "../../types/Player";
+import { useState } from "react";
+import { Player, PlayerDetails } from "../../types/Player";
 import { Card } from "../Atoms";
 import { EvenlySpaced } from "../Layouts";
 import { PlayerAvatar } from "../PlayerAvatar";
+import { updatePlayerDetails } from "../../utils/api";
 
 const PlayerDetailsContainer = styled.div`
   flex: 1;
@@ -10,31 +12,80 @@ const PlayerDetailsContainer = styled.div`
 
 type Props = {
   player: Player;
+  onClose: (updated: boolean) => void;
 };
 
-export const AdminPlayerEdit = ({ player }: Props) => {
+const DEFAULT_PLAYER_DETAILS: PlayerDetails = {
+  gameMoves: 0,
+  whosThatCount: 0,
+};
+
+export const AdminPlayerEdit = ({ player, onClose }: Props) => {
+  const [playerCopy, setPlayerCopy] = useState(deepClone(player));
+
   return (
     <Card
       style={{
         margin: 0,
-        padding: "0.3rem",
+        padding: "1rem",
+        border: "0.3rem solid black",
       }}
     >
       <EvenlySpaced style={{ gap: "0.5rem" }}>
         <div>
-          <PlayerAvatar playerId={player.id} size="thumbnail" />
+          <PlayerAvatar playerId={playerCopy.id} size="thumbnail" />
           <p style={{ textAlign: "center", fontWeight: "bold" }}>
-            {player.name}
+            {playerCopy.name}
           </p>
         </div>
         <PlayerDetailsContainer>
           <ul>
-            {player.tags.map((tag, i) => (
+            {playerCopy.tags.map((tag, i) => (
               <li key={i}>{tag}</li>
             ))}
           </ul>
         </PlayerDetailsContainer>
       </EvenlySpaced>
+      <div>
+        <form>
+          <fieldset>
+            <label htmlFor="game_moves">Game Moves</label>
+            <input
+              id="game_moves"
+              type="number"
+              min={0}
+              step={1}
+              value={playerCopy.details?.gameMoves}
+              onChange={(e) =>
+                setPlayerCopy({
+                  ...playerCopy,
+                  details: {
+                    ...playerCopy.details,
+                    gameMoves: e.target.valueAsNumber,
+                  },
+                })
+              }
+            />
+          </fieldset>
+        </form>
+      </div>
+      <EvenlySpaced>
+        <button onClick={() => onClose(false)}>Cancel</button>
+        <button
+          onClick={() => {
+            updatePlayerDetails(
+              playerCopy.id,
+              playerCopy.details || DEFAULT_PLAYER_DETAILS
+            ).then(() => onClose(true));
+          }}
+        >
+          Save
+        </button>
+      </EvenlySpaced>
     </Card>
   );
 };
+
+function deepClone<T>(object: T): T {
+  return JSON.parse(JSON.stringify(object));
+}
