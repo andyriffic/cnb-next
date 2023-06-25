@@ -24,7 +24,6 @@ const View = ({ players }: Props) => {
   const pacManService = usePacMan(players, boardConfig);
   usePacmanSound(pacManService.uiState);
   usePlayerAutoMove(pacManService);
-  // useSyncData(pacManService.uiState, true);
 
   // useEffect(() => {
   //   triggerUpdate();
