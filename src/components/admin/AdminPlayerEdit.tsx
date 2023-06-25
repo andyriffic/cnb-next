@@ -67,16 +67,32 @@ export const AdminPlayerEdit = ({ player, onClose }: Props) => {
               }
             />
           </fieldset>
+          <fieldset>
+            <label htmlFor="pacman_player">Pacman</label>
+            <input
+              id="pacman_player"
+              type="checkbox"
+              checked={playerCopy.details?.pacmanPlayer}
+              onChange={(e) =>
+                setPlayerCopy({
+                  ...playerCopy,
+                  details: {
+                    ...playerCopy.details,
+                    pacmanPlayer: e.target.checked,
+                  },
+                })
+              }
+            />
+          </fieldset>
         </form>
       </div>
       <EvenlySpaced>
         <button onClick={() => onClose(false)}>Cancel</button>
         <button
           onClick={() => {
-            updatePlayerDetails(
-              playerCopy.id,
-              playerCopy.details || DEFAULT_PLAYER_DETAILS
-            ).then(() => onClose(true));
+            updatePlayerDetails(playerCopy.id, playerCopy.details || {}).then(
+              () => onClose(true)
+            );
           }}
         >
           Save

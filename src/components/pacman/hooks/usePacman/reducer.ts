@@ -54,9 +54,7 @@ export function createInitialState({
   allPlayers: Player[];
   board: PacManBoard;
 }): PacManUiState {
-  const eligiblePlayers = allPlayers.filter((p) =>
-    p.tags.includes("pac_player")
-  );
+  const eligiblePlayers = allPlayers.filter((p) => !!p.details?.pacmanPlayer);
   const pacManPlayer = allPlayers.find((p) => p.id === "mc_settings_face");
 
   const initialState: PacManUiState = {

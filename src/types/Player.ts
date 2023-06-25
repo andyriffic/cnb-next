@@ -8,6 +8,7 @@ export type Player = {
 export type PlayerDetails = {
   gameMoves?: number;
   whosThatCount?: number;
+  pacmanPlayer?: boolean;
 };
 
 export type PlayerNames = { [playerId: string]: string };

@@ -1,8 +1,9 @@
 import { useMemo, useRef } from "react";
 import styled, { css } from "styled-components";
 import tinycolor from "tinycolor2";
+import { FONT_FAMILY } from "../../colors";
 import { spinAnimation } from "../animations/keyframes/spinAnimations";
-import { PacManGhostWithSantaHat } from "./PacManGhostWithSantaHat";
+import { PacManGhost } from "./PacManGhost";
 import { PacManPlayer } from "./types";
 
 const Container = styled.div<{ goingToJail: boolean }>`
@@ -20,7 +21,7 @@ const PlayerName = styled.div`
   color: red;
   padding: 3px;
   border-radius: 5px;
-  font-size: 0.4rem;
+  font-size: 0.6rem;
   text-align: center;
   position: absolute;
   top: -10px;
@@ -40,8 +41,8 @@ const MovesRemaining = styled.div`
   align-items: center;
   justify-content: center;
   color: red;
-  font-family: ${({ theme }) => theme.fontFamily.numbers};
-  font-size: 0.6rem;
+  font-family: ${FONT_FAMILY.numeric};
+  font-size: 1rem;
 `;
 
 const PowerPill = styled.div`
@@ -71,10 +72,7 @@ export function BoardPlayer({ pacPlayer }: Props): JSX.Element {
 
   return (
     <Container goingToJail={goingToJail}>
-      <PacManGhostWithSantaHat
-        color={inJail ? "#777777" : pacPlayer.color}
-        width="3vw"
-      />
+      <PacManGhost color={inJail ? "#777777" : pacPlayer.color} width="3vw" />
       <PlayerName
         style={{
           backgroundColor: pacPlayer.color,
