@@ -13,9 +13,10 @@ import { Appear } from "../../components/animations/Appear";
 import { useSomethingWhenArraySizeChanges } from "../../components/hooks/useSomethingWhenArraySizeChanges";
 import { useSound } from "../../components/hooks/useSound";
 import { usePlayerNames } from "../../providers/PlayerNamesProvider";
-import { useSocketIo } from "../../providers/SocketIoProvider";
+import { SocketIoService, useSocketIo } from "../../providers/SocketIoProvider";
 import { PlayerWallet } from "../../services/betting/types";
-import { shuffleArray } from "../../utils/random";
+import { PlayerGroup } from "../../services/player-join/types";
+import { selectRandomOneOf, shuffleArray } from "../../utils/random";
 import {
   getAiOverlordSpectatorUrl,
   getGasOutSpectatorUrl,
@@ -30,6 +31,21 @@ const JoinedPlayerContainer = styled.div`
   flex-wrap: wrap;
 `;
 
+type GameTypes = "rps" | "balloon" | "ai";
+const availableRandomGames: GameTypes[] = ["rps", "balloon"];
+
+const gameCreators: {
+  [key in GameTypes]: (
+    group: PlayerGroup,
+    socketIoService: SocketIoService,
+    getName: (playerId: string) => string
+  ) => Promise<GameUrl>;
+} = {
+  rps: createRockPaperScissorsWithBettingGame,
+  balloon: createBallonGame,
+  ai: createAiGame,
+};
+
 const JoinedPlayerItem = styled.div``;
 
 // const gasGameEnabled = isClientSideFeatureEnabled("balloon");
@@ -37,8 +53,7 @@ const JoinedPlayerItem = styled.div``;
 function Page() {
   const router = useRouter();
   const groupId = router.query.groupId as string;
-  const { groupJoin, rockPaperScissors, groupBetting, aiOverlord, gasGame } =
-    useSocketIo();
+  const socketService = useSocketIo();
   const { getName } = usePlayerNames();
   const { play, loop } = useSound();
   const [qrCodeUrl, setQrCodeUrl] = useState("");
@@ -63,8 +78,8 @@ function Page() {
   }, [groupId]);
 
   const group = useMemo(() => {
-    return groupJoin.playerGroups.find((g) => g.id === groupId);
-  }, [groupJoin.playerGroups, groupId]);
+    return socketService.groupJoin.playerGroups.find((g) => g.id === groupId);
+  }, [socketService.groupJoin.playerGroups, groupId]);
 
   useSomethingWhenArraySizeChanges(group?.playerIds, () =>
     play("join-player-joined")
@@ -98,84 +113,54 @@ function Page() {
             <PrimaryButton
               disabled={group.playerIds.length < 2}
               onClick={() => {
-                const randomisedPlayerIds = shuffleArray(group.playerIds);
-                const playerId1 = randomisedPlayerIds[0]!;
-                const playerId2 = randomisedPlayerIds[1]!;
-
-                const STARTING_WALLET_BALANCE = 0;
-
-                const bettingPlayerWallets = group.playerIds
-                  .filter((pid) => pid !== playerId1 && pid !== playerId2)
-                  .map<PlayerWallet>((pid) => ({
-                    playerId: pid,
-                    value: STARTING_WALLET_BALANCE,
-                  }));
-
-                rockPaperScissors.createRPSGame(
-                  {
-                    id: group.id,
-                    playerIds: [playerId1, playerId2],
-                  },
-                  (gameId) => {
-                    groupBetting.createGroupBettingGame(
-                      gameId,
-                      [
-                        {
-                          id: playerId1,
-                          name: getName(playerId1),
-                          odds: 1,
-                          betReturn: "oddsOnly",
-                        },
-                        {
-                          id: "draw",
-                          name: "Draw",
-                          odds: 1,
-                          betReturn: "oddsOnly",
-                        },
-                        {
-                          id: playerId2,
-                          name: getName(playerId2),
-                          odds: 1,
-                          betReturn: "oddsOnly",
-                        },
-                      ],
-                      bettingPlayerWallets,
-                      () =>
-                        router.push(
-                          getRockPaperScissorsGameSpectatorUrl(gameId)
-                        )
-                    );
-                  }
-                );
+                gameCreators
+                  .rps(group, socketService, getName)
+                  .then((gameUrl) => {
+                    router.push(gameUrl);
+                  });
               }}
             >
               Betting game
             </PrimaryButton>
             <PrimaryButton
               disabled={group.playerIds.length < 2}
-              onClick={() =>
-                gasGame.createGasGame(group.playerIds, groupId, (gameId) => {
-                  router.push(getGasOutSpectatorUrl(gameId));
-                })
-              }
+              onClick={() => {
+                gameCreators
+                  .balloon(group, socketService, getName)
+                  .then((gameUrl) => {
+                    router.push(gameUrl);
+                  });
+              }}
             >
               Balloon game
             </PrimaryButton>
             <PrimaryButton
               disabled={group.playerIds.length < 2}
-              onClick={() =>
-                aiOverlord.createAiOverlordGame(
-                  groupId,
-                  group.playerIds,
-                  (gameId) => {
-                    router.push(getAiOverlordSpectatorUrl(gameId));
-                  }
-                )
-              }
+              onClick={() => {
+                gameCreators
+                  .ai(group, socketService, getName)
+                  .then((gameUrl) => {
+                    router.push(gameUrl);
+                  });
+              }}
             >
               AI Overlord (BETA ⚠️)
             </PrimaryButton>
           </EvenlySpaced>
+          <Heading>OR</Heading>
+          <PrimaryButton
+            disabled={group.playerIds.length < 2}
+            onClick={() => {
+              const randomGame = selectRandomOneOf(availableRandomGames);
+              gameCreators[randomGame](group, socketService, getName).then(
+                (gameUrl) => {
+                  router.push(gameUrl);
+                }
+              );
+            }}
+          >
+            Random
+          </PrimaryButton>
         </CenterSpaced>
       )}
       {qrCodeUrl && (
@@ -195,3 +180,90 @@ function Page() {
 }
 
 export default Page;
+
+type GameUrl = string;
+
+function createRockPaperScissorsWithBettingGame(
+  group: PlayerGroup,
+  socketIoService: SocketIoService,
+  getName: (playerId: string) => string
+): Promise<GameUrl> {
+  return new Promise((resolve) => {
+    const randomisedPlayerIds = shuffleArray(group.playerIds);
+    const playerId1 = randomisedPlayerIds[0]!;
+    const playerId2 = randomisedPlayerIds[1]!;
+
+    const STARTING_WALLET_BALANCE = 0;
+
+    const bettingPlayerWallets = group.playerIds
+      .filter((pid) => pid !== playerId1 && pid !== playerId2)
+      .map<PlayerWallet>((pid) => ({
+        playerId: pid,
+        value: STARTING_WALLET_BALANCE,
+      }));
+
+    socketIoService.rockPaperScissors.createRPSGame(
+      {
+        id: group.id,
+        playerIds: [playerId1, playerId2],
+      },
+      (gameId) => {
+        socketIoService.groupBetting.createGroupBettingGame(
+          gameId,
+          [
+            {
+              id: playerId1,
+              name: getName(playerId1),
+              odds: 1,
+              betReturn: "oddsOnly",
+            },
+            {
+              id: "draw",
+              name: "Draw",
+              odds: 1,
+              betReturn: "oddsOnly",
+            },
+            {
+              id: playerId2,
+              name: getName(playerId2),
+              odds: 1,
+              betReturn: "oddsOnly",
+            },
+          ],
+          bettingPlayerWallets,
+          () => resolve(getRockPaperScissorsGameSpectatorUrl(gameId))
+        );
+      }
+    );
+  });
+}
+
+function createBallonGame(
+  group: PlayerGroup,
+  socketIoService: SocketIoService
+): Promise<GameUrl> {
+  return new Promise((resolve) => {
+    socketIoService.gasGame.createGasGame(
+      group.playerIds,
+      group.id,
+      (gameId) => {
+        resolve(getGasOutSpectatorUrl(gameId));
+      }
+    );
+  });
+}
+
+function createAiGame(
+  group: PlayerGroup,
+  socketIoService: SocketIoService
+): Promise<GameUrl> {
+  return new Promise((resolve) => {
+    socketIoService.aiOverlord.createAiOverlordGame(
+      group.id,
+      group.playerIds,
+      (gameId) => {
+        resolve(getAiOverlordSpectatorUrl(gameId));
+      }
+    );
+  });
+}

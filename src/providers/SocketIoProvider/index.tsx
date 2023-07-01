@@ -13,7 +13,7 @@ import {
 } from "./useRockPaperScissorsSocket";
 import { GasGameSocketService, useGasGame } from "./useGasGame";
 
-type SocketIoService = {
+export type SocketIoService = {
   rockPaperScissors: RPSSocketService;
   groupJoin: GroupJoinSocketService;
   groupBetting: GroupBettingSocketService;
