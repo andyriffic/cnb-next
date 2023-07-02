@@ -2,9 +2,27 @@ import {
   ApiAiOverlordNewOpponentRequest,
   ApiGameCreationRequest,
 } from "../pages/api/ai-overlord";
+import { CreatePlayerParams } from "../pages/api/player";
 import { AiOverlordGame } from "../services/ai-overlord/types";
 import { PlayerGameMoves } from "../services/saveGameMoves";
 import { PlayerDetails } from "../types/Player";
+
+export const addPlayerFetch = (params: CreatePlayerParams): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    fetch(`/api/player`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(params),
+    })
+      .then(() => resolve())
+      .catch((reason) => {
+        console.log(reason);
+        reject(reason);
+      });
+  });
+};
 
 export const updatePlayerDetails = (
   playerId: string,

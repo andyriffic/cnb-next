@@ -3,6 +3,8 @@ import {
   GetItemCommand,
   GetItemCommandInput,
   GetItemCommandOutput,
+  PutItemCommand,
+  PutItemInput,
   ScanCommand,
   ScanCommandInput,
   UpdateItemCommand,
@@ -27,6 +29,18 @@ const ddbClient = new DynamoDBClient({
     secretAccessKey: DYNAMO_DB_ACCESS_KEY_SECRET,
   },
 });
+
+export const addPlayer = (id: string, name: string): Promise<void> => {
+  const params: PutItemInput = {
+    TableName: DB_TABLE_NAME_PLAYERS,
+    Item: marshall({ id, name, tags: [], details: {} }),
+  };
+
+  return ddbClient
+    .send(new PutItemCommand(params))
+    .then(() => undefined)
+    .catch((err) => console.log("dynamodb error", err));
+};
 
 export const getAllPlayersTE = (): TE.TaskEither<string, Player[]> => {
   return pipe(

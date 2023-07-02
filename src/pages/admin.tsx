@@ -2,13 +2,15 @@ import { GetServerSideProps } from "next";
 import Head from "next/head";
 import styled from "styled-components";
 import { useState } from "react";
-import { SubHeading } from "../components/Atoms";
+import { PrimaryButton, SubHeading } from "../components/Atoms";
 import { SpectatorPageLayout } from "../components/SpectatorPageLayout";
 import { AdminPlayerView } from "../components/admin/AdminPlayerView";
 import { Player } from "../types/Player";
 import { getAllPlayers } from "../utils/data/aws-dynamodb";
 import { sortByPlayerName } from "../utils/sort";
 import { AdminPlayerEdit } from "../components/admin/AdminPlayerEdit";
+import { CenterSpaced } from "../components/Layouts";
+import { AdminPlayerAdd } from "../components/admin/AdminPlayerAdd";
 
 const PlayerContainer = styled.div`
   display: flex;
@@ -45,6 +47,7 @@ type Props = {
 
 export default function Page({ activePlayers, retiredPlayers }: Props) {
   const [editingPlayer, setEditingPlayer] = useState<Player | undefined>();
+  const [addingPlayer, setAddingPlayer] = useState(false);
 
   return (
     <>
@@ -85,6 +88,19 @@ export default function Page({ activePlayers, retiredPlayers }: Props) {
             />
           </EditModalContainer>
         )}
+        {addingPlayer && (
+          <EditModalContainer>
+            <AdminPlayerAdd
+              onClose={() => {
+                setAddingPlayer(false);
+                // updated && window.location.reload();
+              }}
+            />
+          </EditModalContainer>
+        )}
+        <CenterSpaced>
+          <PrimaryButton onClick={() => setAddingPlayer(true)}>Add Player</PrimaryButton>
+        </CenterSpaced>
       </SpectatorPageLayout>
     </>
   );
