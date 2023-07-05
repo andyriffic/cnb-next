@@ -46,15 +46,19 @@ export const updatePlayerDetails = (
 
 export const savePlayerGameMovesFetch = (
   gameId: string,
-  gameMoves: PlayerGameMoves[]
+  gameMoves: PlayerGameMoves[],
+  team?: string
 ): Promise<Response> => {
-  return fetch(`/api/save-game-moves?gameId=${gameId}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(gameMoves),
-  });
+  return fetch(
+    `/api/save-game-moves?gameId=${gameId}${team ? `&team=${team}` : ""}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(gameMoves),
+    }
+  );
 };
 
 export const incrementPlayersWhosThatCountFetch = (

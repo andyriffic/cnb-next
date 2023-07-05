@@ -9,7 +9,7 @@ export default async function userHandler(
   res: NextApiResponse
 ) {
   const { query, method } = req;
-  const { gameId } = query;
+  const { gameId, team } = query;
 
   if (!gameId) {
     res.status(400).json({ reason: "No gameId supplied" });
@@ -21,7 +21,11 @@ export default async function userHandler(
     case "PUT":
       try {
         console.info("Saving game moves for game", gameId, playerMoves);
-        await savePlayersGameMoves(gameId as string, playerMoves);
+        await savePlayersGameMoves(
+          gameId as string,
+          playerMoves,
+          team as string
+        );
         res.status(200).send("OK");
       } catch (err) {
         console.error("Error when saving player details", err);

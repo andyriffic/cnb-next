@@ -29,6 +29,7 @@ type Props = {};
 function Page({}: Props) {
   const router = useRouter();
   const gameId = router.query.gameId as string;
+  const team = router.query.team as string;
   const { game, resolveRound, newRound } = useRPSGame(gameId);
   const { bettingGame } = useBettingGame(gameId);
   useSyncRockPapersScissorsWithBettingGame(gameId);
@@ -135,6 +136,7 @@ function Page({}: Props) {
           gameId={game.id}
           gamePoints={gameFinalPoints}
           winningConditions={winningConditions}
+          team={team}
         />
       )}
       {!showPointsCeremony && game && bettingGame?.currentRound && (

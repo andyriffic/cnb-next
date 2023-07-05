@@ -40,9 +40,10 @@ const GraveyardContainer = styled.div`
 
 type Props = {
   gasGame: GasGame;
+  team: string | undefined;
 };
 
-const View = ({ gasGame }: Props) => {
+const View = ({ gasGame, team }: Props) => {
   useGasSound(gasGame);
   const {
     gasGame: { nextPlayer },

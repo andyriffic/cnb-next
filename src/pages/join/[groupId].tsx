@@ -22,6 +22,7 @@ import {
   getGasOutSpectatorUrl,
   getPlayRootUrl,
   getRockPaperScissorsGameSpectatorUrl,
+  urlWithTeamQueryParam,
 } from "../../utils/url";
 
 const JoinedPlayerContainer = styled.div`
@@ -53,6 +54,7 @@ const JoinedPlayerItem = styled.div``;
 function Page() {
   const router = useRouter();
   const groupId = router.query.groupId as string;
+  const team = router.query.team as string;
   const socketService = useSocketIo();
   const { getName } = usePlayerNames();
   const { play, loop } = useSound();
@@ -116,7 +118,7 @@ function Page() {
                 gameCreators
                   .rps(group, socketService, getName)
                   .then((gameUrl) => {
-                    router.push(gameUrl);
+                    router.push(urlWithTeamQueryParam(gameUrl, team));
                   });
               }}
             >
@@ -128,7 +130,7 @@ function Page() {
                 gameCreators
                   .balloon(group, socketService, getName)
                   .then((gameUrl) => {
-                    router.push(gameUrl);
+                    router.push(urlWithTeamQueryParam(gameUrl, team));
                   });
               }}
             >
@@ -140,7 +142,7 @@ function Page() {
                 gameCreators
                   .ai(group, socketService, getName)
                   .then((gameUrl) => {
-                    router.push(gameUrl);
+                    router.push(urlWithTeamQueryParam(gameUrl, team));
                   });
               }}
             >
@@ -154,7 +156,7 @@ function Page() {
               const randomGame = selectRandomOneOf(availableRandomGames);
               gameCreators[randomGame](group, socketService, getName).then(
                 (gameUrl) => {
-                  router.push(gameUrl);
+                  router.push(urlWithTeamQueryParam(gameUrl, team));
                 }
               );
             }}

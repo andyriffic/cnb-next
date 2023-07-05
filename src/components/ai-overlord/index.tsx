@@ -36,9 +36,10 @@ const Background = styled.div`
 
 type Props = {
   aiOverlordGame: AiOverlordGame;
+  team: string | undefined;
 };
 
-const View = ({ aiOverlordGame }: Props) => {
+const View = ({ aiOverlordGame, team }: Props) => {
   const gameView = useAiOverlordGameView(aiOverlordGame);
   // useAiOverlordGameFlowHelper(aiOverlordGame);
   const { isThinking, initialiseAi } = useAiOverlordGame(aiOverlordGame.gameId);
@@ -95,7 +96,10 @@ const View = ({ aiOverlordGame }: Props) => {
         />
       </Positioned>
       <Positioned absolute={{ rightPercent: 1, topPercent: 1 }}>
-        <OverlordFinishedOpponents aiOverlordGame={aiOverlordGame} />
+        <OverlordFinishedOpponents
+          aiOverlordGame={aiOverlordGame}
+          team={team}
+        />
       </Positioned>
       <Positioned absolute={{ rightPercent: 1, topPercent: 1 }}>
         <RobotMessage />

@@ -69,3 +69,8 @@ export const getGasOutPlayerUrl = (
 ): string => {
   return `/play/${playerId}/gas-out?gameId=${gameId}`;
 };
+
+export const urlWithTeamQueryParam = (url: string, team?: string): string => {
+  const hasQueryAlready = url.indexOf("?") > -1;
+  return team ? `${url}${hasQueryAlready ? "&" : "?"}team=${team}` : url;
+};

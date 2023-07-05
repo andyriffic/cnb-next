@@ -57,12 +57,14 @@ type Props = {
   gameId: string;
   gamePoints: RockPaperScissorsPoints;
   winningConditions: WinningConditions | undefined;
+  team: string | undefined;
 };
 
 export const PointsAwardCeremony = ({
   gameId,
   gamePoints,
   winningConditions,
+  team,
 }: Props): JSX.Element => {
   const hasLosers = gamePoints.zeroPointLosers.length > 0;
   const currentStoryboard = useStoryBoardTiming({
@@ -71,7 +73,7 @@ export const PointsAwardCeremony = ({
 
   useDoOnce(() => {
     const gameMoves = toGameMoves(gamePoints);
-    savePlayerGameMovesFetch(gameId, gameMoves)
+    savePlayerGameMovesFetch(gameId, gameMoves, team)
       .then(() => console.log("Updated games moves"))
       .catch((err) => console.error(err));
   });

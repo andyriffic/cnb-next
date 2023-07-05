@@ -60,12 +60,25 @@ const updateLegacyMovesTag = (
   return updatePlayerLegacyTags(player.id, newTags);
 };
 
-const updatePlayerGameMoves = (playerMoves: PlayerGameMoves): Promise<void> => {
+const updatePlayerGameMoves = (
+  playerMoves: PlayerGameMoves,
+  team?: string
+): Promise<void> => {
   return new Promise((resolve, reject) => {
     getPlayer(playerMoves.playerId)
       .then((player) => {
         if (!player) {
           reject(new Error(`Player with id ${playerMoves.playerId} not found`));
+          return;
+        }
+
+        if (team && player.details?.team !== team) {
+          console.log(
+            "Skipping player",
+            playerMoves.playerId,
+            "not on team",
+            team
+          );
           return;
         }
 
@@ -90,7 +103,8 @@ const updatedGameIds: string[] = [];
 
 export const savePlayersGameMoves = (
   gameId: string,
-  moves: PlayerGameMoves[]
+  moves: PlayerGameMoves[],
+  team?: string
 ): Promise<void[]> | Promise<void> => {
   if (updatedGameIds.includes(gameId)) {
     console.log(`Game ${gameId} already updated`, updatedGameIds);
@@ -99,7 +113,7 @@ export const savePlayersGameMoves = (
 
   updatedGameIds.push(gameId);
 
-  const promises = moves.map(updatePlayerGameMoves);
+  const promises = moves.map((move) => updatePlayerGameMoves(move, team));
 
   return Promise.all(promises);
 };

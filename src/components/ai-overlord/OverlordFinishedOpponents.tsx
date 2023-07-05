@@ -41,12 +41,13 @@ const Points = styled.div`
 
 type Props = {
   aiOverlordGame: AiOverlordGame;
+  team: string | undefined;
 };
 
-export const OverlordFinishedOpponents = ({ aiOverlordGame }: Props) => {
+export const OverlordFinishedOpponents = ({ aiOverlordGame, team }: Props) => {
   useDoOnce(() => {
     const gameMoves = finishedAiOverlordGameToPoints(aiOverlordGame);
-    savePlayerGameMovesFetch(aiOverlordGame.gameId, gameMoves)
+    savePlayerGameMovesFetch(aiOverlordGame.gameId, gameMoves, team)
       .then(() => console.log("Updated AI games moves", gameMoves))
       .catch((err) => console.error(err));
   }, !!aiOverlordGame.aiOverlord.finalSummary);

@@ -18,6 +18,7 @@ type Props = {
 const DEFAULT_PLAYER_DETAILS: PlayerDetails = {
   gameMoves: 0,
   whosThatCount: 0,
+  team: "",
 };
 
 export const AdminPlayerEdit = ({ player, onClose }: Props) => {
@@ -79,6 +80,24 @@ export const AdminPlayerEdit = ({ player, onClose }: Props) => {
                   details: {
                     ...playerCopy.details,
                     pacmanPlayer: e.target.checked,
+                  },
+                })
+              }
+            />
+          </fieldset>
+          <fieldset>
+            <label htmlFor="team_name">Team</label>
+            <input
+              id="team_name"
+              type="text"
+              maxLength={30}
+              value={playerCopy.details?.team}
+              onChange={(e) =>
+                setPlayerCopy({
+                  ...playerCopy,
+                  details: {
+                    ...playerCopy.details,
+                    team: e.target.value,
                   },
                 })
               }

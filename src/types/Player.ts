@@ -9,6 +9,7 @@ export type PlayerDetails = {
   gameMoves?: number;
   whosThatCount?: number;
   pacmanPlayer?: boolean;
+  team?: string;
 };
 
 export type PlayerNames = { [playerId: string]: string };
