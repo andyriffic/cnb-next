@@ -43,12 +43,17 @@ let activeGasGames: GasGame[] = [];
 export const initialiseGasOutSocket = (io: SocketIOServer, socket: Socket) => {
   socket.on(
     CREATE_GAS_GAME,
-    (playerIds: string[], gameId: string, onCreated: (id: string) => void) => {
+    (
+      playerIds: string[],
+      gameId: string,
+      team: string | undefined,
+      onCreated: (id: string) => void
+    ) => {
       getAllPlayers().then((playersFromDb) => {
         if (!playersFromDb) return;
 
         const players = playersFromDb.filter((p) => playerIds.includes(p.id));
-        const gasGame = createGame({ id: gameId, players });
+        const gasGame = createGame({ id: gameId, players, team });
         console.log("Created GasGame", gasGame);
         activeGasGames = [gasGame]; //Only allow one mobGame at a time for now
         io.emit(GAS_GAMES_UPDATE, activeGasGames);

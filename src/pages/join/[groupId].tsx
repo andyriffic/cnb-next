@@ -39,7 +39,8 @@ const gameCreators: {
   [key in GameTypes]: (
     group: PlayerGroup,
     socketIoService: SocketIoService,
-    getName: (playerId: string) => string
+    getName: (playerId: string) => string,
+    team: string | undefined
   ) => Promise<GameUrl>;
 } = {
   rps: createRockPaperScissorsWithBettingGame,
@@ -116,7 +117,7 @@ function Page() {
               disabled={group.playerIds.length < 2}
               onClick={() => {
                 gameCreators
-                  .rps(group, socketService, getName)
+                  .rps(group, socketService, getName, team)
                   .then((gameUrl) => {
                     router.push(urlWithTeamQueryParam(gameUrl, team));
                   });
@@ -128,7 +129,7 @@ function Page() {
               disabled={group.playerIds.length < 2}
               onClick={() => {
                 gameCreators
-                  .balloon(group, socketService, getName)
+                  .balloon(group, socketService, getName, team)
                   .then((gameUrl) => {
                     router.push(urlWithTeamQueryParam(gameUrl, team));
                   });
@@ -140,7 +141,7 @@ function Page() {
               disabled={group.playerIds.length < 2}
               onClick={() => {
                 gameCreators
-                  .ai(group, socketService, getName)
+                  .ai(group, socketService, getName, team)
                   .then((gameUrl) => {
                     router.push(urlWithTeamQueryParam(gameUrl, team));
                   });
@@ -154,11 +155,14 @@ function Page() {
             disabled={group.playerIds.length < 2}
             onClick={() => {
               const randomGame = selectRandomOneOf(availableRandomGames);
-              gameCreators[randomGame](group, socketService, getName).then(
-                (gameUrl) => {
-                  router.push(urlWithTeamQueryParam(gameUrl, team));
-                }
-              );
+              gameCreators[randomGame](
+                group,
+                socketService,
+                getName,
+                team
+              ).then((gameUrl) => {
+                router.push(urlWithTeamQueryParam(gameUrl, team));
+              });
             }}
           >
             Random
@@ -242,12 +246,15 @@ function createRockPaperScissorsWithBettingGame(
 
 function createBallonGame(
   group: PlayerGroup,
-  socketIoService: SocketIoService
+  socketIoService: SocketIoService,
+  getName: (playerId: string) => string,
+  team: string | undefined
 ): Promise<GameUrl> {
   return new Promise((resolve) => {
     socketIoService.gasGame.createGasGame(
       group.playerIds,
       group.id,
+      team,
       (gameId) => {
         resolve(getGasOutSpectatorUrl(gameId));
       }

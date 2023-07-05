@@ -53,6 +53,11 @@ export function pointsToPlayersKong(game: GasGame) {
 
       if (!player) return;
 
+      if (game.team && player.details?.team !== game.team) {
+        console.log("Skipping player", player.id, "not on team", game.team);
+        return;
+      }
+
       const isMostPresses = game.mvpPlayerIds?.mostPresses?.includes(player.id);
 
       givePoints(

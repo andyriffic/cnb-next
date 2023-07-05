@@ -20,9 +20,11 @@ import {
 export function createGame({
   id,
   players,
+  team,
 }: {
   id: string;
   players: Player[];
+  team: string | undefined;
 }): GasGame {
   const randomPlayer = selectRandomOneOf(players);
   return giveEffectPowerToPlayer(
@@ -43,6 +45,7 @@ export function createGame({
       pointsMap: createPointsMap(players.length),
       moveHistory: [],
       turnCount: 0,
+      team,
     },
     randomPlayer.id,
     "double"

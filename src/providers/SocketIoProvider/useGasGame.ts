@@ -17,6 +17,7 @@ export type GasGameSocketService = {
   createGasGame: (
     playerIds: string[],
     gameId: string,
+    team: string | undefined,
     onCreated: (id: string) => void
   ) => void;
   playCard: (gameId: string, playerId: string, cardIndex: number) => void;
@@ -35,8 +36,13 @@ export function useGasGame(socket: Socket): GasGameSocketService {
   const [gasGames, setGasGames] = useState<GasGame[]>([]);
 
   const createGasGame = useCallback(
-    (playerIds: string[], gameId: string, onCreated: (id: string) => void) => {
-      socket.emit(CREATE_GAS_GAME, playerIds, gameId, onCreated);
+    (
+      playerIds: string[],
+      gameId: string,
+      team: string | undefined,
+      onCreated: (id: string) => void
+    ) => {
+      socket.emit(CREATE_GAS_GAME, playerIds, gameId, team, onCreated);
     },
     [socket]
   );

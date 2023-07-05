@@ -23,6 +23,7 @@ export type GasGame = {
   };
   moveHistory: CardHistory[];
   turnCount: number;
+  team?: string;
 };
 
 export type CardHistory = { playerId: string; cardPlayed: GasCard };
