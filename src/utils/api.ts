@@ -5,7 +5,7 @@ import {
 import { CreatePlayerParams } from "../pages/api/player";
 import { AiOverlordGame } from "../services/ai-overlord/types";
 import { PlayerGameMoves } from "../services/saveGameMoves";
-import { PlayerDetails } from "../types/Player";
+import { Player, PlayerDetails } from "../types/Player";
 
 export const addPlayerFetch = (params: CreatePlayerParams): Promise<void> => {
   return new Promise((resolve, reject) => {
@@ -100,6 +100,16 @@ export const fetchGetAiOverlordGame = (
   gameId: string
 ): Promise<AiOverlordGame | undefined> => {
   return fetch(`/api/ai-overlord?overlordId=${gameId}`, {
+    method: "GET",
+  }).then((response) =>
+    response.status === 200 ? response.json() : undefined
+  );
+};
+
+export const fetchGetPlayer = (
+  playerId: string
+): Promise<Player | undefined> => {
+  return fetch(`/api/player/${playerId}`, {
     method: "GET",
   }).then((response) =>
     response.status === 200 ? response.json() : undefined

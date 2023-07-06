@@ -24,6 +24,7 @@ import {
   getRockPaperScissorsGameSpectatorUrl,
   urlWithTeamQueryParam,
 } from "../../utils/url";
+import { JoinedPlayer } from "../../components/JoinedPlayer";
 
 const JoinedPlayerContainer = styled.div`
   display: flex;
@@ -107,7 +108,7 @@ function Page() {
             {group.playerIds.map((pid) => (
               <JoinedPlayerItem key={pid}>
                 <Appear animation="flip-in">
-                  <PlayerAvatar playerId={pid} size="small" />
+                  <JoinedPlayer playerId={pid} team={team} />
                 </Appear>
               </JoinedPlayerItem>
             ))}

@@ -49,22 +49,23 @@ const Animation_FlipIn = keyframes`
 `;
 
 const ANIMATION_CSS: {
-  [key in AppearAnimation]: FlattenSimpleInterpolation;
+  [key in AppearAnimation]: (delayMs: number) => FlattenSimpleInterpolation;
 } = {
-  "roll-in-left": css`
+  "roll-in-left": (delayMs) => css`
     animation: ${Animation_RollInBlurredLeft} 0.65s
-      cubic-bezier(0.23, 1, 0.32, 1) both;
+      cubic-bezier(0.23, 1, 0.32, 1) ${delayMs}ms 1 both;
   `,
-  "roll-in-right": css`
+  "roll-in-right": (delayMs) => css`
     animation: ${Animation_RollInBlurredRight} 0.65s
-      cubic-bezier(0.23, 1, 0.32, 1) both;
+      cubic-bezier(0.23, 1, 0.32, 1) ${delayMs}ms 1 both;
   `,
-  "flip-in": css`
+  "flip-in": (delayMs) => css`
     animation: ${Animation_FlipIn} 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)
-      both;
+      ${delayMs}ms 1 both;
   `,
-  "text-focus-in": css`
-    animation: ${textFocusIn} 0.5s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
+  "text-focus-in": (delayMs) => css`
+    animation: ${textFocusIn} 0.5s cubic-bezier(0.55, 0.085, 0.68, 0.53)
+      ${delayMs}ms 1 both;
   `,
 };
 
@@ -76,15 +77,19 @@ type Props = {
   children: React.ReactNode;
   show?: boolean;
   animation?: AppearAnimation;
+  delayMilliseconds?: number;
 };
 
 export const Appear = ({
   children,
   show = true,
   animation = "flip-in",
+  delayMilliseconds = 0,
 }: Props): JSX.Element | null => {
   return show ? (
-    <Container animation={animation && ANIMATION_CSS[animation]}>
+    <Container
+      animation={animation && ANIMATION_CSS[animation](delayMilliseconds)}
+    >
       {children}
     </Container>
   ) : null;
