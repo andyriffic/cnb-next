@@ -1,9 +1,8 @@
-import styled from "styled-components";
 import { useEffect, useState } from "react";
+import styled from "styled-components";
 import { Player } from "../types/Player";
 import { fetchGetPlayer } from "../utils/api";
 import { PlayerAvatar } from "./PlayerAvatar";
-import { AnimateFadeInLeft } from "./animations/FadeInLeft";
 import { Appear } from "./animations/Appear";
 
 const Label = styled.div`
