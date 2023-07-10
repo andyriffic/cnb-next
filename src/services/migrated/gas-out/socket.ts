@@ -1,8 +1,9 @@
 import { Socket, Server as SocketIOServer } from "socket.io";
 
 import { getAllPlayers } from "../../../utils/data/aws-dynamodb";
+import { savePlayersGameMoves } from "../../saveGameMoves";
 import { sendClientMessage } from "../../socket";
-import { pointsToPlayersKong as pointsToPlayer } from "./points-to-player-kong";
+import { gasGameToPoints } from "./points";
 import { GasGame, GlobalEffect } from "./types";
 import {
   createGame,
@@ -87,7 +88,8 @@ export const initialiseGasOutSocket = (io: SocketIOServer, socket: Socket) => {
     io.emit(GAS_GAMES_UPDATE, activeGasGames);
 
     if (!!updatedGame.winningPlayerId) {
-      pointsToPlayer(updatedGame);
+      const playerPoints = gasGameToPoints(game);
+      savePlayersGameMoves(game.id, playerPoints, game.team);
     }
   });
 
@@ -138,7 +140,8 @@ export const initialiseGasOutSocket = (io: SocketIOServer, socket: Socket) => {
     io.emit(GAS_GAMES_UPDATE, activeGasGames);
 
     if (!!updatedGame.winningPlayerId) {
-      pointsToPlayer(updatedGame);
+      const playerPoints = gasGameToPoints(game);
+      savePlayersGameMoves(game.id, playerPoints, game.team);
     }
   });
 
