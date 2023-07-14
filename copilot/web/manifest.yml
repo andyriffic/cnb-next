@@ -45,7 +45,7 @@ secrets:
 environments:
   test:
     http:
-      alias: test.finx-rocks.com
+      alias: cnb.finx-rocks.com
       # hosted_zone: Z3H2KCS6G4PEXD
 #    count: 2               # Number of tasks to run for the "test" environment.
 #    deployment:            # The deployment strategy for the "test" environment.
