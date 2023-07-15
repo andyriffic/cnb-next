@@ -1,4 +1,4 @@
-import { PlayerGameMoves } from "../../saveGameMoves";
+import { PlayerGameMoves } from "../../save-game-moves/saveGameMovesKong";
 import { GasGame } from "./types";
 
 const MOST_PRESSES_BONUS_POINTS = 2;

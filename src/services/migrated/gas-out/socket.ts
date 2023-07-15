@@ -1,7 +1,7 @@
 import { Socket, Server as SocketIOServer } from "socket.io";
 
 import { getAllPlayers } from "../../../utils/data/aws-dynamodb";
-import { savePlayersGameMoves } from "../../saveGameMoves";
+import { savePlayersGameMoves } from "../../save-game-moves/saveGameMovesPacman";
 import { sendClientMessage } from "../../socket";
 import { gasGameToPoints } from "./points";
 import { GasGame, GlobalEffect } from "./types";
@@ -88,7 +88,8 @@ export const initialiseGasOutSocket = (io: SocketIOServer, socket: Socket) => {
     io.emit(GAS_GAMES_UPDATE, activeGasGames);
 
     if (!!updatedGame.winningPlayerId) {
-      const playerPoints = gasGameToPoints(game);
+      const playerPoints = gasGameToPoints(updatedGame);
+      console.log("Player Points (press)", playerPoints);
       savePlayersGameMoves(game.id, playerPoints, game.team);
     }
   });
@@ -140,7 +141,8 @@ export const initialiseGasOutSocket = (io: SocketIOServer, socket: Socket) => {
     io.emit(GAS_GAMES_UPDATE, activeGasGames);
 
     if (!!updatedGame.winningPlayerId) {
-      const playerPoints = gasGameToPoints(game);
+      const playerPoints = gasGameToPoints(updatedGame);
+      console.log("Player Points (timed out)", playerPoints);
       savePlayersGameMoves(game.id, playerPoints, game.team);
     }
   });

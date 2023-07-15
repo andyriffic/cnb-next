@@ -1,45 +1,18 @@
-import { useEffect, useRef } from "react";
+import { updatePlayerDetails } from "../../../utils/api";
+import { useDoOnce } from "../../hooks/useDoOnce";
 import { PacManUiState } from "./usePacman/reducer";
 
 export function useSyncData(uiState: PacManUiState, disabled: boolean) {
-  // const { updatePlayer, allPlayers } = usePlayersProvider();
-  // const saved = useRef(false);
-  // useEffect(() => {
-  //   if (!saved.current && uiState.status === "game-over" && !disabled) {
-  //     saved.current = true;
-  //     uiState.allPacPlayers.forEach((p) => {
-  //       const filteredTags = p.player.tags
-  //         .filter((t) => !t.startsWith("pac_moves"))
-  //         .filter((t) => !t.startsWith("pac_jail"))
-  //         .filter((t) => !t.startsWith("pac_square"))
-  //         .filter((t) => !t.startsWith("pac_pill"))
-  //         .filter((t) => !t.startsWith("pac_finish"));
-  //       if (p.powerPill) {
-  //         filteredTags.push("pac_pill");
-  //       }
-  //       updatePlayer(p.player.id, [
-  //         ...filteredTags,
-  //         `pac_moves:${p.movesRemaining}`,
-  //         `pac_jail:${p.jailTurnsCount}`,
-  //         `pac_square:${p.pathIndex}`,
-  //         `pac_finish:${p.finishPosition}`,
-  //       ]);
-  //     });
-  //     const pacPlayer = allPlayers.find((p) => p.id === "mc_settings_face");
-  //     if (pacPlayer) {
-  //       updatePlayer(pacPlayer.id, [
-  //         ...pacPlayer.tags.filter((t) => !t.startsWith("pac_square")),
-  //         `pac_square:${uiState.pacMan.pathIndex}`,
-  //       ]);
-  //     }
-  //   }
-  // }, [
-  //   uiState.status,
-  //   disabled,
-  //   uiState.pacMan.movesRemaining,
-  //   uiState.allPacPlayers,
-  //   uiState.pacMan.pathIndex,
-  //   allPlayers,
-  //   updatePlayer,
-  // ]);
+  useDoOnce(() => {
+    uiState.allPacPlayers.forEach((pacPlayer) => {
+      updatePlayerDetails(pacPlayer.player.id, {
+        gameMoves: pacPlayer.movesRemaining,
+        pacmanDetails: {
+          jailTurnsRemaining: pacPlayer.jailTurnsCount,
+          index: pacPlayer.pathIndex,
+          hasPowerPill: pacPlayer.powerPill,
+        },
+      });
+    });
+  }, uiState.status === "game-over" && !disabled);
 }

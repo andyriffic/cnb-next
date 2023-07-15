@@ -1,9 +1,9 @@
-import { Player } from "../types/Player";
+import { Player } from "../../types/Player";
 import {
   getPlayer,
   updatePlayer,
   updatePlayerLegacyTags,
-} from "../utils/data/aws-dynamodb";
+} from "../../utils/data/aws-dynamodb";
 
 export type PlayerGameMoves = {
   playerId: string;

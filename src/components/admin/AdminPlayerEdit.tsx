@@ -1,10 +1,14 @@
-import styled from "styled-components";
 import { useState } from "react";
-import { Player, PlayerDetails } from "../../types/Player";
+import styled from "styled-components";
+import {
+  Player,
+  PlayerDetails,
+  getPlayerPacManDetails,
+} from "../../types/Player";
+import { updatePlayerDetails } from "../../utils/api";
 import { Card } from "../Atoms";
 import { EvenlySpaced } from "../Layouts";
 import { PlayerAvatar } from "../PlayerAvatar";
-import { updatePlayerDetails } from "../../utils/api";
 
 const PlayerDetailsContainer = styled.div`
   flex: 1;
@@ -69,6 +73,26 @@ export const AdminPlayerEdit = ({ player, onClose }: Props) => {
             />
           </fieldset>
           <fieldset>
+            <label htmlFor="team_name">Team</label>
+            <input
+              id="team_name"
+              type="text"
+              maxLength={30}
+              value={playerCopy.details?.team}
+              onChange={(e) =>
+                setPlayerCopy({
+                  ...playerCopy,
+                  details: {
+                    ...playerCopy.details,
+                    team: e.target.value,
+                  },
+                })
+              }
+            />
+          </fieldset>
+          <hr />
+          <h6>Pacman</h6>
+          <fieldset>
             <label htmlFor="pacman_player">Pacman</label>
             <input
               id="pacman_player"
@@ -86,18 +110,66 @@ export const AdminPlayerEdit = ({ player, onClose }: Props) => {
             />
           </fieldset>
           <fieldset>
-            <label htmlFor="team_name">Team</label>
+            <label htmlFor="pacman_index">Index</label>
             <input
-              id="team_name"
-              type="text"
-              maxLength={30}
-              value={playerCopy.details?.team}
+              id="pacman_index"
+              type="number"
+              min={0}
+              step={1}
+              value={playerCopy.details?.pacmanDetails?.index || 0}
               onChange={(e) =>
                 setPlayerCopy({
                   ...playerCopy,
                   details: {
                     ...playerCopy.details,
-                    team: e.target.value,
+                    pacmanDetails: {
+                      ...getPlayerPacManDetails(playerCopy),
+                      index: e.target.valueAsNumber,
+                    },
+                  },
+                })
+              }
+            />
+          </fieldset>
+          <fieldset>
+            <label htmlFor="pacman_jail">Jail turns</label>
+            <input
+              id="pacman_index"
+              type="number"
+              min={0}
+              max={3}
+              step={1}
+              value={playerCopy.details?.pacmanDetails?.jailTurnsRemaining || 0}
+              onChange={(e) =>
+                setPlayerCopy({
+                  ...playerCopy,
+                  details: {
+                    ...playerCopy.details,
+                    pacmanDetails: {
+                      ...getPlayerPacManDetails(playerCopy),
+                      jailTurnsRemaining: e.target.valueAsNumber,
+                    },
+                  },
+                })
+              }
+            />
+          </fieldset>
+
+          <fieldset>
+            <label htmlFor="pacman_powerpill">Power Pill</label>
+            <input
+              id="pacman_powerpill"
+              type="checkbox"
+              checked={playerCopy.details?.pacmanDetails?.hasPowerPill}
+              onChange={(e) =>
+                setPlayerCopy({
+                  ...playerCopy,
+                  details: {
+                    ...playerCopy.details,
+                    pacmanDetails: {
+                      ...getPlayerPacManDetails(playerCopy),
+                      hasPowerPill: e.target.checked,
+                    },
                   },
                 })
               }

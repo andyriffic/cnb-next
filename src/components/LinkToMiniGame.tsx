@@ -5,8 +5,6 @@ const FancyLink = styled.a``;
 
 export function LinkToMiniGame() {
   return (
-    <FancyLink href={getWhosThatUrl("http://cnb.finx-rocks.com/donkey-kong")}>
-      To Minigame! 🍒
-    </FancyLink>
+    <FancyLink href={getWhosThatUrl("/pacman")}>To Minigame! 🍒</FancyLink>
   );
 }

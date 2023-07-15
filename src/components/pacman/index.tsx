@@ -3,11 +3,13 @@ import { Player } from "../../types/Player";
 import { PrimaryButton } from "../Atoms";
 import { SpectatorPageLayout } from "../SpectatorPageLayout";
 import { SplashContent } from "../SplashContent";
+import { isClientSideFeatureEnabled } from "../../utils/feature";
 import { Board } from "./Board";
 import { boardConfig } from "./boardConfig";
 import { usePacMan } from "./hooks/usePacman";
 import { usePacmanSound } from "./hooks/usePacmanSound";
 import { usePlayerAutoMove } from "./hooks/usePlayerMoveTick";
+import { useSyncData } from "./hooks/useSyncData";
 
 const Container = styled.div`
   margin: 0 auto;
@@ -17,13 +19,14 @@ type Props = {
   players: Player[];
 };
 
-// const saveDisabled = isFeatureEnabled("no-save");
+const saveDisabled = isClientSideFeatureEnabled("no-save");
 
 const View = ({ players }: Props) => {
   // const { triggerUpdate } = usePlayersProvider();
   const pacManService = usePacMan(players, boardConfig);
   usePacmanSound(pacManService.uiState);
   usePlayerAutoMove(pacManService);
+  useSyncData(pacManService.uiState, saveDisabled);
 
   // useEffect(() => {
   //   triggerUpdate();

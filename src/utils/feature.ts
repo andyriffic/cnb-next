@@ -1,5 +1,5 @@
 export const isClientSideFeatureEnabled = (featureName: string): boolean => {
-  if (!window) {
+  if (typeof window === "undefined") {
     return false;
   }
 
