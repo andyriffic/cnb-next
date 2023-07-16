@@ -92,7 +92,7 @@ function Page() {
   return (
     <SpectatorPageLayout debug={group && <DebugPlayerJoin group={group} />}>
       <CenterSpaced stacked={true} style={{ margin: "2rem 0 2rem" }}>
-        <SubHeading>test.finx-rocks.com/play</SubHeading>
+        <SubHeading>cnb.finx-rocks.com/play</SubHeading>
         <Heading style={{ fontSize: "5rem" }}>
           <NumericValue>{groupId}</NumericValue>
         </Heading>
