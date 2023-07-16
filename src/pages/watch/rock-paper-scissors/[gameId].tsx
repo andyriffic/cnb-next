@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import { Card, Heading } from "../../../components/Atoms";
+import { Card, Heading, SubHeading } from "../../../components/Atoms";
 import { useSound } from "../../../components/hooks/useSound";
-import { useSyncRockPapersScissorsWithBettingGame } from "../../../components/hooks/useSyncRockPaperScissorsWithBettingGame";
+import { useSyncRockPapersScissorsWithBettingGame } from "../../../components/rock-paper-scissors/hooks/useSyncRockPaperScissorsWithBettingGame";
 import { Positioned } from "../../../components/Positioned";
 import { DebugPlayerBets } from "../../../components/rock-paper-scissors/DebugPlayerBets";
 import { DebugPlayerMove } from "../../../components/rock-paper-scissors/DebugPlayerMove";
@@ -128,9 +128,11 @@ function Page({}: Props) {
         )
       }
     >
-      {/* <Heading>
-        Game: {gameId} | {RpsGameState[gameState.state]}
-      </Heading> */}
+      {game && (
+        <SubHeading style={{ textAlign: "center" }}>
+          First player to {game?.spectatorTargetGuesses} correct guesses wins!
+        </SubHeading>
+      )}
       {game && showPointsCeremony && gameFinalPoints && (
         <PointsAwardCeremony
           gameId={game.id}

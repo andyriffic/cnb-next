@@ -32,7 +32,7 @@ const JoinedPlayerContainer = styled.div`
   flex-wrap: wrap;
 `;
 
-type GameTypes = "rps" | "balloon" | "ai";
+type GameTypes = "rps" | "rps-quick" | "balloon" | "ai";
 const availableRandomGames: GameTypes[] = ["rps", "balloon"];
 
 const gameCreators: {
@@ -43,7 +43,8 @@ const gameCreators: {
     team: string | undefined
   ) => Promise<GameUrl>;
 } = {
-  rps: createRockPaperScissorsWithBettingGame,
+  rps: createRockPaperScissorsWithBettingGame(4),
+  ["rps-quick"]: createRockPaperScissorsWithBettingGame(2),
   balloon: createBallonGame,
   ai: createAiGame,
 };
@@ -137,6 +138,22 @@ function Page() {
             >
               Balloon game
             </PrimaryButton>
+            <Heading>/</Heading>
+            <PrimaryButton
+              disabled={group.playerIds.length < 2}
+              onClick={() => {
+                gameCreators["rps-quick"](
+                  group,
+                  socketService,
+                  getName,
+                  team
+                ).then((gameUrl) => {
+                  router.push(urlWithTeamQueryParam(gameUrl, team));
+                });
+              }}
+            >
+              Betting game (quick)
+            </PrimaryButton>
           </EvenlySpaced>
           <Heading>OR</Heading>
           <EvenlySpaced>
@@ -192,58 +209,63 @@ export default Page;
 type GameUrl = string;
 
 function createRockPaperScissorsWithBettingGame(
-  group: PlayerGroup,
-  socketIoService: SocketIoService,
-  getName: (playerId: string) => string
-): Promise<GameUrl> {
-  return new Promise((resolve) => {
-    const randomisedPlayerIds = shuffleArray(group.playerIds);
-    const playerId1 = randomisedPlayerIds[0]!;
-    const playerId2 = randomisedPlayerIds[1]!;
+  spectatorTargetGuesses: number
+) {
+  return function (
+    group: PlayerGroup,
+    socketIoService: SocketIoService,
+    getName: (playerId: string) => string
+  ): Promise<GameUrl> {
+    return new Promise((resolve) => {
+      const randomisedPlayerIds = shuffleArray(group.playerIds);
+      const playerId1 = randomisedPlayerIds[0]!;
+      const playerId2 = randomisedPlayerIds[1]!;
 
-    const STARTING_WALLET_BALANCE = 0;
+      const STARTING_WALLET_BALANCE = 0;
 
-    const bettingPlayerWallets = group.playerIds
-      .filter((pid) => pid !== playerId1 && pid !== playerId2)
-      .map<PlayerWallet>((pid) => ({
-        playerId: pid,
-        value: STARTING_WALLET_BALANCE,
-      }));
+      const bettingPlayerWallets = group.playerIds
+        .filter((pid) => pid !== playerId1 && pid !== playerId2)
+        .map<PlayerWallet>((pid) => ({
+          playerId: pid,
+          value: STARTING_WALLET_BALANCE,
+        }));
 
-    socketIoService.rockPaperScissors.createRPSGame(
-      {
-        id: group.id,
-        playerIds: [playerId1, playerId2],
-      },
-      (gameId) => {
-        socketIoService.groupBetting.createGroupBettingGame(
-          gameId,
-          [
-            {
-              id: playerId1,
-              name: getName(playerId1),
-              odds: 1,
-              betReturn: "oddsOnly",
-            },
-            {
-              id: "draw",
-              name: "Draw",
-              odds: 1,
-              betReturn: "oddsOnly",
-            },
-            {
-              id: playerId2,
-              name: getName(playerId2),
-              odds: 1,
-              betReturn: "oddsOnly",
-            },
-          ],
-          bettingPlayerWallets,
-          () => resolve(getRockPaperScissorsGameSpectatorUrl(gameId))
-        );
-      }
-    );
-  });
+      socketIoService.rockPaperScissors.createRPSGame(
+        {
+          id: group.id,
+          playerIds: [playerId1, playerId2],
+          spectatorTargetGuesses,
+        },
+        (gameId) => {
+          socketIoService.groupBetting.createGroupBettingGame(
+            gameId,
+            [
+              {
+                id: playerId1,
+                name: getName(playerId1),
+                odds: 1,
+                betReturn: "oddsOnly",
+              },
+              {
+                id: "draw",
+                name: "Draw",
+                odds: 1,
+                betReturn: "oddsOnly",
+              },
+              {
+                id: playerId2,
+                name: getName(playerId2),
+                odds: 1,
+                betReturn: "oddsOnly",
+              },
+            ],
+            bettingPlayerWallets,
+            () => resolve(getRockPaperScissorsGameSpectatorUrl(gameId))
+          );
+        }
+      );
+    });
+  };
 }
 
 function createBallonGame(

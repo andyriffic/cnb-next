@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { useBettingGame } from "../../providers/SocketIoProvider/useGroupBetting";
-import { useRPSGame } from "../../providers/SocketIoProvider/useRockPaperScissorsSocket";
+import { useBettingGame } from "../../../providers/SocketIoProvider/useGroupBetting";
+import { useRPSGame } from "../../../providers/SocketIoProvider/useRockPaperScissorsSocket";
 
 export function useSyncRockPapersScissorsWithBettingGame(gameId: string) {
   const { game: rpsGame } = useRPSGame(gameId);

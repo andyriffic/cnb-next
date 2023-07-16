@@ -3,13 +3,21 @@ import { pipe } from "fp-ts/function";
 import { addRoundToGame, createGame, makePlayerMove, resolveRound } from ".";
 
 test("Can create game successfully", () => {
-  const game = createGame({ id: "test", playerIds: ["p1", "p2"] });
+  const game = createGame({
+    id: "test",
+    playerIds: ["p1", "p2"],
+    spectatorTargetGuesses: 1,
+  });
   expect(game).toBeRight();
 });
 
 test("Can make player move for valid player", () => {
   const result = pipe(
-    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    createGame({
+      id: "test",
+      playerIds: ["p1", "p2"],
+      spectatorTargetGuesses: 1,
+    }),
     E.chain((game) =>
       makePlayerMove({ playerId: "p1", moveName: "paper" }, game)
     )
@@ -20,7 +28,11 @@ test("Can make player move for valid player", () => {
 
 test("Can't make move for invalid player", () => {
   const result = pipe(
-    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    createGame({
+      id: "test",
+      playerIds: ["p1", "p2"],
+      spectatorTargetGuesses: 1,
+    }),
     E.chain((game) =>
       makePlayerMove({ playerId: "xx", moveName: "paper" }, game)
     )
@@ -32,7 +44,11 @@ test("Can't make move for invalid player", () => {
 
 test("Can't make two moves for the same player in the same round", () => {
   const result = pipe(
-    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    createGame({
+      id: "test",
+      playerIds: ["p1", "p2"],
+      spectatorTargetGuesses: 1,
+    }),
     E.chain((game) =>
       makePlayerMove({ playerId: "p1", moveName: "paper" }, game)
     ),
@@ -47,7 +63,11 @@ test("Can't make two moves for the same player in the same round", () => {
 
 test("Correct round result for draw with paper", () => {
   const result = pipe(
-    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    createGame({
+      id: "test",
+      playerIds: ["p1", "p2"],
+      spectatorTargetGuesses: 1,
+    }),
     E.chain((game) =>
       makePlayerMove({ playerId: "p1", moveName: "paper" }, game)
     ),
@@ -65,7 +85,11 @@ test("Correct round result for draw with paper", () => {
 
 test("Correct round result for draw with rock", () => {
   const result = pipe(
-    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    createGame({
+      id: "test",
+      playerIds: ["p1", "p2"],
+      spectatorTargetGuesses: 1,
+    }),
     E.chain((game) =>
       makePlayerMove({ playerId: "p1", moveName: "rock" }, game)
     ),
@@ -83,7 +107,11 @@ test("Correct round result for draw with rock", () => {
 
 test("Correct round result for draw with scissors", () => {
   const result = pipe(
-    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    createGame({
+      id: "test",
+      playerIds: ["p1", "p2"],
+      spectatorTargetGuesses: 1,
+    }),
     E.chain((game) =>
       makePlayerMove({ playerId: "p1", moveName: "scissors" }, game)
     ),
@@ -101,7 +129,11 @@ test("Correct round result for draw with scissors", () => {
 
 test("Correct round result for player1 winning with rock", () => {
   const result = pipe(
-    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    createGame({
+      id: "test",
+      playerIds: ["p1", "p2"],
+      spectatorTargetGuesses: 1,
+    }),
     E.chain((game) =>
       makePlayerMove({ playerId: "p1", moveName: "rock" }, game)
     ),
@@ -119,7 +151,11 @@ test("Correct round result for player1 winning with rock", () => {
 
 test("Correct round result for player1 winning with paper", () => {
   const result = pipe(
-    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    createGame({
+      id: "test",
+      playerIds: ["p1", "p2"],
+      spectatorTargetGuesses: 1,
+    }),
     E.chain((game) =>
       makePlayerMove({ playerId: "p1", moveName: "paper" }, game)
     ),
@@ -137,7 +173,11 @@ test("Correct round result for player1 winning with paper", () => {
 
 test("Correct round result for player1 winning with scissors", () => {
   const result = pipe(
-    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    createGame({
+      id: "test",
+      playerIds: ["p1", "p2"],
+      spectatorTargetGuesses: 1,
+    }),
     E.chain((game) =>
       makePlayerMove({ playerId: "p1", moveName: "scissors" }, game)
     ),
@@ -155,7 +195,11 @@ test("Correct round result for player1 winning with scissors", () => {
 
 test("Correct round result for player2 winning with rock", () => {
   const result = pipe(
-    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    createGame({
+      id: "test",
+      playerIds: ["p1", "p2"],
+      spectatorTargetGuesses: 1,
+    }),
     E.chain((game) =>
       makePlayerMove({ playerId: "p1", moveName: "scissors" }, game)
     ),
@@ -173,7 +217,11 @@ test("Correct round result for player2 winning with rock", () => {
 
 test("Correct round result for player2 winning with paper", () => {
   const result = pipe(
-    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    createGame({
+      id: "test",
+      playerIds: ["p1", "p2"],
+      spectatorTargetGuesses: 1,
+    }),
     E.chain((game) =>
       makePlayerMove({ playerId: "p1", moveName: "rock" }, game)
     ),
@@ -191,7 +239,11 @@ test("Correct round result for player2 winning with paper", () => {
 
 test("Correct round result for player2 winning with scissors", () => {
   const result = pipe(
-    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    createGame({
+      id: "test",
+      playerIds: ["p1", "p2"],
+      spectatorTargetGuesses: 1,
+    }),
     E.chain((game) =>
       makePlayerMove({ playerId: "p1", moveName: "paper" }, game)
     ),
@@ -209,7 +261,11 @@ test("Correct round result for player2 winning with scissors", () => {
 
 test("Can't resolve round if no players have moved", () => {
   const result = pipe(
-    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    createGame({
+      id: "test",
+      playerIds: ["p1", "p2"],
+      spectatorTargetGuesses: 1,
+    }),
     E.chain(resolveRound)
   );
 
@@ -219,7 +275,11 @@ test("Can't resolve round if no players have moved", () => {
 
 test("Can't resolve round if only 1 player has moved", () => {
   const result = pipe(
-    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    createGame({
+      id: "test",
+      playerIds: ["p1", "p2"],
+      spectatorTargetGuesses: 1,
+    }),
     E.chain((game) =>
       makePlayerMove({ playerId: "p1", moveName: "paper" }, game)
     ),
@@ -232,7 +292,11 @@ test("Can't resolve round if only 1 player has moved", () => {
 
 test("Can't resolve round if it already has a result", () => {
   const result = pipe(
-    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    createGame({
+      id: "test",
+      playerIds: ["p1", "p2"],
+      spectatorTargetGuesses: 1,
+    }),
     E.chain((game) =>
       makePlayerMove({ playerId: "p1", moveName: "paper" }, game)
     ),
@@ -249,7 +313,11 @@ test("Can't resolve round if it already has a result", () => {
 
 test("Can add new round to game if last round has a result", () => {
   const result = pipe(
-    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    createGame({
+      id: "test",
+      playerIds: ["p1", "p2"],
+      spectatorTargetGuesses: 1,
+    }),
     E.chain((game) =>
       makePlayerMove({ playerId: "p1", moveName: "paper" }, game)
     ),
@@ -265,7 +333,11 @@ test("Can add new round to game if last round has a result", () => {
 
 test("Can't add new round to game if last round doesn't have result", () => {
   const result = pipe(
-    createGame({ id: "test", playerIds: ["p1", "p2"] }),
+    createGame({
+      id: "test",
+      playerIds: ["p1", "p2"],
+      spectatorTargetGuesses: 1,
+    }),
     E.chain((game) =>
       makePlayerMove({ playerId: "p1", moveName: "paper" }, game)
     ),

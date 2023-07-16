@@ -18,6 +18,7 @@ export function createGame(
     playerIds: [...props.playerIds],
     roundHistory: [],
     currentRound: getNewRound(),
+    spectatorTargetGuesses: props.spectatorTargetGuesses,
   };
   return E.right(newGame);
 }
@@ -182,5 +183,6 @@ export function createGameView(game: RPSGame): RPSSpectatorGameView {
     })),
     currentRound: createGameRoundView(game.currentRound),
     roundHistory: game.roundHistory.map(createGameRoundView),
+    spectatorTargetGuesses: game.spectatorTargetGuesses,
   };
 }

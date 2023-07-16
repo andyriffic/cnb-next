@@ -2,8 +2,6 @@ import { useMemo } from "react";
 import { GroupBettingGame } from "../../../services/betting/types";
 import { RPSSpectatorGameView } from "../../../services/rock-paper-scissors/types";
 
-const SPECTATOR_TARGET_SCORE = 4;
-
 export type WinningConditions = {
   washout?: boolean;
   spectatorWinnerPlayerId?: string;
@@ -36,7 +34,7 @@ export const useGameWinningConditions = (
       .map((w) => w.playerId);
 
     const playersAtTargetScore = bettingGame.playerWallets.filter(
-      (w) => w.value >= SPECTATOR_TARGET_SCORE
+      (w) => w.value >= rpsGame.spectatorTargetGuesses
     );
 
     if (playersAtTargetScore.length === 1) {
@@ -96,7 +94,7 @@ export const useGameWinningConditions = (
 
     return {
       couldWinNextMovePlayerIds: bettingGame.playerWallets
-        .filter((w) => w.value === SPECTATOR_TARGET_SCORE - 1)
+        .filter((w) => w.value === rpsGame.spectatorTargetGuesses - 1)
         .map((w) => w.playerId),
       frontRunnerPlayerIds: playerIdsWithHighestScore,
       gameOver: false,
