@@ -5,9 +5,9 @@ import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { Heading, PrimaryButton, SubHeading } from "../../components/Atoms";
 import { DebugPlayerJoin } from "../../components/DebugPlayerJoin";
+import { JoinedPlayer } from "../../components/JoinedPlayer";
 import { CenterSpaced, EvenlySpaced } from "../../components/Layouts";
 import { NumericValue } from "../../components/NumericValue";
-import { PlayerAvatar } from "../../components/PlayerAvatar";
 import { SpectatorPageLayout } from "../../components/SpectatorPageLayout";
 import { Appear } from "../../components/animations/Appear";
 import { useSomethingWhenArraySizeChanges } from "../../components/hooks/useSomethingWhenArraySizeChanges";
@@ -24,7 +24,6 @@ import {
   getRockPaperScissorsGameSpectatorUrl,
   urlWithTeamQueryParam,
 } from "../../utils/url";
-import { JoinedPlayer } from "../../components/JoinedPlayer";
 
 const JoinedPlayerContainer = styled.div`
   display: flex;
@@ -138,6 +137,25 @@ function Page() {
             >
               Balloon game
             </PrimaryButton>
+          </EvenlySpaced>
+          <Heading>OR</Heading>
+          <EvenlySpaced>
+            <PrimaryButton
+              disabled={group.playerIds.length < 2}
+              onClick={() => {
+                const randomGame = selectRandomOneOf(availableRandomGames);
+                gameCreators[randomGame](
+                  group,
+                  socketService,
+                  getName,
+                  team
+                ).then((gameUrl) => {
+                  router.push(urlWithTeamQueryParam(gameUrl, team));
+                });
+              }}
+            >
+              Random
+            </PrimaryButton>
             <PrimaryButton
               disabled={group.playerIds.length < 2}
               onClick={() => {
@@ -151,23 +169,6 @@ function Page() {
               AI Overlord (BETA ⚠️)
             </PrimaryButton>
           </EvenlySpaced>
-          <Heading>OR</Heading>
-          <PrimaryButton
-            disabled={group.playerIds.length < 2}
-            onClick={() => {
-              const randomGame = selectRandomOneOf(availableRandomGames);
-              gameCreators[randomGame](
-                group,
-                socketService,
-                getName,
-                team
-              ).then((gameUrl) => {
-                router.push(urlWithTeamQueryParam(gameUrl, team));
-              });
-            }}
-          >
-            Random
-          </PrimaryButton>
         </CenterSpaced>
       )}
       {qrCodeUrl && (
