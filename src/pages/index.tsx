@@ -1,8 +1,8 @@
 import type { NextPage } from "next";
-import styled from "styled-components";
 import Head from "next/head";
 import Image from "next/image";
-import { CenterSpaced } from "../components/Layouts";
+import Link from "next/link";
+import styled from "styled-components";
 import { Heading } from "../components/Atoms";
 
 const Container = styled.div`
@@ -34,6 +34,7 @@ const Home: NextPage = () => {
         />
       </ImageContainer>
       <Heading>Finx Rocks!</Heading>
+      <Link href="/join">Play a game</Link>
     </Container>
   );
 };
