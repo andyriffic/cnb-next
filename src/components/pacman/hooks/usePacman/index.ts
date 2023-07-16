@@ -11,10 +11,14 @@ export type UsePacMan = {
   movePacmanOneSquare: () => void;
 };
 
-export function usePacMan(allPlayers: Player[], board: PacManBoard): UsePacMan {
+export function usePacMan(
+  allPlayers: Player[],
+  board: PacManBoard,
+  team?: string
+): UsePacMan {
   const [state, dispatch] = useReducer(
     reducer,
-    { allPlayers, board },
+    { allPlayers, board, team },
     createInitialState
   );
 

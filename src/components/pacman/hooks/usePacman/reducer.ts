@@ -50,11 +50,15 @@ function createPacManPlayer(player: Player): PacManPlayer {
 export function createInitialState({
   allPlayers,
   board,
+  team,
 }: {
   allPlayers: Player[];
   board: PacManBoard;
+  team?: string;
 }): PacManUiState {
-  const eligiblePlayers = allPlayers.filter((p) => !!p.details?.pacmanPlayer);
+  const eligiblePlayers = allPlayers
+    .filter((p) => !!p.details?.pacmanPlayer)
+    .filter((p) => !team || p.details?.team === team);
   const pacManPlayer = allPlayers.find((p) => p.id === "mc_settings_face");
 
   const initialState: PacManUiState = {

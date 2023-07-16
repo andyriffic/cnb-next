@@ -1,9 +1,10 @@
+import { useRouter } from "next/router";
 import styled from "styled-components";
 import { Player } from "../../types/Player";
+import { isClientSideFeatureEnabled } from "../../utils/feature";
 import { PrimaryButton } from "../Atoms";
 import { SpectatorPageLayout } from "../SpectatorPageLayout";
 import { SplashContent } from "../SplashContent";
-import { isClientSideFeatureEnabled } from "../../utils/feature";
 import { Board } from "./Board";
 import { boardConfig } from "./boardConfig";
 import { usePacMan } from "./hooks/usePacman";
@@ -15,6 +16,12 @@ const Container = styled.div`
   margin: 0 auto;
 `;
 
+const TeamOptionsContainer = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+`;
+
 type Props = {
   players: Player[];
 };
@@ -23,7 +30,10 @@ const saveDisabled = isClientSideFeatureEnabled("no-save");
 
 const View = ({ players }: Props) => {
   // const { triggerUpdate } = usePlayersProvider();
-  const pacManService = usePacMan(players, boardConfig);
+  const router = useRouter();
+  const team = router.query.team as string;
+
+  const pacManService = usePacMan(players, boardConfig, team);
   usePacmanSound(pacManService.uiState);
   usePlayerAutoMove(pacManService);
   useSyncData(pacManService.uiState, saveDisabled);
@@ -36,6 +46,29 @@ const View = ({ players }: Props) => {
     <SpectatorPageLayout scrollable={true}>
       <Container>
         <Board uiState={pacManService.uiState} />
+        <TeamOptionsContainer>
+          <button
+            onClick={() => {
+              window.location.href = "/pacman?team=native";
+            }}
+          >
+            Native only
+          </button>
+          <button
+            onClick={() => {
+              window.location.href = "/pacman?team=web";
+            }}
+          >
+            Web only
+          </button>
+          <button
+            onClick={() => {
+              window.location.href = "/pacman";
+            }}
+          >
+            Everyone!
+          </button>
+        </TeamOptionsContainer>
       </Container>
       {pacManService.uiState.status === "game-over" && (
         <SplashContent>Game Over</SplashContent>
