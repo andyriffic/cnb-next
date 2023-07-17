@@ -14,11 +14,12 @@ export type UsePacMan = {
 export function usePacMan(
   allPlayers: Player[],
   board: PacManBoard,
-  team?: string
+  team: string | undefined,
+  pacmanStartingIndex: number
 ): UsePacMan {
   const [state, dispatch] = useReducer(
     reducer,
-    { allPlayers, board, team },
+    { allPlayers, board, team, pacmanStartingIndex },
     createInitialState
   );
 

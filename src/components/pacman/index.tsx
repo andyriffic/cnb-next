@@ -24,16 +24,22 @@ const TeamOptionsContainer = styled.div`
 
 type Props = {
   players: Player[];
+  pacmanStartingIndex: number;
 };
 
 const saveDisabled = isClientSideFeatureEnabled("no-save");
 
-const View = ({ players }: Props) => {
+const View = ({ players, pacmanStartingIndex }: Props) => {
   // const { triggerUpdate } = usePlayersProvider();
   const router = useRouter();
   const team = router.query.team as string;
 
-  const pacManService = usePacMan(players, boardConfig, team);
+  const pacManService = usePacMan(
+    players,
+    boardConfig,
+    team,
+    pacmanStartingIndex
+  );
   usePacmanSound(pacManService.uiState);
   usePlayerAutoMove(pacManService);
   useSyncData(pacManService.uiState, saveDisabled);

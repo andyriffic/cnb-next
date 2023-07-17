@@ -72,7 +72,11 @@ export default function Page({ activePlayers, retiredPlayers }: Props) {
         <SubHeading style={{ textAlign: "center" }}>Retired</SubHeading>
         <PlayerContainer>
           {retiredPlayers.map((player) => (
-            <PlayerItem key={player.id}>
+            <PlayerItem
+              key={player.id}
+              style={{ cursor: "pointer" }}
+              onClick={() => setEditingPlayer(player)}
+            >
               <AdminPlayerView player={player} />
             </PlayerItem>
           ))}
@@ -99,7 +103,9 @@ export default function Page({ activePlayers, retiredPlayers }: Props) {
           </EditModalContainer>
         )}
         <CenterSpaced>
-          <PrimaryButton onClick={() => setAddingPlayer(true)}>Add Player</PrimaryButton>
+          <PrimaryButton onClick={() => setAddingPlayer(true)}>
+            Add Player
+          </PrimaryButton>
         </CenterSpaced>
       </SpectatorPageLayout>
     </>

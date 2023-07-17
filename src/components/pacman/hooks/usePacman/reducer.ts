@@ -1,13 +1,11 @@
 import { Player } from "../../../../types/Player";
 import {
   getPlayerAttributeValueFromTags,
-  getPlayerBooleanAttributeValue,
   getPlayerIntegerAttributeValue,
 } from "../../../../utils/string";
 import {
   PacManBoard,
   PacManCharacter,
-  PacManDirection,
   PacManPlayer,
   PacManPlayerStatus,
 } from "../../types";
@@ -51,15 +49,16 @@ export function createInitialState({
   allPlayers,
   board,
   team,
+  pacmanStartingIndex,
 }: {
   allPlayers: Player[];
   board: PacManBoard;
   team?: string;
+  pacmanStartingIndex: number;
 }): PacManUiState {
   const eligiblePlayers = allPlayers
     .filter((p) => !!p.details?.pacmanPlayer)
     .filter((p) => !team || p.details?.team === team);
-  const pacManPlayer = allPlayers.find((p) => p.id === "mc_settings_face");
 
   const initialState: PacManUiState = {
     allPacPlayers: eligiblePlayers.map(createPacManPlayer),
@@ -68,9 +67,7 @@ export function createInitialState({
     pacMan: setPacManFacingDirection(
       {
         movesRemaining: 0,
-        pathIndex: pacManPlayer
-          ? getPlayerIntegerAttributeValue(pacManPlayer.tags, "pac_square", 0)
-          : 0,
+        pathIndex: pacmanStartingIndex,
         status: "",
         facingDirection: "right",
       },
