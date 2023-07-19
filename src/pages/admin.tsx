@@ -11,6 +11,7 @@ import { sortByPlayerName } from "../utils/sort";
 import { AdminPlayerEdit } from "../components/admin/AdminPlayerEdit";
 import { CenterSpaced } from "../components/Layouts";
 import { AdminPlayerAdd } from "../components/admin/AdminPlayerAdd";
+import { fetchGetPlayer } from "../utils/api";
 
 const PlayerContainer = styled.div`
   display: flex;
@@ -48,6 +49,9 @@ type Props = {
 export default function Page({ activePlayers, retiredPlayers }: Props) {
   const [editingPlayer, setEditingPlayer] = useState<Player | undefined>();
   const [addingPlayer, setAddingPlayer] = useState(false);
+  const [playersUpdating, setPlayersUpdating] = useState<string[]>([]);
+  const [workingActivePlayers, setWorkingActivePlayers] =
+    useState(activePlayers);
 
   return (
     <>
@@ -59,7 +63,7 @@ export default function Page({ activePlayers, retiredPlayers }: Props) {
           Active
         </SubHeading>
         <PlayerContainer>
-          {activePlayers.map((player) => (
+          {workingActivePlayers.map((player) => (
             <PlayerItem
               key={player.id}
               style={{ cursor: "pointer" }}
@@ -87,7 +91,17 @@ export default function Page({ activePlayers, retiredPlayers }: Props) {
               player={editingPlayer}
               onClose={(updated) => {
                 setEditingPlayer(undefined);
-                // updated && window.location.reload();
+
+                updated &&
+                  setPlayersUpdating([...playersUpdating, editingPlayer.id]);
+                fetchGetPlayer(editingPlayer.id).then((updatedPlayer) => {
+                  updatedPlayer &&
+                    setWorkingActivePlayers(
+                      workingActivePlayers.map((p) =>
+                        p.id === editingPlayer.id ? updatedPlayer : p
+                      )
+                    );
+                });
               }}
             />
           </EditModalContainer>
