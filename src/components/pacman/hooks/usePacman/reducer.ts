@@ -1,8 +1,5 @@
 import { Player } from "../../../../types/Player";
-import {
-  getPlayerAttributeValueFromTags,
-  getPlayerIntegerAttributeValue,
-} from "../../../../utils/string";
+import { getPlayerIntegerAttributeValue } from "../../../../utils/string";
 import {
   PacManBoard,
   PacManCharacter,
@@ -34,7 +31,7 @@ function createPacManPlayer(player: Player): PacManPlayer {
     offset: 0,
     movesRemaining: player.details?.gameMoves || 0,
     pathIndex: player.details?.pacmanDetails?.index || 0,
-    color: getPlayerAttributeValueFromTags(player.tags, "rt_color", "red"),
+    color: player.details?.colourHex || "#FF0000",
     jailTurnsCount: player.details?.pacmanDetails?.jailTurnsRemaining || 0,
     powerPill: !!player.details?.pacmanDetails?.hasPowerPill,
     finishPosition: getPlayerIntegerAttributeValue(
