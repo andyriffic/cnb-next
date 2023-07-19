@@ -9,6 +9,7 @@ import { updatePlayerDetails } from "../../utils/api";
 import { Card } from "../Atoms";
 import { EvenlySpaced } from "../Layouts";
 import { PlayerAvatar } from "../PlayerAvatar";
+import { AdminPlayerEditBooleanValue } from "./AdminPlayerEditBooleanValue";
 
 const PlayerDetailsContainer = styled.div`
   flex: 1;
@@ -53,6 +54,20 @@ export const AdminPlayerEdit = ({ player, onClose }: Props) => {
       </EvenlySpaced>
       <div>
         <form>
+          <AdminPlayerEditBooleanValue
+            label="Retired"
+            id="retired"
+            value={!!playerCopy.details?.retired}
+            onChange={(checked) =>
+              setPlayerCopy({
+                ...playerCopy,
+                details: {
+                  ...playerCopy.details,
+                  retired: checked,
+                },
+              })
+            }
+          />
           <fieldset>
             <label htmlFor="game_moves">Game Moves</label>
             <input
@@ -92,23 +107,20 @@ export const AdminPlayerEdit = ({ player, onClose }: Props) => {
           </fieldset>
           <hr />
           <h6>Pacman</h6>
-          <fieldset>
-            <label htmlFor="pacman_player">Pacman</label>
-            <input
-              id="pacman_player"
-              type="checkbox"
-              checked={playerCopy.details?.pacmanPlayer}
-              onChange={(e) =>
-                setPlayerCopy({
-                  ...playerCopy,
-                  details: {
-                    ...playerCopy.details,
-                    pacmanPlayer: e.target.checked,
-                  },
-                })
-              }
-            />
-          </fieldset>
+          <AdminPlayerEditBooleanValue
+            label="Pacman"
+            id="pacman_player"
+            value={!!playerCopy.details?.pacmanPlayer}
+            onChange={(checked) =>
+              setPlayerCopy({
+                ...playerCopy,
+                details: {
+                  ...playerCopy.details,
+                  pacmanPlayer: checked,
+                },
+              })
+            }
+          />
           <fieldset>
             <label htmlFor="pacman_index">Index</label>
             <input
@@ -155,26 +167,23 @@ export const AdminPlayerEdit = ({ player, onClose }: Props) => {
             />
           </fieldset>
 
-          <fieldset>
-            <label htmlFor="pacman_powerpill">Power Pill</label>
-            <input
-              id="pacman_powerpill"
-              type="checkbox"
-              checked={playerCopy.details?.pacmanDetails?.hasPowerPill}
-              onChange={(e) =>
-                setPlayerCopy({
-                  ...playerCopy,
-                  details: {
-                    ...playerCopy.details,
-                    pacmanDetails: {
-                      ...getPlayerPacManDetails(playerCopy),
-                      hasPowerPill: e.target.checked,
-                    },
+          <AdminPlayerEditBooleanValue
+            label="Power Pill"
+            id="pacman_powerpill"
+            value={!!playerCopy.details?.pacmanDetails?.hasPowerPill}
+            onChange={(checked) =>
+              setPlayerCopy({
+                ...playerCopy,
+                details: {
+                  ...playerCopy.details,
+                  pacmanDetails: {
+                    ...getPlayerPacManDetails(playerCopy),
+                    hasPowerPill: checked,
                   },
-                })
-              }
-            />
-          </fieldset>
+                },
+              })
+            }
+          />
         </form>
       </div>
       <EvenlySpaced>

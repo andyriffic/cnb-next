@@ -21,7 +21,7 @@ const PlayerContainer = styled.div`
 `;
 
 const PlayerItem = styled.div`
-  /* width: 30%; */
+  flex-basis: 48%;
 `;
 
 const PlayerDetailsContainer = styled.div`
@@ -116,10 +116,10 @@ export const getServerSideProps: GetServerSideProps = async () => {
   const allPlayers = await getAllPlayers();
 
   const activePlayers = allPlayers
-    ? allPlayers.filter((p) => !p.tags.includes("retired"))
+    ? allPlayers.filter((p) => !p.details?.retired)
     : [];
   const retiredPlayers = allPlayers
-    ? allPlayers.filter((p) => p.tags.includes("retired"))
+    ? allPlayers.filter((p) => !!p.details?.retired)
     : [];
 
   return {

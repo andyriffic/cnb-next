@@ -4,6 +4,7 @@ import { Card } from "../Atoms";
 import { EvenlySpaced } from "../Layouts";
 import { PlayerAvatar } from "../PlayerAvatar";
 import { COLORS } from "../../colors";
+import { AdminPlayerDetail } from "./AdminPlayerDetail";
 
 const PlayerDetailsContainer = styled.div`
   flex: 1;
@@ -48,7 +49,7 @@ export const AdminPlayerView = ({ player }: Props) => {
             ))}
           </ul>
           <hr />
-          <div>{JSON.stringify(player.details, null, 2)}</div>
+          <AdminPlayerDetail obj={player.details} />
         </PlayerDetailsContainer>
       </EvenlySpaced>
     </Card>

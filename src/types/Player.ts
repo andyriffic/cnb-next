@@ -7,6 +7,7 @@ export type Player = {
 
 export type PlayerDetails = {
   gameMoves?: number;
+  retired?: boolean;
   whosThatCount?: number;
   pacmanPlayer?: boolean;
   team?: string;
