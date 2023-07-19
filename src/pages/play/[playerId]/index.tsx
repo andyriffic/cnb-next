@@ -13,6 +13,7 @@ import { PlayerGamesList } from "../../../components/rock-paper-scissors/PlayerG
 import { Player } from "../../../types/Player";
 import { getAllPlayers, getPlayer } from "../../../utils/data/aws-dynamodb";
 import { getPlayerJoinUrl } from "../../../utils/url";
+import { PlayerColourSelector } from "../../../components/player/PlayerColourSelector";
 
 const CenterAlignContainer = styled.div`
   display: flex;
@@ -37,6 +38,7 @@ function Page({ player }: Props) {
         </Link>
       </Card>
       <PlayerGamesList playerId={player.id} />
+      <PlayerColourSelector player={player} />
     </PlayerPageLayout>
   );
 }
