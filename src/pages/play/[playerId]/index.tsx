@@ -1,4 +1,4 @@
-import { GetStaticPaths, GetStaticProps } from "next";
+import { GetServerSideProps, GetStaticPaths, GetStaticProps } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import styled from "styled-components";
@@ -43,24 +43,7 @@ function Page({ player }: Props) {
   );
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const players = await getAllPlayers();
-
-  if (!players) {
-    return { paths: [], fallback: false };
-  }
-
-  return {
-    paths: players.map((player) => ({
-      params: {
-        playerId: player.id,
-      },
-    })),
-    fallback: false,
-  };
-};
-
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const player = await getPlayer(params!.playerId! as string);
   return {
     props: { player },
