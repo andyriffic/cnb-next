@@ -2,8 +2,11 @@ import { Player } from "../../../types/Player";
 
 export type Direction = "left" | "right";
 
+export type GasGameType = "normal" | "quick";
+
 export type GasGame = {
   id: string;
+  gameType: GasGameType;
   allPlayers: GasPlayer[];
   alivePlayersIds: string[];
   deadPlayerIds: string[];

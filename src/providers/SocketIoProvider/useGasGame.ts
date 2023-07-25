@@ -10,7 +10,11 @@ import {
   PLAY_GAS_CARD,
   PRESS_GAS,
 } from "../../services/migrated/gas-out/socket";
-import { GasGame, GlobalEffect } from "../../services/migrated/gas-out/types";
+import {
+  GasGame,
+  GasGameType,
+  GlobalEffect,
+} from "../../services/migrated/gas-out/types";
 
 export type GasGameSocketService = {
   gasGames: GasGame[];
@@ -18,6 +22,7 @@ export type GasGameSocketService = {
     playerIds: string[],
     gameId: string,
     team: string | undefined,
+    gameType: GasGameType,
     onCreated: (id: string) => void
   ) => void;
   playCard: (gameId: string, playerId: string, cardIndex: number) => void;
@@ -40,9 +45,17 @@ export function useGasGame(socket: Socket): GasGameSocketService {
       playerIds: string[],
       gameId: string,
       team: string | undefined,
+      gameType: GasGameType,
       onCreated: (id: string) => void
     ) => {
-      socket.emit(CREATE_GAS_GAME, playerIds, gameId, team, onCreated);
+      socket.emit(
+        CREATE_GAS_GAME,
+        playerIds,
+        gameId,
+        team,
+        gameType,
+        onCreated
+      );
     },
     [socket]
   );

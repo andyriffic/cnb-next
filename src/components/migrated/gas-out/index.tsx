@@ -16,9 +16,12 @@ const Container = styled.div`
   margin: 50px auto;
 `;
 
-const PlayersContainer = styled.div`
-  display: flex;
-  justify-content: center;
+const GameModeDisplay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  text-transform: uppercase;
+  padding: 1rem;
 `;
 
 const CarouselContainer = styled.div`
@@ -79,6 +82,7 @@ const View = ({ gasGame, team }: Props) => {
       debug={<GasPlayerDebug game={gasGame} />}
     >
       <Container>
+        <GameModeDisplay>{gasGame.gameType} mode</GameModeDisplay>
         {!gasGame.winningPlayerId && (
           <CarouselContainer>
             <PlayerCarousel

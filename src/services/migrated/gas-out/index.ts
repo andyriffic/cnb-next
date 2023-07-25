@@ -13,6 +13,7 @@ import {
   EffectType,
   GasCard,
   GasGame,
+  GasGameType,
   GasPlayer,
   GlobalEffect,
 } from "./types";
@@ -21,16 +22,19 @@ export function createGame({
   id,
   players,
   team,
+  gameType,
 }: {
   id: string;
   players: Player[];
   team: string | undefined;
+  gameType: GasGameType;
 }): GasGame {
   const randomPlayer = selectRandomOneOf(players);
   return giveEffectPowerToPlayer(
     {
       id,
-      allPlayers: players.map(createGasPlayer),
+      gameType,
+      allPlayers: players.map((p) => createGasPlayer(p, gameType)),
       alivePlayersIds: players.map((p) => p.id),
       deadPlayerIds: [],
       direction: "right",
@@ -522,7 +526,7 @@ export function playCard(
     curse: undefined, // Curse automatically removed after card is played
     cards: [
       ...updatedCards,
-      createRandomCard(game.alivePlayersIds.length === 2),
+      createRandomCard(game.gameType, game.alivePlayersIds.length === 2),
     ],
   };
 
@@ -619,11 +623,15 @@ function getPlayerAndCardOrThrow(
   return { player, card };
 }
 
-function createGasPlayer(player: Player): GasPlayer {
+function createGasPlayer(player: Player, gameType: GasGameType): GasPlayer {
   return {
     player,
     status: "alive",
-    cards: [createRandomCard(), createRandomCard(), createRandomCard()],
+    cards: [
+      createRandomCard(gameType),
+      createRandomCard(gameType),
+      createRandomCard(gameType),
+    ],
     totalPresses: 0,
     points: 0,
     guesses: {
@@ -639,7 +647,10 @@ function createGasPlayer(player: Player): GasPlayer {
   };
 }
 
-function getWeightedRandomCardType(isFinalRound: boolean): CardType {
+function getRandomCardType(
+  gameType: GasGameType,
+  isFinalRound: boolean
+): CardType {
   const cardWeights: WeightedItem<CardType>[] = [
     { weight: 1, item: "skip" },
     { weight: 2, item: "risky" },
@@ -647,12 +658,16 @@ function getWeightedRandomCardType(isFinalRound: boolean): CardType {
     { weight: 14, item: "press" },
   ];
 
-  return selectWeightedRandomOneOf(
-    isFinalRound ? cardWeights.filter((w) => w.item !== "risky") : cardWeights
-  );
+  return isFinalRound
+    ? "press"
+    : selectWeightedRandomOneOf(
+        cardWeights.filter((cw) =>
+          gameType === "quick" ? cw.item !== "skip" : true
+        ) //No Skip cards in Quick game
+      );
 }
 
-function createCard(cardType: CardType): GasCard {
+function createCard(cardType: CardType, presses: number): GasCard {
   switch (cardType) {
     case "skip":
     case "reverse":
@@ -660,13 +675,21 @@ function createCard(cardType: CardType): GasCard {
     case "risky":
       return { type: "risky", presses: 6 };
     case "press":
-      return { type: "press", presses: selectRandomOneOf([1, 2, 3, 4, 5]) };
+      return { type: "press", presses };
   }
 }
 
-function createRandomCard(isFinalRound: boolean = false): GasCard {
-  const nextCardType = getWeightedRandomCardType(isFinalRound);
-  const card = createCard(nextCardType);
+function createRandomCard(
+  gameType: GasGameType,
+  isFinalRound: boolean = false
+): GasCard {
+  const nextCardType = getRandomCardType(gameType, isFinalRound);
+  const card = createCard(
+    nextCardType,
+    gameType === "quick"
+      ? selectRandomOneOf([3, 4, 5])
+      : selectRandomOneOf([1, 2, 3, 4, 5])
+  );
 
   return card;
 }

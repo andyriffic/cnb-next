@@ -4,7 +4,7 @@ import { getAllPlayers } from "../../../utils/data/aws-dynamodb";
 import { savePlayersGameMoves } from "../../save-game-moves/saveGameMovesPacman";
 import { sendClientMessage } from "../../socket";
 import { gasGameToPoints } from "./points";
-import { GasGame, GlobalEffect } from "./types";
+import { GasGame, GasGameType, GlobalEffect } from "./types";
 import {
   createGame,
   makeNextPlayerOutGuess,
@@ -48,13 +48,14 @@ export const initialiseGasOutSocket = (io: SocketIOServer, socket: Socket) => {
       playerIds: string[],
       gameId: string,
       team: string | undefined,
+      gameType: GasGameType,
       onCreated: (id: string) => void
     ) => {
       getAllPlayers().then((playersFromDb) => {
         if (!playersFromDb) return;
 
         const players = playersFromDb.filter((p) => playerIds.includes(p.id));
-        const gasGame = createGame({ id: gameId, players, team });
+        const gasGame = createGame({ id: gameId, players, team, gameType });
         console.log("Created GasGame", gasGame);
         activeGasGames = [gasGame]; //Only allow one mobGame at a time for now
         io.emit(GAS_GAMES_UPDATE, activeGasGames);

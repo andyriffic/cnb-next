@@ -32,7 +32,7 @@ const JoinedPlayerContainer = styled.div`
   flex-wrap: wrap;
 `;
 
-type GameTypes = "rps" | "rps-quick" | "balloon" | "ai";
+type GameTypes = "rps" | "rps-quick" | "balloon" | "balloon-quick" | "ai";
 const availableRandomGames: GameTypes[] = ["rps", "balloon"];
 
 const gameCreators: {
@@ -45,7 +45,8 @@ const gameCreators: {
 } = {
   rps: createRockPaperScissorsWithBettingGame(4),
   ["rps-quick"]: createRockPaperScissorsWithBettingGame(2),
-  balloon: createBallonGame,
+  ["balloon-quick"]: createBallonGameQuick,
+  balloon: createBallonGameNormal,
   ai: createAiGame,
 };
 
@@ -114,31 +115,7 @@ function Page() {
             ))}
           </JoinedPlayerContainer>
           <EvenlySpaced>
-            <PrimaryButton
-              disabled={group.playerIds.length < 2}
-              onClick={() => {
-                gameCreators
-                  .rps(group, socketService, getName, team)
-                  .then((gameUrl) => {
-                    router.push(urlWithTeamQueryParam(gameUrl, team));
-                  });
-              }}
-            >
-              Betting game
-            </PrimaryButton>
-            <PrimaryButton
-              disabled={group.playerIds.length < 2}
-              onClick={() => {
-                gameCreators
-                  .balloon(group, socketService, getName, team)
-                  .then((gameUrl) => {
-                    router.push(urlWithTeamQueryParam(gameUrl, team));
-                  });
-              }}
-            >
-              Balloon game
-            </PrimaryButton>
-            <Heading>/</Heading>
+            <Heading>Quick: </Heading>
             <PrimaryButton
               disabled={group.playerIds.length < 2}
               onClick={() => {
@@ -152,12 +129,55 @@ function Page() {
                 });
               }}
             >
-              Betting game (quick)
+              Betting 🎲 ⏩
+            </PrimaryButton>
+            <PrimaryButton
+              disabled={group.playerIds.length < 2}
+              onClick={() => {
+                gameCreators["balloon-quick"](
+                  group,
+                  socketService,
+                  getName,
+                  team
+                ).then((gameUrl) => {
+                  router.push(urlWithTeamQueryParam(gameUrl, team));
+                });
+              }}
+            >
+              Balloon 🎈 ⏩
             </PrimaryButton>
           </EvenlySpaced>
-          <Heading>OR</Heading>
-          <EvenlySpaced>
+          <EvenlySpaced style={{ marginTop: "2rem" }}>
+            <Heading>Normal: </Heading>
+
             <PrimaryButton
+              disabled={group.playerIds.length < 2}
+              onClick={() => {
+                gameCreators
+                  .rps(group, socketService, getName, team)
+                  .then((gameUrl) => {
+                    router.push(urlWithTeamQueryParam(gameUrl, team));
+                  });
+              }}
+            >
+              Betting 🎲
+            </PrimaryButton>
+            <PrimaryButton
+              disabled={group.playerIds.length < 2}
+              onClick={() => {
+                gameCreators
+                  .balloon(group, socketService, getName, team)
+                  .then((gameUrl) => {
+                    router.push(urlWithTeamQueryParam(gameUrl, team));
+                  });
+              }}
+            >
+              Balloon 🎈
+            </PrimaryButton>
+          </EvenlySpaced>
+          <Heading style={{ marginTop: "2rem" }}>OR</Heading>
+          <EvenlySpaced>
+            {/* <PrimaryButton
               disabled={group.playerIds.length < 2}
               onClick={() => {
                 const randomGame = selectRandomOneOf(availableRandomGames);
@@ -172,7 +192,7 @@ function Page() {
               }}
             >
               Random
-            </PrimaryButton>
+            </PrimaryButton> */}
             <PrimaryButton
               disabled={group.playerIds.length < 2}
               onClick={() => {
@@ -268,7 +288,7 @@ function createRockPaperScissorsWithBettingGame(
   };
 }
 
-function createBallonGame(
+function createBallonGameNormal(
   group: PlayerGroup,
   socketIoService: SocketIoService,
   getName: (playerId: string) => string,
@@ -279,6 +299,26 @@ function createBallonGame(
       group.playerIds,
       group.id,
       team,
+      "normal",
+      (gameId) => {
+        resolve(getGasOutSpectatorUrl(gameId));
+      }
+    );
+  });
+}
+
+function createBallonGameQuick(
+  group: PlayerGroup,
+  socketIoService: SocketIoService,
+  getName: (playerId: string) => string,
+  team: string | undefined
+): Promise<GameUrl> {
+  return new Promise((resolve) => {
+    socketIoService.gasGame.createGasGame(
+      group.playerIds,
+      group.id,
+      team,
+      "quick",
       (gameId) => {
         resolve(getGasOutSpectatorUrl(gameId));
       }
