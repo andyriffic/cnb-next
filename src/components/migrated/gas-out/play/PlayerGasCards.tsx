@@ -90,7 +90,7 @@ export const PlayerGasCards = ({
           key={i}
           disabled={!enabled || isCardDisabled(c, player.curse)}
           onClick={() => playCard(i)}
-          special={c.type === "risky"}
+          special={c.type === "risky" || c.type === "bomb"}
         >
           {c.type === "press" && (
             <CardNumber>{applyCurse(c, player.curse)}</CardNumber>
@@ -98,6 +98,7 @@ export const PlayerGasCards = ({
           {c.type === "risky" && <CardNumber>{c.presses}</CardNumber>}
           {c.type === "skip" && <CardText>Skip</CardText>}
           {c.type === "reverse" && <CardText>↔</CardText>}
+          {c.type === "bomb" && <CardText>💣</CardText>}
         </Card>
       ))}
     </Container>

@@ -8,7 +8,7 @@ import { GasGame, GasGameType, GlobalEffect } from "./types";
 import {
   createGame,
   makeNextPlayerOutGuess,
-  moveToNextAlivePlayerWithReverseDeath,
+  moveToNextAlivePlayerWithExtraCardRules,
   playCard,
   playEffect,
   playerTimedOut,
@@ -99,7 +99,9 @@ export const initialiseGasOutSocket = (io: SocketIOServer, socket: Socket) => {
     console.log(NEXT_GAS_PAYER, gameId);
     const game = getGameOrThrow(activeGasGames, gameId);
 
-    const updatedGame = moveToNextAlivePlayerWithReverseDeath(resetCloud(game));
+    const updatedGame = moveToNextAlivePlayerWithExtraCardRules(
+      resetCloud(game)
+    );
     activeGasGames = updateGames(activeGasGames, updatedGame);
 
     // console.log('UPDATED GAME', updatedGame);

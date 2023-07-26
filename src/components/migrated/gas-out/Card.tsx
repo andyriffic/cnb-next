@@ -53,6 +53,12 @@ function renderCard(
     case "press":
     case "risky":
       return <CardNumber>{pressesRemaining}</CardNumber>;
+    case "bomb":
+      return (
+        <CardNumber>
+          💣 <br /> {pressesRemaining}
+        </CardNumber>
+      );
     case "skip":
       return <CardText>skip</CardText>;
     case "reverse":
@@ -77,6 +83,7 @@ export function Card({ card, pressesRemaining }: Props): JSX.Element | null {
         play("gas-play-skip-card");
         break;
       case "risky":
+      case "bomb":
         play("gas-play-risky-card");
         break;
       default:
@@ -89,7 +96,7 @@ export function Card({ card, pressesRemaining }: Props): JSX.Element | null {
   }
   return (
     <Appear animation="flip-in">
-      <CardContainer special={card.type === "risky"}>
+      <CardContainer special={card.type === "risky" || card.type === "bomb"}>
         {renderCard(card, pressesRemaining)}
       </CardContainer>
     </Appear>

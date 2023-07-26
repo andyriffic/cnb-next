@@ -1,3 +1,4 @@
+import { pipe } from "fp-ts/lib/function";
 import { Player } from "../../../types/Player";
 import {
   WeightedItem,
@@ -29,31 +30,26 @@ export function createGame({
   team: string | undefined;
   gameType: GasGameType;
 }): GasGame {
-  const randomPlayer = selectRandomOneOf(players);
-  return giveEffectPowerToPlayer(
-    {
-      id,
-      gameType,
-      allPlayers: players.map((p) => createGasPlayer(p, gameType)),
-      alivePlayersIds: players.map((p) => p.id),
-      deadPlayerIds: [],
-      direction: "right",
-      currentPlayer: {
-        id: players[0]!.id,
-        pressesRemaining: 0,
-      },
-      gasCloud: {
-        pressed: 0,
-        exploded: false,
-      },
-      pointsMap: createPointsMap(players.length),
-      moveHistory: [],
-      turnCount: 0,
-      team,
+  return {
+    id,
+    gameType,
+    allPlayers: players.map((p) => createGasPlayer(p, gameType)),
+    alivePlayersIds: players.map((p) => p.id),
+    deadPlayerIds: [],
+    direction: "right",
+    currentPlayer: {
+      id: players[0]!.id,
+      pressesRemaining: 0,
     },
-    randomPlayer.id,
-    "double"
-  );
+    gasCloud: {
+      pressed: 0,
+      exploded: false,
+    },
+    pointsMap: createPointsMap(players.length),
+    moveHistory: [],
+    turnCount: 0,
+    team,
+  };
 }
 
 function createPointsMap(totalPlayerCount: number): number[] {
@@ -70,6 +66,18 @@ function createPointsMap(totalPlayerCount: number): number[] {
 
     return points;
   });
+}
+
+export function moveToNextAlivePlayerWithExtraCardRules(
+  game: GasGame
+): GasGame {
+  return pipe(
+    game,
+    moveToNextAlivePlayer,
+    applyCursesToCurrentPlayer,
+    applyBoomerangDeath,
+    applyBombDeath
+  );
 }
 
 export function moveToNextAlivePlayerWithReverseDeath(game: GasGame): GasGame {
@@ -97,6 +105,73 @@ export function moveToNextAlivePlayerWithReverseDeath(game: GasGame): GasGame {
   }
 
   return gameWithNextPlayer;
+}
+
+function applyBoomerangDeath(game: GasGame): GasGame {
+  if (game.alivePlayersIds.length === 2) {
+    return game;
+  }
+
+  if (game.moveHistory.length < 2) {
+    return game;
+  }
+
+  const lastCardMove = game.moveHistory[0]!;
+  const secondLastCarMove = game.moveHistory[1]!;
+
+  if (
+    lastCardMove.cardPlayed.type === "reverse" &&
+    secondLastCarMove.cardPlayed.type === "reverse" &&
+    secondLastCarMove.playerId === game.currentPlayer.id
+  ) {
+    return explode(game, "boomerang");
+  }
+
+  return game;
+}
+
+function applyBombDeath(game: GasGame): GasGame {
+  if (game.alivePlayersIds.length === 2) {
+    return game;
+  }
+
+  if (game.moveHistory.length < 1) {
+    return game;
+  }
+
+  const lastDeadPlayerId = game.deadPlayerIds[game.deadPlayerIds.length - 1];
+
+  if (lastDeadPlayerId) {
+    const lastDeadPlayer = getPlayerOrThrow(game, lastDeadPlayerId);
+
+    if (lastDeadPlayer.killedBy === "bomb") {
+      return game;
+    }
+  }
+
+  const lastCardMove = game.moveHistory[0]!;
+
+  if (
+    lastCardMove.cardPlayed.type === "bomb" &&
+    game.alivePlayersIds.includes(lastCardMove.playerId)
+  ) {
+    const randomAlivePlayerId = selectRandomOneOf(
+      game.alivePlayersIds.filter((pid) => pid !== lastCardMove.playerId)
+    );
+
+    return explode(
+      {
+        ...game,
+        currentPlayer: {
+          id: randomAlivePlayerId,
+          pressesRemaining: 0,
+        },
+      },
+      "bomb"
+    );
+  }
+
+  return game;
 }
 
 export function moveToNextAlivePlayer(game: GasGame): GasGame {
@@ -651,20 +726,22 @@ function getRandomCardType(
   gameType: GasGameType,
   isFinalRound: boolean
 ): CardType {
-  const cardWeights: WeightedItem<CardType>[] = [
-    { weight: 1, item: "skip" },
-    { weight: 2, item: "risky" },
-    { weight: 3, item: "reverse" },
-    { weight: 14, item: "press" },
-  ];
+  const cardWeights: WeightedItem<CardType>[] =
+    gameType === "quick"
+      ? [
+          { weight: 1, item: "bomb" },
+          { weight: 2, item: "risky" },
+          { weight: 3, item: "reverse" },
+          { weight: 14, item: "press" },
+        ]
+      : [
+          { weight: 1, item: "skip" },
+          { weight: 2, item: "risky" },
+          { weight: 3, item: "reverse" },
+          { weight: 14, item: "press" },
+        ];
 
-  return isFinalRound
-    ? "press"
-    : selectWeightedRandomOneOf(
-        cardWeights.filter((cw) =>
-          gameType === "quick" ? cw.item !== "skip" : true
-        ) //No Skip cards in Quick game
-      );
+  return isFinalRound ? "press" : selectWeightedRandomOneOf(cardWeights);
 }
 
 function createCard(cardType: CardType, presses: number): GasCard {
@@ -676,6 +753,8 @@ function createCard(cardType: CardType, presses: number): GasCard {
       return { type: "risky", presses: 6 };
     case "press":
       return { type: "press", presses };
+    case "bomb":
+      return { type: "bomb", presses: 10 };
   }
 }
 

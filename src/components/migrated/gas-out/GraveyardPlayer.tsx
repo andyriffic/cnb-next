@@ -115,6 +115,7 @@ export function GraveyardPlayer({ player, game }: Props): JSX.Element {
       </PlayerAvatarContainer>
       {(!notDead || winner) && <PlayerPoints>{player.points}</PlayerPoints>}
       {player.killedBy === "timeout" && <TimedOutIcon>⏰</TimedOutIcon>}
+      {player.killedBy === "bomb" && <TimedOutIcon>💣</TimedOutIcon>}
       {player.killedBy === "boomerang" && <TimedOutIcon>🪃</TimedOutIcon>}
     </PlayerListItem>
   );
