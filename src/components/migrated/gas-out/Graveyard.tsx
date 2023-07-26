@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { slideInUpAnimation } from "../../animations/keyframes/slideInBlurredTop";
-import { GasGame } from "../../../services/migrated/gas-out/types";
+import { GasGame, GasPlayer } from "../../../services/migrated/gas-out/types";
 import { GraveyardPlayer } from "./GraveyardPlayer";
 
 const Container = styled.div`
@@ -23,6 +23,9 @@ type Props = {
   game: GasGame;
 };
 
+const sortByFinishPositionDesc = (a: GasPlayer, b: GasPlayer) =>
+  (b.finishedPosition || 0) - (a.finishedPosition || 0);
+
 export function Graveyard({ game }: Props): JSX.Element {
   return (
     <Container>
@@ -32,6 +35,7 @@ export function Graveyard({ game }: Props): JSX.Element {
       <GraveyardPlayerContainer>
         {game.allPlayers
           .filter((p) => p.status === "dead")
+          .sort(sortByFinishPositionDesc)
           .map((p) => {
             return (
               <GraveyardPlayerItem key={p.player.id}>
