@@ -3,7 +3,7 @@ import { isClientSideFeatureEnabled } from "../../utils/feature";
 import { BoardPlayer } from "./BoardPlayer";
 import { BoardSquare } from "./BoardSquare";
 import { PacMan } from "./PacMan";
-import { boardConfig } from "./boardConfig";
+import { PathDirection, boardConfig, getCellDirection } from "./boardConfig";
 import { getCoordinatesForOffset } from "./coordinateOffsets";
 import { PacManUiState } from "./hooks/usePacman/reducer";
 import { Coordinates } from "./types";
@@ -46,22 +46,48 @@ type Props = {
   uiState: PacManUiState;
 };
 
+const getDirectionIndicator = (
+  pathDirection: PathDirection | undefined
+): JSX.Element => {
+  switch (pathDirection) {
+    case "up":
+      return <>👆🏻</>;
+    case "down":
+      return <>👇🏻</>;
+    case "left":
+      return <>👈🏻</>;
+    case "right":
+      return <>👉🏻</>;
+    default:
+      return <>🤷‍♂️</>;
+  }
+};
+
 export function Board({ uiState }: Props): JSX.Element {
   return (
     <BoardBackground>
       <BoardBackgroundImage src="/images/pacman/pac-man-board.png" />
-      {boardConfig.playerPath.map((s, i) => (
-        <BoardSquare
-          key={i}
-          square={s}
-          color="white"
-          content={
-            <span style={{ transform: "translate3d(0.6rem, -0.2rem, 0)" }}>
-              {debug ? i : <span style={{ fontSize: "2rem" }}>.</span>}
-            </span>
-          }
-        />
-      ))}
+      {boardConfig.playerPath.map((s, i) => {
+        const direction = getCellDirection(boardConfig, i);
+        return (
+          <BoardSquare
+            key={i}
+            square={s}
+            color="white"
+            content={
+              <span style={{ transform: "translate3d(0.6rem, -0.2rem, 0)" }}>
+                {debug ? (
+                  i
+                ) : (
+                  <span style={{ fontSize: "1rem" }}>
+                    {getDirectionIndicator(direction)}
+                  </span>
+                )}
+              </span>
+            }
+          />
+        );
+      })}
       {debug &&
         boardConfig.pacManPath.map((s, i) => {
           return (

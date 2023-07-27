@@ -1,4 +1,4 @@
-import { PacManBoard } from './types';
+import { PacManBoard } from "./types";
 
 export const generateTestBoard = (): PacManBoard => {
   let board: PacManBoard = boardConfig;
@@ -14,8 +14,36 @@ export const generateTestBoard = (): PacManBoard => {
   return board;
 };
 
+export type PathDirection = "up" | "down" | "left" | "right";
+
+export const getCellDirection = (
+  board: PacManBoard,
+  cellIndex: number
+): PathDirection | undefined => {
+  const currentCell = board.playerPath[cellIndex];
+  const nextCell = board.playerPath[cellIndex + 1];
+
+  if (!(nextCell && currentCell)) {
+    return "right";
+  }
+
+  if (nextCell.coordinates.x > currentCell.coordinates.x) {
+    return "right";
+  } else if (nextCell.coordinates.x < currentCell.coordinates.x) {
+    return "left";
+  } else if (nextCell.coordinates.y > currentCell.coordinates.y) {
+    return "down";
+  } else if (nextCell.coordinates.y < currentCell.coordinates.y) {
+    return "up";
+  }
+};
+
 export const boardConfig: PacManBoard = {
-  jailLocations: [{ x: 9, y: 6 }, { x: 8, y: 6 }, { x: 7, y: 6 }],
+  jailLocations: [
+    { x: 9, y: 6 },
+    { x: 8, y: 6 },
+    { x: 7, y: 6 },
+  ],
   playerPath: [
     { coordinates: { x: 0, y: 6 } },
     { coordinates: { x: 1, y: 6 } },
