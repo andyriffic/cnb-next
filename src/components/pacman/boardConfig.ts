@@ -14,12 +14,19 @@ export const generateTestBoard = (): PacManBoard => {
   return board;
 };
 
-export type PathDirection = "up" | "down" | "left" | "right";
+export type PathDirection = "up" | "down" | "left" | "right" | "start" | "end";
 
 export const getCellDirection = (
   board: PacManBoard,
   cellIndex: number
 ): PathDirection | undefined => {
+  if (cellIndex === 0) {
+    return "start";
+  }
+  if (cellIndex === board.playerPath.length - 1) {
+    return "end";
+  }
+
   const currentCell = board.playerPath[cellIndex];
   const nextCell = board.playerPath[cellIndex + 1];
 

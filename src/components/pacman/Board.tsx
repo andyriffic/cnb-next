@@ -58,8 +58,12 @@ const getDirectionIndicator = (
       return <>👈🏻</>;
     case "right":
       return <>👉🏻</>;
+    case "start":
+      return <>🏡</>;
+    case "end":
+      return <>🍒</>;
     default:
-      return <>🤷‍♂️</>;
+      return <></>;
   }
 };
 
