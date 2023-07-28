@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { isClientSideFeatureEnabled } from "../../utils/feature";
+import { Arrow } from "../Arrow";
 import { BoardPlayer } from "./BoardPlayer";
 import { BoardSquare } from "./BoardSquare";
 import { PacMan } from "./PacMan";
@@ -47,17 +48,19 @@ type Props = {
 };
 
 const getDirectionIndicator = (
-  pathDirection: PathDirection | undefined
+  pathDirection: PathDirection | undefined,
+  index: number
 ): JSX.Element => {
+  const delayMs = index * 0;
   switch (pathDirection) {
     case "up":
-      return <>👆🏻</>;
+      return <Arrow direction="up" delayMs={delayMs} />;
     case "down":
-      return <>👇🏻</>;
+      return <Arrow delayMs={delayMs} />;
     case "left":
-      return <>👈🏻</>;
+      return <Arrow direction="left" delayMs={delayMs} />;
     case "right":
-      return <>👉🏻</>;
+      return <Arrow direction="right" delayMs={delayMs} />;
     case "start":
       return <>🏡</>;
     case "end":
@@ -84,7 +87,7 @@ export function Board({ uiState }: Props): JSX.Element {
                   i
                 ) : (
                   <span style={{ fontSize: "1rem" }}>
-                    {getDirectionIndicator(direction)}
+                    {getDirectionIndicator(direction, i)}
                   </span>
                 )}
               </span>
