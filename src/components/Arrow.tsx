@@ -2,15 +2,16 @@ import styled, { keyframes } from "styled-components";
 
 const ArrowAnimation = keyframes`
     0% {
-        opacity: 0;
-        transform: rotate(45deg) translate(-10px, -10px);
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
     }
     50% {
         opacity: 1;
+        transform: translate3d(0, 2px, 0);
     }
     100% {
-        opacity: 0;
-        transform: rotate(45deg) translate(10px, 10px);
+        opacity: 1;
+        transform: translate3d(0, 0px, 0);
     }
   `;
 
@@ -18,18 +19,17 @@ const ArrowGroup = styled.div<{ rotationDegrees: number }>`
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
   transform: rotate(${({ rotationDegrees }) => rotationDegrees}deg);
 `;
 
 const ArrowItem = styled.div<{ delayMs: number }>`
   width: 0.5vw;
   height: 0.5vw;
-  border-bottom: 2px solid white;
+  /* border-bottom: 2px solid white;
   border-right: 2px solid white;
-  transform: rotate(45deg);
+  transform: rotate(45deg); */
   margin: -10px;
-  animation: ${ArrowAnimation} 2s ${({ delayMs }) => delayMs}ms infinite;
+  animation: ${ArrowAnimation} 1s ${({ delayMs }) => delayMs}ms infinite;
 `;
 
 const getRotationDegrees = (direction: ArrowDirection): number => {
@@ -55,7 +55,7 @@ type Props = {
 export function Arrow({ direction = "down", delayMs = 0 }: Props) {
   return (
     <ArrowGroup rotationDegrees={getRotationDegrees(direction)}>
-      <ArrowItem delayMs={delayMs} />
+      <ArrowItem delayMs={delayMs}>👇🏻</ArrowItem>
     </ArrowGroup>
   );
 }

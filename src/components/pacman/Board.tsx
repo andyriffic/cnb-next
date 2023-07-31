@@ -49,28 +49,49 @@ type Props = {
 
 const getDirectionIndicator = (
   pathDirection: PathDirection | undefined,
-  index: number
+  index: number,
+  animate: boolean
 ): JSX.Element => {
-  const delayMs = index * 0;
-  switch (pathDirection) {
-    case "up":
-      return <Arrow direction="up" delayMs={delayMs} />;
-    case "down":
-      return <Arrow delayMs={delayMs} />;
-    case "left":
-      return <Arrow direction="left" delayMs={delayMs} />;
-    case "right":
-      return <Arrow direction="right" delayMs={delayMs} />;
-    case "start":
-      return <>🏡</>;
-    case "end":
-      return <>🍒</>;
-    default:
-      return <></>;
+  if (animate) {
+    const delayMs = index * 200;
+    switch (pathDirection) {
+      case "up":
+        return <Arrow direction="up" delayMs={delayMs} />;
+      case "down":
+        return <Arrow delayMs={delayMs} />;
+      case "left":
+        return <Arrow direction="left" delayMs={delayMs} />;
+      case "right":
+        return <Arrow direction="right" delayMs={delayMs} />;
+      case "start":
+        return <>🏡</>;
+      case "end":
+        return <>🍒</>;
+      default:
+        return <></>;
+    }
+  } else {
+    switch (pathDirection) {
+      case "up":
+        return <>👆🏻</>;
+      case "down":
+        return <>👇🏻</>;
+      case "left":
+        return <>👈🏻</>;
+      case "right":
+        return <>👉🏻</>;
+      case "start":
+        return <>🏡</>;
+      case "end":
+        return <>🍒</>;
+      default:
+        return <></>;
+    }
   }
 };
 
 export function Board({ uiState }: Props): JSX.Element {
+  const animatePath = isClientSideFeatureEnabled("animate");
   return (
     <BoardBackground>
       <BoardBackgroundImage src="/images/pacman/pac-man-board.png" />
@@ -87,7 +108,7 @@ export function Board({ uiState }: Props): JSX.Element {
                   i
                 ) : (
                   <span style={{ fontSize: "1rem" }}>
-                    {getDirectionIndicator(direction, i)}
+                    {getDirectionIndicator(direction, i, animatePath)}
                   </span>
                 )}
               </span>
