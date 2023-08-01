@@ -4,12 +4,14 @@ import {
   Player,
   PlayerDetails,
   getPlayerPacManDetails,
+  getPlayerZombieRunDetails,
 } from "../../types/Player";
 import { updatePlayerDetails } from "../../utils/api";
 import { Card } from "../Atoms";
 import { EvenlySpaced } from "../Layouts";
 import { PlayerAvatar } from "../PlayerAvatar";
 import { AdminPlayerEditBooleanValue } from "./AdminPlayerEditBooleanValue";
+import { AdminPlayerEditNumberValue } from "./AdminPlayerEditNumberValue";
 
 const PlayerDetailsContainer = styled.div`
   flex: 1;
@@ -106,7 +108,7 @@ export const AdminPlayerEdit = ({ player, onClose }: Props) => {
             />
           </fieldset>
           <hr />
-          <h6>Pacman</h6>
+          <h6 style={{ fontWeight: "bold" }}>Pacman</h6>
           <AdminPlayerEditBooleanValue
             label="Pacman"
             id="pacman_player"
@@ -179,6 +181,42 @@ export const AdminPlayerEdit = ({ player, onClose }: Props) => {
                   pacmanDetails: {
                     ...getPlayerPacManDetails(playerCopy),
                     hasPowerPill: checked,
+                  },
+                },
+              })
+            }
+          />
+          <hr />
+          <h6 style={{ fontWeight: "bold" }}>Zombie Run</h6>
+          <AdminPlayerEditNumberValue
+            label="Total Metres"
+            id="zombie_metres"
+            value={playerCopy.details?.zombieRun?.totalMetresRun || 0}
+            onChange={(value) =>
+              setPlayerCopy({
+                ...playerCopy,
+                details: {
+                  ...playerCopy.details,
+                  zombieRun: {
+                    ...getPlayerZombieRunDetails(playerCopy),
+                    totalMetresRun: value,
+                  },
+                },
+              })
+            }
+          />
+          <AdminPlayerEditBooleanValue
+            label="isZombie"
+            id="zombie_isZombie"
+            value={!!playerCopy.details?.zombieRun?.isZombie}
+            onChange={(checked) =>
+              setPlayerCopy({
+                ...playerCopy,
+                details: {
+                  ...playerCopy.details,
+                  zombieRun: {
+                    ...getPlayerZombieRunDetails(playerCopy),
+                    isZombie: checked,
                   },
                 },
               })

@@ -1,11 +1,11 @@
 type Props = {
   label: string;
   id: string;
-  value: boolean;
-  onChange: (value: boolean) => void;
+  value: number;
+  onChange: (value: number) => void;
 };
 
-export const AdminPlayerEditBooleanValue = ({
+export const AdminPlayerEditNumberValue = ({
   label,
   id,
   value,
@@ -16,9 +16,9 @@ export const AdminPlayerEditBooleanValue = ({
       <label htmlFor={id}>{label}</label>
       <input
         id={id}
-        type="checkbox"
-        checked={value}
-        onChange={(e) => onChange(e.target.checked)}
+        type="number"
+        value={value}
+        onChange={(e) => onChange(e.target.valueAsNumber)}
       />
     </fieldset>
   );
