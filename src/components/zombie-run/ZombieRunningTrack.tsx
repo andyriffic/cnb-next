@@ -6,17 +6,18 @@ import { Zombie } from "./Zombie";
 const TOTAL_TRACK_WIDTH = 95;
 
 const ZombieBackground = styled.div`
-  border: 1px solid black;
+  border: 1px solid #ccc;
   height: 50vh;
   position: relative;
   width: ${TOTAL_TRACK_WIDTH}vw;
   margin: 0 auto;
   box-sizing: border-box;
+  background: url("/images/zombie-background-day.png");
 `;
 
 const ZombiePlayer = styled.div<{ isZombie: boolean }>`
   position: absolute;
-  bottom: 0;
+  bottom: 1vh;
   transition: left 3s ease-in-out;
   /* border: 1px solid black; */
   box-sizing: border-box;
@@ -116,8 +117,8 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
               }vw`,
             }}
           >
-            {marker}
-            {/* {marker % 10 === 0 ? <>{marker}</> : ""} */}
+            {/* {marker} */}
+            {marker % 10 === 0 && marker}
           </DistanceMarker>
         ))}
       </DistanceMarkerContainer>
