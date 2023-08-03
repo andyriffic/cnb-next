@@ -12,7 +12,8 @@ const ZombieBackground = styled.div`
   width: ${TOTAL_TRACK_WIDTH}vw;
   margin: 0 auto;
   box-sizing: border-box;
-  background: url("/images/zombie-background-day.png");
+  background: url("/images/zombie-background-day.png") no-repeat bottom center;
+  background-size: 100% 100%;
 `;
 
 const ZombiePlayer = styled.div<{ isZombie: boolean }>`
