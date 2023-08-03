@@ -1,11 +1,10 @@
 import { useRouter } from "next/router";
 import { useCallback } from "react";
 import styled from "styled-components";
-import { SpectatorPageLayout } from "../../components/SpectatorPageLayout";
-import { useSocketIo } from "../../providers/SocketIoProvider";
 import { Heading, PrimaryButton } from "../../components/Atoms";
 import { CenterSpaced } from "../../components/Layouts";
-import { COLORS } from "../../colors";
+import { SpectatorPageLayout } from "../../components/SpectatorPageLayout";
+import { useSocketIo } from "../../providers/SocketIoProvider";
 
 const CenterAlignContainer = styled.div`
   display: flex;
@@ -36,18 +35,6 @@ function Page() {
           Start new game
         </PrimaryButton>
       </CenterSpaced>
-      <PrimaryButton
-        style={{
-          position: "absolute",
-          display: "block",
-          bottom: 0,
-          backgroundColor: "#f2d585",
-          color: "#bfaf7e",
-        }}
-        onClick={() => startNewGame("native")}
-      >
-        Start new mobile game 🤫
-      </PrimaryButton>
     </SpectatorPageLayout>
   );
 }
