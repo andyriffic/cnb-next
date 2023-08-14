@@ -44,7 +44,7 @@ const gameCreators: {
   ) => Promise<GameUrl>;
 } = {
   rps: createRockPaperScissorsWithBettingGame(4),
-  ["rps-quick"]: createRockPaperScissorsWithBettingGame(2),
+  ["rps-quick"]: createRockPaperScissorsWithBettingGame(3),
   ["balloon-quick"]: createBallonGameQuick,
   balloon: createBallonGameNormal,
   ai: createAiGame,
