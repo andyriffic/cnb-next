@@ -130,11 +130,11 @@ export function useGasSound(game: GasGame | undefined) {
   //   }
   // }, [cardPlayed]);
 
-  useEffect(() => {
-    if (hasWinner) {
-      play("gas-winner");
-    }
-  }, [hasWinner, play]);
+  // useEffect(() => {
+  //   if (hasWinner) {
+  //     play("gas-winner");
+  //   }
+  // }, [hasWinner, play]);
 
   useEffect(() => {
     if (finishedPressingRiskyCard) {

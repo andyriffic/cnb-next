@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import styled from "styled-components";
 import { FONT_FAMILY } from "../../../colors";
 import { GasGame } from "../../../services/migrated/gas-out/types";
@@ -8,6 +8,7 @@ import {
   fadeInDownAnimation,
   fadeInLeftAnimation,
 } from "../../animations/keyframes/fade";
+import { useSound } from "../../hooks/useSound";
 import { PlayerListPlayer } from "./PlayerListPlayer";
 
 const Container = styled.div`
@@ -40,6 +41,15 @@ type Props = {
 };
 
 export function FinalPodium({ game }: Props): JSX.Element | null {
+  const { play } = useSound();
+
+  useEffect(() => {
+    const winMusic = play("gas-winner");
+    return () => {
+      winMusic.stop();
+    };
+  }, [play]);
+
   const winningPlayer = useMemo(() => {
     return game.allPlayers.find((p) => p.player.id === game.winningPlayerId);
   }, [game]);
