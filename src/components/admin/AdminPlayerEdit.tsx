@@ -45,6 +45,7 @@ export const AdminPlayerEdit = ({ player, onClose }: Props) => {
           <p style={{ textAlign: "center", fontWeight: "bold" }}>
             {playerCopy.name}
           </p>
+          <p>{playerCopy.id}</p>
         </div>
         <PlayerDetailsContainer>
           <ul>

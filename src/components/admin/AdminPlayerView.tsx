@@ -36,6 +36,7 @@ export const AdminPlayerView = ({ player }: Props) => {
           >
             {player.name}
           </p>
+          <p>{player.id}</p>
           {/* <p style={{ textAlign: "center", fontWeight: "bold" }}>
             <NumericValue>
               {player.details?.gameMoves || 0}
