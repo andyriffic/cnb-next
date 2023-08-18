@@ -118,13 +118,12 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   }
 
   const allPlayers = (await getAllPlayers()) || [];
-  const lowestViewCount = allPlayers.reduce((acc, p) => {
-    const playerViewCount = p.details?.whosThatCount || 0;
-    return playerViewCount < acc ? playerViewCount : acc;
-  }, 0);
+  const allViewCounts = allPlayers.map((p) => p.details?.whosThatCount || 0);
+
+  const lowestViewCount = Math.min(...allViewCounts);
 
   const lowestViewCountPlayers = allPlayers.filter(
-    (p) => p.details?.whosThatCount || 0 === lowestViewCount
+    (p) => (p.details?.whosThatCount || 0) === lowestViewCount
   );
 
   return {
