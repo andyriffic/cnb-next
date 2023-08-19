@@ -36,7 +36,7 @@ export default async function userHandler(
 
     case "GET": {
       // Update or create data in your database
-      console.log("UPDATING", id, playerDetails);
+      console.log("GETTING PLAYERs", id, playerDetails);
       const playerOrNull = await getPlayer(id as string);
       console.info("Got player", playerOrNull);
 

@@ -64,24 +64,22 @@ export default function Page({ activePlayers, retiredPlayers }: Props) {
         </SubHeading>
         <PlayerContainer>
           {workingActivePlayers.map((player) => (
-            <PlayerItem
-              key={player.id}
-              style={{ cursor: "pointer" }}
-              onClick={() => setEditingPlayer(player)}
-            >
-              <AdminPlayerView player={player} />
+            <PlayerItem key={player.id}>
+              <AdminPlayerView
+                player={player}
+                onStartEdit={() => setEditingPlayer(player)}
+              />
             </PlayerItem>
           ))}
         </PlayerContainer>
         <SubHeading style={{ textAlign: "center" }}>Retired</SubHeading>
         <PlayerContainer>
           {retiredPlayers.map((player) => (
-            <PlayerItem
-              key={player.id}
-              style={{ cursor: "pointer" }}
-              onClick={() => setEditingPlayer(player)}
-            >
-              <AdminPlayerView player={player} />
+            <PlayerItem key={player.id}>
+              <AdminPlayerView
+                player={player}
+                onStartEdit={() => setEditingPlayer(player)}
+              />
             </PlayerItem>
           ))}
         </PlayerContainer>
@@ -91,9 +89,11 @@ export default function Page({ activePlayers, retiredPlayers }: Props) {
               player={editingPlayer}
               onClose={(updated) => {
                 setEditingPlayer(undefined);
+                if (!updated) {
+                  return;
+                }
 
-                updated &&
-                  setPlayersUpdating([...playersUpdating, editingPlayer.id]);
+                setPlayersUpdating([...playersUpdating, editingPlayer.id]);
                 fetchGetPlayer(editingPlayer.id).then((updatedPlayer) => {
                   updatedPlayer &&
                     setWorkingActivePlayers(

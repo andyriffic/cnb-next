@@ -12,9 +12,10 @@ const PlayerDetailsContainer = styled.div`
 
 type Props = {
   player: Player;
+  onStartEdit: () => void;
 };
 
-export const AdminPlayerView = ({ player }: Props) => {
+export const AdminPlayerView = ({ player, onStartEdit }: Props) => {
   return (
     <Card
       style={{
@@ -36,7 +37,8 @@ export const AdminPlayerView = ({ player }: Props) => {
           >
             {player.name}
           </p>
-          <p>{player.id}</p>
+          <p style={{ textAlign: "center" }}>{player.id}</p>
+          <button onClick={onStartEdit}>Edit</button>
           {/* <p style={{ textAlign: "center", fontWeight: "bold" }}>
             <NumericValue>
               {player.details?.gameMoves || 0}
