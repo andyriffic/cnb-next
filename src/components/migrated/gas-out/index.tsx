@@ -92,7 +92,7 @@ const View = ({ gasGame, team }: Props) => {
           </CarouselContainer>
         )}
         {/* <Winner game={game} /> */}
-        <FinalPodium game={gasGame} />
+        {!!gasGame.winningPlayerId && <FinalPodium game={gasGame} />}
         {!!gasGame.winningPlayerId && <LinkToMiniGame />}
         <LastTwoPlayersNotification game={gasGame} />
         <BalloonContainer>

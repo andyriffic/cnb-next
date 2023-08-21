@@ -43,7 +43,7 @@ const gameCreators: {
     team: string | undefined
   ) => Promise<GameUrl>;
 } = {
-  rps: createRockPaperScissorsWithBettingGame(4),
+  rps: createRockPaperScissorsWithBettingGame(3),
   ["rps-quick"]: createRockPaperScissorsWithBettingGame(3),
   ["balloon-quick"]: createBallonGameQuick,
   balloon: createBallonGameNormal,
@@ -114,7 +114,7 @@ function Page() {
               </JoinedPlayerItem>
             ))}
           </JoinedPlayerContainer>
-          <EvenlySpaced>
+          {/* <EvenlySpaced>
             <Heading>Quick: </Heading>
             <PrimaryButton
               disabled={group.playerIds.length < 2}
@@ -146,10 +146,8 @@ function Page() {
             >
               Balloon 🎈 ⏩
             </PrimaryButton>
-          </EvenlySpaced>
+          </EvenlySpaced> */}
           <EvenlySpaced style={{ marginTop: "2rem" }}>
-            <Heading>Normal: </Heading>
-
             <PrimaryButton
               disabled={group.playerIds.length < 2}
               onClick={() => {
