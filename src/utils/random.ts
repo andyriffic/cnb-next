@@ -2,7 +2,12 @@ import random from "random";
 
 export function shuffleArray<T>(array: Array<T>): Array<T> {
   const arrayCopy = [...array];
-  return arrayCopy.sort(() => random.float() - 0.5);
+  for (let i = arrayCopy.length - 1; i > 0; i--) {
+    const j = random.int(0, i); // Generate a random index between 0 and i.
+    // Swap elements at i and j.
+    [arrayCopy[i], arrayCopy[j]] = [arrayCopy[j]!, arrayCopy[i]!];
+  }
+  return arrayCopy;
 }
 
 export function selectRandomOneOf<T>(items: T[]): T {

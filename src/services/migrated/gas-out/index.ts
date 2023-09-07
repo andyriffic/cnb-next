@@ -34,8 +34,8 @@ export function createGame({
   return {
     id,
     gameType,
-    allPlayers: shuffleArray(players.map((p) => createGasPlayer(p, gameType))),
-    alivePlayersIds: players.map((p) => p.id),
+    allPlayers: players.map((p) => createGasPlayer(p, gameType)),
+    alivePlayersIds: shuffleArray(players.map((p) => p.id)),
     deadPlayerIds: [],
     direction: "right",
     currentPlayer: {
