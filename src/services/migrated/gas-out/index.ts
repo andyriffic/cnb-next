@@ -4,6 +4,7 @@ import {
   WeightedItem,
   selectRandomOneOf,
   selectWeightedRandomOneOf,
+  shuffleArray,
 } from "../../../utils/random";
 import {
   CardHistory,
@@ -33,7 +34,7 @@ export function createGame({
   return {
     id,
     gameType,
-    allPlayers: players.map((p) => createGasPlayer(p, gameType)),
+    allPlayers: shuffleArray(players.map((p) => createGasPlayer(p, gameType))),
     alivePlayersIds: players.map((p) => p.id),
     deadPlayerIds: [],
     direction: "right",
