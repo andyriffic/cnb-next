@@ -1,13 +1,13 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Player } from "../../types/Player";
 import { ZombieRunGame, ZombieRunGameStatus } from "./types";
-import { useZombieRunAutoTiming } from "./useZombieRunAutoTiming";
 
-type UseZombieRun = {
+export type UseZombieRun = {
   zombieGame: ZombieRunGame;
   run: () => void;
   moveOriginalZombie: () => void;
   moveBittenZombies: () => void;
+  setZombieGameStatus: (status: ZombieRunGameStatus) => void;
 };
 
 const createZombieGame = (players: Player[]): ZombieRunGame => {
@@ -32,15 +32,14 @@ const createZombieGame = (players: Player[]): ZombieRunGame => {
         gotBitten: false,
       })),
     originalZombie: {
-      totalMetresRun: 0,
-      totalMetresToRun: 2,
+      totalMetresRun: 2, //TODO: hook up to settings mcsettingsface
+      totalMetresToRun: 2, //TODO: hook up to settings mcsettingsface
     },
   };
 };
 
 export const useZombieRun = (players: Player[]): UseZombieRun => {
   const [zombieGame, setZombieGame] = useState(createZombieGame(players));
-  useZombieRunAutoTiming(zombieGame, setZombieGame);
 
   const run = useCallback(() => {
     setZombieGame({
@@ -101,5 +100,12 @@ export const useZombieRun = (players: Player[]): UseZombieRun => {
     });
   }, [zombieGame]);
 
-  return { zombieGame, run, moveOriginalZombie, moveBittenZombies };
+  return {
+    zombieGame,
+    run,
+    moveOriginalZombie,
+    moveBittenZombies,
+    setZombieGameStatus: (status) =>
+      setZombieGame({ ...zombieGame, gameStatus: status }),
+  };
 };

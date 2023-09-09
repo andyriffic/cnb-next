@@ -59,6 +59,17 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
   return (
     <div>
       <ZombieBackground>
+        <PositionedZombiePlayer
+          style={{
+            left: `${
+              (TOTAL_TRACK_WIDTH / ZOMBIE_RUNNING_TRACK_LENGTH_METRES) *
+              (zombieGame.originalZombie.totalMetresRun - 1)
+            }vw`,
+          }}
+        >
+          <Zombie />
+        </PositionedZombiePlayer>
+
         {zombieGame.survivors.map((zp) => {
           return (
             <PositionedZombiePlayer
@@ -85,20 +96,10 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
                 }vw`,
               }}
             >
-              <PlayerAvatar playerId={zp.id} size="thumbnail" />
+              <ZombieRunPlayer zombiePlayer={zp} />
             </PositionedZombiePlayer>
           );
         })}
-        <PositionedZombiePlayer
-          style={{
-            left: `${
-              (TOTAL_TRACK_WIDTH / ZOMBIE_RUNNING_TRACK_LENGTH_METRES) *
-              (zombieGame.originalZombie.totalMetresRun - 1)
-            }vw`,
-          }}
-        >
-          <Zombie />
-        </PositionedZombiePlayer>
       </ZombieBackground>
       <DistanceMarkerContainer>
         {allMarkers.map((marker) => (

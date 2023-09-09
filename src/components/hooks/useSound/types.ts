@@ -37,4 +37,5 @@ export type SoundName =
   | "ai-typing"
   | "zombie-run-players-running"
   | "zombie-run-zombie-moving"
+  | "zombie-run-player-zombie-moving"
   | "zombie-run-player-bitten";

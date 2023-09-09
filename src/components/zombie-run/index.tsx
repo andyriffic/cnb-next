@@ -5,6 +5,7 @@ import { SplashContent } from "../SplashContent";
 import { ZombieRunningTrack } from "./ZombieRunningTrack";
 import { ZombieRunGameStatus } from "./types";
 import { useZombieRun } from "./useZombieRun";
+import { useZombieRunAutoTiming } from "./useZombieRunAutoTiming";
 import { useZombieRunSound } from "./useZombieRunSound";
 
 type Props = {
@@ -12,44 +13,46 @@ type Props = {
 };
 
 const View = ({ players }: Props) => {
-  const { zombieGame, run, moveOriginalZombie, moveBittenZombies } =
-    useZombieRun(players);
-  useZombieRunSound(zombieGame);
+  const zombieManager = useZombieRun(players);
+  useZombieRunAutoTiming(zombieManager);
+  useZombieRunSound(zombieManager.zombieGame);
 
   return (
     <SpectatorPageLayout scrollable={false}>
       <Heading style={{ textAlign: "center" }}>Zombie Run 🧟</Heading>
-      <p>{ZombieRunGameStatus[zombieGame.gameStatus]}</p>
+      <p>{ZombieRunGameStatus[zombieManager.zombieGame.gameStatus]}</p>
       <div>
-        <ZombieRunningTrack zombieGame={zombieGame} />
+        <ZombieRunningTrack zombieGame={zombieManager.zombieGame} />
       </div>
-      {zombieGame.gameStatus === ZombieRunGameStatus.PLAYERS_RUNNING && (
+      {zombieManager.zombieGame.gameStatus ===
+        ZombieRunGameStatus.PLAYERS_RUNNING && (
         <SplashContent showForMilliseconds={300}>
           <Heading>RUN!!</Heading>
         </SplashContent>
       )}
       <div style={{ marginTop: 30 }}>
         <button
-          onClick={run}
+          onClick={zombieManager.run}
           disabled={
-            zombieGame.gameStatus !== ZombieRunGameStatus.READY_TO_START
+            zombieManager.zombieGame.gameStatus !==
+            ZombieRunGameStatus.READY_TO_START
           }
         >
           RUN!
         </button>
         <button
-          onClick={moveOriginalZombie}
+          onClick={zombieManager.moveOriginalZombie}
           disabled={
-            zombieGame.gameStatus !==
+            zombieManager.zombieGame.gameStatus !==
             ZombieRunGameStatus.READY_FOR_ORIGINAL_ZOMBIE
           }
         >
           ORIGINAL ZOMBIE!
         </button>
         <button
-          onClick={moveBittenZombies}
+          onClick={zombieManager.moveBittenZombies}
           disabled={
-            zombieGame.gameStatus !==
+            zombieManager.zombieGame.gameStatus !==
             ZombieRunGameStatus.READY_FOR_BITTEN_ZOMBIES
           }
         >

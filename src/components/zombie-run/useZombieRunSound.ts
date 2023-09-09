@@ -13,15 +13,34 @@ export const useZombieRunSound = (zombieGame: ZombieRunGame) => {
     if (zombieGame.gameStatus === ZombieRunGameStatus.ORIGINAL_ZOMBIE_RUNNING) {
       play("zombie-run-zombie-moving");
     }
+    if (zombieGame.gameStatus === ZombieRunGameStatus.BITTEN_ZOMBIES_RUNNING) {
+      zombieGame.zombies.forEach(() => {
+        setTimeout(() => play("zombie-run-player-zombie-moving"), 100);
+      });
+    }
   }, [zombieGame, play]);
 
   // Game action sounds
   useEffect(() => {
+    //Original zombie bites player
     if (
-      zombieGame.gameStatus === ZombieRunGameStatus.ORIGINAL_ZOMBIE_RUNNING &&
+      [
+        ZombieRunGameStatus.ORIGINAL_ZOMBIE_RUNNING,
+        ZombieRunGameStatus.BITTEN_ZOMBIES_RUNNING,
+      ].includes(zombieGame.gameStatus) &&
       zombieGame.survivors.filter((p) => p.gotBitten).length > 0
     ) {
       play("zombie-run-player-bitten");
     }
   }, [zombieGame, play]);
+
+  // useEffect(() => {
+  //   //Player zombie bites player
+  //   if (
+  //     zombieGame.gameStatus === ZombieRunGameStatus.BITTEN_ZOMBIES_RUNNING &&
+  //     zombieGame.survivors.filter((p) => p.gotBitten).length > 0
+  //   ) {
+  //     play("zombie-run-player-bitten");
+  //   }
+  // }, [zombieGame, play]);
 };

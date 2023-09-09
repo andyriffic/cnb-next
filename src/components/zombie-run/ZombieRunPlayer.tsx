@@ -37,7 +37,9 @@ export const ZombieRunPlayer = ({ zombiePlayer }: Props) => {
   useEffect(() => {}, [zombiePlayer.gotBitten]);
 
   return (
-    <ZombiePlayerContainer isZombie={zombiePlayer.gotBitten}>
+    <ZombiePlayerContainer
+      isZombie={zombiePlayer.gotBitten || zombiePlayer.isZombie}
+    >
       <PlayerAvatar playerId={zombiePlayer.id} size="thumbnail" />
       {zombiePlayer.gotBitten && (
         <BittenIndicator>
