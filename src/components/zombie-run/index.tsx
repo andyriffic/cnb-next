@@ -1,7 +1,6 @@
 import { Player } from "../../types/Player";
-import { Heading } from "../Atoms";
+import { Heading, PrimaryButton } from "../Atoms";
 import { SpectatorPageLayout } from "../SpectatorPageLayout";
-import { SplashContent } from "../SplashContent";
 import { ZombieRunningTrack } from "./ZombieRunningTrack";
 import { ZombieRunGameStatus } from "./types";
 import { useZombieRun } from "./useZombieRun";
@@ -24,14 +23,8 @@ const View = ({ players }: Props) => {
       <div>
         <ZombieRunningTrack zombieGame={zombieManager.zombieGame} />
       </div>
-      {zombieManager.zombieGame.gameStatus ===
-        ZombieRunGameStatus.PLAYERS_RUNNING && (
-        <SplashContent showForMilliseconds={300}>
-          <Heading>RUN!!</Heading>
-        </SplashContent>
-      )}
       <div style={{ marginTop: 30 }}>
-        <button
+        <PrimaryButton
           onClick={zombieManager.run}
           disabled={
             zombieManager.zombieGame.gameStatus !==
@@ -39,8 +32,8 @@ const View = ({ players }: Props) => {
           }
         >
           RUN!
-        </button>
-        <button
+        </PrimaryButton>
+        {/* <button
           onClick={zombieManager.moveOriginalZombie}
           disabled={
             zombieManager.zombieGame.gameStatus !==
@@ -57,7 +50,7 @@ const View = ({ players }: Props) => {
           }
         >
           BITTEN ZOMBIES!
-        </button>
+        </button> */}
       </div>
     </SpectatorPageLayout>
   );
