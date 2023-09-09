@@ -34,4 +34,7 @@ export type SoundName =
   | "pacman-eat-player"
   | "ai-thinking"
   | "ai-speaking"
-  | "ai-typing";
+  | "ai-typing"
+  | "zombie-run-players-running"
+  | "zombie-run-zombie-moving"
+  | "zombie-run-player-bitten";

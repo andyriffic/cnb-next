@@ -1,9 +1,18 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Player } from "../../types/Player";
-import { ZombieRunGame } from "./types";
+import { ZombieRunGame, ZombieRunGameStatus } from "./types";
+import { useZombieRunAutoTiming } from "./useZombieRunAutoTiming";
+
+type UseZombieRun = {
+  zombieGame: ZombieRunGame;
+  run: () => void;
+  moveOriginalZombie: () => void;
+  moveBittenZombies: () => void;
+};
 
 const createZombieGame = (players: Player[]): ZombieRunGame => {
   return {
+    gameStatus: ZombieRunGameStatus.READY_TO_START,
     survivors: players
       .filter((p) => !p.details?.zombieRun?.isZombie)
       .map((p) => ({
@@ -29,19 +38,14 @@ const createZombieGame = (players: Player[]): ZombieRunGame => {
   };
 };
 
-export const useZombieRun = (
-  players: Player[]
-): {
-  zombieGame: ZombieRunGame;
-  run: () => void;
-  moveOriginalZombie: () => void;
-  moveBittenZombies: () => void;
-} => {
+export const useZombieRun = (players: Player[]): UseZombieRun => {
   const [zombieGame, setZombieGame] = useState(createZombieGame(players));
+  useZombieRunAutoTiming(zombieGame, setZombieGame);
 
   const run = useCallback(() => {
     setZombieGame({
       ...zombieGame,
+      gameStatus: ZombieRunGameStatus.PLAYERS_RUNNING,
       survivors: zombieGame.survivors.map((s) => ({
         ...s,
         totalMetresRun: s.totalMetresRun + s.totalMetresToRun,
@@ -61,6 +65,7 @@ export const useZombieRun = (
 
     setZombieGame({
       ...zombieGame,
+      gameStatus: ZombieRunGameStatus.ORIGINAL_ZOMBIE_RUNNING,
       survivors: zombieGame.survivors.map((s) => ({
         ...s,
         gotBitten: !!playersGonnaGetBitten.find((p) => p.id === s.id),
@@ -83,6 +88,7 @@ export const useZombieRun = (
 
     setZombieGame({
       ...zombieGame,
+      gameStatus: ZombieRunGameStatus.BITTEN_ZOMBIES_RUNNING,
       survivors: zombieGame.survivors.map((s) => ({
         ...s,
         gotBitten: !!playersGonnaGetBitten.find((p) => p.id === s.id),

@@ -2,31 +2,27 @@ import styled, { css } from "styled-components";
 import { PlayerAvatar } from "../PlayerAvatar";
 import { ZOMBIE_RUNNING_TRACK_LENGTH_METRES, ZombieRunGame } from "./types";
 import { Zombie } from "./Zombie";
+import { ZombieRunPlayer } from "./ZombieRunPlayer";
 
-const TOTAL_TRACK_WIDTH = 95;
+const TOTAL_TRACK_WIDTH = 98;
 
 const ZombieBackground = styled.div`
   border: 1px solid #ccc;
   height: 50vh;
   position: relative;
-  width: ${TOTAL_TRACK_WIDTH}vw;
+  width: 100vw;
   margin: 0 auto;
   box-sizing: border-box;
   background: url("/images/zombie-background-day.png") no-repeat bottom center;
   background-size: 100% 100%;
 `;
 
-const ZombiePlayer = styled.div<{ isZombie: boolean }>`
+const PositionedZombiePlayer = styled.div`
   position: absolute;
   bottom: 1vh;
   transition: left 3s ease-in-out;
   /* border: 1px solid black; */
   box-sizing: border-box;
-  ${({ isZombie }) =>
-    isZombie &&
-    css`
-      filter: hue-rotate(90deg);
-    `}
 `;
 
 const DistanceMarkerContainer = styled.div`
@@ -65,7 +61,7 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
       <ZombieBackground>
         {zombieGame.survivors.map((zp) => {
           return (
-            <ZombiePlayer
+            <PositionedZombiePlayer
               key={zp.id}
               style={{
                 left: `${
@@ -73,15 +69,14 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
                   (zp.totalMetresRun - 1)
                 }vw`,
               }}
-              isZombie={zp.gotBitten}
             >
-              <PlayerAvatar playerId={zp.id} size="thumbnail" />
-            </ZombiePlayer>
+              <ZombieRunPlayer zombiePlayer={zp} />
+            </PositionedZombiePlayer>
           );
         })}
         {zombieGame.zombies.map((zp) => {
           return (
-            <ZombiePlayer
+            <PositionedZombiePlayer
               key={zp.id}
               style={{
                 left: `${
@@ -89,23 +84,21 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
                   (zp.totalMetresRun - 1)
                 }vw`,
               }}
-              isZombie={true}
             >
               <PlayerAvatar playerId={zp.id} size="thumbnail" />
-            </ZombiePlayer>
+            </PositionedZombiePlayer>
           );
         })}
-        <ZombiePlayer
+        <PositionedZombiePlayer
           style={{
             left: `${
               (TOTAL_TRACK_WIDTH / ZOMBIE_RUNNING_TRACK_LENGTH_METRES) *
               (zombieGame.originalZombie.totalMetresRun - 1)
             }vw`,
           }}
-          isZombie={false}
         >
           <Zombie />
-        </ZombiePlayer>
+        </PositionedZombiePlayer>
       </ZombieBackground>
       <DistanceMarkerContainer>
         {allMarkers.map((marker) => (

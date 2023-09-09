@@ -37,4 +37,7 @@ export const SOUND_MAP: { [key in SoundName]: string } = {
   "pacman-eat-player": "/sounds/pacman_ghost.mp3",
   "pacman-move-pacman": "/sounds/pacman_move.mp3",
   "pacman-move-player": "/sounds/pacman_fruit.mp3",
+  "zombie-run-players-running": "/sounds/screaming.mp3",
+  "zombie-run-zombie-moving": "/sounds/minecraft_zombie_2.mp3",
+  "zombie-run-player-bitten": "/sounds/eating_minecraft.mp3",
 };

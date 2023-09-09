@@ -65,3 +65,22 @@ export const fadeOutUpAnimation = keyframes`
     transform: translate3d(0, -200%, 0);
   }
 `;
+
+export const fadeInOutBottomToTop = keyframes`
+  0% {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  30% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  70% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+`;
