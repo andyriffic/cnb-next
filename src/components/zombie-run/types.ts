@@ -18,12 +18,14 @@ export type ZombiePlayer = {
   gotBitten: boolean;
 };
 
+export type OriginalZombieDetails = {
+  totalMetresRun: number;
+  totalMetresToRun: number;
+};
+
 export type ZombieRunGame = {
   gameStatus: ZombieRunGameStatus;
   zombies: ZombiePlayer[];
   survivors: ZombiePlayer[];
-  originalZombie: {
-    totalMetresRun: number;
-    totalMetresToRun: number;
-  };
+  originalZombie: OriginalZombieDetails;
 };

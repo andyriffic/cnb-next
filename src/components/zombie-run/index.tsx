@@ -2,7 +2,7 @@ import { Player } from "../../types/Player";
 import { Heading, PrimaryButton } from "../Atoms";
 import { SpectatorPageLayout } from "../SpectatorPageLayout";
 import { ZombieRunningTrack } from "./ZombieRunningTrack";
-import { ZombieRunGameStatus } from "./types";
+import { OriginalZombieDetails, ZombieRunGameStatus } from "./types";
 import { useZombieRun } from "./useZombieRun";
 import { useZombieRunAutoTiming } from "./useZombieRunAutoTiming";
 import { useZombieRunSound } from "./useZombieRunSound";
@@ -10,10 +10,11 @@ import { useZombieSaveState } from "./useZombieSaveState";
 
 type Props = {
   players: Player[];
+  originalZombie: OriginalZombieDetails;
 };
 
-const View = ({ players }: Props) => {
-  const zombieManager = useZombieRun(players);
+const View = ({ players, originalZombie }: Props) => {
+  const zombieManager = useZombieRun(players, originalZombie);
   useZombieRunAutoTiming(zombieManager);
   useZombieRunSound(zombieManager.zombieGame);
   useZombieSaveState(zombieManager.zombieGame);

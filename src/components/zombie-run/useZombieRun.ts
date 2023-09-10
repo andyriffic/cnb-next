@@ -1,6 +1,10 @@
 import { useCallback, useState } from "react";
 import { Player } from "../../types/Player";
-import { ZombieRunGame, ZombieRunGameStatus } from "./types";
+import {
+  OriginalZombieDetails,
+  ZombieRunGame,
+  ZombieRunGameStatus,
+} from "./types";
 
 export type UseZombieRun = {
   zombieGame: ZombieRunGame;
@@ -10,7 +14,10 @@ export type UseZombieRun = {
   setZombieGameStatus: (status: ZombieRunGameStatus) => void;
 };
 
-const createZombieGame = (players: Player[]): ZombieRunGame => {
+const createZombieGame = (
+  players: Player[],
+  originalZombie: OriginalZombieDetails
+): ZombieRunGame => {
   return {
     gameStatus: ZombieRunGameStatus.READY_TO_START,
     survivors: players
@@ -31,15 +38,17 @@ const createZombieGame = (players: Player[]): ZombieRunGame => {
         isZombie: true,
         gotBitten: false,
       })),
-    originalZombie: {
-      totalMetresRun: 2, //TODO: hook up to settings mcsettingsface
-      totalMetresToRun: 2, //TODO: hook up to settings mcsettingsface
-    },
+    originalZombie,
   };
 };
 
-export const useZombieRun = (players: Player[]): UseZombieRun => {
-  const [zombieGame, setZombieGame] = useState(createZombieGame(players));
+export const useZombieRun = (
+  players: Player[],
+  originalZombie: OriginalZombieDetails
+): UseZombieRun => {
+  const [zombieGame, setZombieGame] = useState(
+    createZombieGame(players, originalZombie)
+  );
 
   const run = useCallback(() => {
     setZombieGame({
