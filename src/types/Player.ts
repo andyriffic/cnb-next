@@ -25,7 +25,7 @@ export type PacmanDetails = {
 export type ZombieRunDetails = {
   totalMetresRun: number;
   isZombie: boolean;
-  playersBitten: string[];
+  // playersBitten: string[];
 };
 
 export type PlayerNames = { [playerId: string]: string };
@@ -39,7 +39,7 @@ export const DEFAULT_PACMAN_DETAILS: PacmanDetails = {
 const DEFAULT_ZOMBIE_RUN_DETAILS: ZombieRunDetails = {
   totalMetresRun: 0,
   isZombie: false,
-  playersBitten: [],
+  // playersBitten: [],
 };
 
 export const getPlayerPacManDetails = (player: Player): PacmanDetails => {

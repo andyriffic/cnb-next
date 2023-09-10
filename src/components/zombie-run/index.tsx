@@ -6,6 +6,7 @@ import { ZombieRunGameStatus } from "./types";
 import { useZombieRun } from "./useZombieRun";
 import { useZombieRunAutoTiming } from "./useZombieRunAutoTiming";
 import { useZombieRunSound } from "./useZombieRunSound";
+import { useZombieSaveState } from "./useZombieSaveState";
 
 type Props = {
   players: Player[];
@@ -15,6 +16,7 @@ const View = ({ players }: Props) => {
   const zombieManager = useZombieRun(players);
   useZombieRunAutoTiming(zombieManager);
   useZombieRunSound(zombieManager.zombieGame);
+  useZombieSaveState(zombieManager.zombieGame);
 
   return (
     <SpectatorPageLayout scrollable={false}>
