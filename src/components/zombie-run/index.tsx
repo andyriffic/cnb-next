@@ -1,4 +1,5 @@
 import { Player } from "../../types/Player";
+import { isClientSideFeatureEnabled } from "../../utils/feature";
 import { Heading, PrimaryButton } from "../Atoms";
 import { SpectatorPageLayout } from "../SpectatorPageLayout";
 import { ZombieRunningTrack } from "./ZombieRunningTrack";
@@ -17,7 +18,10 @@ const View = ({ players, originalZombie }: Props) => {
   const zombieManager = useZombieRun(players, originalZombie);
   useZombieRunAutoTiming(zombieManager);
   useZombieRunSound(zombieManager.zombieGame);
-  useZombieSaveState(zombieManager.zombieGame);
+  useZombieSaveState(
+    zombieManager.zombieGame,
+    isClientSideFeatureEnabled("no-save")
+  );
 
   return (
     <SpectatorPageLayout scrollable={false}>

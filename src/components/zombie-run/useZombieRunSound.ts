@@ -14,8 +14,13 @@ export const useZombieRunSound = (zombieGame: ZombieRunGame) => {
       play("zombie-run-zombie-moving");
     }
     if (zombieGame.gameStatus === ZombieRunGameStatus.BITTEN_ZOMBIES_RUNNING) {
-      zombieGame.zombies.forEach(() => {
-        setTimeout(() => play("zombie-run-player-zombie-moving"), 100);
+      console.log(
+        "playing zombie sounds for bitten zombies",
+        zombieGame.zombies
+      );
+      zombieGame.zombies.forEach((item, index) => {
+        console.log("playing zombie sound");
+        setTimeout(() => play("zombie-run-player-zombie-moving"), index * 400);
       });
     }
   }, [zombieGame, play]);
