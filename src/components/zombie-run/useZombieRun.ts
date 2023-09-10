@@ -76,7 +76,8 @@ export const useZombieRun = (
       gameStatus: ZombieRunGameStatus.ORIGINAL_ZOMBIE_RUNNING,
       survivors: zombieGame.survivors.map((s) => ({
         ...s,
-        gotBitten: !!playersGonnaGetBitten.find((p) => p.id === s.id),
+        gotBitten:
+          s.gotBitten || !!playersGonnaGetBitten.find((p) => p.id === s.id),
       })),
       originalZombie: {
         ...zombieGame.originalZombie,
@@ -99,7 +100,8 @@ export const useZombieRun = (
       gameStatus: ZombieRunGameStatus.BITTEN_ZOMBIES_RUNNING,
       survivors: zombieGame.survivors.map((s) => ({
         ...s,
-        gotBitten: !!playersGonnaGetBitten.find((p) => p.id === s.id),
+        gotBitten:
+          s.gotBitten || !!playersGonnaGetBitten.find((p) => p.id === s.id),
       })),
       zombies: zombieGame.zombies.map((z) => ({
         ...z,
