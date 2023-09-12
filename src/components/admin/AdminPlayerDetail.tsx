@@ -25,35 +25,67 @@ const AttributeValue = styled.strong`
   font-weight: bold;
 `;
 
+type Attribute = {
+  name: string;
+  value: any;
+  children?: Attribute[];
+};
+
+function sortByNodeType(a: Attribute, b: Attribute) {
+  if (!!a.children && !b.children) {
+    return 1;
+  }
+
+  if (!a.children && !!b.children) {
+    return -1;
+  }
+
+  return 0;
+}
+
+function buildAttributes(obj: { [key: string]: any }): Attribute[] {
+  return Object.keys(obj).map((attributeName) => {
+    const value = obj[attributeName];
+    return {
+      name: attributeName,
+      value: obj[attributeName],
+      children: typeof value === "object" ? buildAttributes(value) : undefined,
+    };
+  });
+}
+
 type Props = {
   obj?: { [key: string]: any };
   prefix?: string;
 };
 
-export const AdminPlayerDetail = ({ prefix = "details", obj = {} }: Props) => {
+export const AdminPlayerDetail = ({ prefix = "", obj = {} }: Props) => {
+  console.log("AdminPlayerDetail", buildAttributes(obj).sort(sortByNodeType));
   return (
     <div>
-      {Object.keys(obj).map((keyName) => {
-        const value = obj[keyName];
-        if (typeof value === "object") {
-          return (
-            <AdminPlayerDetail
-              key={prefix + keyName}
-              obj={value}
-              prefix={keyName}
-            />
-          );
-        }
+      {Object.keys(obj)
+        .sort()
+        .map((keyName) => {
+          const value = obj[keyName];
+          if (typeof value === "object") {
+            return (
+              <AdminPlayerDetail
+                key={prefix + keyName}
+                obj={value}
+                prefix={keyName}
+              />
+            );
+          }
 
-        const displayValue = value.toString();
-        return (
-          <div key={prefix + keyName}>
-            <PrefixName>{prefix}</PrefixName>
-            <AttributeName>{keyName}</AttributeName>
-            <AttributeValue>{displayValue}</AttributeValue>
-          </div>
-        );
-      })}
+          const displayValue = value.toString();
+          return (
+            <div key={prefix + keyName}>
+              {prefix && <PrefixName>{prefix}</PrefixName>}
+              <AttributeName>{keyName}</AttributeName>
+              <AttributeValue>{displayValue}</AttributeValue>
+            </div>
+          );
+        })}
     </div>
   );
 };
