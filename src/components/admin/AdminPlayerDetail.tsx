@@ -59,33 +59,71 @@ type Props = {
   prefix?: string;
 };
 
-export const AdminPlayerDetail = ({ prefix = "", obj = {} }: Props) => {
-  console.log("AdminPlayerDetail", buildAttributes(obj).sort(sortByNodeType));
-  return (
+const DisplayAttributeValue = ({
+  prefix,
+  attribute,
+}: {
+  prefix: string;
+  attribute: Attribute;
+}) => {
+  return !attribute.children ? (
     <div>
-      {Object.keys(obj)
-        .sort()
-        .map((keyName) => {
-          const value = obj[keyName];
-          if (typeof value === "object") {
-            return (
-              <AdminPlayerDetail
-                key={prefix + keyName}
-                obj={value}
-                prefix={keyName}
-              />
-            );
-          }
-
-          const displayValue = value.toString();
-          return (
-            <div key={prefix + keyName}>
-              {prefix && <PrefixName>{prefix}</PrefixName>}
-              <AttributeName>{keyName}</AttributeName>
-              <AttributeValue>{displayValue}</AttributeValue>
-            </div>
-          );
-        })}
+      {prefix && <PrefixName>{prefix}</PrefixName>}
+      <AttributeName>{attribute.name}</AttributeName>
+      <AttributeValue>{attribute.value}</AttributeValue>
+    </div>
+  ) : (
+    <div>
+      {attribute.children.map((childAttribute) => (
+        <DisplayAttributeValue
+          key={`${prefix}_${childAttribute.name}}`}
+          prefix={attribute.name}
+          attribute={childAttribute}
+        />
+      ))}
     </div>
   );
+};
+
+export const AdminPlayerDetail = ({ prefix = "", obj = {} }: Props) => {
+  const attributes = buildAttributes(obj).sort(sortByNodeType);
+  console.log("AdminPlayerDetail", attributes);
+  return (
+    <div>
+      {attributes.map((attribute) => (
+        <DisplayAttributeValue
+          key={attribute.name}
+          prefix={prefix}
+          attribute={attribute}
+        />
+      ))}
+    </div>
+  );
+  // return (
+  //   <div>
+  //     {Object.keys(obj)
+  //       .sort()
+  //       .map((keyName) => {
+  //         const value = obj[keyName];
+  //         if (typeof value === "object") {
+  //           return (
+  //             <AdminPlayerDetail
+  //               key={prefix + keyName}
+  //               obj={value}
+  //               prefix={keyName}
+  //             />
+  //           );
+  //         }
+
+  //         const displayValue = value.toString();
+  //         return (
+  //           <div key={prefix + keyName}>
+  //             {prefix && <PrefixName>{prefix}</PrefixName>}
+  //             <AttributeName>{keyName}</AttributeName>
+  //             <AttributeValue>{displayValue}</AttributeValue>
+  //           </div>
+  //         );
+  //       })}
+  //   </div>
+  // );
 };
