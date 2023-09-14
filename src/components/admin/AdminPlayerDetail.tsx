@@ -1,8 +1,9 @@
 import styled from "styled-components";
 
 const PrefixName = styled.strong`
-  background: darkgray;
-  color: black;
+  background: rgb(0, 100, 0, 0.95);
+  opacity: 0.5;
+  color: white;
   display: inline-block;
   padding: 0.3rem;
   margin: 0.1rem;
@@ -59,71 +60,35 @@ type Props = {
   prefix?: string;
 };
 
-const DisplayAttributeValue = ({
+const DisplayAttributes = ({
   prefix,
-  attribute,
+  attributes,
 }: {
   prefix: string;
-  attribute: Attribute;
+  attributes: Attribute[];
 }) => {
-  return !attribute.children ? (
-    <div>
-      {prefix && <PrefixName>{prefix}</PrefixName>}
-      <AttributeName>{attribute.name}</AttributeName>
-      <AttributeValue>{attribute.value}</AttributeValue>
-    </div>
-  ) : (
-    <div>
-      {attribute.children.map((childAttribute) => (
-        <DisplayAttributeValue
-          key={`${prefix}_${childAttribute.name}}`}
-          prefix={attribute.name}
-          attribute={childAttribute}
-        />
-      ))}
-    </div>
+  return (
+    <>
+      {attributes.map((attribute) => {
+        return !attribute.children ? (
+          <div key={`${prefix}_${attribute.name}`}>
+            {prefix && <PrefixName>{prefix}</PrefixName>}
+            <AttributeName>{attribute.name}</AttributeName>
+            <AttributeValue>{attribute.value.toString()}</AttributeValue>
+          </div>
+        ) : (
+          <DisplayAttributes
+            key={`${prefix}_${attribute.name}`}
+            prefix={attribute.name}
+            attributes={attribute.children}
+          />
+        );
+      })}
+    </>
   );
 };
 
 export const AdminPlayerDetail = ({ prefix = "", obj = {} }: Props) => {
   const attributes = buildAttributes(obj).sort(sortByNodeType);
-  console.log("AdminPlayerDetail", attributes);
-  return (
-    <div>
-      {attributes.map((attribute) => (
-        <DisplayAttributeValue
-          key={attribute.name}
-          prefix={prefix}
-          attribute={attribute}
-        />
-      ))}
-    </div>
-  );
-  // return (
-  //   <div>
-  //     {Object.keys(obj)
-  //       .sort()
-  //       .map((keyName) => {
-  //         const value = obj[keyName];
-  //         if (typeof value === "object") {
-  //           return (
-  //             <AdminPlayerDetail
-  //               key={prefix + keyName}
-  //               obj={value}
-  //               prefix={keyName}
-  //             />
-  //           );
-  //         }
-
-  //         const displayValue = value.toString();
-  //         return (
-  //           <div key={prefix + keyName}>
-  //             {prefix && <PrefixName>{prefix}</PrefixName>}
-  //             <AttributeName>{keyName}</AttributeName>
-  //             <AttributeValue>{displayValue}</AttributeValue>
-  //           </div>
-  //         );
-  //       })}
-  //   </div>
-  // );
+  return <DisplayAttributes prefix={prefix} attributes={attributes} />;
 };
