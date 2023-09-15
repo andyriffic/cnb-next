@@ -39,13 +39,14 @@ const DistanceMarkerContainer = styled.div`
 const DistanceMarker = styled.div`
   position: absolute;
   top: 0;
-  border-right: 1px solid red;
+  /* border-right: 1px solid red; */
   height: 1vh;
   box-sizing: border-box;
   width: ${TOTAL_TRACK_WIDTH / ZOMBIE_RUNNING_TRACK_LENGTH_METRES}vw;
   text-align: right;
   margin: 0;
   padding: 0;
+  font-weight: bold;
 `;
 
 const allMarkers: number[] = Array.from(

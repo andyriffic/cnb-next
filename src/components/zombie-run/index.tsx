@@ -26,38 +26,19 @@ const View = ({ players, originalZombie }: Props) => {
   return (
     <SpectatorPageLayout scrollable={false}>
       <Heading style={{ textAlign: "center" }}>Zombie Run 🧟</Heading>
+      <PrimaryButton
+        onClick={zombieManager.run}
+        disabled={
+          zombieManager.zombieGame.gameStatus !==
+          ZombieRunGameStatus.READY_TO_START
+        }
+      >
+        RUN!
+      </PrimaryButton>
+
       <p>{ZombieRunGameStatus[zombieManager.zombieGame.gameStatus]}</p>
       <div>
         <ZombieRunningTrack zombieGame={zombieManager.zombieGame} />
-      </div>
-      <div style={{ marginTop: 30 }}>
-        <PrimaryButton
-          onClick={zombieManager.run}
-          disabled={
-            zombieManager.zombieGame.gameStatus !==
-            ZombieRunGameStatus.READY_TO_START
-          }
-        >
-          RUN!
-        </PrimaryButton>
-        {/* <button
-          onClick={zombieManager.moveOriginalZombie}
-          disabled={
-            zombieManager.zombieGame.gameStatus !==
-            ZombieRunGameStatus.READY_FOR_ORIGINAL_ZOMBIE
-          }
-        >
-          ORIGINAL ZOMBIE!
-        </button>
-        <button
-          onClick={zombieManager.moveBittenZombies}
-          disabled={
-            zombieManager.zombieGame.gameStatus !==
-            ZombieRunGameStatus.READY_FOR_BITTEN_ZOMBIES
-          }
-        >
-          BITTEN ZOMBIES!
-        </button> */}
       </div>
     </SpectatorPageLayout>
   );
