@@ -28,6 +28,33 @@ const BittenIndicator = styled.div`
   border-radius: 0.5rem;
 `;
 
+const PlayerDetailsContainer = styled.div`
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+`;
+
+const ArrowIndicator = styled.div`
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+
+  border-top: 20px solid #f00;
+  margin: 0 auto;
+`;
+
+const PlayerName = styled.div`
+  background: darkgreen;
+  color: white;
+  text-align: center;
+  padding: 0.2rem;
+  font-size: 0.9rem;
+  border-radius: 0.5rem;
+  margin: 0 0.5rem;
+`;
+
 type Props = {
   zombiePlayer: ZombiePlayer;
 };
@@ -46,6 +73,10 @@ export const ZombieRunPlayer = ({ zombiePlayer }: Props) => {
           {getName(zombiePlayer.id)} got bitten 😱
         </BittenIndicator>
       )}
+      <PlayerDetailsContainer>
+        <ArrowIndicator />
+        <PlayerName>{getName(zombiePlayer.id)}</PlayerName>
+      </PlayerDetailsContainer>
     </ZombiePlayerContainer>
   );
 };
