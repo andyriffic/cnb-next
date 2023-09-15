@@ -1,10 +1,12 @@
 import styled, { css } from "styled-components";
 import { PlayerAvatar } from "../PlayerAvatar";
+import { isNumberInRange } from "../../utils/number";
 import { ZOMBIE_RUNNING_TRACK_LENGTH_METRES, ZombieRunGame } from "./types";
 import { Zombie } from "./Zombie";
 import { ZombieRunPlayer } from "./ZombieRunPlayer";
 
 const TOTAL_TRACK_WIDTH = 98;
+const STACK_INDEX_RANGE = 2;
 
 const ZombieBackground = styled.div`
   border: 1px solid #ccc;
@@ -71,6 +73,15 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
         </PositionedZombiePlayer>
 
         {zombieGame.survivors.map((zp) => {
+          const stackIndex = zombieGame.survivors
+            .filter((z) =>
+              isNumberInRange(
+                z.totalMetresRun,
+                zp.totalMetresRun - STACK_INDEX_RANGE,
+                zp.totalMetresRun + STACK_INDEX_RANGE
+              )
+            )
+            .indexOf(zp);
           return (
             <PositionedZombiePlayer
               key={zp.id}
@@ -81,11 +92,20 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
                 }vw`,
               }}
             >
-              <ZombieRunPlayer zombiePlayer={zp} />
+              <ZombieRunPlayer zombiePlayer={zp} stackIndex={stackIndex} />
             </PositionedZombiePlayer>
           );
         })}
         {zombieGame.zombies.map((zp) => {
+          const stackIndex = zombieGame.zombies
+            .filter((z) =>
+              isNumberInRange(
+                z.totalMetresRun,
+                zp.totalMetresRun - STACK_INDEX_RANGE,
+                zp.totalMetresRun + STACK_INDEX_RANGE
+              )
+            )
+            .indexOf(zp);
           return (
             <PositionedZombiePlayer
               key={zp.id}
@@ -96,7 +116,7 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
                 }vw`,
               }}
             >
-              <ZombieRunPlayer zombiePlayer={zp} />
+              <ZombieRunPlayer zombiePlayer={zp} stackIndex={stackIndex} />
             </PositionedZombiePlayer>
           );
         })}

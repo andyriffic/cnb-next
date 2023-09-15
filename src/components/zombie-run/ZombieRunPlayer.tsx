@@ -57,9 +57,10 @@ const PlayerName = styled.div`
 
 type Props = {
   zombiePlayer: ZombiePlayer;
+  stackIndex?: number;
 };
 
-export const ZombieRunPlayer = ({ zombiePlayer }: Props) => {
+export const ZombieRunPlayer = ({ zombiePlayer, stackIndex = 0 }: Props) => {
   const { getName } = usePlayerNames();
   useEffect(() => {}, [zombiePlayer.gotBitten]);
 
@@ -75,7 +76,9 @@ export const ZombieRunPlayer = ({ zombiePlayer }: Props) => {
       )}
       <PlayerDetailsContainer>
         <ArrowIndicator />
-        <PlayerName>{getName(zombiePlayer.id)}</PlayerName>
+        <PlayerName style={{ transform: `translateY(${stackIndex * 100}%)` }}>
+          {getName(zombiePlayer.id)}
+        </PlayerName>
       </PlayerDetailsContainer>
     </ZombiePlayerContainer>
   );
