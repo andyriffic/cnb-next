@@ -3,7 +3,10 @@ import { useEffect, useMemo } from "react";
 import { PlayerAvatar } from "../PlayerAvatar";
 import { usePlayerNames } from "../../providers/PlayerNamesProvider";
 import { Appear } from "../animations/Appear";
-import { fadeInOutBottomToTop } from "../animations/keyframes/fade";
+import {
+  fadeInBottom,
+  fadeInOutBottomToTop,
+} from "../animations/keyframes/fade";
 import { ZombiePlayer } from "./types";
 
 const ZOMBIE_COLOR = "#69B362";
@@ -23,13 +26,12 @@ const ZombieTransform = styled.div<{ isZombie: boolean }>`
 
 const BittenIndicator = styled.div`
   position: absolute;
-  top: -50%;
   background: ${ZOMBIE_COLOR}};
   color: white;
   text-align: center;
   padding: 0.2rem 0;
   font-size: 1rem;
-  animation: ${fadeInOutBottomToTop} 3s ease-in-out 0.5s 1 both;
+  animation: ${fadeInBottom} 2s ease-in-out 0.5s 1 both;
   border-radius: 0.5rem;
 `;
 
@@ -80,7 +82,7 @@ export const ZombieRunPlayer = ({ zombiePlayer, stackIndex = 0 }: Props) => {
         <PlayerAvatar playerId={zombiePlayer.id} size="thumbnail" />
       </ZombieTransform>
       {zombiePlayer.gotBitten && (
-        <BittenIndicator>
+        <BittenIndicator style={{ top: `-${(stackIndex + 1) * 30}%` }}>
           {getName(zombiePlayer.id)} got bitten 😱
         </BittenIndicator>
       )}

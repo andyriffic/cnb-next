@@ -1,9 +1,13 @@
-import styled, { css } from "styled-components";
-import { PlayerAvatar } from "../PlayerAvatar";
+import styled from "styled-components";
 import { isNumberInRange } from "../../utils/number";
-import { ZOMBIE_RUNNING_TRACK_LENGTH_METRES, ZombieRunGame } from "./types";
 import { Zombie } from "./Zombie";
 import { ZombieRunPlayer } from "./ZombieRunPlayer";
+import {
+  ZOMBIE_RUNNING_TRACK_LENGTH_METRES,
+  ZombiePlayer,
+  ZombieRunGame,
+  ZombieRunGameStatus,
+} from "./types";
 
 const TOTAL_TRACK_WIDTH = 98;
 const STACK_INDEX_RANGE = 2;
@@ -54,11 +58,40 @@ const allMarkers: number[] = Array.from(
   (_, index) => index + 1
 );
 
+const sortByZombiePlayerDistance = (a: ZombiePlayer, b: ZombiePlayer) => {
+  return a.totalMetresRun - b.totalMetresRun;
+};
+
+const getPlayerStackIndex = (
+  zombieGame: ZombieRunGame,
+  zp: ZombiePlayer
+): number => {
+  const combinedZombiePlayersInRange = zombieGame.survivors
+    .concat(zombieGame.zombies)
+    .sort(sortByZombiePlayerDistance)
+    .filter((z) =>
+      isNumberInRange(
+        z.totalMetresRun,
+        zp.totalMetresRun - STACK_INDEX_RANGE,
+        zp.totalMetresRun + STACK_INDEX_RANGE
+      )
+    );
+  const stackIndex = combinedZombiePlayersInRange.findIndex(
+    (p) => p.id === zp.id
+  );
+  return stackIndex;
+};
+
 type Props = {
   zombieGame: ZombieRunGame;
 };
 
 export const ZombieRunningTrack = ({ zombieGame }: Props) => {
+  console.warn(
+    "Stack index render",
+    ZombieRunGameStatus[zombieGame.gameStatus]
+  );
+
   return (
     <div>
       <ZombieBackground>
@@ -74,15 +107,6 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
         </PositionedZombiePlayer>
 
         {zombieGame.survivors.map((zp) => {
-          const stackIndex = zombieGame.survivors
-            .filter((z) =>
-              isNumberInRange(
-                z.totalMetresRun,
-                zp.totalMetresRun - STACK_INDEX_RANGE,
-                zp.totalMetresRun + STACK_INDEX_RANGE
-              )
-            )
-            .indexOf(zp);
           return (
             <PositionedZombiePlayer
               key={zp.id}
@@ -93,20 +117,14 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
                 }vw`,
               }}
             >
-              <ZombieRunPlayer zombiePlayer={zp} stackIndex={stackIndex} />
+              <ZombieRunPlayer
+                zombiePlayer={zp}
+                stackIndex={getPlayerStackIndex(zombieGame, zp)}
+              />
             </PositionedZombiePlayer>
           );
         })}
         {zombieGame.zombies.map((zp) => {
-          const stackIndex = zombieGame.zombies
-            .filter((z) =>
-              isNumberInRange(
-                z.totalMetresRun,
-                zp.totalMetresRun - STACK_INDEX_RANGE,
-                zp.totalMetresRun + STACK_INDEX_RANGE
-              )
-            )
-            .indexOf(zp);
           return (
             <PositionedZombiePlayer
               key={zp.id}
@@ -117,7 +135,10 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
                 }vw`,
               }}
             >
-              <ZombieRunPlayer zombiePlayer={zp} stackIndex={stackIndex} />
+              <ZombieRunPlayer
+                zombiePlayer={zp}
+                stackIndex={getPlayerStackIndex(zombieGame, zp)}
+              />
             </PositionedZombiePlayer>
           );
         })}
