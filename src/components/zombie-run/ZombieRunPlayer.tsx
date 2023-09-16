@@ -63,6 +63,7 @@ const PlayerName = styled.div<{ isZombie: boolean }>`
   border-radius: 0.5rem;
   margin: 0 0.5rem;
   transition: background 1s ease-in-out;
+  min-width: 100%;
 `;
 
 type Props = {
