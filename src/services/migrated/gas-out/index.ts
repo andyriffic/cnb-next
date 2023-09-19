@@ -31,15 +31,16 @@ export function createGame({
   team: string | undefined;
   gameType: GasGameType;
 }): GasGame {
+  const randomPlayerOrder = shuffleArray(players);
   return {
     id,
     gameType,
-    allPlayers: players.map((p) => createGasPlayer(p, gameType)),
-    alivePlayersIds: shuffleArray(players.map((p) => p.id)),
+    allPlayers: randomPlayerOrder.map((p) => createGasPlayer(p, gameType)),
+    alivePlayersIds: randomPlayerOrder.map((p) => p.id),
     deadPlayerIds: [],
     direction: "right",
     currentPlayer: {
-      id: players[0]!.id,
+      id: randomPlayerOrder[0]!.id,
       pressesRemaining: 0,
     },
     gasCloud: {

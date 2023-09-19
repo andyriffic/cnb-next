@@ -53,7 +53,7 @@ const CarouselContent = styled.div<{
   box-sizing: border-box;
   padding: 0;
   backface-visibility: ${({ transparent }) =>
-    transparent ? "visbile" : "hidden"};
+    transparent ? "visible" : "hidden"};
   display: flex;
   justify-content: center;
 
