@@ -11,6 +11,7 @@ import { usePacMan } from "./hooks/usePacman";
 import { usePacmanSound } from "./hooks/usePacmanSound";
 import { usePlayerAutoMove } from "./hooks/usePlayerMoveTick";
 import { useSyncData } from "./hooks/useSyncData";
+import { WinningPlayer } from "./WinningPlayer";
 
 const Container = styled.div`
   margin: 0 auto;
@@ -68,6 +69,12 @@ const View = ({ players, pacmanStartingIndex }: Props) => {
           {/* <BoardFinalMatchup state={pacManService.uiState} /> */}
         </div>
       )}
+      {pacManService.uiState.status === "game-over" && (
+      <WinningPlayer
+        winningPlayer={pacManService.uiState.allPacPlayers.find(
+          (p) => p.finishPosition === 1
+        )}
+      />)}
     </SpectatorPageLayout>
   );
 };
