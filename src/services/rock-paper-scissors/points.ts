@@ -114,11 +114,11 @@ export const toGameMoves = (
       moves: p.points,
     });
   });
-  // rpsPoints.zeroPointLosers.forEach((p) => {
-  //   gameMoves.push({
-  //     playerId: p.playerId,
-  //     moves: p.points,
-  //   });
-  // });
+  rpsPoints.zeroPointLosers.forEach((p) => {
+    gameMoves.push({
+      playerId: p.playerId,
+      moves: 0,
+    });
+  });
   return gameMoves;
 };

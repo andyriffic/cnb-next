@@ -1,6 +1,7 @@
 import { Player } from "../../types/Player";
 import { isClientSideFeatureEnabled } from "../../utils/feature";
 import { Heading, PrimaryButton } from "../Atoms";
+import { CenterSpaced } from "../Layouts";
 import { SpectatorPageLayout } from "../SpectatorPageLayout";
 import { ZombieRunningTrack } from "./ZombieRunningTrack";
 import { OriginalZombieDetails, ZombieRunGameStatus } from "./types";
@@ -26,17 +27,19 @@ const View = ({ players, originalZombie }: Props) => {
   return (
     <SpectatorPageLayout scrollable={false}>
       <Heading style={{ textAlign: "center" }}>Zombie Run 🧟</Heading>
-      <PrimaryButton
-        onClick={zombieManager.run}
-        disabled={
-          zombieManager.zombieGame.gameStatus !==
-          ZombieRunGameStatus.READY_TO_START
-        }
-      >
-        RUN!
-      </PrimaryButton>
+      <CenterSpaced>
+        <PrimaryButton
+          onClick={zombieManager.run}
+          disabled={
+            zombieManager.zombieGame.gameStatus !==
+            ZombieRunGameStatus.READY_TO_START
+          }
+        >
+          RUN!
+        </PrimaryButton>
+      </CenterSpaced>
 
-      <p>{ZombieRunGameStatus[zombieManager.zombieGame.gameStatus]}</p>
+      {/* <p>{ZombieRunGameStatus[zombieManager.zombieGame.gameStatus]}</p> */}
       <div>
         <ZombieRunningTrack zombieGame={zombieManager.zombieGame} />
       </div>

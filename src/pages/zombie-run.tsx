@@ -17,7 +17,8 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
   const activePlayers = allPlayers
     ? allPlayers
-        .filter((p) => !p.details?.retired)
+        // .filter((p) => !p.details?.retired)
+        .filter((p) => p.id !== SETTINGS_PLAYER_ID)
         .filter((p) => !!p.details?.zombieRun)
     : [];
 
