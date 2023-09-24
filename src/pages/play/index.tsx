@@ -16,11 +16,7 @@ const PlayerList = styled.div`
   padding: 1rem;
 `;
 
-const PlayerProfileContainer = styled.div`
-  position: relative;
-`;
-
-const PlayerName = styled.a`
+const PlayerNameLink = styled(Link)`
   display: block;
   background-color: #2f70af;
   padding: 1rem;
@@ -42,13 +38,12 @@ function Page({ players }: Props) {
     <SpectatorPageLayout scrollable={true}>
       <PlayerList>
         {players.map((player) => (
-          <Link
+          <PlayerNameLink
             key={player.id}
             href={getPlayerHomeUrl(player.id, query.autoJoinId as string)}
-            passHref={true}
           >
-            <PlayerName>{player.name}</PlayerName>
-          </Link>
+            {player.name}
+          </PlayerNameLink>
         ))}
       </PlayerList>
     </SpectatorPageLayout>

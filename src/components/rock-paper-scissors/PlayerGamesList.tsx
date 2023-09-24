@@ -54,7 +54,7 @@ export const PlayerGamesList = ({ playerId }: Props): JSX.Element | null => {
               <Link
                 href={`/play/${playerId}/rock-paper-scissors?gameId=${game.id}`}
                 passHref={true}
-              >
+                legacyBehavior>
                 <TappableLink>RPS: {game.id}</TappableLink>
               </Link>
             </li>
@@ -66,7 +66,7 @@ export const PlayerGamesList = ({ playerId }: Props): JSX.Element | null => {
               <Link
                 href={getAiOverlordPlayerUrl(playerId, game.gameId)}
                 passHref={true}
-              >
+                legacyBehavior>
                 <TappableLink>AI Overlord: {game.gameId}</TappableLink>
               </Link>
             </li>
@@ -78,7 +78,7 @@ export const PlayerGamesList = ({ playerId }: Props): JSX.Element | null => {
               <Link
                 href={getGasOutPlayerUrl(playerId, game.id)}
                 passHref={true}
-              >
+                legacyBehavior>
                 <TappableLink>Balloon: {game.id}</TappableLink>
               </Link>
             </li>

@@ -33,7 +33,7 @@ function Page({ player }: Props) {
         <Link
           href={getPlayerJoinUrl(player.id, query.autoJoinId as string)}
           passHref={true}
-        >
+          legacyBehavior>
           <PrimaryLinkButton>Join a game</PrimaryLinkButton>
         </Link>
       </Card>

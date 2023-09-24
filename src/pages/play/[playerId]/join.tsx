@@ -103,7 +103,7 @@ function Page({}: Props) {
                 relatedRPSGame.id
               )}
               passHref={true}
-            >
+              legacyBehavior>
               <PrimaryLinkButton>Play RPS</PrimaryLinkButton>
             </Link>
           ) : (
@@ -113,7 +113,7 @@ function Page({}: Props) {
             <Link
               href={playersBettingGameUrl(playerId, relatedGroupBettingGame.id)}
               passHref={true}
-            >
+              legacyBehavior>
               <PrimaryLinkButton>Play Betting</PrimaryLinkButton>
             </Link>
           )}
@@ -124,7 +124,7 @@ function Page({}: Props) {
                 relatedAiOverlordGame.gameId
               )}
               passHref={true}
-            >
+              legacyBehavior>
               <PrimaryLinkButton>Play Ai Overlord</PrimaryLinkButton>
             </Link>
           )}
@@ -132,7 +132,7 @@ function Page({}: Props) {
             <Link
               href={getGasOutPlayerUrl(playerId, relatedGasGame.id)}
               passHref={true}
-            >
+              legacyBehavior>
               <PrimaryLinkButton>Play Balloon</PrimaryLinkButton>
             </Link>
           )}
