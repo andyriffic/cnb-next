@@ -4,6 +4,7 @@ import { pipe } from "fp-ts/lib/function";
 import { Server as SocketIOServer, Socket } from "socket.io";
 import { sendClientMessage } from "../socket";
 import { RPSMoveName } from "../rock-paper-scissors/types";
+import { getAllPlayersTE } from "../../utils/data/aws-dynamodb";
 import {
   createOpenAiOverlord,
   createAiOverlordGameSummary,
@@ -101,7 +102,7 @@ export function initialiseAiOverlordSocket(
     console.log("Create Ai Overlord game", playerIds);
 
     const game = await pipe(
-      createAiOpponents(playerIds),
+      createAiOpponents(playerIds, getAllPlayersTE),
       TE.chain((opponents) =>
         createAiOverlordGame(id, createEmptyAiOverlord, opponents)
       )

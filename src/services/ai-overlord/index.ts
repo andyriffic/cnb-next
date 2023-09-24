@@ -1,12 +1,10 @@
-import { pipe } from "fp-ts/lib/function";
 import * as TE from "fp-ts/lib/TaskEither";
+import { pipe } from "fp-ts/lib/function";
 import { Player } from "../../types/Player";
-import { getAllPlayersTE } from "../../utils/data/aws-dynamodb";
+import { selectRandomOneOf } from "../../utils/random";
 import { getPlayerAttributeValueFromTags } from "../../utils/string";
 import { RPSMoveName } from "../rock-paper-scissors/types";
-import { selectRandomOneOf } from "../../utils/random";
 import {
-  createAiBattleMove,
   createAiBattleOutcome,
   createAiBattleTaunt,
   createAiOverlordGameSummary,
@@ -98,10 +96,11 @@ const mapPlayerToOpponent = (player: Player): AiOverlordOpponent => ({
 });
 
 export const createAiOpponents = (
-  playerIds: string[]
+  playerIds: string[],
+  getAllPlayers: () => TE.TaskEither<string, Player[]>
 ): TE.TaskEither<string, AiOverlordOpponent[]> => {
   return pipe(
-    getAllPlayersTE(),
+    getAllPlayers(),
     TE.map((players) =>
       players.filter((player) => playerIds.includes(player.id))
     ),
