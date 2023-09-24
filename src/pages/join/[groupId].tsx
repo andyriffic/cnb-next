@@ -76,8 +76,6 @@ function Page() {
       window.location.host
     }${getPlayRootUrl(groupId)}`;
     qrcode.toDataURL(joinUrl, (error, url) => {
-      console.info("URL", joinUrl);
-      console.info("QR generated URL", url);
       setQrCodeUrl(url);
     });
   }, [groupId]);
@@ -211,11 +209,9 @@ function Page() {
           style={{
             position: "absolute",
             top: 0,
-            width: "10vw",
-            height: "10vw",
           }}
         >
-          <Image layout="fill" src={qrCodeUrl} alt="" />
+          <Image src={qrCodeUrl} alt="" width={200} height={200} />
         </div>
       )}
     </SpectatorPageLayout>
