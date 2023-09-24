@@ -1,8 +1,8 @@
-name: run tests
+name: run-tests
 run-name: Run all unit tests
 on: [push]
 jobs:
-  check-bats-version:
+  run-jest-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
