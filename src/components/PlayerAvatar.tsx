@@ -1,4 +1,4 @@
-import Image from "next/future/image";
+import Image from "next/image";
 import { CSSProperties } from "react";
 import styled, { css } from "styled-components";
 import { getPlayerAvatarUrl } from "../utils/url";

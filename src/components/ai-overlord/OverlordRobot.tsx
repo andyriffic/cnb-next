@@ -1,4 +1,4 @@
-import Image from "next/future/image";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useAiOverlordGame } from "../../providers/SocketIoProvider/useAiOverlord";
