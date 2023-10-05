@@ -1,1 +1,1 @@
-AWS_PROFILE=cnb-next-copilot copilot svc delete -n web -e test
+AWS_PROFILE=cnb-next-copilot copilot svc delete -n web -e test --yes
