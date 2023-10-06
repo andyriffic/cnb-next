@@ -34,7 +34,7 @@ const createZombieGame = (
       .map((p) => ({
         id: p.id,
         totalMetresRun: p.details?.zombieRun?.totalMetresRun || 0,
-        totalMetresToRun: Math.ceil((p.details?.gameMoves || 0) / 2),
+        totalMetresToRun: p.details?.gameMoves || 0,
         isZombie: true,
         gotBitten: false,
       })),
