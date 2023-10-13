@@ -23,6 +23,13 @@ const Label = styled.div`
   transform: translateX(-50%);
 `;
 
+const ZombieLabel = styled(Label)`
+  background-color: #69b362;
+  border-color: darkgreen;
+  /* font-size: 2rem; */
+  text-align: center;
+`;
+
 const ZombieTransform = styled.div<{ isZombie: boolean }>`
   transition: filter 1s ease-in-out;
   ${({ isZombie }) =>
@@ -41,34 +48,36 @@ export function JoinedPlayer({ playerId, team }: Props) {
   const [player, setPlayer] = useState<Player | undefined>();
   const { play } = useSound();
 
+  const isZombie = player ? getPlayerZombieRunDetails(player).isZombie : false;
+
   useEffect(() => {
     fetchGetPlayer(playerId).then((playerOrNull) => {
       setPlayer(playerOrNull);
     });
   }, [playerId]);
 
-  useDoOnce(
-    () => {
-      play(
-        selectRandomOneOf([
-          "zombie-run-player-zombie-moving",
-          "zombie-run-zombie-moving",
-        ])
-      );
-    },
-    player ? getPlayerZombieRunDetails(player).isZombie : false
-  );
+  useDoOnce(() => {
+    play(
+      selectRandomOneOf([
+        "zombie-run-player-zombie-moving",
+        "zombie-run-zombie-moving",
+      ])
+    );
+  }, isZombie);
 
   return (
     <div>
-      <ZombieTransform
-        isZombie={player ? getPlayerZombieRunDetails(player).isZombie : false}
-      >
+      <ZombieTransform isZombie={isZombie}>
         <PlayerAvatar playerId={playerId} size="small" />
       </ZombieTransform>
       {player && team && player.details?.team === team && (
         <Appear animation="text-focus-in">
           <Label>{player.details.team}</Label>
+        </Appear>
+      )}
+      {player && isZombie && (
+        <Appear animation="text-focus-in">
+          <ZombieLabel>Zombie</ZombieLabel>
         </Appear>
       )}
     </div>
