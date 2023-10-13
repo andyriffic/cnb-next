@@ -86,7 +86,11 @@ export default function Page({ player, continueUrl }: Props) {
   }, [player]);
 
   if (!player) {
-    return <div>Soz</div>;
+    return (
+      <div>
+        Soz, I couldn{"'"}t find a player to show you for some reason ¯\_(ツ)_/¯
+      </div>
+    );
   }
 
   return (
@@ -118,23 +122,25 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   }
 
   const allPlayers = (await getAllPlayers()) || [];
-  const allViewCounts = allPlayers.map((p) => p.details?.whosThatCount || 0);
+  const allValidPlayers = allPlayers.filter(
+    (p) => !p.tags.includes("no-whos-that")
+  );
+  const allViewCounts = allValidPlayers.map(
+    (p) => p.details?.whosThatCount || 0
+  );
 
   const lowestViewCount = Math.min(...allViewCounts);
 
-  const lowestViewCountPlayers = allPlayers.filter(
+  const lowestViewCountPlayers = allValidPlayers.filter(
     (p) => (p.details?.whosThatCount || 0) === lowestViewCount
   );
 
   return {
     props: {
-      player: allPlayers
-        ? selectRandomOneOf(
-            lowestViewCountPlayers.filter(
-              (p) => !p.tags.includes("no-whos-that")
-            )
-          )
-        : undefined,
+      player:
+        lowestViewCountPlayers.length > 0
+          ? selectRandomOneOf(lowestViewCountPlayers)
+          : null,
       continueUrl: continueUrl ? (continueUrl as string) : null,
     },
   };
