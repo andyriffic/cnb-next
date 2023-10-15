@@ -25,6 +25,7 @@ export type PacmanDetails = {
 export type ZombieRunDetails = {
   totalMetresRun: number;
   isZombie: boolean;
+  finishPosition?: number;
   // playersBitten: string[];
 };
 

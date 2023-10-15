@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import { Player } from "../../types/Player";
 import {
   OriginalZombieDetails,
+  ZOMBIE_RUNNING_TRACK_LENGTH_METRES,
   ZombieRunGame,
   ZombieRunGameStatus,
 } from "./types";
@@ -9,6 +10,7 @@ import {
 export type UseZombieRun = {
   zombieGame: ZombieRunGame;
   run: () => void;
+  checkForWinners: () => void;
   moveOriginalZombie: () => void;
   moveBittenZombies: () => void;
   setZombieGameStatus: (status: ZombieRunGameStatus) => void;
@@ -28,6 +30,7 @@ const createZombieGame = (
         totalMetresToRun: p.details?.gameMoves || 0,
         isZombie: false,
         gotBitten: false,
+        finishPosition: p.details?.zombieRun?.finishPosition,
       })),
     zombies: players
       .filter((p) => !!p.details?.zombieRun?.isZombie)
@@ -56,16 +59,45 @@ export const useZombieRun = (
       gameStatus: ZombieRunGameStatus.PLAYERS_RUNNING,
       survivors: zombieGame.survivors.map((s) => ({
         ...s,
-        totalMetresRun: s.totalMetresRun + s.totalMetresToRun,
+        totalMetresRun: Math.min(
+          s.totalMetresRun + s.totalMetresToRun,
+          ZOMBIE_RUNNING_TRACK_LENGTH_METRES
+        ),
         totalMetresToRun: 0,
       })),
     });
   }, [zombieGame]);
 
+  const checkForWinners = useCallback(() => {
+    const lastFinishedPosition = Math.max(
+      0,
+      ...zombieGame.survivors.map((p) => p.finishPosition || 0)
+    );
+
+    const newlyFinishedPlayers = zombieGame.survivors.filter(
+      (p) =>
+        !p.gotBitten &&
+        p.totalMetresRun === ZOMBIE_RUNNING_TRACK_LENGTH_METRES &&
+        !p.finishPosition
+    );
+
+    setZombieGame({
+      ...zombieGame,
+      gameStatus: ZombieRunGameStatus.GAME_OVER,
+      survivors: zombieGame.survivors.map((s) =>
+        newlyFinishedPlayers.find((p) => p.id === s.id)
+          ? { ...s, finishPosition: lastFinishedPosition + 1 }
+          : s
+      ),
+    });
+  }, [zombieGame]);
+
   const moveOriginalZombie = useCallback(() => {
-    const originalZombieNewTotalDistance =
+    const originalZombieNewTotalDistance = Math.min(
       zombieGame.originalZombie.totalMetresRun +
-      zombieGame.originalZombie.totalMetresToRun;
+        zombieGame.originalZombie.totalMetresToRun,
+      ZOMBIE_RUNNING_TRACK_LENGTH_METRES - 1
+    );
 
     const playersGonnaGetBitten = zombieGame.survivors
       .filter((p) => !p.gotBitten)
@@ -105,7 +137,10 @@ export const useZombieRun = (
       })),
       zombies: zombieGame.zombies.map((z) => ({
         ...z,
-        totalMetresRun: z.totalMetresRun + z.totalMetresToRun,
+        totalMetresRun: Math.min(
+          z.totalMetresRun + z.totalMetresToRun,
+          ZOMBIE_RUNNING_TRACK_LENGTH_METRES - 1
+        ),
         totalMetresToRun: 0,
       })),
     });
@@ -114,6 +149,7 @@ export const useZombieRun = (
   return {
     zombieGame,
     run,
+    checkForWinners,
     moveOriginalZombie,
     moveBittenZombies,
     setZombieGameStatus: (status) =>

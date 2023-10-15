@@ -206,6 +206,23 @@ export const AdminPlayerEdit = ({ player, onClose }: Props) => {
               })
             }
           />
+          <AdminPlayerEditNumberValue
+            label="Finish Position"
+            id="zombie_finish_position"
+            value={playerCopy.details?.zombieRun?.finishPosition || 0}
+            onChange={(value) =>
+              setPlayerCopy({
+                ...playerCopy,
+                details: {
+                  ...playerCopy.details,
+                  zombieRun: {
+                    ...getPlayerZombieRunDetails(playerCopy),
+                    totalMetresRun: value,
+                  },
+                },
+              })
+            }
+          />
           <AdminPlayerEditBooleanValue
             label="isZombie"
             id="zombie_isZombie"

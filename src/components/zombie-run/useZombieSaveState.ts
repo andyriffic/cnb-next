@@ -18,7 +18,11 @@ export const useZombieSaveState = (
     zombieGame.survivors.forEach((z) => {
       updatePlayerDetails(z.id, {
         gameMoves: 0,
-        zombieRun: { isZombie: z.gotBitten, totalMetresRun: z.totalMetresRun },
+        zombieRun: {
+          isZombie: z.gotBitten,
+          totalMetresRun: z.totalMetresRun,
+          finishPosition: z.finishPosition,
+        },
       });
     });
     zombieGame.zombies.forEach((z) => {

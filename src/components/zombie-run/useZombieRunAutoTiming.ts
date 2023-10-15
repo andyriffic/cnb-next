@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useDoOnce } from "../hooks/useDoOnce";
 import { ZombieRunGameStatus } from "./types";
 import { UseZombieRun } from "./useZombieRun";
 
@@ -37,9 +38,20 @@ export const useZombieRunAutoTiming = (useZombieGame: UseZombieRun) => {
       ZombieRunGameStatus.BITTEN_ZOMBIES_RUNNING
     ) {
       const timeout = setTimeout(() => {
-        useZombieGame.setZombieGameStatus(ZombieRunGameStatus.GAME_OVER);
+        useZombieGame.setZombieGameStatus(
+          ZombieRunGameStatus.CHECK_FOR_NEW_WINNERS
+        );
       }, 3000);
       return () => clearTimeout(timeout);
+    }
+  }, [useZombieGame]);
+
+  useEffect(() => {
+    if (
+      useZombieGame.zombieGame.gameStatus ===
+      ZombieRunGameStatus.CHECK_FOR_NEW_WINNERS
+    ) {
+      useZombieGame.checkForWinners();
     }
   }, [useZombieGame]);
 

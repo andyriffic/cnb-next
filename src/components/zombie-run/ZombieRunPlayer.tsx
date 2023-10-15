@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { PlayerAvatar } from "../PlayerAvatar";
 import { usePlayerNames } from "../../providers/PlayerNamesProvider";
 import { Appear } from "../animations/Appear";
@@ -7,6 +7,7 @@ import {
   fadeInBottom,
   fadeInOutBottomToTop,
 } from "../animations/keyframes/fade";
+import { useSound } from "../hooks/useSound";
 import { ZombiePlayer } from "./types";
 
 const ZOMBIE_COLOR = "#69B362";
@@ -29,10 +30,15 @@ const BittenIndicator = styled.div`
   background: ${ZOMBIE_COLOR}};
   color: white;
   text-align: center;
-  padding: 0.2rem 0;
+  padding: 0.2rem;
   font-size: 1rem;
   animation: ${fadeInBottom} 2s ease-in-out 0.5s 1 both;
   border-radius: 0.5rem;
+`;
+
+const FinishedIndicator = styled(BittenIndicator)`
+  background: yellow;
+  color: black;
 `;
 
 const PlayerDetailsContainer = styled.div`
@@ -73,7 +79,18 @@ type Props = {
 
 export const ZombieRunPlayer = ({ zombiePlayer, stackIndex = 0 }: Props) => {
   const { getName } = usePlayerNames();
-  useEffect(() => {}, [zombiePlayer.gotBitten]);
+  const { play } = useSound();
+
+  const originalFinishedPosition = useRef(zombiePlayer.finishPosition || 0);
+
+  useEffect(() => {
+    if (
+      !!zombiePlayer.finishPosition &&
+      zombiePlayer.finishPosition > originalFinishedPosition.current
+    ) {
+      play("rps-award-winner");
+    }
+  }, [play, zombiePlayer.finishPosition]);
 
   const isZombie = zombiePlayer.gotBitten || zombiePlayer.isZombie;
 
@@ -86,6 +103,11 @@ export const ZombieRunPlayer = ({ zombiePlayer, stackIndex = 0 }: Props) => {
         <BittenIndicator style={{ top: `-${(stackIndex + 1) * 30}%` }}>
           {getName(zombiePlayer.id)} got bitten 😱
         </BittenIndicator>
+      )}
+      {!!zombiePlayer.finishPosition && (
+        <FinishedIndicator style={{ top: `-${(stackIndex + 1) * 30}%` }}>
+          {`${getName(zombiePlayer.id)} 🏁 # ${zombiePlayer.finishPosition}`}
+        </FinishedIndicator>
       )}
       <PlayerDetailsContainer>
         <ArrowIndicator isZombie={isZombie} />

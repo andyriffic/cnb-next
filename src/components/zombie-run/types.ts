@@ -7,7 +7,8 @@ export enum ZombieRunGameStatus {
   ORIGINAL_ZOMBIE_RUNNING = 4,
   READY_FOR_BITTEN_ZOMBIES = 5,
   BITTEN_ZOMBIES_RUNNING = 6,
-  GAME_OVER = 7,
+  CHECK_FOR_NEW_WINNERS = 7,
+  GAME_OVER = 8,
 }
 
 export type ZombiePlayer = {
@@ -16,6 +17,7 @@ export type ZombiePlayer = {
   totalMetresToRun: number;
   isZombie: boolean;
   gotBitten: boolean;
+  finishPosition?: number;
 };
 
 export type OriginalZombieDetails = {

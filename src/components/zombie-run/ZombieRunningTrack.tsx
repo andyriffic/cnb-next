@@ -9,7 +9,7 @@ import {
   ZombieRunGameStatus,
 } from "./types";
 
-const TOTAL_TRACK_WIDTH = 98;
+const TOTAL_TRACK_WIDTH = 94;
 const STACK_INDEX_RANGE = 2;
 
 const ZombieBackground = styled.div`
