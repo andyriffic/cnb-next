@@ -9,6 +9,8 @@ import {
   RPSSpectatorRoundView,
 } from "./types";
 
+const DRAW_BONUS_POINTS = 2;
+
 export function createGame(
   props: RPSCreateGameProps
 ): E.Either<string, RPSGame> {
@@ -17,7 +19,7 @@ export function createGame(
     id: props.id,
     playerIds: [...props.playerIds],
     roundHistory: [],
-    currentRound: getNewRound(),
+    currentRound: getNewRound(0),
     spectatorTargetGuesses: props.spectatorTargetGuesses,
   };
   return E.right(newGame);
@@ -59,7 +61,11 @@ function addResultToRound(
   const p2Move = validatedRound.moves[1]!;
 
   if (p1Move.moveName === p2Move.moveName) {
-    return E.right({ ...validatedRound, result: { draw: true } });
+    return E.right({
+      ...validatedRound,
+      result: { draw: true },
+      bonusPoints: validatedRound.bonusPoints + DRAW_BONUS_POINTS,
+    });
   }
 
   switch (p1Move.moveName) {
@@ -142,8 +148,8 @@ function updateRoundInGame(updatedRound: RPSRound, game: RPSGame): RPSGame {
   };
 }
 
-function getNewRound(): RPSRound {
-  return { moves: [] };
+function getNewRound(bonusPoints: number): RPSRound {
+  return { moves: [], bonusPoints };
 }
 
 export function addRoundToGame(game: RPSGame): E.Either<string, RPSGame> {
@@ -155,7 +161,7 @@ export function addRoundToGame(game: RPSGame): E.Either<string, RPSGame> {
 
   return E.right({
     ...game,
-    currentRound: getNewRound(),
+    currentRound: getNewRound(currentRound.bonusPoints),
     roundHistory: [...game.roundHistory, currentRound],
   });
 }

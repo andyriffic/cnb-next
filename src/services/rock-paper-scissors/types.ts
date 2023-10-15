@@ -17,6 +17,7 @@ export type RPSGame = {
 export type RPSRound = {
   moves: RPSPlayerMove[];
   result?: RPSRoundResult;
+  bonusPoints: number;
 };
 
 export type RPSRoundResult = {
