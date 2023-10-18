@@ -23,6 +23,8 @@ import { SplashContent } from "../../../components/SplashContent";
 import { useBettingGame } from "../../../providers/SocketIoProvider/useGroupBetting";
 import { useRPSGame } from "../../../providers/SocketIoProvider/useRockPaperScissorsSocket";
 import { roundReady as gameRoundReady } from "../../../services/rock-paper-scissors/helpers";
+import { FeatureValue } from "../../../components/FeatureValue";
+import { Appear } from "../../../components/animations/Appear";
 
 type Props = {};
 
@@ -133,6 +135,19 @@ function Page({}: Props) {
           First player to {game?.spectatorTargetGuesses} correct guesses wins!
         </SubHeading>
       )}
+      {game &&
+        game.currentRound.bonusPoints > 0 &&
+        !showPointsCeremony &&
+        gameState.state >= RpsGameState.SHOW_GAME_RESULT && (
+          <Positioned absolute={{ leftPercent: 48, topPercent: 20 }}>
+            <Appear>
+              <FeatureValue
+                value={game.currentRound.bonusPoints}
+                label="Bonus"
+              />
+            </Appear>
+          </Positioned>
+        )}
       {game && showPointsCeremony && gameFinalPoints && (
         <PointsAwardCeremony
           gameId={game.id}

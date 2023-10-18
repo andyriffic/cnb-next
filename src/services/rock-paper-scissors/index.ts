@@ -73,30 +73,36 @@ function addResultToRound(
       return p2Move.moveName === "scissors"
         ? E.right({
             ...validatedRound,
+            bonusPoints: validatedRound.bonusPoints,
             result: { draw: false, winningPlayerId: p1Move.playerId },
           })
         : E.right({
             ...validatedRound,
+            bonusPoints: validatedRound.bonusPoints,
             result: { draw: false, winningPlayerId: p2Move.playerId },
           });
     case "paper":
       return p2Move.moveName === "rock"
         ? E.right({
             ...validatedRound,
+            bonusPoints: validatedRound.bonusPoints,
             result: { draw: false, winningPlayerId: p1Move.playerId },
           })
         : E.right({
             ...validatedRound,
+            bonusPoints: validatedRound.bonusPoints,
             result: { draw: false, winningPlayerId: p2Move.playerId },
           });
     case "scissors":
       return p2Move.moveName === "paper"
         ? E.right({
             ...validatedRound,
+            bonusPoints: validatedRound.bonusPoints,
             result: { draw: false, winningPlayerId: p1Move.playerId },
           })
         : E.right({
             ...validatedRound,
+            bonusPoints: validatedRound.bonusPoints,
             result: { draw: false, winningPlayerId: p2Move.playerId },
           });
   }
@@ -161,7 +167,9 @@ export function addRoundToGame(game: RPSGame): E.Either<string, RPSGame> {
 
   return E.right({
     ...game,
-    currentRound: getNewRound(currentRound.bonusPoints),
+    currentRound: getNewRound(
+      currentRound.result.draw ? currentRound.bonusPoints : 0
+    ),
     roundHistory: [...game.roundHistory, currentRound],
   });
 }
@@ -169,6 +177,7 @@ export function addRoundToGame(game: RPSGame): E.Either<string, RPSGame> {
 function createGameRoundView(round: RPSRound): RPSSpectatorRoundView {
   return {
     movedPlayerIds: round.moves.map((move) => move.playerId),
+    bonusPoints: round.bonusPoints,
     result:
       round.result === undefined
         ? undefined
@@ -183,9 +192,10 @@ export function createGameView(game: RPSGame): RPSSpectatorGameView {
     playerIds: [...game.playerIds],
     scores: game.playerIds.map((pid) => ({
       playerId: pid,
-      score: allRounds.filter(
-        (round) => round.result && round.result.winningPlayerId === pid
-      ).length,
+      score: allRounds
+        .filter((round) => round.result && round.result.winningPlayerId === pid)
+        .map((r) => r.bonusPoints || 1)
+        .reduce((a, b) => a + b, 0),
     })),
     currentRound: createGameRoundView(game.currentRound),
     roundHistory: game.roundHistory.map(createGameRoundView),

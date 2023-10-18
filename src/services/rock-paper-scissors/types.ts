@@ -34,6 +34,7 @@ export type RPSMoveName = "rock" | "paper" | "scissors";
 export type RPSPlayer = {} & Player;
 
 export type RPSSpectatorRoundView = {
+  bonusPoints: number;
   movedPlayerIds: string[];
   result?: {
     moves: RPSPlayerMove[];
