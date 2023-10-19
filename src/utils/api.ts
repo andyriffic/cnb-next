@@ -46,7 +46,7 @@ export const updatePlayerDetails = (
 
 export const deletePlayerZombieDetails = (playerId: string): Promise<void> => {
   return new Promise((resolve, reject) => {
-    fetch(`/api/player/${playerId}`, {
+    fetch(`/api/player/${playerId}/delete/zombie`, {
       method: "DELETE",
     })
       .then(() => resolve())

@@ -194,10 +194,11 @@ export const AdminPlayerEdit = ({ player, onClose }: Props) => {
           <EvenlySpaced style={{ marginBottom: "1rem" }}>
             <h6 style={{ fontWeight: "bold" }}>Zombie Run</h6>
             <button
+              type="button"
               style={{ backgroundColor: "red" }}
               onClick={() => {
                 deletePlayerZombieDetails(playerCopy.id).then(() => {
-                  () => onClose(true);
+                  onClose(true);
                 });
               }}
             >
