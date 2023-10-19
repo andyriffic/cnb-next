@@ -753,11 +753,11 @@ function createCard(cardType: CardType, presses: number): GasCard {
     case "reverse":
       return { type: cardType, presses: 0 };
     case "risky":
-      return { type: "risky", presses: 6 };
+      return { type: "risky", presses: 5 };
     case "press":
       return { type: "press", presses };
     case "bomb":
-      return { type: "bomb", presses: 10 };
+      return { type: "bomb", presses: 8 };
   }
 }
 
