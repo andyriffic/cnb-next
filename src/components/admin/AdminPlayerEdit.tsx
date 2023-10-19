@@ -6,7 +6,10 @@ import {
   getPlayerPacManDetails,
   getPlayerZombieRunDetails,
 } from "../../types/Player";
-import { updatePlayerDetails } from "../../utils/api";
+import {
+  deletePlayerZombieDetails,
+  updatePlayerDetails,
+} from "../../utils/api";
 import { Card } from "../Atoms";
 import { EvenlySpaced } from "../Layouts";
 import { PlayerAvatar } from "../PlayerAvatar";
@@ -188,7 +191,19 @@ export const AdminPlayerEdit = ({ player, onClose }: Props) => {
             }
           />
           <hr />
-          <h6 style={{ fontWeight: "bold" }}>Zombie Run</h6>
+          <EvenlySpaced style={{ marginBottom: "1rem" }}>
+            <h6 style={{ fontWeight: "bold" }}>Zombie Run</h6>
+            <button
+              style={{ backgroundColor: "red" }}
+              onClick={() => {
+                deletePlayerZombieDetails(playerCopy.id).then(() => {
+                  () => onClose(true);
+                });
+              }}
+            >
+              Delete Zombie details
+            </button>
+          </EvenlySpaced>
           <AdminPlayerEditNumberValue
             label="Total Metres"
             id="zombie_metres"

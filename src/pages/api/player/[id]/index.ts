@@ -47,8 +47,30 @@ export default async function userHandler(
       res.status(200).json(playerOrNull);
       break;
     }
+    case "DELETE": {
+      //Hardcode to zombie details for now
+      console.log("Attempting to delete player zombie details", id);
+      // const playerOrNull = await getPlayer(id as string);
+      // console.info("Got player", playerOrNull);
+
+      // if (!playerOrNull) {
+      //   res.status(404);
+      //   return;
+      // }
+
+      // const detailsWithoutZombie: PlayerDetails = {
+      //   ...playerOrNull.details,
+      //   zombieRun: undefined,
+      // };
+
+      // await updatePlayer(id as string, detailsWithoutZombie);
+
+      res.status(200).send("OK");
+      break;
+    }
+
     default: {
-      res.setHeader("Allow", ["PUT, GET"]);
+      res.setHeader("Allow", ["PUT, GET, DELETE"]);
       res.status(405).end(`Method ${method} Not Allowed`);
     }
   }
