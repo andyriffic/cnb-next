@@ -27,6 +27,7 @@ export type GasGame = {
   moveHistory: CardHistory[];
   turnCount: number;
   team?: string;
+  superGuessInEffect: boolean;
 };
 
 export type CardHistory = { playerId: string; cardPlayed: GasCard };

@@ -29,6 +29,7 @@ export type SoundName =
   | "gas-winner"
   | "gas-head-to-head-round"
   | "gas-background-music"
+  | "gas-super-guess"
   | "pacman-move-pacman"
   | "pacman-move-player"
   | "pacman-eat-player"

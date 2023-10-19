@@ -51,6 +51,7 @@ export function createGame({
     moveHistory: [],
     turnCount: 0,
     team,
+    superGuessInEffect: false,
   };
 }
 
@@ -445,7 +446,7 @@ export function makeNextPlayerOutGuess(
     updatedGuessingPlayer
   );
 
-  return {
+  return setSuperGuessBonus({
     ...game,
     allPlayers: updatedPlayers.map((p) => {
       return {
@@ -456,6 +457,27 @@ export function makeNextPlayerOutGuess(
         },
       };
     }),
+  });
+}
+
+function setSuperGuessBonus(game: GasGame): GasGame {
+  const allDeadPlayers = game.allPlayers.filter((p) => p.status === "dead");
+  if (allDeadPlayers.length === 0) {
+    return { ...game, superGuessInEffect: false };
+  }
+
+  const allDeadPlayersHaveGuessed = allDeadPlayers.every(
+    (p) => p.guesses.nextPlayerOutGuess !== undefined
+  );
+  const firstDeadPlayerGuess = allDeadPlayers[0]!.guesses.nextPlayerOutGuess;
+
+  return {
+    ...game,
+    superGuessInEffect:
+      allDeadPlayersHaveGuessed &&
+      allDeadPlayers.every(
+        (p) => p.guesses.nextPlayerOutGuess === firstDeadPlayerGuess
+      ),
   };
 }
 
@@ -506,22 +528,24 @@ function explode(game: GasGame, killedBy: DeathType | undefined): GasGame {
     points: game.pointsMap[deadPlayerIds.length - 1]!,
   };
 
-  return assignMvps(
-    assignWinner(
-      resetPlayerGuessesAndGivePoints({
-        ...game,
-        allPlayers: updatePlayerInList(game.allPlayers, updatedCurrentPlayer),
-        alivePlayersIds,
-        deadPlayerIds,
-        currentPlayer: {
-          ...game.currentPlayer,
-          pressesRemaining: game.currentPlayer.pressesRemaining - 1,
-        },
-        gasCloud: {
-          ...game.gasCloud,
-          exploded: true,
-        },
-      })
+  return setSuperGuessBonus(
+    assignMvps(
+      assignWinner(
+        resetPlayerGuessesAndGivePoints({
+          ...game,
+          allPlayers: updatePlayerInList(game.allPlayers, updatedCurrentPlayer),
+          alivePlayersIds,
+          deadPlayerIds,
+          currentPlayer: {
+            ...game.currentPlayer,
+            pressesRemaining: game.currentPlayer.pressesRemaining - 1,
+          },
+          gasCloud: {
+            ...game.gasCloud,
+            exploded: true,
+          },
+        })
+      )
     )
   );
 }
@@ -551,6 +575,8 @@ function resetPlayerGuessesAndGivePoints(game: GasGame): GasGame {
     return game;
   }
 
+  const BONUS_POINTS = game.superGuessInEffect ? 3 : 1;
+
   return {
     ...game,
     allPlayers: game.allPlayers.map<GasPlayer>((p) => {
@@ -558,7 +584,7 @@ function resetPlayerGuessesAndGivePoints(game: GasGame): GasGame {
         p.guesses.nextPlayerOutGuess === game.currentPlayer.id;
       return {
         ...p,
-        points: p.points + (guessedCorrectly ? 1 : 0),
+        points: p.points + (guessedCorrectly ? BONUS_POINTS : 0),
         guesses: {
           nextPlayerOutGuess: undefined,
           nominatedCount: 0,

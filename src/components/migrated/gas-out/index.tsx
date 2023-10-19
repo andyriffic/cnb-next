@@ -11,6 +11,7 @@ import { Graveyard } from "./Graveyard";
 import { LastTwoPlayersNotification } from "./LastTwoPlayersNotification";
 import { PlayerCarousel } from "./PlayerCarousel";
 import { useGasSound } from "./hooks/useGasSound";
+import { SuperGuess } from "./SuperGuess";
 
 const Container = styled.div`
   margin: 50px auto;
@@ -22,6 +23,13 @@ const GameModeDisplay = styled.div`
   left: 0;
   text-transform: uppercase;
   padding: 1rem;
+`;
+
+const SuperGuessDisplay = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 2rem;
 `;
 
 const CarouselContainer = styled.div`
@@ -83,6 +91,11 @@ const View = ({ gasGame, team }: Props) => {
     >
       <Container>
         <GameModeDisplay>{gasGame.gameType} mode</GameModeDisplay>
+        {gasGame.superGuessInEffect && (
+          <SuperGuessDisplay>
+            <SuperGuess />
+          </SuperGuessDisplay>
+        )}
         {!gasGame.winningPlayerId && (
           <CarouselContainer>
             <PlayerCarousel
