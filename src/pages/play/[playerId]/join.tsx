@@ -38,7 +38,7 @@ function Page({}: Props) {
   const joinedId = router.query.joinedId as string;
   const { groupJoin, rockPaperScissors, groupBetting, aiOverlord, gasGame } =
     useSocketIo();
-  const [groupId, setGroupId] = useState(autoJoinId);
+  const [groupId, setGroupId] = useState(autoJoinId || joinedId);
 
   const joinedGroup = useMemo(() => {
     if (joinedId && joinedId === groupId) {
@@ -103,7 +103,8 @@ function Page({}: Props) {
                 relatedRPSGame.id
               )}
               passHref={true}
-              legacyBehavior>
+              legacyBehavior
+            >
               <PrimaryLinkButton>Play RPS</PrimaryLinkButton>
             </Link>
           ) : (
@@ -113,7 +114,8 @@ function Page({}: Props) {
             <Link
               href={playersBettingGameUrl(playerId, relatedGroupBettingGame.id)}
               passHref={true}
-              legacyBehavior>
+              legacyBehavior
+            >
               <PrimaryLinkButton>Play Betting</PrimaryLinkButton>
             </Link>
           )}
@@ -124,7 +126,8 @@ function Page({}: Props) {
                 relatedAiOverlordGame.gameId
               )}
               passHref={true}
-              legacyBehavior>
+              legacyBehavior
+            >
               <PrimaryLinkButton>Play Ai Overlord</PrimaryLinkButton>
             </Link>
           )}
@@ -132,7 +135,8 @@ function Page({}: Props) {
             <Link
               href={getGasOutPlayerUrl(playerId, relatedGasGame.id)}
               passHref={true}
-              legacyBehavior>
+              legacyBehavior
+            >
               <PrimaryLinkButton>Play Balloon</PrimaryLinkButton>
             </Link>
           )}

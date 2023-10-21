@@ -14,6 +14,7 @@ import { Player } from "../../../types/Player";
 import { getAllPlayers, getPlayer } from "../../../utils/data/aws-dynamodb";
 import { getPlayerJoinUrl } from "../../../utils/url";
 import { PlayerColourSelector } from "../../../components/player/PlayerColourSelector";
+import { PlayerAutoJoinDialog } from "../../../components/player/PlayerAutoJoinGameDialog";
 
 const CenterAlignContainer = styled.div`
   display: flex;
@@ -33,12 +34,17 @@ function Page({ player }: Props) {
         <Link
           href={getPlayerJoinUrl(player.id, query.autoJoinId as string)}
           passHref={true}
-          legacyBehavior>
+          legacyBehavior
+        >
           <PrimaryLinkButton>Join a game</PrimaryLinkButton>
         </Link>
       </Card>
       <PlayerGamesList playerId={player.id} />
       <PlayerColourSelector player={player} />
+      <PlayerAutoJoinDialog
+        playerId={player.id}
+        groupId={query.autoJoinId as string}
+      />
     </PlayerPageLayout>
   );
 }
