@@ -1,25 +1,16 @@
-import { GetServerSideProps, GetStaticPaths, GetStaticProps } from "next";
+import { GetServerSideProps } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import styled from "styled-components";
-import {
-  Card,
-  Heading,
-  PrimaryLinkButton,
-  SubHeading,
-} from "../../../components/Atoms";
+import { useEffect } from "react";
+import { Card, PrimaryLinkButton, SubHeading } from "../../../components/Atoms";
 import { PlayerPageLayout } from "../../../components/PlayerPageLayout";
-import { PlayerGamesList } from "../../../components/rock-paper-scissors/PlayerGamesList";
-import { Player } from "../../../types/Player";
-import { getAllPlayers, getPlayer } from "../../../utils/data/aws-dynamodb";
-import { getPlayerJoinUrl } from "../../../utils/url";
-import { PlayerColourSelector } from "../../../components/player/PlayerColourSelector";
 import { PlayerAutoJoinDialog } from "../../../components/player/PlayerAutoJoinGameDialog";
-
-const CenterAlignContainer = styled.div`
-  display: flex;
-  justify-content: center;
-`;
+import { PlayerColourSelector } from "../../../components/player/PlayerColourSelector";
+import { PlayerGamesList } from "../../../components/rock-paper-scissors/PlayerGamesList";
+import { setPlayerLocalStorageSettings } from "../../../utils/client-only/localStorage";
+import { getPlayer } from "../../../utils/data/aws-dynamodb";
+import { getPlayerJoinUrl } from "../../../utils/url";
+import { Player } from "../../../types/Player";
 
 type Props = {
   player: Player;
@@ -27,6 +18,11 @@ type Props = {
 
 function Page({ player }: Props) {
   const { query } = useRouter();
+
+  useEffect(() => {
+    setPlayerLocalStorageSettings({ playerId: player.id });
+  }, [player]);
+
   return (
     <PlayerPageLayout headerContent={<>{player.name}</>} playerId={player.id}>
       <Card>

@@ -1,8 +1,9 @@
-import { GetStaticPaths, GetStaticProps } from "next";
+import { GetStaticProps } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 import { SpectatorPageLayout } from "../../components/SpectatorPageLayout";
+import { PlayerRejoinDialog } from "../../components/player/PlayerRejoinDialog";
 import { Player } from "../../types/Player";
 import { getAllPlayers } from "../../utils/data/aws-dynamodb";
 import { sortByPlayerName } from "../../utils/sort";
@@ -34,6 +35,7 @@ type Props = {
 
 function Page({ players }: Props) {
   const { query } = useRouter();
+
   return (
     <SpectatorPageLayout scrollable={true}>
       <PlayerList>
@@ -46,6 +48,7 @@ function Page({ players }: Props) {
           </PlayerNameLink>
         ))}
       </PlayerList>
+      <PlayerRejoinDialog autoJoinGroupId={query.autoJoinId as string} />
     </SpectatorPageLayout>
   );
 }
