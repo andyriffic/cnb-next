@@ -13,23 +13,26 @@ type Props = {
 };
 
 export const PlayerRejoinDialog = ({ autoJoinGroupId }: Props) => {
+  const [playerIdFromLocalStorage, setPlayerIdFromLocalStorage] =
+    useState<string>("");
   const [showModal, setShowModal] = useState(false);
   const { getName } = usePlayerNames();
   const router = useRouter();
 
-  const playerId = getPlayerLocalStorageSettings()?.playerId;
-
   const playerConfirmed = () => {
-    if (!playerId) {
-      return;
-    }
-    router.push(getPlayerHomeUrl(playerId, autoJoinGroupId));
+    router.push(getPlayerHomeUrl(playerIdFromLocalStorage, autoJoinGroupId));
   };
 
   const playerNotConfirmed = () => {
     clearAllPlayerSettings();
     setShowModal(false);
   };
+
+  useEffect(() => {
+    const localPlayerSettings = getPlayerLocalStorageSettings();
+    localPlayerSettings &&
+      setPlayerIdFromLocalStorage(localPlayerSettings.playerId);
+  }, []);
 
   useEffect(() => {
     const localPlayerSettings = getPlayerLocalStorageSettings();
@@ -50,7 +53,10 @@ export const PlayerRejoinDialog = ({ autoJoinGroupId }: Props) => {
       ]}
     >
       Are you{" "}
-      <strong style={{ fontWeight: "bold" }}>{getName(playerId || "")}</strong>?
+      <strong style={{ fontWeight: "bold" }}>
+        {getName(playerIdFromLocalStorage || "")}
+      </strong>
+      ?
     </DialogModal>
   );
 };
