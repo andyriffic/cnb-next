@@ -1,8 +1,6 @@
-import { GetStaticPaths, GetStaticProps } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
-import styled from "styled-components";
 import {
   BigInput,
   Heading,
@@ -20,11 +18,6 @@ import {
   playersRockPaperScissorsGameUrl,
 } from "../../../utils/url";
 
-const CenterAlignContainer = styled.div`
-  display: flex;
-  justify-content: center;
-`;
-
 function numbersOnly(str: string): string {
   return str.replace(/\D/g, "");
 }
@@ -38,7 +31,7 @@ function Page({}: Props) {
   const joinedId = router.query.joinedId as string;
   const { groupJoin, rockPaperScissors, groupBetting, aiOverlord, gasGame } =
     useSocketIo();
-  const [groupId, setGroupId] = useState(autoJoinId || joinedId);
+  const [groupId, setGroupId] = useState(autoJoinId || joinedId || "");
 
   const joinedGroup = useMemo(() => {
     if (joinedId && joinedId === groupId) {
