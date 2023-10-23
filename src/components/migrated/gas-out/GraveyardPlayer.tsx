@@ -1,17 +1,12 @@
 import styled from "styled-components";
 import { FONT_FAMILY } from "../../../colors";
+import { usePlayerNames } from "../../../providers/PlayerNamesProvider";
 import { GasGame, GasPlayer } from "../../../services/migrated/gas-out/types";
 import { getOrdinal } from "../../../utils/string";
 import { PlayerAvatar } from "../../PlayerAvatar";
 import { fadeInAnimation } from "../../animations/keyframes/fade";
+import { textFocusIn } from "../../animations/keyframes/textFocusIn";
 import { PlayerBonusPoints } from "./PlayerBonusPoints";
-
-const CardContainer = styled.div`
-  position: absolute;
-  top: -80px;
-  left: 50%;
-  transform: translateX(-50%);
-`;
 
 const PlayerAvatarContainer = styled.div`
   opacity: 0.6;
@@ -48,44 +43,25 @@ const PlayerPoints = styled.div`
   animation: ${fadeInAnimation} 1000ms ease-in-out 2000ms both;
 `;
 
-const DeathIcon = styled.div``;
+const NextVoteName = styled.div`
+  font-size: 1rem;
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 2px solid #444;
+  background-color: lightblue;
+  color: darkblue;
+  padding: 0.3rem;
+  border-radius: 1rem;
+  animation: ${textFocusIn} 200ms ease-in-out both;
+  text-transform: uppercase;
+`;
+
 const TimedOutIcon = styled.div`
   position: absolute;
   bottom: 0;
 `;
-
-const PlayerStatsContainer = styled.div`
-  position: absolute;
-  bottom: -200px;
-`;
-
-const getDeathIcons = (total: number) => {
-  if (!total) {
-    return [];
-  }
-
-  const icons = ["☠️"];
-
-  if (total > 1) {
-    icons.push(`x${total}`);
-  }
-
-  return icons;
-};
-
-const markedForDeath = (player: GasPlayer): JSX.Element | null => {
-  if (!player.guesses.nominatedCount) {
-    return null;
-  }
-
-  return (
-    <DeathIcon>
-      {getDeathIcons(player.guesses.nominatedCount).map((d, i) => (
-        <span key={i}>{d}</span>
-      ))}
-    </DeathIcon>
-  );
-};
 
 type Props = {
   player: GasPlayer;
@@ -93,6 +69,8 @@ type Props = {
 };
 
 export function GraveyardPlayer({ player, game }: Props): JSX.Element {
+  const { getName } = usePlayerNames();
+
   const active = player.player.id === game.currentPlayer.id;
   const winner = player.player.id === game.winningPlayerId;
 
@@ -113,6 +91,11 @@ export function GraveyardPlayer({ player, game }: Props): JSX.Element {
       <PlayerAvatarContainer>
         <PlayerAvatar playerId={player.player.id} size="thumbnail" />
       </PlayerAvatarContainer>
+      {player.guesses.nextPlayerOutGuess && (
+        <NextVoteName>
+          {getName(player.guesses.nextPlayerOutGuess)}
+        </NextVoteName>
+      )}
       {(!notDead || winner) && <PlayerPoints>{player.points}</PlayerPoints>}
       {player.killedBy === "timeout" && <TimedOutIcon>⏰</TimedOutIcon>}
       {player.killedBy === "bomb" && <TimedOutIcon>💣</TimedOutIcon>}

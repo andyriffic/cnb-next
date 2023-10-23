@@ -5,6 +5,7 @@ import { GasGame, GasPlayer } from "../../../services/migrated/gas-out/types";
 import { AvatarSize, PlayerAvatar } from "../../PlayerAvatar";
 import { shakeAnimationLeft } from "../../animations/keyframes/extreme";
 import { spinAwayAnimationUp } from "../../animations/keyframes/spinAnimations";
+import { textFocusIn } from "../../animations/keyframes/textFocusIn";
 import { Card } from "./Card";
 
 const usePlayerCarousel = true;
@@ -63,7 +64,8 @@ const DeathContainer = styled.div<{ active: boolean }>`
 `;
 
 const DeathIcon = styled.div`
-  font-size: 1.3rem;
+  font-size: 3rem;
+  animation: ${textFocusIn} 200ms ease-in-out both;
 `;
 
 const getDeathIcons = (total: number) => {
