@@ -30,7 +30,7 @@ const ZombieLabel = styled(Label)`
   text-align: center;
 `;
 
-const ZombieTransform = styled.div<{ isZombie: boolean }>`
+export const ZombieTransform = styled.div<{ isZombie: boolean }>`
   transition: filter 1s ease-in-out;
   ${({ isZombie }) =>
     isZombie &&

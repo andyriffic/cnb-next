@@ -6,6 +6,8 @@ import { AvatarSize, PlayerAvatar } from "../../PlayerAvatar";
 import { shakeAnimationLeft } from "../../animations/keyframes/extreme";
 import { spinAwayAnimationUp } from "../../animations/keyframes/spinAnimations";
 import { textFocusIn } from "../../animations/keyframes/textFocusIn";
+import { ZombieTransform } from "../../JoinedPlayer";
+import { getPlayerZombieRunDetails } from "../../../types/Player";
 import { Card } from "./Card";
 
 const usePlayerCarousel = true;
@@ -148,7 +150,11 @@ export function PlayerCarouselPlayer({
       )} */}
 
       <PlayerAvatarContainer alive={alive}>
-        <PlayerAvatar playerId={player.player.id} size={size} />
+        <ZombieTransform
+          isZombie={getPlayerZombieRunDetails(player.player).isZombie}
+        >
+          <PlayerAvatar playerId={player.player.id} size={size} />
+        </ZombieTransform>
         {/* {player.curse === "double-press" && <Curse>Double Press ‼️</Curse>} */}
       </PlayerAvatarContainer>
       {active &&

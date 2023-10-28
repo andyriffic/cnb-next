@@ -6,6 +6,8 @@ import { getOrdinal } from "../../../utils/string";
 import { PlayerAvatar } from "../../PlayerAvatar";
 import { fadeInAnimation } from "../../animations/keyframes/fade";
 import { textFocusIn } from "../../animations/keyframes/textFocusIn";
+import { ZombieTransform } from "../../JoinedPlayer";
+import { getPlayerZombieRunDetails } from "../../../types/Player";
 import { PlayerBonusPoints } from "./PlayerBonusPoints";
 
 const PlayerAvatarContainer = styled.div`
@@ -89,7 +91,11 @@ export function GraveyardPlayer({ player, game }: Props): JSX.Element {
         </PlayerFinishedPosition>
       )}
       <PlayerAvatarContainer>
-        <PlayerAvatar playerId={player.player.id} size="thumbnail" />
+        <ZombieTransform
+          isZombie={getPlayerZombieRunDetails(player.player).isZombie}
+        >
+          <PlayerAvatar playerId={player.player.id} size="thumbnail" />
+        </ZombieTransform>
       </PlayerAvatarContainer>
       {player.guesses.nextPlayerOutGuess && (
         <NextVoteName>
