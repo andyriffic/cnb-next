@@ -90,9 +90,7 @@ const View = ({ playerId, gasGameId }: Props) => {
         !game.winningPlayerId &&
         gasPlayer.status === "dead" && (
           <PlayerGasNextOutSelector
-            eligiblePlayers={game.allPlayers.filter(
-              (p) => p.status === "alive"
-            )}
+            gasGame={game}
             selectPlayer={guessNextPlayerOut}
           />
         )}
