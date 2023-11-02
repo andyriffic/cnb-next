@@ -3,8 +3,13 @@ import { isClientSideFeatureEnabled } from "../../utils/feature";
 import { Heading, PrimaryButton } from "../Atoms";
 import { CenterSpaced } from "../Layouts";
 import { SpectatorPageLayout } from "../SpectatorPageLayout";
+import { ZombieParty } from "./ZombieParty";
 import { ZombieRunningTrack } from "./ZombieRunningTrack";
-import { OriginalZombieDetails, ZombieRunGameStatus } from "./types";
+import {
+  OriginalZombieDetails,
+  ZombieRunEndGameStatus,
+  ZombieRunGameStatus,
+} from "./types";
 import { useZombieRun } from "./useZombieRun";
 import { useZombieRunAutoTiming } from "./useZombieRunAutoTiming";
 import { useZombieRunSound } from "./useZombieRunSound";
@@ -42,6 +47,10 @@ const View = ({ players, originalZombie }: Props) => {
       {/* <p>{ZombieRunGameStatus[zombieManager.zombieGame.gameStatus]}</p> */}
       <div>
         <ZombieRunningTrack zombieGame={zombieManager.zombieGame} />
+        {zombieManager.zombieGame.gameStatus ===
+          ZombieRunGameStatus.GAME_OVER &&
+          zombieManager.zombieGame.endGameStatus ===
+            ZombieRunEndGameStatus.ZOMBIE_PARTY && <ZombieParty />}
       </div>
     </SpectatorPageLayout>
   );

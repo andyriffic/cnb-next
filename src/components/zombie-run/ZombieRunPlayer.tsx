@@ -1,12 +1,8 @@
+import { useEffect, useRef } from "react";
 import styled, { css } from "styled-components";
-import { useEffect, useMemo, useRef } from "react";
-import { PlayerAvatar } from "../PlayerAvatar";
 import { usePlayerNames } from "../../providers/PlayerNamesProvider";
-import { Appear } from "../animations/Appear";
-import {
-  fadeInBottom,
-  fadeInOutBottomToTop,
-} from "../animations/keyframes/fade";
+import { PlayerAvatar } from "../PlayerAvatar";
+import { fadeInBottom } from "../animations/keyframes/fade";
 import { useSound } from "../hooks/useSound";
 import { ZombiePlayer } from "./types";
 

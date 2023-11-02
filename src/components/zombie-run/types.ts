@@ -11,6 +11,10 @@ export enum ZombieRunGameStatus {
   GAME_OVER = 8,
 }
 
+export enum ZombieRunEndGameStatus {
+  ZOMBIE_PARTY = 1,
+}
+
 export type ZombiePlayer = {
   id: string;
   totalMetresRun: number;
@@ -26,6 +30,7 @@ export type OriginalZombieDetails = {
 };
 
 export type ZombieRunGame = {
+  endGameStatus?: ZombieRunEndGameStatus;
   gameStatus: ZombieRunGameStatus;
   zombies: ZombiePlayer[];
   survivors: ZombiePlayer[];

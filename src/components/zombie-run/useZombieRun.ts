@@ -3,6 +3,7 @@ import { Player } from "../../types/Player";
 import {
   OriginalZombieDetails,
   ZOMBIE_RUNNING_TRACK_LENGTH_METRES,
+  ZombieRunEndGameStatus,
   ZombieRunGame,
   ZombieRunGameStatus,
 } from "./types";
@@ -81,8 +82,15 @@ export const useZombieRun = (
         !p.finishPosition
     );
 
+    const allPlayersAreZombies =
+      zombieGame.survivors.every((p) => p.gotBitten) ||
+      zombieGame.survivors.length === 0;
+
     setZombieGame({
       ...zombieGame,
+      endGameStatus: allPlayersAreZombies
+        ? ZombieRunEndGameStatus.ZOMBIE_PARTY
+        : undefined,
       gameStatus: ZombieRunGameStatus.GAME_OVER,
       survivors: zombieGame.survivors.map((s) =>
         newlyFinishedPlayers.find((p) => p.id === s.id)

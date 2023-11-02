@@ -42,4 +42,5 @@ export const SOUND_MAP: { [key in SoundName]: string } = {
   "zombie-run-zombie-moving": "/sounds/minecraft_zombie_2.mp3",
   "zombie-run-player-zombie-moving": "/sounds/zombie_groan.mp3",
   "zombie-run-player-bitten": "/sounds/eating_minecraft.mp3",
+  "zombie-run-party": "/sounds/thriller_long_intro.mp3",
 };

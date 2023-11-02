@@ -39,4 +39,5 @@ export type SoundName =
   | "zombie-run-players-running"
   | "zombie-run-zombie-moving"
   | "zombie-run-player-zombie-moving"
-  | "zombie-run-player-bitten";
+  | "zombie-run-player-bitten"
+  | "zombie-run-party";

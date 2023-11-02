@@ -4,7 +4,7 @@ import styled, {
   keyframes,
 } from "styled-components";
 
-type AttentionAnimation = "vibrate" | "shake";
+type AttentionAnimation = "vibrate" | "slow-vibrate" | "shake";
 
 const Animation_Vibrate = keyframes` {
   0% {
@@ -59,6 +59,9 @@ const ANIMATION_CSS: {
 } = {
   vibrate: css`
     animation: ${Animation_Vibrate} 0.3s linear infinite both;
+  `,
+  "slow-vibrate": css`
+    animation: ${Animation_Vibrate} 1.5s linear infinite both;
   `,
   shake: css`
     animation: ${Animation_ShakeBottom} 2.5s

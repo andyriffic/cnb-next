@@ -1,10 +1,12 @@
 import styled from "styled-components";
 import { isNumberInRange } from "../../utils/number";
+import { Attention } from "../animations/Attention";
 import { Zombie } from "./Zombie";
 import { ZombieRunPlayer } from "./ZombieRunPlayer";
 import {
   ZOMBIE_RUNNING_TRACK_LENGTH_METRES,
   ZombiePlayer,
+  ZombieRunEndGameStatus,
   ZombieRunGame,
   ZombieRunGameStatus,
 } from "./types";
@@ -87,10 +89,9 @@ type Props = {
 };
 
 export const ZombieRunningTrack = ({ zombieGame }: Props) => {
-  console.warn(
-    "Stack index render",
-    ZombieRunGameStatus[zombieGame.gameStatus]
-  );
+  const zombieParty =
+    zombieGame.gameStatus === ZombieRunGameStatus.GAME_OVER &&
+    zombieGame.endGameStatus === ZombieRunEndGameStatus.ZOMBIE_PARTY;
 
   return (
     <div>
@@ -103,7 +104,9 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
             }vw`,
           }}
         >
-          <Zombie />
+          <Attention animate={zombieParty} animation="slow-vibrate">
+            <Zombie />
+          </Attention>
         </PositionedZombiePlayer>
 
         {zombieGame.survivors.map((zp) => {
@@ -117,10 +120,12 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
                 }vw`,
               }}
             >
-              <ZombieRunPlayer
-                zombiePlayer={zp}
-                stackIndex={getPlayerStackIndex(zombieGame, zp)}
-              />
+              <Attention animate={zombieParty} animation="slow-vibrate">
+                <ZombieRunPlayer
+                  zombiePlayer={zp}
+                  stackIndex={getPlayerStackIndex(zombieGame, zp)}
+                />
+              </Attention>
             </PositionedZombiePlayer>
           );
         })}
@@ -135,10 +140,12 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
                 }vw`,
               }}
             >
-              <ZombieRunPlayer
-                zombiePlayer={zp}
-                stackIndex={getPlayerStackIndex(zombieGame, zp)}
-              />
+              <Attention animate={zombieParty} animation="slow-vibrate">
+                <ZombieRunPlayer
+                  zombiePlayer={zp}
+                  stackIndex={getPlayerStackIndex(zombieGame, zp)}
+                />
+              </Attention>
             </PositionedZombiePlayer>
           );
         })}
