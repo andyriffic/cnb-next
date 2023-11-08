@@ -21,7 +21,7 @@ const ZombieBackground = styled.div`
   width: 100vw;
   margin: 0 auto;
   box-sizing: border-box;
-  background: url("/images/zombie-background-night.png") no-repeat bottom center;
+  background: url("/images/zombie-background-dusk.png") no-repeat bottom center;
   background-size: 100% 100%;
 `;
 
