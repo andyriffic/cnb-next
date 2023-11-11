@@ -111,7 +111,9 @@ export const ZombieRunPlayer = ({ zombiePlayer, stackIndex = 0 }: Props) => {
           isZombie={isZombie}
           style={{ transform: `translateY(${stackIndex * 100}%)` }}
         >
-          {getName(zombiePlayer.id)}
+          {getName(zombiePlayer.id)}{" "}
+          {zombiePlayer.totalMetresToRun > 0 &&
+            `(${zombiePlayer.totalMetresToRun})`}
         </PlayerName>
       </PlayerDetailsContainer>
     </ZombiePlayerContainer>

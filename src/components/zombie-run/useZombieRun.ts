@@ -8,6 +8,8 @@ import {
   ZombieRunGameStatus,
 } from "./types";
 
+const MIN_PLAYER_MOVES = 1;
+
 export type UseZombieRun = {
   zombieGame: ZombieRunGame;
   run: () => void;
@@ -21,6 +23,26 @@ const createZombieGame = (
   players: Player[],
   originalZombie: OriginalZombieDetails
 ): ZombieRunGame => {
+  const survivorsWithMoves = players
+    .filter((p) => !p.details?.zombieRun?.isZombie)
+    .filter((p) => (p.details?.gameMoves || 0) > 0);
+
+  const minSurvivorMoves =
+    survivorsWithMoves.length > 0
+      ? Math.min(...survivorsWithMoves.map((p) => p.details?.gameMoves || 0))
+      : 0;
+
+  const zombiePlayersWithMoves = players
+    .filter((p) => !!p.details?.zombieRun?.isZombie)
+    .filter((p) => (p.details?.gameMoves || 0) > 0);
+
+  const minZombiePlayerMoves =
+    zombiePlayersWithMoves.length > 0
+      ? Math.min(
+          ...zombiePlayersWithMoves.map((p) => p.details?.gameMoves || 0)
+        )
+      : 0;
+
   return {
     gameStatus: ZombieRunGameStatus.READY_TO_START,
     survivors: players
@@ -28,7 +50,8 @@ const createZombieGame = (
       .map((p) => ({
         id: p.id,
         totalMetresRun: p.details?.zombieRun?.totalMetresRun || 0,
-        totalMetresToRun: p.details?.gameMoves || 0,
+        totalMetresToRun:
+          p.details?.gameMoves || minSurvivorMoves || MIN_PLAYER_MOVES,
         isZombie: false,
         gotBitten: false,
         finishPosition: p.details?.zombieRun?.finishPosition,
@@ -38,7 +61,8 @@ const createZombieGame = (
       .map((p) => ({
         id: p.id,
         totalMetresRun: p.details?.zombieRun?.totalMetresRun || 0,
-        totalMetresToRun: p.details?.gameMoves || 0,
+        totalMetresToRun:
+          p.details?.gameMoves || minZombiePlayerMoves || MIN_PLAYER_MOVES,
         isZombie: true,
         gotBitten: false,
       })),
