@@ -60,8 +60,6 @@ export function initialiseGroupJoinSocket(
             O.fold(
               () => console.log("Player not found", playerId),
               (player) => {
-                console.log("Success...adding", playerId, groupId);
-
                 const group = inMemoryGroups.find((g) => g.id === groupId);
                 if (!group) {
                   console.error("Group not found", groupId);

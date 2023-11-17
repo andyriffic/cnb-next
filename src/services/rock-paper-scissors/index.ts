@@ -17,7 +17,7 @@ export function createGame(
   //TODO: could probably validate there's enough players 🤷‍♂️
   const newGame: RPSGame = {
     id: props.id,
-    playerIds: [...props.playerIds],
+    players: [...props.players],
     roundHistory: [],
     currentRound: getNewRound(0),
     spectatorTargetGuesses: props.spectatorTargetGuesses,
@@ -129,7 +129,7 @@ function validatePlayerInGame(
   playerId: string,
   game: RPSGame
 ): E.Either<string, RPSGame> {
-  return game.playerIds.includes(playerId)
+  return !!game.players.find((p) => p.id === playerId)
     ? E.right(game)
     : E.left(`Player "${playerId}" is not in this game`);
 }
@@ -189,11 +189,13 @@ export function createGameView(game: RPSGame): RPSSpectatorGameView {
   const allRounds = [{ ...game.currentRound }, ...game.roundHistory];
   return {
     id: game.id,
-    playerIds: [...game.playerIds],
-    scores: game.playerIds.map((pid) => ({
-      playerId: pid,
+    players: [...game.players],
+    scores: game.players.map((p) => ({
+      playerId: p.id,
       score: allRounds
-        .filter((round) => round.result && round.result.winningPlayerId === pid)
+        .filter(
+          (round) => round.result && round.result.winningPlayerId === p.id
+        )
         .map((r) => r.bonusPoints || 1)
         .reduce((a, b) => a + b, 0),
     })),

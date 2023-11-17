@@ -45,7 +45,8 @@ function Page({}: Props) {
     return (
       joinedGroup &&
       rockPaperScissors.activeRPSGames.find(
-        (g) => g.id === joinedGroup.id && g.playerIds.includes(playerId)
+        (g) =>
+          g.id === joinedGroup.id && g.players.find((p) => p.id === playerId)
       )
     );
   }, [rockPaperScissors.activeRPSGames, joinedGroup, playerId]);

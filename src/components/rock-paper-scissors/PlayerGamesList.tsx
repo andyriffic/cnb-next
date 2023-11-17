@@ -25,7 +25,9 @@ export const PlayerGamesList = ({ playerId }: Props): JSX.Element | null => {
 
   const playersGames = useMemo(() => {
     return [
-      ...activeRPSGames.filter((game) => game.playerIds.includes(playerId)),
+      ...activeRPSGames.filter((game) =>
+        game.players.find((p) => p.id === playerId)
+      ),
       ...bettingGames.filter((game) =>
         game.playerWallets.map((pw) => pw.playerId).includes(playerId)
       ),
@@ -54,7 +56,8 @@ export const PlayerGamesList = ({ playerId }: Props): JSX.Element | null => {
               <Link
                 href={`/play/${playerId}/rock-paper-scissors?gameId=${game.id}`}
                 passHref={true}
-                legacyBehavior>
+                legacyBehavior
+              >
                 <TappableLink>RPS: {game.id}</TappableLink>
               </Link>
             </li>
@@ -66,7 +69,8 @@ export const PlayerGamesList = ({ playerId }: Props): JSX.Element | null => {
               <Link
                 href={getAiOverlordPlayerUrl(playerId, game.gameId)}
                 passHref={true}
-                legacyBehavior>
+                legacyBehavior
+              >
                 <TappableLink>AI Overlord: {game.gameId}</TappableLink>
               </Link>
             </li>
@@ -78,7 +82,8 @@ export const PlayerGamesList = ({ playerId }: Props): JSX.Element | null => {
               <Link
                 href={getGasOutPlayerUrl(playerId, game.id)}
                 passHref={true}
-                legacyBehavior>
+                legacyBehavior
+              >
                 <TappableLink>Balloon: {game.id}</TappableLink>
               </Link>
             </li>

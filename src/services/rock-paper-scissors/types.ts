@@ -2,13 +2,13 @@ import { Player } from "../../types/Player";
 
 export type RPSCreateGameProps = {
   id: string;
-  playerIds: [string, string];
+  players: [Player, Player];
   spectatorTargetGuesses: number;
 };
 
 export type RPSGame = {
   id: string;
-  playerIds: [string, string];
+  players: [Player, Player];
   currentRound: RPSRound;
   roundHistory: RPSRound[];
   spectatorTargetGuesses: number;
@@ -44,7 +44,7 @@ export type RPSSpectatorRoundView = {
 export type RPSSpectatorGameView = {
   id: string;
   currentRound: RPSSpectatorRoundView;
-  playerIds: [string, string];
+  players: [Player, Player];
   roundHistory: RPSSpectatorRoundView[];
   scores: { playerId: string; score: number }[];
   spectatorTargetGuesses: number;

@@ -231,14 +231,14 @@ function createRockPaperScissorsWithBettingGame(
     getName: (playerId: string) => string
   ): Promise<GameUrl> {
     return new Promise((resolve) => {
-      const randomisedPlayerIds = shuffleArray(group.playerIds);
-      const playerId1 = randomisedPlayerIds[0]!;
-      const playerId2 = randomisedPlayerIds[1]!;
+      const randomisedPlayerIds = shuffleArray(group.players);
+      const player1 = randomisedPlayerIds[0]!;
+      const player2 = randomisedPlayerIds[1]!;
 
       const STARTING_WALLET_BALANCE = 0;
 
       const bettingPlayerWallets = group.playerIds
-        .filter((pid) => pid !== playerId1 && pid !== playerId2)
+        .filter((pid) => pid !== player1.id && pid !== player2.id)
         .map<PlayerWallet>((pid) => ({
           playerId: pid,
           value: STARTING_WALLET_BALANCE,
@@ -247,7 +247,7 @@ function createRockPaperScissorsWithBettingGame(
       socketIoService.rockPaperScissors.createRPSGame(
         {
           id: group.id,
-          playerIds: [playerId1, playerId2],
+          players: [player1, player2],
           spectatorTargetGuesses,
         },
         (gameId) => {
@@ -255,8 +255,8 @@ function createRockPaperScissorsWithBettingGame(
             gameId,
             [
               {
-                id: playerId1,
-                name: getName(playerId1),
+                id: player1.id,
+                name: player1.name,
                 odds: 1,
                 betReturn: "oddsOnly",
               },
@@ -267,8 +267,8 @@ function createRockPaperScissorsWithBettingGame(
                 betReturn: "oddsOnly",
               },
               {
-                id: playerId2,
-                name: getName(playerId2),
+                id: player2.id,
+                name: getName(player2.name),
                 odds: 1,
                 betReturn: "oddsOnly",
               },

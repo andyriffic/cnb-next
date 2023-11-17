@@ -42,7 +42,7 @@ export const createPoints = (
     //Give everyone the same points
     const allParticipatingPlayerIds = [
       ...bettingGame.playerWallets.map((w) => w.playerId),
-      ...game.playerIds,
+      ...game.players.map((p) => p.id),
     ];
     return {
       middleOfThePack: allParticipatingPlayerIds.map((playerId) => ({
@@ -65,22 +65,22 @@ export const createPoints = (
   if (winningConditions.spectatorWinnerPlayerId) {
     //If spectator wins, make sure both game players are added to points
     everyoneElsePoints.push({
-      playerId: game.playerIds[0],
+      playerId: game.players[0].id,
       points:
-        game.scores.find((s) => s.playerId === game.playerIds[0])?.score || 0,
+        game.scores.find((s) => s.playerId === game.players[0].id)?.score || 0,
     });
     everyoneElsePoints.push({
-      playerId: game.playerIds[1],
+      playerId: game.players[1].id,
       points:
-        game.scores.find((s) => s.playerId === game.playerIds[1])?.score || 0,
+        game.scores.find((s) => s.playerId === game.players[1].id)?.score || 0,
     });
   }
 
   if (winningConditions.playerWinnerPlayerId) {
     //If player wins, make sure the other player gets added to points
-    const otherPlayerId = game.playerIds.find(
-      (p) => p !== winningConditions.playerWinnerPlayerId
-    );
+    const otherPlayerId = game.players.find(
+      (p) => p.id !== winningConditions.playerWinnerPlayerId
+    )!.id;
     if (otherPlayerId) {
       everyoneElsePoints.push({
         playerId: otherPlayerId,

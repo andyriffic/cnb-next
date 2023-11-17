@@ -49,8 +49,8 @@ export const useGameWinningConditions = (
 
     if (playersAtTargetScore.length > 1) {
       //Find winner of the two players
-      const player1Id = rpsGame.playerIds[0];
-      const player2Id = rpsGame.playerIds[1];
+      const player1Id = rpsGame.players[0].id;
+      const player2Id = rpsGame.players[1].id;
 
       const player1Score =
         rpsGame.scores.find((s) => s.playerId === player1Id)?.score || 0;

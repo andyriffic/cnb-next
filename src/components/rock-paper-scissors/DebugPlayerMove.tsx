@@ -16,9 +16,9 @@ export const DebugPlayerMove = ({ game }: Props) => {
   const { makeMove } = useRPSGame(game.id);
 
   const randomMoves = () => {
-    game.playerIds.forEach((pid) =>
+    game.players.forEach((p) =>
       makeMove({
-        playerId: pid,
+        playerId: p.id,
         moveName: selectRandomOneOf(["rock", "paper", "scissors"]),
       })
     );
@@ -27,22 +27,22 @@ export const DebugPlayerMove = ({ game }: Props) => {
   return (
     <Container>
       <button onClick={randomMoves}>random moves</button>
-      {game.playerIds.map((pid) => (
-        <div key={pid}>
-          <p>{pid}</p>
+      {game.players.map((p) => (
+        <div key={p.id}>
+          <p>{p.id}</p>
           <div>
             <button
-              onClick={() => makeMove({ playerId: pid, moveName: "rock" })}
+              onClick={() => makeMove({ playerId: p.id, moveName: "rock" })}
             >
               🪨
             </button>
             <button
-              onClick={() => makeMove({ playerId: pid, moveName: "paper" })}
+              onClick={() => makeMove({ playerId: p.id, moveName: "paper" })}
             >
               📄
             </button>
             <button
-              onClick={() => makeMove({ playerId: pid, moveName: "scissors" })}
+              onClick={() => makeMove({ playerId: p.id, moveName: "scissors" })}
             >
               ✂️
             </button>
