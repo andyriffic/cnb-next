@@ -2,7 +2,6 @@ import {
   DynamoDBClient,
   GetItemCommand,
   GetItemCommandInput,
-  GetItemCommandOutput,
   PutItemCommand,
   PutItemInput,
   ScanCommand,
@@ -10,17 +9,18 @@ import {
   UpdateItemCommand,
   UpdateItemCommandInput,
 } from "@aws-sdk/client-dynamodb";
-import * as TE from "fp-ts/TaskEither";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
+import * as O from "fp-ts/Option";
+import * as TE from "fp-ts/TaskEither";
 import { pipe } from "fp-ts/lib/function";
 import { AWS_REGION } from "../../constants";
 import {
   DB_TABLE_NAME_PLAYERS,
   DYNAMO_DB_ACCESS_KEY,
   DYNAMO_DB_ACCESS_KEY_SECRET,
-  ENVIRONMENT_NAME,
 } from "../../environment";
 import { Player, PlayerDetails } from "../../types/Player";
+import { ErrorMessage } from "../../types/common";
 
 const ddbClient = new DynamoDBClient({
   region: AWS_REGION,
@@ -55,6 +55,34 @@ export const getAllPlayersTE = (): TE.TaskEither<string, Player[]> => {
     ),
     TE.chain((playersOrVoid) =>
       !playersOrVoid ? TE.left("No players found") : TE.right(playersOrVoid)
+    )
+  );
+};
+
+export const getPlayerTE = (
+  playerId: string
+): TE.TaskEither<ErrorMessage, O.Option<Player>> => {
+  return pipe(
+    TE.tryCatch(
+      () => getPlayer(playerId),
+      (error) => {
+        let message;
+        if (error instanceof Error) message = error.message;
+        else message = String(error);
+        return message;
+      }
+    ),
+    TE.map((something) => O.fromNullable(something)),
+    TE.fold(
+      (errorMsg) => TE.left(errorMsg),
+      (maybePlayer) =>
+        pipe(
+          maybePlayer,
+          O.fold(
+            () => TE.right(O.none),
+            (p) => (!!p ? TE.right(O.some(p)) : TE.right(O.none))
+          )
+        )
     )
   );
 };

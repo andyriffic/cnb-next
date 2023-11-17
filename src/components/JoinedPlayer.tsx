@@ -1,12 +1,10 @@
-import { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { Player, getPlayerZombieRunDetails } from "../types/Player";
-import { fetchGetPlayer } from "../utils/api";
 import { selectRandomOneOf } from "../utils/random";
 import { PlayerAvatar } from "./PlayerAvatar";
 import { Appear } from "./animations/Appear";
-import { useSound } from "./hooks/useSound";
 import { useDoOnce } from "./hooks/useDoOnce";
+import { useSound } from "./hooks/useSound";
 
 const Label = styled.div`
   background-color: goldenrod;
@@ -40,21 +38,14 @@ export const ZombieTransform = styled.div<{ isZombie: boolean }>`
 `;
 
 type Props = {
-  playerId: string;
+  player: Player;
   team: string | undefined;
 };
 
-export function JoinedPlayer({ playerId, team }: Props) {
-  const [player, setPlayer] = useState<Player | undefined>();
+export function JoinedPlayer({ player, team }: Props) {
   const { play } = useSound();
 
-  const isZombie = player ? getPlayerZombieRunDetails(player).isZombie : false;
-
-  useEffect(() => {
-    fetchGetPlayer(playerId).then((playerOrNull) => {
-      setPlayer(playerOrNull);
-    });
-  }, [playerId]);
+  const isZombie = getPlayerZombieRunDetails(player).isZombie;
 
   useDoOnce(() => {
     play(
@@ -68,7 +59,7 @@ export function JoinedPlayer({ playerId, team }: Props) {
   return (
     <div>
       <ZombieTransform isZombie={isZombie}>
-        <PlayerAvatar playerId={playerId} size="small" />
+        <PlayerAvatar playerId={player.id} size="small" />
       </ZombieTransform>
       {player && team && player.details?.team === team && (
         <Appear animation="text-focus-in">

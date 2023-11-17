@@ -1,5 +1,10 @@
 import { Socket, Server as SocketIOServer } from "socket.io";
+import { pipe } from "fp-ts/lib/function";
+import * as E from "fp-ts/Either";
+import * as TE from "fp-ts/TaskEither";
+import * as O from "fp-ts/Option";
 import { sendClientMessage } from "../socket";
+import { getPlayerTE } from "../../utils/data/aws-dynamodb";
 import { PlayerGroup } from "./types";
 import { addPlayerToGroup, createPlayerJoinGroup } from ".";
 
@@ -36,24 +41,44 @@ export function initialiseGroupJoinSocket(
     onCreated && onCreated(groupId);
   };
 
-  const playerJoinGroupHandler: PlayerJoinGroupSocketHandler = (
+  const playerJoinGroupHandler: PlayerJoinGroupSocketHandler = async (
     playerId,
     groupId,
     onJoined
   ) => {
     console.log("JOINING GROUP", playerId, groupId);
 
-    const group = inMemoryGroups.find((g) => g.id === groupId);
-    if (!group) {
-      console.error("Group not found", groupId);
-      return;
-    }
-    const updatedGroup = addPlayerToGroup(playerId, group);
-    inMemoryGroups = inMemoryGroups.map((g) =>
-      g.id === groupId ? updatedGroup : g
+    const player = await getPlayerTE(playerId)();
+
+    pipe(
+      player,
+      E.match(
+        (error) => console.log(error),
+        (maybePlayer) =>
+          pipe(
+            maybePlayer,
+            O.fold(
+              () => console.log("Player not found", playerId),
+              (player) => {
+                console.log("Success...adding", playerId, groupId);
+
+                const group = inMemoryGroups.find((g) => g.id === groupId);
+                if (!group) {
+                  console.error("Group not found", groupId);
+                  return;
+                }
+
+                const updatedGroup = addPlayerToGroup(player, group);
+                inMemoryGroups = inMemoryGroups.map((g) =>
+                  g.id === groupId ? updatedGroup : g
+                );
+                io.emit(PLAYER_JOIN_ACTIONS.JOIN_GROUP_UPDATE, inMemoryGroups);
+                onJoined && onJoined(groupId);
+              }
+            )
+          )
+      )
     );
-    io.emit(PLAYER_JOIN_ACTIONS.JOIN_GROUP_UPDATE, inMemoryGroups);
-    onJoined && onJoined(groupId);
   };
 
   console.log("Registering Player Join SocketIo 🔌");

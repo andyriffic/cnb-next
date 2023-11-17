@@ -104,10 +104,10 @@ function Page() {
             <NumericValue>{group.playerIds.length}</NumericValue>)
           </SubHeading>
           <JoinedPlayerContainer>
-            {group.playerIds.map((pid) => (
-              <JoinedPlayerItem key={pid}>
+            {group.players.map((player) => (
+              <JoinedPlayerItem key={player.id}>
                 <Appear animation="flip-in">
-                  <JoinedPlayer playerId={pid} team={team} />
+                  <JoinedPlayer player={player} team={team} />
                 </Appear>
               </JoinedPlayerItem>
             ))}
