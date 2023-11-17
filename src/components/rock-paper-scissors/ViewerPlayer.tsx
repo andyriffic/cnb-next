@@ -1,21 +1,22 @@
 import { useEffect, useMemo, useRef } from "react";
-import styled from "styled-components";
 import { GroupBettingGame } from "../../services/betting/types";
 import { RPSSpectatorGameView } from "../../services/rock-paper-scissors/types";
-import { Attention } from "../animations/Attention";
+import { Player, getPlayerZombieRunDetails } from "../../types/Player";
 import { Card, SubHeading } from "../Atoms";
 import { FeatureValue } from "../FeatureValue";
-import { useSound } from "../hooks/useSound";
+import { ZombieTransform } from "../JoinedPlayer";
 import { FacingDirection } from "../PlayerAvatar";
 import { Positioned } from "../Positioned";
-import { RpsGameState } from "./hooks/useGameState";
+import { Attention } from "../animations/Attention";
+import { useSound } from "../hooks/useSound";
 import { ViewerPlayersAvatar } from "./ViewerPlayerAvatar";
 import { ViewerPlayerBets } from "./ViewerPlayerBets";
 import { ViewerPlayersMove } from "./ViewerPlayersMove";
+import { RpsGameState } from "./hooks/useGameState";
 import { WinningConditions } from "./hooks/useGameWinningConditions";
 
 type Props = {
-  playerId: string;
+  player: Player;
   game: RPSSpectatorGameView;
   bettingGame?: GroupBettingGame;
   direction: FacingDirection;
@@ -32,26 +33,26 @@ const getPlayersScore = (
 };
 
 export const ViewerPlayer = ({
-  playerId,
+  player,
   game,
   bettingGame,
   direction,
   gameState,
   winningConditions,
 }: Props): JSX.Element | null => {
-  const initialScore = useRef(getPlayersScore(playerId, game));
+  const initialScore = useRef(getPlayersScore(player.id, game));
   const { play } = useSound();
 
   const displayedScore = useMemo(() => {
     if (gameState >= RpsGameState.SHOW_GAME_RESULT) {
-      initialScore.current = getPlayersScore(playerId, game);
+      initialScore.current = getPlayersScore(player.id, game);
     }
 
     return initialScore.current;
-  }, [game, playerId, gameState]);
+  }, [game, player.id, gameState]);
 
   useEffect(() => {
-    const didWin = game.currentRound.result?.winningPlayerId === playerId;
+    const didWin = game.currentRound.result?.winningPlayerId === player.id;
     const isDraw = game.currentRound.result?.draw;
 
     if (gameState === RpsGameState.SHOW_GAME_RESULT) {
@@ -62,10 +63,10 @@ export const ViewerPlayer = ({
         play("rps-result-draw"); //This will play 2 draw sounds at the same time since two instances of this component but I don't care at the moment
       }
     }
-  }, [gameState, game, playerId, play]);
+  }, [gameState, game, player.id, play]);
 
-  const score = game.scores.find((s) => s.playerId === playerId)!;
-  const didWin = game.currentRound.result?.winningPlayerId === playerId;
+  const score = game.scores.find((s) => s.playerId === player.id)!;
+  const didWin = game.currentRound.result?.winningPlayerId === player.id;
   const isDraw = game.currentRound.result?.draw;
 
   const totalBetValue =
@@ -74,7 +75,7 @@ export const ViewerPlayer = ({
       .reduce((acc, val) => acc + val, 0) || 0;
 
   const favorableBets = bettingGame?.currentRound.playerBets.filter(
-    (b) => b.betOptionId === playerId
+    (b) => b.betOptionId === player.id
   );
 
   const totalFavorableBetValue =
@@ -83,11 +84,14 @@ export const ViewerPlayer = ({
 
   return (
     <div style={{ position: "relative" }}>
-      <ViewerPlayersAvatar
-        playerId={playerId}
-        size="medium"
-        facing={direction}
-      />
+      <ZombieTransform isZombie={getPlayerZombieRunDetails(player).isZombie}>
+        <ViewerPlayersAvatar
+          playerId={player.id}
+          size="medium"
+          facing={direction}
+        />
+      </ZombieTransform>
+
       <Positioned
         absolute={{
           topPercent: 1,
@@ -105,7 +109,7 @@ export const ViewerPlayer = ({
         }}
       >
         <ViewerPlayersMove
-          playerId={playerId}
+          playerId={player.id}
           currentRound={game.currentRound}
           reveal={gameState >= RpsGameState.SHOW_MOVES}
           facingDirection={direction}
@@ -126,7 +130,7 @@ export const ViewerPlayer = ({
             <ViewerPlayerBets
               groupBettingRound={bettingGame.currentRound}
               wallets={bettingGame.playerWallets}
-              betId={playerId}
+              betId={player.id}
               direction={direction}
               explodeLosers={
                 gameState >= RpsGameState.HIGHLIGHT_WINNING_SPECTATORS

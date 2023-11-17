@@ -160,7 +160,7 @@ function Page({}: Props) {
         <div>
           <Positioned absolute={{ topPercent: 5, leftPercent: 10 }}>
             <ViewerPlayer
-              playerId={game.players[0].id}
+              player={game.players[0]}
               game={game}
               bettingGame={bettingGame}
               direction="right"
@@ -170,7 +170,7 @@ function Page({}: Props) {
           </Positioned>
           <Positioned absolute={{ topPercent: 5, rightPercent: 10 }}>
             <ViewerPlayer
-              playerId={game.players[1].id}
+              player={game.players[1]}
               game={game}
               bettingGame={bettingGame}
               direction="left"
