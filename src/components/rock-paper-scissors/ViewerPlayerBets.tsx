@@ -108,7 +108,7 @@ export function ViewerPlayerBets({
       </Value> */}
       {displayedPlayers.map((player, i) => {
         const livesRemaining =
-          wallets.find((w) => w.playerId === player.playerId)?.value || 0;
+          wallets.find((w) => w.player.id === player.playerId)?.value || 0;
 
         const choseCorrectly =
           !!groupBettingRound.result &&

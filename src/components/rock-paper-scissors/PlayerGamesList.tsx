@@ -29,7 +29,7 @@ export const PlayerGamesList = ({ playerId }: Props): JSX.Element | null => {
         game.players.find((p) => p.id === playerId)
       ),
       ...bettingGames.filter((game) =>
-        game.playerWallets.map((pw) => pw.playerId).includes(playerId)
+        game.playerWallets.map((pw) => pw.player.id).includes(playerId)
       ),
     ];
   }, [activeRPSGames, bettingGames, playerId]);

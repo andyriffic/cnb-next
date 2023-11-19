@@ -30,7 +30,7 @@ const getWinnerPoints = (
 };
 
 const convertWalletsToPoints = (wallets: PlayerWallet[]): PlayerPoints[] => {
-  return wallets.map((w) => ({ playerId: w.playerId, points: w.value }));
+  return wallets.map((w) => ({ playerId: w.player.id, points: w.value }));
 };
 
 export const createPoints = (
@@ -41,7 +41,7 @@ export const createPoints = (
   if (winningConditions.washout) {
     //Give everyone the same points
     const allParticipatingPlayerIds = [
-      ...bettingGame.playerWallets.map((w) => w.playerId),
+      ...bettingGame.playerWallets.map((w) => w.player.id),
       ...game.players.map((p) => p.id),
     ];
     return {

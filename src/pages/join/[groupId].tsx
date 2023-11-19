@@ -237,10 +237,10 @@ function createRockPaperScissorsWithBettingGame(
 
       const STARTING_WALLET_BALANCE = 0;
 
-      const bettingPlayerWallets = group.playerIds
-        .filter((pid) => pid !== player1.id && pid !== player2.id)
-        .map<PlayerWallet>((pid) => ({
-          playerId: pid,
+      const bettingPlayerWallets = group.players
+        .filter((p) => p.id !== player1.id && p.id !== player2.id)
+        .map<PlayerWallet>((p) => ({
+          player: p,
           value: STARTING_WALLET_BALANCE,
         }));
 

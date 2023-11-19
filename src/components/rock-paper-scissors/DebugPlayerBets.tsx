@@ -29,7 +29,7 @@ export const DebugPlayerBets = ({ bettingGame, rpsGameView }: Props) => {
   const randomBets = () => {
     bettingGame.playerWallets.forEach((w) => {
       makePlayerBet({
-        playerId: w.playerId,
+        playerId: w.player.id,
         betValue: 0,
         betOptionId: selectRandomOneOf(bettingGame.currentRound.bettingOptions)
           .id,
@@ -46,12 +46,12 @@ export const DebugPlayerBets = ({ bettingGame, rpsGameView }: Props) => {
       {bettingGame.playerWallets.map((wallet) => {
         const specialPlayer = playerHasSpecialAdvantage(
           winningConditions,
-          wallet.playerId
+          wallet.player.id
         );
         return (
-          <div key={wallet.playerId}>
+          <div key={wallet.player.id}>
             <p>
-              {wallet.playerId}: {wallet.value}
+              {wallet.player.id}: {wallet.value}
             </p>
             <div>
               <PlayersBettingOptions
@@ -116,7 +116,7 @@ function PlayersBettingOptions({
               key={bo.id}
               onClick={() =>
                 makeBet({
-                  playerId: wallet.playerId,
+                  playerId: wallet.player.id,
                   betValue: 0,
                   betOptionId: bo.id,
                 })

@@ -1,5 +1,6 @@
 import * as E from "fp-ts/Either";
 import { pipe } from "fp-ts/function";
+import { Player } from "../../types/Player";
 import {
   addNewBettingRound,
   applyBetResultToCurrentRound,
@@ -7,12 +8,18 @@ import {
   makePlayerBet,
 } from ".";
 
+const testPlayer1: Player = {
+  id: "p1",
+  name: "Player 1",
+  tags: [],
+};
+
 test("Can add bet to game if have enough in wallet", () => {
   const result = pipe(
     createBettingGame(
       "game1",
       [{ id: "b1", name: "Bet1", odds: 1, betReturn: "multiply" }],
-      [{ playerId: "p1", value: 1 }]
+      [{ player: testPlayer1, value: 1 }]
     ),
     E.chain((game) =>
       makePlayerBet(game, { playerId: "p1", betOptionId: "b1", betValue: 1 })
@@ -27,7 +34,7 @@ test("Can't bet twice in same round for same player", () => {
     createBettingGame(
       "game1",
       [{ id: "b1", name: "Bet1", odds: 1, betReturn: "multiply" }],
-      [{ playerId: "p1", value: 1 }]
+      [{ player: testPlayer1, value: 1 }]
     ),
     E.chain((game) =>
       makePlayerBet(game, { playerId: "p1", betOptionId: "b1", betValue: 1 })
@@ -45,7 +52,7 @@ test("Can't add bet for invalid betting option", () => {
     createBettingGame(
       "game1",
       [{ id: "b1", name: "Bet1", odds: 1, betReturn: "multiply" }],
-      [{ playerId: "p1", value: 1 }]
+      [{ player: testPlayer1, value: 1 }]
     ),
     E.chain((game) =>
       makePlayerBet(game, {
@@ -67,7 +74,7 @@ test("Can't add bet if not enough in wallet", () => {
     createBettingGame(
       "game1",
       [{ id: "b1", name: "Bet1", odds: 1, betReturn: "multiply" }],
-      [{ playerId: "p1", value: STARTING_BALANCE }]
+      [{ player: testPlayer1, value: STARTING_BALANCE }]
     ),
     E.chain((game) =>
       makePlayerBet(game, {
@@ -89,7 +96,7 @@ test("Can bet 0", () => {
     createBettingGame(
       "game1",
       [{ id: "b1", name: "Bet1", odds: 1, betReturn: "oddsOnly" }],
-      [{ playerId: "p1", value: STARTING_BALANCE }]
+      [{ player: testPlayer1, value: STARTING_BALANCE }]
     ),
     E.chain((game) =>
       makePlayerBet(game, {
@@ -108,7 +115,7 @@ test("Can apply result to current betting round for multiply bets", () => {
     createBettingGame(
       "game1",
       [{ id: "b1", name: "Bet1", odds: 3, betReturn: "multiply" }],
-      [{ playerId: "p1", value: 2 }]
+      [{ player: testPlayer1, value: 2 }]
     ),
     E.chain((game) =>
       makePlayerBet(game, { playerId: "p1", betOptionId: "b1", betValue: 2 })
@@ -132,7 +139,7 @@ test("Can apply result to current betting round for oddsOnly bets", () => {
     createBettingGame(
       "game1",
       [{ id: "b1", name: "Bet1", odds: 2, betReturn: "oddsOnly" }],
-      [{ playerId: "p1", value: 3 }]
+      [{ player: testPlayer1, value: 3 }]
     ),
     E.chain((game) =>
       makePlayerBet(game, { playerId: "p1", betOptionId: "b1", betValue: 3 })
@@ -156,7 +163,7 @@ test("Can bet 0 and get a return on oddsOnly bet", () => {
     createBettingGame(
       "game1",
       [{ id: "b1", name: "Bet1", odds: 2, betReturn: "oddsOnly" }],
-      [{ playerId: "p1", value: 0 }]
+      [{ player: testPlayer1, value: 0 }]
     ),
     E.chain((game) =>
       makePlayerBet(game, { playerId: "p1", betOptionId: "b1", betValue: 0 })
@@ -180,7 +187,7 @@ test("Can't apply result to current betting round for invalid winning option", (
     createBettingGame(
       "game1",
       [{ id: "b1", name: "Bet1", odds: 1, betReturn: "multiply" }],
-      [{ playerId: "p1", value: 1 }]
+      [{ player: testPlayer1, value: 1 }]
     ),
     E.chain((game) =>
       makePlayerBet(game, { playerId: "p1", betOptionId: "b1", betValue: 1 })
@@ -196,7 +203,7 @@ test("Can add new betting round", () => {
     createBettingGame(
       "game1",
       [{ id: "b1", name: "Bet1", odds: 1, betReturn: "multiply" }],
-      [{ playerId: "p1", value: 1 }]
+      [{ player: testPlayer1, value: 1 }]
     ),
     E.chain((game) => applyBetResultToCurrentRound(game, "b1")),
     E.chain((game) => addNewBettingRound(game))
@@ -210,7 +217,7 @@ test("Can't add new betting round if current round does not have a result", () =
     createBettingGame(
       "game1",
       [{ id: "b1", name: "Bet1", odds: 1, betReturn: "multiply" }],
-      [{ playerId: "p1", value: 1 }]
+      [{ player: testPlayer1, value: 1 }]
     ),
     E.chain((game) => addNewBettingRound(game))
   );

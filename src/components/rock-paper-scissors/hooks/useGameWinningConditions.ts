@@ -31,7 +31,7 @@ export const useGameWinningConditions = (
           bettingGame.roundHistory.length +
             (rpsGame.currentRound.result ? 1 : 0)
       )
-      .map((w) => w.playerId);
+      .map((w) => w.player.id);
 
     const playersAtTargetScore = bettingGame.playerWallets.filter(
       (w) => w.value >= rpsGame.spectatorTargetGuesses
@@ -39,7 +39,7 @@ export const useGameWinningConditions = (
 
     if (playersAtTargetScore.length === 1) {
       return {
-        spectatorWinnerPlayerId: playersAtTargetScore[0]!.playerId,
+        spectatorWinnerPlayerId: playersAtTargetScore[0]!.player.id,
         couldWinNextMovePlayerIds: [],
         frontRunnerPlayerIds: [],
         gameOver: true,
@@ -90,12 +90,12 @@ export const useGameWinningConditions = (
 
     const playerIdsWithHighestScore = bettingGame.playerWallets
       .filter((w) => w.value === highestScore)
-      .map((w) => w.playerId);
+      .map((w) => w.player.id);
 
     return {
       couldWinNextMovePlayerIds: bettingGame.playerWallets
         .filter((w) => w.value === rpsGame.spectatorTargetGuesses - 1)
-        .map((w) => w.playerId),
+        .map((w) => w.player.id),
       frontRunnerPlayerIds: playerIdsWithHighestScore,
       gameOver: false,
       hotPlayerIds: playersWhoHaventLostABet,

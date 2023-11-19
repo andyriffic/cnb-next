@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
 import styled from "styled-components";
@@ -10,11 +9,11 @@ import {
   SubHeading,
 } from "../../../components/Atoms";
 import { PlayerPageLayout } from "../../../components/PlayerPageLayout";
-import { useBettingGame } from "../../../providers/SocketIoProvider/useGroupBetting";
-import { BettingOption } from "../../../services/betting/types";
-import { useRPSGame } from "../../../providers/SocketIoProvider/useRockPaperScissorsSocket";
 import { useGameWinningConditions } from "../../../components/rock-paper-scissors/hooks/useGameWinningConditions";
 import { playerHasSpecialAdvantage } from "../../../components/rock-paper-scissors/rpsUtils";
+import { useBettingGame } from "../../../providers/SocketIoProvider/useGroupBetting";
+import { useRPSGame } from "../../../providers/SocketIoProvider/useRockPaperScissorsSocket";
+import { BettingOption } from "../../../services/betting/types";
 
 const BettingOptionContainer = styled.div`
   display: flex;
@@ -37,7 +36,7 @@ function Page() {
   const playerWallet = useMemo(() => {
     return (
       bettingGame &&
-      bettingGame.playerWallets.find((w) => w.playerId === playerId)
+      bettingGame.playerWallets.find((w) => w.player.id === playerId)
     );
   }, [bettingGame, playerId]);
 

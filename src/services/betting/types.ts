@@ -1,3 +1,5 @@
+import { Player } from "../../types/Player";
+
 export type GroupBettingGame = {
   id: string;
   currentRound: GroupPlayerBettingRound;
@@ -35,6 +37,6 @@ export type BettingOption = {
 };
 
 export type PlayerWallet = {
-  playerId: string;
+  player: Player;
   value: number;
 };

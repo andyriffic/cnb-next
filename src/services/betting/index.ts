@@ -68,7 +68,7 @@ function updatePlayerWalletsWithRoundResult({
     ...bettingGame,
     playerWallets: bettingGame.playerWallets.map((wallet) => {
       const betResult = bettingResult.playerResults.find(
-        (r) => r.playerId === wallet.playerId
+        (r) => r.playerId === wallet.player.id
       );
       if (!betResult) {
         return wallet;
@@ -169,7 +169,7 @@ function playerHasAmountInWallet(
 ): E.Either<string, GroupBettingGame> {
   return pipe(
     bettingGame.playerWallets,
-    A.findFirst((wallet) => wallet.playerId === playerBet.playerId),
+    A.findFirst((wallet) => wallet.player.id === playerBet.playerId),
     O.match(
       () => E.left("No wallet found"),
       (wallet) =>

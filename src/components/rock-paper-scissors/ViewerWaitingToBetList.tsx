@@ -11,6 +11,8 @@ import { useSomethingWhenArraySizeChanges } from "../hooks/useSomethingWhenArray
 import { useSound } from "../hooks/useSound";
 import { NumericValue } from "../NumericValue";
 import { PlayerAvatar } from "../PlayerAvatar";
+import { ZombieTransform } from "../JoinedPlayer";
+import { getPlayerZombieRunDetails } from "../../types/Player";
 import { WinningConditions } from "./hooks/useGameWinningConditions";
 
 type BetState =
@@ -41,11 +43,11 @@ const getBetState = (
   }
 
   const currentBet = round.playerBets.find(
-    (b) => b.playerId === wallet.playerId
+    (b) => b.playerId === wallet.player.id
   );
 
   const currentResult = round.result?.playerResults.find(
-    (r) => r.playerId === wallet.playerId
+    (r) => r.playerId === wallet.player.id
   );
 
   if (!reveal && currentBet) {
@@ -102,7 +104,8 @@ export const ViewerWaitingToBetList = ({
       wallets
         // .filter((w) => w.value > 0)
         .filter(
-          (w) => !bettingRound.playerBets.find((b) => b.playerId === w.playerId)
+          (w) =>
+            !bettingRound.playerBets.find((b) => b.playerId === w.player.id)
         )
         .sort(sortWalletByBetMostToLeastBetAmount)
     );
@@ -115,7 +118,7 @@ export const ViewerWaitingToBetList = ({
   const transitions = useTransition(
     waitingPlayerWallets.map((w, i) => ({ ...w, x: i * WIDTH_PX })),
     {
-      key: (w: PlayerWallet) => w.playerId,
+      key: (w: PlayerWallet) => w.player.id,
       from: { opacity: 0, top: -50 },
       leave: { opacity: 0, top: 50 },
       enter: ({ x }) => ({ x, opacity: 1, top: 0 }),
@@ -128,7 +131,7 @@ export const ViewerWaitingToBetList = ({
     <div style={{ position: "relative", width: wallets.length * WIDTH_PX }}>
       {transitions((style, wallet, t, index) => {
         const currentResult = bettingRound!.result?.playerResults.find(
-          (r) => r.playerId === wallet.playerId
+          (r) => r.playerId === wallet.player.id
         );
 
         // const betState = getBetState(
@@ -145,13 +148,17 @@ export const ViewerWaitingToBetList = ({
               ...style,
             }}
           >
-            <div key={wallet.playerId}>
+            <div key={wallet.player.id}>
               {/* <SubHeading>{names[wallet.playerId]}</SubHeading> */}
-              <PlayerAvatar playerId={wallet.playerId} size="thumbnail" />
+              <ZombieTransform
+                isZombie={getPlayerZombieRunDetails(wallet.player).isZombie}
+              >
+                <PlayerAvatar playerId={wallet.player.id} size="thumbnail" />
+              </ZombieTransform>
               <Score>
                 <NumericValue>
                   {wallet.value}
-                  {winningConditions?.hotPlayerIds.includes(wallet.playerId) &&
+                  {winningConditions?.hotPlayerIds.includes(wallet.player.id) &&
                     "🔥"}
                 </NumericValue>
               </Score>
