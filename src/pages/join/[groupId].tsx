@@ -268,7 +268,7 @@ function createRockPaperScissorsWithBettingGame(
               },
               {
                 id: player2.id,
-                name: getName(player2.name),
+                name: player2.name,
                 odds: 1,
                 betReturn: "oddsOnly",
               },
