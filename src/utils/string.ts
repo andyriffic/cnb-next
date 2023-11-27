@@ -39,3 +39,18 @@ export const getOrdinal = (n: number): string => {
   const v = n % 100;
   return n + (s[(v - 20) % 10]! || s[v]! || s[0]!);
 };
+
+export function replaceFirstLetterWithZ(inputString: string): string {
+  if (inputString.length === 0) {
+    // Handle empty string case
+    return inputString;
+  }
+
+  const firstLetter = inputString[0];
+  const restOfString = inputString.slice(1);
+
+  // Replace the first letter with 'Z' and concatenate the rest of the string
+  const modifiedString = "Z" + restOfString;
+
+  return modifiedString;
+}

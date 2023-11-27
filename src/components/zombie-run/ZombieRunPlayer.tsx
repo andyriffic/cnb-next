@@ -4,6 +4,7 @@ import { usePlayerNames } from "../../providers/PlayerNamesProvider";
 import { PlayerAvatar } from "../PlayerAvatar";
 import { fadeInBottom } from "../animations/keyframes/fade";
 import { useSound } from "../hooks/useSound";
+import { replaceFirstLetterWithZ } from "../../utils/string";
 import { ZombiePlayer } from "./types";
 
 const ZOMBIE_COLOR = "#69B362";
@@ -89,6 +90,9 @@ export const ZombieRunPlayer = ({ zombiePlayer, stackIndex = 0 }: Props) => {
   }, [play, zombiePlayer.finishPosition]);
 
   const isZombie = zombiePlayer.gotBitten || zombiePlayer.isZombie;
+  const playerName = isZombie
+    ? replaceFirstLetterWithZ(getName(zombiePlayer.id))
+    : getName(zombiePlayer.id);
 
   return (
     <ZombiePlayerContainer>
@@ -111,7 +115,7 @@ export const ZombieRunPlayer = ({ zombiePlayer, stackIndex = 0 }: Props) => {
           isZombie={isZombie}
           style={{ transform: `translateY(${stackIndex * 100}%)` }}
         >
-          {getName(zombiePlayer.id)}{" "}
+          {playerName}{" "}
           {zombiePlayer.totalMetresToRun > 0 &&
             `(${zombiePlayer.totalMetresToRun})`}
         </PlayerName>
