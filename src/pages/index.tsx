@@ -3,8 +3,7 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import styled from "styled-components";
-import { Heading } from "../components/Atoms";
-import finxMascotImage from "../assets/finx-rocks-mascot.png";
+import finxMascotImage from "../assets/finx-mascot.png";
 
 const Container = styled.div`
   display: flex;
@@ -25,7 +24,6 @@ const Home: NextPage = () => {
         src={finxMascotImage}
         alt="Finx Rocks mascot of a rock smiling and using a laptop"
       />
-      <Heading>Finx Rocks!</Heading>
       <Link href="/join">Play a game</Link>
     </Container>
   );
