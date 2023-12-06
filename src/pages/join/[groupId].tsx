@@ -24,6 +24,7 @@ import {
   getRockPaperScissorsGameSpectatorUrl,
   urlWithTeamQueryParam,
 } from "../../utils/url";
+import { PeekaBear } from "../../components/PeekaBear";
 
 const JoinedPlayerContainer = styled.div`
   display: flex;
@@ -90,6 +91,7 @@ function Page() {
 
   return (
     <SpectatorPageLayout debug={group && <DebugPlayerJoin group={group} />}>
+      <PeekaBear />
       <CenterSpaced stacked={true} style={{ margin: "2rem 0 2rem" }}>
         <SubHeading>cnb.finx-rocks.com/play</SubHeading>
         <Heading style={{ fontSize: "5rem" }}>
