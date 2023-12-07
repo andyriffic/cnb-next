@@ -25,14 +25,14 @@ export const PrimaryButton = styled.button`
   font-weight: 600;
   font-size: 1.4rem;
   text-transform: uppercase;
-  background-color: #b03461;
-  color: #f7e6b6;
+  background-color: #ea4630;
+  color: #f8b229;
   border: 0;
   border-radius: 2rem;
   cursor: pointer;
 
   &:disabled {
-    background-color: #777;
+    background-color: rgb(234, 70, 48, 0.6);
     opacity: 0.8;
   }
 `;

@@ -1,6 +1,6 @@
 import { SoundName } from "./types";
 
-export const SOUND_MAP: { [key in SoundName]: string } = {
+const DEFAULT_SOUND_MAP: { [key in SoundName]: string } = {
   "join-music": "/sounds/mojuo.mp3",
   "join-player-joined": "/sounds/dbz_instant_trans.mp3",
   "rps-show-move": "/sounds/spinning_heart.mp3",
@@ -43,4 +43,19 @@ export const SOUND_MAP: { [key in SoundName]: string } = {
   "zombie-run-player-zombie-moving": "/sounds/zombie_groan.mp3",
   "zombie-run-player-bitten": "/sounds/eating_minecraft.mp3",
   "zombie-run-party": "/sounds/thriller_long_intro.mp3",
+};
+
+const XMAS_SOUND_MAP: { [key in SoundName]: string } = {
+  ...DEFAULT_SOUND_MAP,
+  "join-music": "/sounds/xmas/jingle_bells.mp3",
+  "join-player-joined": "/sounds/xmas/santa_ho_ho_ho_ho_ho.mp3",
+  "gas-background-music": "/sounds/xmas/jingle_bells_2.mp3",
+  "rps-waiting-music": "/sounds/xmas/jingle_bells_2.mp3",
+  "rps-new-round": "/sounds/xmas/santa_ho_ho_ho_ho_ho.mp3",
+  "rps-game-on": "/sounds/xmas/santa_ho_ho_ho_ho_ho.mp3",
+  "rps-spectator-choice-reveal": "/sounds/xmas/sleigh_bell.mp3",
+};
+
+export const SOUND_MAP = {
+  ...XMAS_SOUND_MAP,
 };

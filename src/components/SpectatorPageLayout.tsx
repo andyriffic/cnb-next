@@ -9,8 +9,8 @@ const Container = styled.div<{ scrollable: boolean }>`
   overflow: ${({ scrollable }) => (scrollable ? "visible" : "hidden")};
   justify-content: center;
   align-items: center;
-  background-color: #f2d585;
-  color: #b03461;
+  background-color: #165b33;
+  color: #bb2528;
 `;
 
 const Main = styled.div<{ scrollable: boolean }>`

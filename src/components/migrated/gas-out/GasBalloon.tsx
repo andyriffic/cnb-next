@@ -1,11 +1,13 @@
 import React from "react";
 import styled, { css } from "styled-components";
 import tinycolor from "tinycolor2";
+import Image from "next/image";
 import {
   explodeAnimation,
   shakeExtremeAnimation,
 } from "../../animations/keyframes/extreme";
 import { GasCloud } from "../../../services/migrated/gas-out/types";
+import xmasGiftImage from "./assets/xmas-gift.gif";
 
 function getCloudAnimationSpeedMilliSeconds(intensity: number): number {
   return Math.max(8000 - intensity * 500, 100);
@@ -60,10 +62,10 @@ const Ballon = styled.div<{ size: number }>`
   }
 `;
 
-const Gift = styled.img<{ size: number }>`
+const Gift = styled(Image)<{ size: number }>`
   display: inline-block;
-  width: ${({ size }) => size * 10 + 50}px;
-  height: ${({ size }) => size * 10 + 50}px;
+  width: ${({ size }) => size * 10 + 80}px;
+  height: ${({ size }) => size * 10 + 80}px;
   transition: all 180ms ease-in;
 `;
 
@@ -75,12 +77,12 @@ export function GasBallon({ gasCloud }: Props): JSX.Element {
   const visibleSize = gasCloud.exploded ? 10 : gasCloud.pressed;
   return (
     <Container size={visibleSize} exploded={gasCloud.exploded}>
-      <Ballon size={visibleSize} />
-      {/* <Gift
+      {/* <Ballon size={visibleSize} /> */}
+      <Gift
         size={visibleSize}
         src={xmasGiftImage}
         alt="Wrapped christmas gift box"
-      /> */}
+      />
     </Container>
   );
 }
