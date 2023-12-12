@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 import tinycolor from "tinycolor2";
 import { FONT_FAMILY } from "../../colors";
 import { spinAnimation } from "../animations/keyframes/spinAnimations";
-import { PacManGhost } from "./PacManGhost";
+import { PacManGhostWithSantaHat } from "./PacManGhostWithSantaHat";
 import { PacManPlayer } from "./types";
 
 const Container = styled.div<{ goingToJail: boolean }>`
@@ -72,7 +72,10 @@ export function BoardPlayer({ pacPlayer }: Props): JSX.Element {
 
   return (
     <Container goingToJail={goingToJail}>
-      <PacManGhost color={inJail ? "#777777" : pacPlayer.color} width="3vw" />
+      <PacManGhostWithSantaHat
+        color={inJail ? "#777777" : pacPlayer.color}
+        width="3vw"
+      />
       <PlayerName
         style={{
           backgroundColor: pacPlayer.color,

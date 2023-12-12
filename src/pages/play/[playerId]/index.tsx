@@ -36,7 +36,7 @@ function Page({ player }: Props) {
         </Link>
       </Card>
       <PlayerGamesList playerId={player.id} />
-      {/* <PlayerColourSelector player={player} /> */}
+      <PlayerColourSelector player={player} />
       <PlayerAutoJoinDialog
         playerId={player.id}
         groupId={query.autoJoinId as string}

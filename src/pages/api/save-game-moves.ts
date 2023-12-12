@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import {
   PlayerGameMoves,
   savePlayersGameMoves,
-} from "../../services/save-game-moves/saveGameMovesZombieRun";
+} from "../../services/save-game-moves/saveGameMovesPacman";
 
 export default async function userHandler(
   req: NextApiRequest,
