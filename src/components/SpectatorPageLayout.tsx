@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
+import THEME from "../themes/types";
 
 const Container = styled.div<{ scrollable: boolean }>`
   display: flex;
@@ -9,8 +10,8 @@ const Container = styled.div<{ scrollable: boolean }>`
   overflow: ${({ scrollable }) => (scrollable ? "visible" : "hidden")};
   justify-content: center;
   align-items: center;
-  background-color: #165b33;
-  color: #bb2528;
+  background-color: ${THEME.colours.primaryBackground};
+  color: ${THEME.colours.primaryText};
 `;
 
 const Main = styled.div<{ scrollable: boolean }>`

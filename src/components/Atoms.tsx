@@ -1,5 +1,45 @@
 import styled from "styled-components";
 
+import THEME from "../themes/types";
+
+export const FeatureHeading = styled.h1`
+  font-size: 10rem;
+  margin: 0;
+  text-transform: uppercase;
+  font-family: ${THEME.fonts.feature};
+  color: ${THEME.colours.primaryText};
+  text-shadow: 4px 4px ${THEME.colours.textAccent};
+`;
+
+export const FeatureSubHeading = styled.h1`
+  font-size: 2rem;
+  margin: 0;
+  font-family: ${THEME.fonts.body};
+  color: ${THEME.colours.primaryText};
+  letter-spacing: 0.2rem;
+`;
+
+export const ThemedPrimaryLinkButton = styled.a`
+  display: block;
+  padding: 1rem 2rem;
+  font-weight: 600;
+  font-size: 1.4rem;
+  text-decoration: none;
+  background: linear-gradient(
+    ${THEME.colours.buttonPrimaryBackground},
+    ${THEME.colours.buttonSecondaryBackground}
+  );
+  color: ${THEME.colours.buttonPrimaryText};
+  border: 0;
+  box-shadow: 0 4px ${THEME.colours.buttonAccent};
+  border-radius: 2rem;
+
+  &:disabled {
+    background-color: #777;
+    opacity: 0.8;
+  }
+`;
+
 export const Heading = styled.h1`
   font-weight: 600;
   font-size: 2.3rem;
