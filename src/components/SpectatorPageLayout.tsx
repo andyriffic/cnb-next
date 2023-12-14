@@ -23,12 +23,13 @@ const Main = styled.div<{ scrollable: boolean }>`
 `;
 
 const DebugContainer = styled.div`
-  flex-shrink: 0;
+  position: fixed;
+  bottom: 0;
   border-top: 2px solid #b03461;
   min-height: 20px;
   width: 100vw;
   padding: 1rem;
-  background-color: #f7e6b6;
+  background-color: ${THEME.colours.primaryBackground};
   overflow: hidden;
 `;
 

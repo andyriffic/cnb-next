@@ -23,7 +23,7 @@ const PeekAnimation = keyframes`
 const PositionedContainer = styled.div`
   position: fixed;
   bottom: -200px;
-  left: 50%;
+  left: 10%;
   /* transform-origin: 0% 50%; */
   animation: ${PeekAnimation} 10s ease-in-out 3s infinite;
 `;

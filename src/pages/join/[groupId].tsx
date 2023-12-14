@@ -3,7 +3,13 @@ import { useRouter } from "next/router";
 import qrcode from "qrcode";
 import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
-import { Heading, PrimaryButton, SubHeading } from "../../components/Atoms";
+import {
+  Heading,
+  PrimaryButton,
+  SmallHeading,
+  SubHeading,
+  ThemedPrimaryButton,
+} from "../../components/Atoms";
 import { DebugPlayerJoin } from "../../components/DebugPlayerJoin";
 import { JoinedPlayer } from "../../components/JoinedPlayer";
 import { CenterSpaced, EvenlySpaced } from "../../components/Layouts";
@@ -25,12 +31,38 @@ import {
   urlWithTeamQueryParam,
 } from "../../utils/url";
 import { PeekaBear } from "../../components/PeekaBear";
+import THEME from "../../themes/types";
+import { AvatarSize } from "../../components/PlayerAvatar";
 
 const JoinedPlayerContainer = styled.div`
   display: flex;
-  justify-content: center;
-  max-width: 90vw;
+  flex: 0 1;
   flex-wrap: wrap;
+  margin-bottom: 2rem;
+`;
+
+const SplitScreenContainer = styled.div`
+  display: flex;
+  height: 100vh;
+  flex: 1;
+`;
+
+const JoinDetailsContainer = styled.div`
+  width: 30%;
+  background-color: ${THEME.colours.primaryBackground};
+  padding: 4rem;
+`;
+
+const WaitingRoomContainer = styled.div`
+  flex: 1;
+  background-color: ${THEME.colours.secondaryBackground};
+  padding: 4rem;
+`;
+
+const GameButttonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 2rem;
 `;
 
 type GameTypes = "rps" | "rps-quick" | "balloon" | "balloon-quick" | "ai";
@@ -89,133 +121,96 @@ function Page() {
     play("join-player-joined")
   );
 
+  const playerAvatarSize: AvatarSize =
+    (group && group.players.length > 20 ? "thumbnail" : "small") || "small";
+
   return (
     <SpectatorPageLayout debug={group && <DebugPlayerJoin group={group} />}>
       <PeekaBear />
-      <CenterSpaced stacked={true} style={{ margin: "2rem 0 2rem" }}>
-        <SubHeading>cnb.finx-rocks.com/play</SubHeading>
-        <Heading style={{ fontSize: "5rem" }}>
-          <NumericValue>{groupId}</NumericValue>
-        </Heading>
-      </CenterSpaced>
-      {!group && "Invalid group 😭"}
-      {group && (
-        <CenterSpaced stacked={true}>
-          <SubHeading>
-            Joined players (
-            <NumericValue>{group.playerIds.length}</NumericValue>)
+
+      <SplitScreenContainer>
+        <JoinDetailsContainer>
+          <SmallHeading style={{ textAlign: "right", marginBottom: "2rem" }}>
+            Come in!
+          </SmallHeading>
+          {qrCodeUrl && (
+            <div style={{ textAlign: "right", marginBottom: "2rem" }}>
+              <Image src={qrCodeUrl} alt="" width={200} height={200} />
+            </div>
+          )}
+
+          <Heading
+            style={{
+              fontSize: "5rem",
+              textAlign: "right",
+              marginBottom: "2rem",
+            }}
+          >
+            <NumericValue>{groupId}</NumericValue>
+          </Heading>
+          <SubHeading style={{ textAlign: "right" }}>
+            cnb.finx-rocks.com/play
           </SubHeading>
-          <JoinedPlayerContainer>
-            {group.players.map((player) => (
-              <JoinedPlayerItem key={player.id}>
-                <Appear animation="flip-in">
-                  <JoinedPlayer player={player} team={team} />
-                </Appear>
-              </JoinedPlayerItem>
-            ))}
-          </JoinedPlayerContainer>
-          {/* <EvenlySpaced>
-            <Heading>Quick: </Heading>
-            <PrimaryButton
-              disabled={group.playerIds.length < 2}
-              onClick={() => {
-                gameCreators["rps-quick"](
-                  group,
-                  socketService,
-                  getName,
-                  team
-                ).then((gameUrl) => {
-                  router.push(urlWithTeamQueryParam(gameUrl, team));
-                });
+        </JoinDetailsContainer>
+        <WaitingRoomContainer>
+          {group && (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                height: "100%",
               }}
             >
-              Betting 🎲 ⏩
-            </PrimaryButton>
-            <PrimaryButton
-              disabled={group.playerIds.length < 2}
-              onClick={() => {
-                gameCreators["balloon-quick"](
-                  group,
-                  socketService,
-                  getName,
-                  team
-                ).then((gameUrl) => {
-                  router.push(urlWithTeamQueryParam(gameUrl, team));
-                });
-              }}
-            >
-              Balloon 🎈 ⏩
-            </PrimaryButton>
-          </EvenlySpaced> */}
-          <EvenlySpaced style={{ marginTop: "2rem" }}>
-            <PrimaryButton
-              disabled={group.playerIds.length < 2}
-              onClick={() => {
-                gameCreators
-                  .rps(group, socketService, getName, team)
-                  .then((gameUrl) => {
-                    router.push(urlWithTeamQueryParam(gameUrl, team));
-                  });
-              }}
-            >
-              Betting 🎲
-            </PrimaryButton>
-            <PrimaryButton
-              disabled={group.playerIds.length < 2}
-              onClick={() => {
-                gameCreators
-                  .balloon(group, socketService, getName, team)
-                  .then((gameUrl) => {
-                    router.push(urlWithTeamQueryParam(gameUrl, team));
-                  });
-              }}
-            >
-              Balloon 🎈
-            </PrimaryButton>
-          </EvenlySpaced>
-          <Heading style={{ marginTop: "2rem" }}>OR</Heading>
-          <EvenlySpaced>
-            {/* <PrimaryButton
-              disabled={group.playerIds.length < 2}
-              onClick={() => {
-                const randomGame = selectRandomOneOf(availableRandomGames);
-                gameCreators[randomGame](
-                  group,
-                  socketService,
-                  getName,
-                  team
-                ).then((gameUrl) => {
-                  router.push(urlWithTeamQueryParam(gameUrl, team));
-                });
-              }}
-            >
-              Random
-            </PrimaryButton> */}
-            <PrimaryButton
-              disabled={group.playerIds.length < 2}
-              onClick={() => {
-                gameCreators
-                  .ai(group, socketService, getName, team)
-                  .then((gameUrl) => {
-                    router.push(urlWithTeamQueryParam(gameUrl, team));
-                  });
-              }}
-            >
-              AI Overlord (BETA ⚠️)
-            </PrimaryButton>
-          </EvenlySpaced>
-        </CenterSpaced>
-      )}
-      {qrCodeUrl && (
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-          }}
-        >
-          <Image src={qrCodeUrl} alt="" width={200} height={200} />
-        </div>
-      )}
+              <div style={{ flex: 1 }}>
+                <SmallHeading style={{ marginBottom: "2rem" }}>
+                  The waiting room ({group.playerIds.length})
+                </SmallHeading>
+
+                <JoinedPlayerContainer>
+                  {group.players.map((player) => (
+                    <JoinedPlayerItem key={player.id}>
+                      <Appear animation="flip-in">
+                        <JoinedPlayer
+                          player={player}
+                          team={team}
+                          avatarSize={playerAvatarSize}
+                        />
+                      </Appear>
+                    </JoinedPlayerItem>
+                  ))}
+                </JoinedPlayerContainer>
+              </div>
+              <GameButttonContainer>
+                <ThemedPrimaryButton
+                  disabled={group.playerIds.length < 2}
+                  onClick={() => {
+                    gameCreators
+                      .rps(group, socketService, getName, team)
+                      .then((gameUrl) => {
+                        router.push(urlWithTeamQueryParam(gameUrl, team));
+                      });
+                  }}
+                >
+                  Betting 🎲
+                </ThemedPrimaryButton>
+                <ThemedPrimaryButton
+                  disabled={group.playerIds.length < 2}
+                  onClick={() => {
+                    gameCreators
+                      .balloon(group, socketService, getName, team)
+                      .then((gameUrl) => {
+                        router.push(urlWithTeamQueryParam(gameUrl, team));
+                      });
+                  }}
+                >
+                  Balloon 🎈
+                </ThemedPrimaryButton>
+              </GameButttonContainer>
+            </div>
+          )}
+        </WaitingRoomContainer>
+      </SplitScreenContainer>
+      {!group && "Invalid group 😭"}
     </SpectatorPageLayout>
   );
 }

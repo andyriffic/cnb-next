@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components";
 import { Player, getPlayerZombieRunDetails } from "../types/Player";
 import { selectRandomOneOf } from "../utils/random";
-import { PlayerAvatar } from "./PlayerAvatar";
+import { AvatarSize, PlayerAvatar } from "./PlayerAvatar";
 import { Appear } from "./animations/Appear";
 import { useDoOnce } from "./hooks/useDoOnce";
 import { useSound } from "./hooks/useSound";
@@ -22,7 +22,7 @@ const Label = styled.div`
 `;
 
 const ZombieLabel = styled(Label)`
-  background-color: #69b362;
+  background-color: #165b33;
   border-color: darkgreen;
   /* font-size: 2rem; */
   text-align: center;
@@ -40,9 +40,10 @@ export const ZombieTransform = styled.div<{ isZombie: boolean }>`
 type Props = {
   player: Player;
   team: string | undefined;
+  avatarSize: AvatarSize;
 };
 
-export function JoinedPlayer({ player, team }: Props) {
+export function JoinedPlayer({ player, team, avatarSize }: Props) {
   const { play } = useSound();
 
   const isZombie = getPlayerZombieRunDetails(player).isZombie;
@@ -59,7 +60,7 @@ export function JoinedPlayer({ player, team }: Props) {
   return (
     <div>
       <ZombieTransform isZombie={isZombie}>
-        <PlayerAvatar playerId={player.id} size="small" />
+        <PlayerAvatar playerId={player.id} size={avatarSize} />
       </ZombieTransform>
       {player && team && player.details?.team === team && (
         <Appear animation="text-focus-in">

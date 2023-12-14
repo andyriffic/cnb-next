@@ -12,12 +12,20 @@ export const FeatureHeading = styled.h1`
   text-shadow: 4px 4px ${THEME.colours.textAccent};
 `;
 
-export const FeatureSubHeading = styled.h1`
+export const FeatureSubHeading = styled.h2`
   font-size: 2rem;
   margin: 0;
   font-family: ${THEME.fonts.body};
   color: ${THEME.colours.primaryText};
   letter-spacing: 0.2rem;
+`;
+
+export const SmallHeading = styled.h3`
+  font-size: 1.2rem;
+  margin: 0;
+  font-family: ${THEME.fonts.feature};
+  color: ${THEME.colours.primaryText};
+  text-transform: uppercase;
 `;
 
 export const ThemedPrimaryLinkButton = styled(Link)`
@@ -36,8 +44,7 @@ export const ThemedPrimaryLinkButton = styled(Link)`
   border-radius: 2rem;
 
   &:disabled {
-    background-color: #777;
-    opacity: 0.8;
+    background: #777;
   }
 `;
 
@@ -58,7 +65,7 @@ export const ThemedPrimaryButton = styled.button`
   cursor: pointer;
 
   &:disabled {
-    background-color: #777;
+    background: #777;
     opacity: 0.8;
   }
 `;

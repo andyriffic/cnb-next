@@ -41,7 +41,7 @@ const XMAS_THEME: ThemeTokens = {
     primaryText: "#FFFFFF",
     textAccent: "#ea4630",
     primaryBackground: "#165b33",
-    secondaryBackground: "#6757C7",
+    secondaryBackground: "#0a2c18",
     buttonPrimaryBackground: "#6AE29A",
     buttonSecondaryBackground: "#7AFFE7",
   },
