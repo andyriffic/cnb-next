@@ -1,14 +1,25 @@
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { useCallback } from "react";
 import styled from "styled-components";
-import { Heading, PrimaryButton } from "../../components/Atoms";
+import finxMascotImage from "../../assets/finx-mascot.png";
+import {
+  FeatureHeading,
+  FeatureSubHeading,
+  ThemedPrimaryButton,
+} from "../../components/Atoms";
 import { CenterSpaced } from "../../components/Layouts";
 import { SpectatorPageLayout } from "../../components/SpectatorPageLayout";
+import { Appear } from "../../components/animations/Appear";
 import { useSocketIo } from "../../providers/SocketIoProvider";
 
-const CenterAlignContainer = styled.div`
+const Container = styled.div`
   display: flex;
+  width: 100vw;
+  height: 100vh;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
 `;
 
 function Page() {
@@ -29,12 +40,26 @@ function Page() {
 
   return (
     <SpectatorPageLayout>
-      <CenterSpaced stacked={true}>
-        <Heading>Create a game</Heading>
-        <PrimaryButton onClick={() => startNewGame()}>
-          Start new game
-        </PrimaryButton>
-      </CenterSpaced>
+      <Container>
+        <CenterSpaced>
+          <Appear animation="flip-in">
+            <Image
+              src={finxMascotImage}
+              alt="Finx Rocks mascot of a rock smiling and using a laptop"
+              width={200}
+            />
+          </Appear>
+          <div style={{ marginBottom: "2rem" }}>
+            <FeatureSubHeading style={{ marginBottom: "2rem" }}>
+              Welcome to
+            </FeatureSubHeading>
+            <FeatureHeading>CNB</FeatureHeading>
+          </div>
+        </CenterSpaced>
+        <ThemedPrimaryButton onClick={() => startNewGame()}>
+          Create a game
+        </ThemedPrimaryButton>
+      </Container>
     </SpectatorPageLayout>
   );
 }

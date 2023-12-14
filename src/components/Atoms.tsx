@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Link from "next/link";
 
 import THEME from "../themes/types";
 
@@ -19,7 +20,7 @@ export const FeatureSubHeading = styled.h1`
   letter-spacing: 0.2rem;
 `;
 
-export const ThemedPrimaryLinkButton = styled.a`
+export const ThemedPrimaryLinkButton = styled(Link)`
   display: block;
   padding: 1rem 2rem;
   font-weight: 600;
@@ -33,6 +34,28 @@ export const ThemedPrimaryLinkButton = styled.a`
   border: 0;
   box-shadow: 0 4px ${THEME.colours.buttonAccent};
   border-radius: 2rem;
+
+  &:disabled {
+    background-color: #777;
+    opacity: 0.8;
+  }
+`;
+
+export const ThemedPrimaryButton = styled.button`
+  display: block;
+  padding: 1rem 2rem;
+  font-weight: 600;
+  font-size: 1.4rem;
+  text-decoration: none;
+  background: linear-gradient(
+    ${THEME.colours.buttonPrimaryBackground},
+    ${THEME.colours.buttonSecondaryBackground}
+  );
+  color: ${THEME.colours.buttonPrimaryText};
+  border: 0;
+  box-shadow: 0 4px ${THEME.colours.buttonAccent};
+  border-radius: 2rem;
+  cursor: pointer;
 
   &:disabled {
     background-color: #777;
