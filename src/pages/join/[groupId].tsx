@@ -57,6 +57,7 @@ const WaitingRoomContainer = styled.div`
   flex: 1;
   background-color: ${THEME.colours.secondaryBackground};
   padding: 4rem;
+  overflow-y: scroll;
 `;
 
 const GameButttonContainer = styled.div`
