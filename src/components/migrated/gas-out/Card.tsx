@@ -1,39 +1,67 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
+import Image from "next/image";
 import { GasCard } from "../../../services/migrated/gas-out/types";
 import { useSound } from "../../hooks/useSound";
 import { Appear } from "../../animations/Appear";
 import { COLORS, FONT_FAMILY } from "../../../colors";
+import THEME from "../../../themes/types";
+import bombImage from "./cnb-card-bomb.png";
+import curseImage from "./cnb-card-curse.png";
+import reverseImage from "./cnb-card-reverse.png";
+import skipImage from "./cnb-card-skip.png";
 
-const CardContainer = styled.div<{ special: boolean }>`
+const BaseCard = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
+  padding: 1.2rem 0 0 0;
   align-items: center;
-  gap: 20px;
+  flex-direction: column;
+  /* gap: 1rem; */
   border: 5px solid ${COLORS.gasGame.cardBorderColor};
   border-radius: 10px;
-  width: 70px;
-  height: 100px;
-  background-color: ${({ special }) =>
-    special
-      ? COLORS.gasGame.cardBackgroundColorSpecial
-      : COLORS.gasGame.cardBackgroundColor};
-  color: ${({ special }) =>
-    special
-      ? COLORS.gasGame.cardTextColorSpecial
-      : COLORS.gasGame.cardTextColor01};
-  box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px,
-    rgba(6, 24, 44, 0.65) 0px 4px 6px -1px,
-    rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+  width: 100px;
+  height: 160px;
+  color: ${THEME.colours.ballonGame.cardText};
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
+  position: relative;
 `;
 
-const CardNumber = styled.div`
-  font-size: 2rem;
-  font-family: ${FONT_FAMILY.numeric};
+const NumberCard = styled(BaseCard)`
+  background-color: ${THEME.colours.ballonGame.numberCardBackground};
+`;
+
+const CurseCard = styled(BaseCard)`
+  background-color: ${THEME.colours.ballonGame.cursedCardBackground};
+`;
+
+const ReverseCard = styled(BaseCard)`
+  background-color: ${THEME.colours.ballonGame.reverseCardBackground};
+`;
+
+const BombCard = styled(BaseCard)`
+  background-color: ${THEME.colours.ballonGame.bombCardBackground};
+`;
+
+const SkipCard = styled(BaseCard)`
+  background-color: ${THEME.colours.ballonGame.skipCardBackground};
+`;
+
+const PressesRemainingText = styled.div`
+  font-size: 3rem;
+  font-family: ${THEME.fonts.feature};
+`;
+
+const CardImage = styled(Image)`
+  position: absolute;
+  bottom: 5px;
 `;
 
 const CardText = styled.div`
-  font-size: 1.2rem;
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  font-family: ${THEME.fonts.feature};
+  letter-spacing: 0.1rem;
 `;
 
 const CardIcon = styled.div`
@@ -51,18 +79,42 @@ function renderCard(
 ): JSX.Element | null {
   switch (card.type) {
     case "press":
+      return (
+        <NumberCard>
+          <CardText>&nbsp;</CardText>
+          <PressesRemainingText>{pressesRemaining}</PressesRemainingText>
+        </NumberCard>
+      );
     case "risky":
-      return <CardNumber>{pressesRemaining}</CardNumber>;
+      return (
+        <CurseCard>
+          <CardText>Curse</CardText>
+          <PressesRemainingText>{pressesRemaining}</PressesRemainingText>
+          <CardImage src={curseImage} width={40} alt="" />
+        </CurseCard>
+      );
     case "bomb":
       return (
-        <CardNumber>
-          💣 <br /> {pressesRemaining}
-        </CardNumber>
+        <BombCard>
+          <CardText>Bomb</CardText>
+          <PressesRemainingText>{pressesRemaining}</PressesRemainingText>
+          <CardImage src={bombImage} width={40} alt="" />
+        </BombCard>
       );
     case "skip":
-      return <CardText>skip</CardText>;
+      return (
+        <SkipCard style={{ justifyContent: "center", gap: "1rem" }}>
+          <Image src={skipImage} width={40} alt="" />
+          <CardText>skip</CardText>
+        </SkipCard>
+      );
     case "reverse":
-      return <CardIcon>↔</CardIcon>;
+      return (
+        <ReverseCard style={{ justifyContent: "center", gap: "1rem" }}>
+          <Image src={reverseImage} width={40} alt="" />
+          <CardText style={{ fontSize: "1.0rem" }}>Reverse</CardText>
+        </ReverseCard>
+      );
     default:
       return <CardText>{card.type}</CardText>;
   }
@@ -95,10 +147,6 @@ export function Card({ card, pressesRemaining }: Props): JSX.Element | null {
     return null;
   }
   return (
-    <Appear animation="flip-in">
-      <CardContainer special={card.type === "risky" || card.type === "bomb"}>
-        {renderCard(card, pressesRemaining)}
-      </CardContainer>
-    </Appear>
+    <Appear animation="flip-in">{renderCard(card, pressesRemaining)}</Appear>
   );
 }

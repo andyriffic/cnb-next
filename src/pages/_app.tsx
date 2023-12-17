@@ -56,6 +56,11 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+
+@font-face {
+  font-family: "pixeboy";
+  src: url("/fonts/pixeboy.ttf");
+}
 `;
 
 function MyApp({ Component, pageProps }: AppProps) {

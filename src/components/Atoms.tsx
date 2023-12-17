@@ -21,11 +21,12 @@ export const FeatureSubHeading = styled.h2`
 `;
 
 export const SmallHeading = styled.h3`
-  font-size: 1.2rem;
+  font-size: 2rem;
   margin: 0;
   font-family: ${THEME.fonts.feature};
   color: ${THEME.colours.primaryText};
   text-transform: uppercase;
+  letter-spacing: 0.2rem;
 `;
 
 export const ThemedPrimaryLinkButton = styled(Link)`

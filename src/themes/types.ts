@@ -8,6 +8,14 @@ type ThemeTokens = {
     buttonSecondaryBackground: string;
     buttonPrimaryText: string;
     buttonAccent: string;
+    ballonGame: {
+      cardText: string;
+      numberCardBackground: string;
+      skipCardBackground: string;
+      cursedCardBackground: string;
+      bombCardBackground: string;
+      reverseCardBackground: string;
+    };
   };
   fonts: {
     feature: string;
@@ -26,9 +34,17 @@ const DEFAULT_THEME: ThemeTokens = {
     buttonSecondaryBackground: "#7AFFE7",
     buttonPrimaryText: "#252525",
     buttonAccent: "rgb(0, 0, 0, 0.25)",
+    ballonGame: {
+      cardText: "#000000",
+      numberCardBackground: "#CBFFEF",
+      skipCardBackground: "#FFCBF3",
+      cursedCardBackground: "#9ED38B",
+      bombCardBackground: "#F4576A",
+      reverseCardBackground: "#FFD29D",
+    },
   },
   fonts: {
-    feature: "'Press Start 2P'",
+    feature: "'Pixeboy', sans-serif",
     body: "'Raleway', sans-serif",
     numbers: "'Kameron', serif",
   },
@@ -44,7 +60,10 @@ const XMAS_THEME: ThemeTokens = {
     secondaryBackground: "#0e3f22",
     buttonPrimaryBackground: "#6AE29A",
     buttonSecondaryBackground: "#7AFFE7",
+    ballonGame: {
+      ...DEFAULT_THEME.colours.ballonGame,
+    },
   },
 };
 
-export default XMAS_THEME;
+export default DEFAULT_THEME;
