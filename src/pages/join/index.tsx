@@ -49,8 +49,8 @@ function Page() {
               width={200}
             />
           </Appear>
-          <div style={{ marginBottom: "2rem" }}>
-            <FeatureSubHeading style={{ marginBottom: "2rem" }}>
+          <div style={{ marginBottom: "0rem" }}>
+            <FeatureSubHeading style={{ marginBottom: "0rem" }}>
               Welcome to
             </FeatureSubHeading>
             <FeatureHeading>CNB</FeatureHeading>

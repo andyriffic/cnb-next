@@ -5,29 +5,19 @@ import {
   GasCard,
   GasPlayer,
 } from "../../../../services/migrated/gas-out/types";
+import { BalloonCard } from "../Card";
 
 const Container = styled.div`
   display: flex;
-  gap: 10vw;
+  /* gap: 2rem; */
   transition: opacity 300ms ease-out;
+  justify-content: space-between;
+  padding: 0 1rem;
 `;
 
-const Card = styled.button<{ special: boolean }>`
-  border: 5px solid ${COLORS.gasGame.cardBorderColor};
-  border-radius: 5px;
-  width: 20vw;
-  height: 25vw;
-  font-size: 2rem;
-  text-transform: uppercase;
-  color: ${({ special }) =>
-    special
-      ? COLORS.gasGame.cardTextColorSpecial
-      : COLORS.gasGame.cardTextColor01};
-  background-color: ${({ special }) =>
-    special
-      ? COLORS.gasGame.cardBackgroundColorSpecial
-      : COLORS.gasGame.cardBackgroundColor};
-  font-family: ${FONT_FAMILY.numeric};
+const CardButtonContainer = styled.button`
+  border: 0;
+  background: none;
 
   &:disabled {
     opacity: 0.5;
@@ -84,22 +74,18 @@ export const PlayerGasCards = ({
   player,
 }: Props): JSX.Element => {
   return (
-    <Container style={{ opacity: enabled ? 1 : 0.6 }}>
+    <Container style={{ opacity: enabled ? 1 : 0.8 }}>
       {cards.map((c, i) => (
-        <Card
+        <CardButtonContainer
           key={i}
           disabled={!enabled || isCardDisabled(c, player.curse)}
           onClick={() => playCard(i)}
-          special={c.type === "risky" || c.type === "bomb"}
         >
-          {c.type === "press" && (
-            <CardNumber>{applyCurse(c, player.curse)}</CardNumber>
-          )}
-          {c.type === "risky" && <CardNumber>{c.presses}</CardNumber>}
-          {c.type === "skip" && <CardText>Skip</CardText>}
-          {c.type === "reverse" && <CardText>↔</CardText>}
-          {c.type === "bomb" && <CardText>💣</CardText>}
-        </Card>
+          <BalloonCard
+            card={c}
+            pressesRemaining={applyCurse(c, player.curse)}
+          ></BalloonCard>
+        </CardButtonContainer>
       ))}
     </Container>
   );

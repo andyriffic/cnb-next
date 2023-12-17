@@ -18,6 +18,7 @@ const DialogContainer = styled.div`
   padding: 2rem;
   transform: translate3d(-50%, -50%, 0);
   font-size: 2rem;
+  color: black;
 `;
 
 const DialogBodyContainer = styled.div`

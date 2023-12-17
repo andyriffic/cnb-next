@@ -1,23 +1,24 @@
 import Link from "next/link";
 import styled from "styled-components";
 import { getClassicCnbPlayerUrl, getPlayerHomeUrl } from "../utils/url";
+import THEME from "../themes/types";
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  width: 100vw;
+  /* width: 100vw; */
   justify-content: center;
   align-items: center;
-  background-color: #f2d585;
-  color: #b03461;
-  /* overflow-x: hidden; */
+  background-color: ${THEME.colours.primaryBackground};
+  color: ${THEME.colours.primaryText};
+  /* overflow-y: scroll; */
 `;
 
 const Main = styled.div`
   /* border: 1px solid black; */
   width: 100vw;
-  flex: 1;
+  flex: 1 1;
   padding: 1rem;
 `;
 

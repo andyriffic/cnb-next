@@ -14,7 +14,7 @@ import skipImage from "./cnb-card-skip.png";
 const BaseCard = styled.div`
   display: flex;
   justify-content: flex-start;
-  padding: 1.2rem 0 0 0;
+  padding: 15px 0;
   align-items: center;
   flex-direction: column;
   /* gap: 1rem; */
@@ -50,11 +50,14 @@ const SkipCard = styled(BaseCard)`
 const PressesRemainingText = styled.div`
   font-size: 3rem;
   font-family: ${THEME.fonts.feature};
+  margin: 0;
+  padding: 0;
+  line-height: 100%;
 `;
 
 const CardImage = styled(Image)`
-  position: absolute;
-  bottom: 5px;
+  /* position: absolute;
+  bottom: 5px; */
 `;
 
 const CardText = styled.div`
@@ -62,6 +65,7 @@ const CardText = styled.div`
   text-transform: uppercase;
   font-family: ${THEME.fonts.feature};
   letter-spacing: 0.1rem;
+  line-height: 100%;
 `;
 
 const CardIcon = styled.div`
@@ -112,7 +116,7 @@ function renderCard(
       return (
         <ReverseCard style={{ justifyContent: "center", gap: "1rem" }}>
           <Image src={reverseImage} width={40} alt="" />
-          <CardText style={{ fontSize: "1.0rem" }}>Reverse</CardText>
+          <CardText style={{ fontSize: "1.1rem" }}>Reverse</CardText>
         </ReverseCard>
       );
     default:
@@ -120,7 +124,10 @@ function renderCard(
   }
 }
 
-export function Card({ card, pressesRemaining }: Props): JSX.Element | null {
+export function BalloonCard({
+  card,
+  pressesRemaining,
+}: Props): JSX.Element | null {
   const { play } = useSound();
 
   useEffect(() => {

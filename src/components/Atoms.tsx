@@ -4,12 +4,13 @@ import Link from "next/link";
 import THEME from "../themes/types";
 
 export const FeatureHeading = styled.h1`
-  font-size: 10rem;
+  font-size: 20rem;
   margin: 0;
   text-transform: uppercase;
   font-family: ${THEME.fonts.feature};
   color: ${THEME.colours.primaryText};
   text-shadow: 4px 4px ${THEME.colours.textAccent};
+  line-height: 70%;
 `;
 
 export const FeatureSubHeading = styled.h2`

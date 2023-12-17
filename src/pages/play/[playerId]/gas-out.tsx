@@ -14,14 +14,10 @@ function Page() {
   } = useSocketIo();
   const game = gasGames.find((game) => game.id === gameId);
 
-  return (
-    <PlayerPageLayout playerId={playerId}>
-      {game ? (
-        <PlayerGameView gasGameId={gameId} playerId={playerId} />
-      ) : (
-        <p>Game not found</p>
-      )}
-    </PlayerPageLayout>
+  return game ? (
+    <PlayerGameView gasGameId={gameId} playerId={playerId} />
+  ) : (
+    <p>Game not found</p>
   );
 }
 

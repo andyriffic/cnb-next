@@ -2,20 +2,20 @@ import styled from "styled-components";
 import { PlayerPageLayout } from "../../../PlayerPageLayout";
 import { usePlayerGasGame } from "../hooks/usePlayerGasGame";
 import { getOrdinal } from "../../../../utils/string";
+import { SmallHeading } from "../../../Atoms";
 import { PlayerGasCards } from "./PlayerGasCards";
 import { PlayerGasTimeoutTimer } from "./PlayerGasTimeoutTimer";
 import { PlayerGasCloudPresser } from "./PlayerGasCloudPresser";
 import { PlayerGasNextOutSelector } from "./PlayerGasNextOutSelector";
 import { PlayerGasChosenNextOutPlayer } from "./PlayerGasChosenNextOutPlayer";
 
-const PlayerStatus = styled.div`
+const PlayerStatus = styled(SmallHeading)`
   margin: 30px 0;
   text-align: center;
-  font-size: 2rem;
 `;
 
 const PlayerFinishedPosition = styled.div`
-  margin: 30px 0;
+  margin: 2rem 0;
   text-align: center;
   font-size: 3rem;
 `;

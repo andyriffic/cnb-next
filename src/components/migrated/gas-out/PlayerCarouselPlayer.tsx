@@ -8,7 +8,7 @@ import { spinAwayAnimationUp } from "../../animations/keyframes/spinAnimations";
 import { textFocusIn } from "../../animations/keyframes/textFocusIn";
 import { ZombieTransform } from "../../JoinedPlayer";
 import { getPlayerZombieRunDetails } from "../../../types/Player";
-import { Card } from "./Card";
+import { BalloonCard } from "./Card";
 
 const usePlayerCarousel = true;
 
@@ -162,7 +162,7 @@ export function PlayerCarouselPlayer({
         !gameOver &&
         player.status === "alive" && (
           <CardContainer>
-            <Card
+            <BalloonCard
               card={game.currentPlayer.cardPlayed}
               pressesRemaining={game.currentPlayer.pressesRemaining}
             />

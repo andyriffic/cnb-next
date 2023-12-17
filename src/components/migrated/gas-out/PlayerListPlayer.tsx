@@ -7,7 +7,7 @@ import { AvatarSize, PlayerAvatar } from "../../PlayerAvatar";
 import { getOrdinal } from "../../../utils/string";
 import { COLORS, FONT_FAMILY } from "../../../colors";
 import { PlayerBonusPoints } from "./PlayerBonusPoints";
-import { Card } from "./Card";
+import { BalloonCard } from "./Card";
 
 const CardContainer = styled.div`
   position: absolute;
@@ -155,7 +155,7 @@ export function PlayerListPlayer({
         !gameOver &&
         player.status === "alive" && (
           <CardContainer>
-            <Card
+            <BalloonCard
               card={game.currentPlayer.cardPlayed}
               pressesRemaining={game.currentPlayer.pressesRemaining}
             />
