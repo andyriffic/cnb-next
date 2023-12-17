@@ -10,6 +10,7 @@ type ThemeTokens = {
     buttonAccent: string;
     ballonGame: {
       cardText: string;
+      cardAltText: string;
       numberCardBackground: string;
       skipCardBackground: string;
       cursedCardBackground: string;
@@ -36,8 +37,9 @@ const DEFAULT_THEME: ThemeTokens = {
     buttonAccent: "rgb(0, 0, 0, 0.25)",
     ballonGame: {
       cardText: "#000000",
+      cardAltText: "#E700B4",
       numberCardBackground: "#CBFFEF",
-      skipCardBackground: "#FFCBF3",
+      skipCardBackground: "#FFD29D",
       cursedCardBackground: "#9ED38B",
       bombCardBackground: "#F4576A",
       reverseCardBackground: "#FFD29D",

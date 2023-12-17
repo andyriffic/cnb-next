@@ -1,15 +1,14 @@
-import React, { useEffect } from "react";
-import styled from "styled-components";
 import Image from "next/image";
+import { useEffect } from "react";
+import styled from "styled-components";
+import { COLORS } from "../../../colors";
 import { GasCard } from "../../../services/migrated/gas-out/types";
-import { useSound } from "../../hooks/useSound";
-import { Appear } from "../../animations/Appear";
-import { COLORS, FONT_FAMILY } from "../../../colors";
 import THEME from "../../../themes/types";
+import { Appear } from "../../animations/Appear";
+import { useSound } from "../../hooks/useSound";
 import bombImage from "./cnb-card-bomb.png";
 import curseImage from "./cnb-card-curse.png";
 import reverseImage from "./cnb-card-reverse.png";
-import skipImage from "./cnb-card-skip.png";
 
 const BaseCard = styled.div`
   display: flex;
@@ -45,6 +44,7 @@ const BombCard = styled(BaseCard)`
 
 const SkipCard = styled(BaseCard)`
   background-color: ${THEME.colours.ballonGame.skipCardBackground};
+  color: ${THEME.colours.ballonGame.cardAltText};
 `;
 
 const PressesRemainingText = styled.div`
@@ -108,8 +108,7 @@ function renderCard(
     case "skip":
       return (
         <SkipCard style={{ justifyContent: "center", gap: "1rem" }}>
-          <Image src={skipImage} width={40} alt="" />
-          <CardText>skip</CardText>
+          <CardText>Skip</CardText>
         </SkipCard>
       );
     case "reverse":
