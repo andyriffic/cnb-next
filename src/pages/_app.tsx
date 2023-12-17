@@ -59,7 +59,7 @@ table {
 
 @font-face {
   font-family: "pixeboy";
-  src: url("/fonts/pixeboy.ttf");
+  src: url("/fonts/Pixeboy.ttf");
 }
 `;
 
