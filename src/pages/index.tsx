@@ -25,6 +25,7 @@ const Home: NextPage = () => {
         <Image
           src={finxMascotImage}
           alt="Finx Rocks mascot of a rock smiling and using a laptop"
+          width={300}
         />
       </Appear>
       <Link href="/join">Play a game</Link>
