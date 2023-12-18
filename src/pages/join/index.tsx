@@ -2,7 +2,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useCallback } from "react";
 import styled from "styled-components";
-import finxMascotImage from "../../assets/finx-mascot.png";
+
 import {
   FeatureHeading,
   FeatureSubHeading,
@@ -12,6 +12,7 @@ import { CenterSpaced } from "../../components/Layouts";
 import { SpectatorPageLayout } from "../../components/SpectatorPageLayout";
 import { Appear } from "../../components/animations/Appear";
 import { useSocketIo } from "../../providers/SocketIoProvider";
+import cinbyWave from "./cinby-wave.png";
 
 const Container = styled.div`
   display: flex;
@@ -43,11 +44,7 @@ function Page() {
       <Container>
         <CenterSpaced>
           <Appear animation="flip-in">
-            <Image
-              src={finxMascotImage}
-              alt="Finx Rocks mascot of a rock smiling and using a laptop"
-              width={200}
-            />
+            <Image src={cinbyWave} alt="" width={200} />
           </Appear>
           <div style={{ marginBottom: "0rem" }}>
             <FeatureSubHeading style={{ marginBottom: "0rem" }}>
