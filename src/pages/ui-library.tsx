@@ -3,7 +3,7 @@ import Head from "next/head";
 import styled from "styled-components";
 import { SmallHeading } from "../components/Atoms";
 import { SpectatorPageLayout } from "../components/SpectatorPageLayout";
-import { BalloonCard } from "../components/migrated/gas-out/Card";
+import { BalloonCard } from "../components/migrated/gas-out/BalloonCard";
 
 const UiSection = styled.div`
   padding: 3rem;

@@ -5,7 +5,7 @@ import {
   GasCard,
   GasPlayer,
 } from "../../../../services/migrated/gas-out/types";
-import { BalloonCard } from "../Card";
+import { BalloonCard } from "../BalloonCard";
 
 const Container = styled.div`
   display: flex;

@@ -8,7 +8,7 @@ import { AvatarSize, PlayerAvatar } from "../../PlayerAvatar";
 import { shakeAnimationLeft } from "../../animations/keyframes/extreme";
 import { spinAwayAnimationUp } from "../../animations/keyframes/spinAnimations";
 import { textFocusIn } from "../../animations/keyframes/textFocusIn";
-import { BalloonCardWithSoundAndAnimation } from "./CardWithSoundAndAnimation";
+import { BalloonCardWithSoundAndAnimation } from "./BalloonCardWithSoundAndAnimation";
 
 const usePlayerCarousel = true;
 

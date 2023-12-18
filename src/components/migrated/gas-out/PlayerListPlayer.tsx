@@ -7,7 +7,7 @@ import { AvatarSize, PlayerAvatar } from "../../PlayerAvatar";
 import { getOrdinal } from "../../../utils/string";
 import { COLORS, FONT_FAMILY } from "../../../colors";
 import { PlayerBonusPoints } from "./PlayerBonusPoints";
-import { BalloonCard } from "./Card";
+import { BalloonCard } from "./BalloonCard";
 
 const CardContainer = styled.div`
   position: absolute;

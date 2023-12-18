@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { GasCard } from "../../../services/migrated/gas-out/types";
 import { Appear } from "../../animations/Appear";
 import { useSound } from "../../hooks/useSound";
-import { BalloonCard } from "./Card";
+import { BalloonCard } from "./BalloonCard";
 
 type Props = {
   card: GasCard;
