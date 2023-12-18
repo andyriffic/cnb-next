@@ -2,13 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import styled, { css } from "styled-components";
 import { COLORS } from "../../../colors";
 import { GasGame, GasPlayer } from "../../../services/migrated/gas-out/types";
+import { getPlayerZombieRunDetails } from "../../../types/Player";
+import { ZombieTransform } from "../../JoinedPlayer";
 import { AvatarSize, PlayerAvatar } from "../../PlayerAvatar";
 import { shakeAnimationLeft } from "../../animations/keyframes/extreme";
 import { spinAwayAnimationUp } from "../../animations/keyframes/spinAnimations";
 import { textFocusIn } from "../../animations/keyframes/textFocusIn";
-import { ZombieTransform } from "../../JoinedPlayer";
-import { getPlayerZombieRunDetails } from "../../../types/Player";
-import { BalloonCard } from "./Card";
+import { BalloonCardWithSoundAndAnimation } from "./CardWithSoundAndAnimation";
 
 const usePlayerCarousel = true;
 
@@ -162,7 +162,7 @@ export function PlayerCarouselPlayer({
         !gameOver &&
         player.status === "alive" && (
           <CardContainer>
-            <BalloonCard
+            <BalloonCardWithSoundAndAnimation
               card={game.currentPlayer.cardPlayed}
               pressesRemaining={game.currentPlayer.pressesRemaining}
             />

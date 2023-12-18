@@ -1,11 +1,8 @@
 import Image from "next/image";
-import { useEffect } from "react";
 import styled from "styled-components";
 import { COLORS } from "../../../colors";
 import { GasCard } from "../../../services/migrated/gas-out/types";
 import THEME from "../../../themes/types";
-import { Appear } from "../../animations/Appear";
-import { useSound } from "../../hooks/useSound";
 import bombImage from "./cnb-card-bomb.png";
 import curseImage from "./cnb-card-curse.png";
 import reverseImage from "./cnb-card-reverse.png";
@@ -127,32 +124,5 @@ export function BalloonCard({
   card,
   pressesRemaining,
 }: Props): JSX.Element | null {
-  const { play } = useSound();
-
-  useEffect(() => {
-    switch (card.type) {
-      case "press":
-        play("gas-play-number-card");
-        break;
-      case "reverse":
-        play("gas-play-reverse-card");
-        break;
-      case "skip":
-        play("gas-play-skip-card");
-        break;
-      case "risky":
-      case "bomb":
-        play("gas-play-risky-card");
-        break;
-      default:
-        break;
-    }
-  }, [card.type, play]);
-
-  if (card.type === "press" && pressesRemaining === 0) {
-    return null;
-  }
-  return (
-    <Appear animation="flip-in">{renderCard(card, pressesRemaining)}</Appear>
-  );
+  return renderCard(card, pressesRemaining);
 }
