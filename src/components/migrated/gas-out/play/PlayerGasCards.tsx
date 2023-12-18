@@ -9,15 +9,14 @@ import { BalloonCard } from "../BalloonCard";
 
 const Container = styled.div`
   display: flex;
-  /* gap: 2rem; */
   transition: opacity 300ms ease-out;
   justify-content: space-between;
-  padding: 0 1rem;
 `;
 
 const CardButtonContainer = styled.button`
   border: 0;
   background: none;
+  cursor: pointer;
 
   &:disabled {
     opacity: 0.5;

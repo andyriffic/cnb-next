@@ -24,11 +24,10 @@ const Main = styled.div`
 
 const Header = styled.div`
   flex-shrink: 0;
-  /* border-bottom: 2px solid #05a9c7; */
   min-height: 20px;
   width: 100vw;
   padding: 1rem;
-  background-color: #f7e6b6;
+  background-color: ${THEME.colours.secondaryBackground};
 `;
 
 const Footer = styled.div`
@@ -37,7 +36,7 @@ const Footer = styled.div`
   min-height: 20px;
   width: 100vw;
   padding: 1rem;
-  background-color: #f7e6b6;
+  background-color: ${THEME.colours.secondaryBackground};
 `;
 
 const FooterContent = styled.div`
@@ -63,7 +62,6 @@ export function PlayerPageLayout({
       <Footer>
         <FooterContent>
           <Link href={getPlayerHomeUrl(playerId)}>Home</Link>
-          <Link href={getClassicCnbPlayerUrl(playerId)}>Classic CNB</Link>
         </FooterContent>
       </Footer>
     </Container>

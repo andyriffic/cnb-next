@@ -30,6 +30,13 @@ export const SmallHeading = styled.h3`
   letter-spacing: 0.2rem;
 `;
 
+export const NormalText = styled.p`
+  font-size: 1rem;
+  margin: 0;
+  font-family: ${THEME.fonts.body};
+  color: ${THEME.colours.primaryText};
+`;
+
 export const ThemedPrimaryLinkButton = styled(Link)`
   display: block;
   padding: 1rem 2rem;

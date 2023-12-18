@@ -39,7 +39,7 @@ function getPlayerStatusText(
   }
 
   if (!game.currentPlayer.cardPlayed) {
-    return "Select a card";
+    return "Pick a card";
   }
 
   if (game.currentPlayer.pressesRemaining) {

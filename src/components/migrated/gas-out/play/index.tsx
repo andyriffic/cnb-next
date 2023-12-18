@@ -8,10 +8,10 @@ import { PlayerGasTimeoutTimer } from "./PlayerGasTimeoutTimer";
 import { PlayerGasCloudPresser } from "./PlayerGasCloudPresser";
 import { PlayerGasNextOutSelector } from "./PlayerGasNextOutSelector";
 import { PlayerGasChosenNextOutPlayer } from "./PlayerGasChosenNextOutPlayer";
+import { PlayerSelectedCardInfo } from "./PlayerSelectedCardInfo";
 
 const PlayerStatus = styled(SmallHeading)`
-  margin: 30px 0;
-  text-align: center;
+  margin: 2rem 0;
 `;
 
 const PlayerFinishedPosition = styled.div`
@@ -65,22 +65,35 @@ const View = ({ playerId, gasGameId }: Props) => {
               😭
             </PlayerStatus>
           )}
-          {playersTurn &&
+          {/* {playersTurn &&
             !game.currentPlayer.cardPlayed &&
             !!gasPlayer?.curse && (
               <PlayerGasTimeoutTimer
                 timeOutMilliseconds={3000}
                 onTimedOut={timeOut}
               />
-            )}
+            )} */}
         </>
       )}
-      {showCloudPresser && gasPlayer.status === "alive" && (
-        <PlayerGasCloudPresser
-          pressesRemaining={pressesRemaining}
-          press={pressCloud}
-        />
-      )}
+      {game.currentPlayer.cardPlayed &&
+        showCloudPresser &&
+        gasPlayer.status === "alive" && (
+          <div
+            style={{
+              display: "flex",
+              width: "100%",
+              flexDirection: "column",
+              gap: "2rem",
+              alignItems: "center",
+            }}
+          >
+            {/* <PlayerSelectedCardInfo card={game.currentPlayer.cardPlayed} /> */}
+            <PlayerGasCloudPresser
+              pressesRemaining={pressesRemaining}
+              press={pressCloud}
+            />
+          </div>
+        )}
       {!!gasPlayer.finishedPosition && (
         <PlayerFinishedPosition>
           <>{getOrdinal(gasPlayer.finishedPosition)}</>
