@@ -42,7 +42,7 @@ function Page() {
   return (
     <SpectatorPageLayout>
       <Container>
-        <CenterSpaced>
+        <CenterSpaced style={{ alignItems: "flex-end" }}>
           <Appear animation="flip-in">
             <Image src={cinbyWave} alt="" width={200} />
           </Appear>
