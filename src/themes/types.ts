@@ -25,6 +25,10 @@ type ThemeTokens = {
   };
 };
 
+export type ThemedComponents = {
+  JoinScreenDecoration?: JSX.Element;
+};
+
 const DEFAULT_THEME: ThemeTokens = {
   colours: {
     primaryText: "#FFFFFF",

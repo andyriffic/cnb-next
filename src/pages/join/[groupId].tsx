@@ -30,8 +30,8 @@ import {
   getRockPaperScissorsGameSpectatorUrl,
   urlWithTeamQueryParam,
 } from "../../utils/url";
-import { PeekaBear } from "../../components/PeekaBear";
 import THEME from "../../themes/types";
+import THEME_COMPONENTS from "../../themes/themed-components";
 import { AvatarSize } from "../../components/PlayerAvatar";
 
 const JoinedPlayerContainer = styled.div`
@@ -44,14 +44,22 @@ const JoinedPlayerContainer = styled.div`
 const SplitScreenContainer = styled.div`
   display: flex;
   height: 100vh;
-  flex: 1;
+  align-items: stretch;
 `;
 
 const JoinDetailsContainer = styled.div`
   width: 30%;
   background-color: ${THEME.colours.primaryBackground};
-  padding: 4rem;
+  display: flex;
+  flex-direction: column;
 `;
+
+const JoinDetailsInfoContainer = styled.div`
+  padding: 4rem;
+  flex-grow: 1;
+`;
+
+const JoinDetailsDecorationContainer = styled.div``;
 
 const WaitingRoomContainer = styled.div`
   flex: 1;
@@ -127,31 +135,36 @@ function Page() {
 
   return (
     <SpectatorPageLayout debug={group && <DebugPlayerJoin group={group} />}>
-      <PeekaBear />
-
       <SplitScreenContainer>
         <JoinDetailsContainer>
-          <SmallHeading style={{ textAlign: "right", marginBottom: "2rem" }}>
-            Come in!
-          </SmallHeading>
-          {qrCodeUrl && (
-            <div style={{ textAlign: "right", marginBottom: "2rem" }}>
-              <Image src={qrCodeUrl} alt="" width={200} height={200} />
-            </div>
-          )}
+          <JoinDetailsInfoContainer>
+            <SmallHeading style={{ textAlign: "right", marginBottom: "2rem" }}>
+              Come in!
+            </SmallHeading>
+            {qrCodeUrl && (
+              <div style={{ textAlign: "right", marginBottom: "2rem" }}>
+                <Image src={qrCodeUrl} alt="" width={200} height={200} />
+              </div>
+            )}
 
-          <Heading
-            style={{
-              fontSize: "5rem",
-              textAlign: "right",
-              marginBottom: "2rem",
-            }}
-          >
-            <NumericValue>{groupId}</NumericValue>
-          </Heading>
-          <SubHeading style={{ textAlign: "right" }}>
-            cnb.finx-rocks.com/play
-          </SubHeading>
+            <Heading
+              style={{
+                fontSize: "5rem",
+                textAlign: "right",
+                marginBottom: "2rem",
+              }}
+            >
+              <NumericValue>{groupId}</NumericValue>
+            </Heading>
+            <SubHeading style={{ textAlign: "right" }}>
+              cnb.finx-rocks.com/play
+            </SubHeading>
+          </JoinDetailsInfoContainer>
+          {THEME_COMPONENTS.JoinScreenDecoration && (
+            <JoinDetailsDecorationContainer>
+              {THEME_COMPONENTS.JoinScreenDecoration}
+            </JoinDetailsDecorationContainer>
+          )}
         </JoinDetailsContainer>
         <WaitingRoomContainer>
           {group && (
