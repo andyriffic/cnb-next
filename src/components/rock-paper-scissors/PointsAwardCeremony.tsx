@@ -14,6 +14,7 @@ import { useSound } from "../hooks/useSound";
 import { CenterSpaced } from "../Layouts";
 import { LinkToMiniGame } from "../LinkToMiniGame";
 import { PlayerAvatar } from "../PlayerAvatar";
+import THEME from "../../themes/types";
 import { WinningConditions } from "./hooks/useGameWinningConditions";
 
 enum STORYBOARD {
@@ -42,7 +43,8 @@ const Points = styled.div`
   transform: translateX(-50%);
   width: 2vw;
   height: 2vw;
-  background-color: white;
+  background: ${THEME.colours.secondaryBackground};
+  color: ${THEME.colours.primaryText};
   border-radius: 50%;
   border: 0.2rem solid ${COLORS.borderPrimary};
   display: flex;

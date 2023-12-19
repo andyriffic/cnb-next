@@ -13,6 +13,7 @@ import { NumericValue } from "../NumericValue";
 import { PlayerAvatar } from "../PlayerAvatar";
 import { ZombieTransform } from "../JoinedPlayer";
 import { getPlayerZombieRunDetails } from "../../types/Player";
+import THEME from "../../themes/types";
 import { WinningConditions } from "./hooks/useGameWinningConditions";
 
 type BetState =
@@ -69,7 +70,8 @@ const Score = styled.div`
   left: 50%;
   /* transform: translateX(-50%); */
   font-size: 1rem;
-  background: white;
+  color: ${THEME.colours.primaryText};
+  background: ${THEME.colours.secondaryBackground};
   padding: 0.2rem 0.4rem;
   border-radius: 0.2rem;
   border: 2px solid ${COLORS.borderPrimary};

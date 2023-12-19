@@ -9,6 +9,7 @@ import { Appear } from "../animations/Appear";
 import { useSound } from "../hooks/useSound";
 import { NumericValue } from "../NumericValue";
 import { FacingDirection, PlayerAvatar } from "../PlayerAvatar";
+import THEME from "../../themes/types";
 import { WinningConditions } from "./hooks/useGameWinningConditions";
 
 const Container = styled.div`
@@ -38,7 +39,8 @@ const Lives = styled.div`
   left: 50%;
   /* transform: translateX(-50%); */
   font-size: 1rem;
-  background: white;
+  background: ${THEME.colours.secondaryBackground};
+  color: ${THEME.colours.primaryText};
   padding: 0.2rem 0.4rem;
   border-radius: 0.2rem;
   border: 2px solid ${COLORS.borderPrimary};

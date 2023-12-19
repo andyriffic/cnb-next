@@ -139,7 +139,8 @@ export const Label = styled.label`
 `;
 
 export const Card = styled.div`
-  background: white;
+  background: ${THEME.colours.secondaryBackground};
+  color: ${THEME.colours.primaryText};
   border-radius: 1rem;
   padding: 1rem;
   margin-bottom: 2rem;
