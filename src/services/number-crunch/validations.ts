@@ -1,27 +1,27 @@
 import * as E from "fp-ts/Either";
+import { pipe } from "fp-ts/lib/function";
 import { ErrorMessage } from "../../types/common";
 import { NumberCrunchGame, NumberCrunchRound } from "./types";
 
-export const validatePlayerIsMainPlayer = (
+export const validatePlayerHasNotGuessedOnLatestRound = (
   game: NumberCrunchGame,
   playerId: string
 ): E.Either<ErrorMessage, NumberCrunchGame> => {
-  return game.mainPlayer.id === playerId
-    ? E.right(game)
-    : E.left("Not main player");
+  return pipe(
+    getLatestRound(game),
+    E.map(playerHasGuessed(playerId)),
+    E.fold(
+      () => E.left("No latest round"),
+      (hasGuessed) =>
+        hasGuessed ? E.left("Player has already guessed") : E.right(game)
+    )
+  );
 };
 
-export const validatePlayerHasNotGuessed = (
-  game: NumberCrunchGame,
-  playerId: string
-): E.Either<ErrorMessage, NumberCrunchGame> => {
-  const guess = game.rounds[game.rounds.length - 1]?.guessingPlayers.find(
-    (g) => g.id === playerId
-  );
-  return guess && !guess.guess
-    ? E.right(game)
-    : E.left("Player already guessed");
-};
+function playerHasGuessed(playerId: string) {
+  return (round: NumberCrunchRound) =>
+    !!round.playerGuesses.find((g) => g.id === playerId);
+}
 
 export const getLatestRound = (
   game: NumberCrunchGame

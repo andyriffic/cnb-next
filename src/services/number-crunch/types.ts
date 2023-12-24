@@ -1,7 +1,12 @@
 export type NumberCrunchGame = {
   id: string;
-  mainPlayer: NumberCrunchMainPlayer;
   rounds: NumberCrunchRound[];
+  players: NumberCrunchPlayer[];
+};
+
+type NumberCrunchPlayer = {
+  id: string;
+  name: string;
 };
 
 type NumberCrunchRoundRange = {
@@ -12,7 +17,7 @@ type NumberCrunchRoundRange = {
 export type NumberCrunchRound = {
   range: NumberCrunchRoundRange;
   margin: number;
-  guessingPlayers: NumberCrunchGuessingPlayer[];
+  playerGuesses: NumberCrunchPlayerGuess[];
 };
 
 export type NumberCrunchMainPlayer = {
@@ -20,7 +25,14 @@ export type NumberCrunchMainPlayer = {
   targetNumber?: number;
 };
 
-export type NumberCrunchGuessingPlayer = {
+export type NumberCrunchPlayerGuess = {
   id: string;
-  guess?: number;
+  guess: number;
+};
+
+export type NumberCrunchGuessResultRange = "exact" | "cold" | "warm" | "hot";
+
+export type NumberCrunchPlayerGuessResult = {
+  id: string;
+  range: NumberCrunchGuessResultRange;
 };

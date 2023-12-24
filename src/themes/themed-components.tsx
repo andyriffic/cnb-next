@@ -10,4 +10,4 @@ const XMAS_COMPONENTS: ThemedComponents = {
   JoinScreenDecoration: <XmasJoinScreenDecoration />,
 };
 
-export default XMAS_COMPONENTS;
+export default DEFAULT_COMPONENTS;

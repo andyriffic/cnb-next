@@ -1,7 +1,7 @@
 import { SoundName } from "./types";
 
 const DEFAULT_SOUND_MAP: { [key in SoundName]: string } = {
-  "join-music": "/sounds/mojuo.mp3",
+  "join-music": "/sounds/music/training_new_record.mp3",
   "join-player-joined": "/sounds/dbz_instant_trans.mp3",
   "rps-show-move": "/sounds/spinning_heart.mp3",
   "rps-result-win": "/sounds/winner.mp3",
@@ -57,5 +57,5 @@ const XMAS_SOUND_MAP: { [key in SoundName]: string } = {
 };
 
 export const SOUND_MAP = {
-  ...XMAS_SOUND_MAP,
+  ...DEFAULT_SOUND_MAP,
 };

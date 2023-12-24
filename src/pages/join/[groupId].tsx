@@ -26,6 +26,7 @@ import { selectRandomOneOf, shuffleArray } from "../../utils/random";
 import {
   getAiOverlordSpectatorUrl,
   getGasOutSpectatorUrl,
+  getNumberCrunchSpectatorUrl,
   getPlayRootUrl,
   getRockPaperScissorsGameSpectatorUrl,
   urlWithTeamQueryParam,
@@ -74,7 +75,13 @@ const GameButttonContainer = styled.div`
   gap: 2rem;
 `;
 
-type GameTypes = "rps" | "rps-quick" | "balloon" | "balloon-quick" | "ai";
+type GameTypes =
+  | "rps"
+  | "rps-quick"
+  | "balloon"
+  | "balloon-quick"
+  | "ai"
+  | "number-crunch";
 const availableRandomGames: GameTypes[] = ["rps", "balloon"];
 
 const gameCreators: {
@@ -90,6 +97,7 @@ const gameCreators: {
   ["balloon-quick"]: createBallonGameQuick,
   balloon: createBallonGameNormal,
   ai: createAiGame,
+  ["number-crunch"]: createNumberCrunchGame,
 };
 
 const JoinedPlayerItem = styled.div``;
@@ -219,6 +227,24 @@ function Page() {
                 >
                   Balloon 🎈
                 </ThemedPrimaryButton>
+                <ThemedPrimaryButton
+                  disabled={group.playerIds.length < 2}
+                  onClick={() => {
+                    console.log("creatig game");
+
+                    gameCreators["number-crunch"](
+                      group,
+                      socketService,
+                      getName,
+                      team
+                    ).then((gameUrl) => {
+                      console.log("got herrre");
+                      router.push(urlWithTeamQueryParam(gameUrl, team));
+                    });
+                  }}
+                >
+                  Number Crunch 💯
+                </ThemedPrimaryButton>
               </GameButttonContainer>
             </div>
           )}
@@ -343,5 +369,16 @@ function createAiGame(
         resolve(getAiOverlordSpectatorUrl(gameId));
       }
     );
+  });
+}
+
+function createNumberCrunchGame(
+  group: PlayerGroup,
+  socketIoService: SocketIoService
+): Promise<GameUrl> {
+  return new Promise((resolve) => {
+    socketIoService.numberCrunch.createGame(group.id, group.players, (game) => {
+      resolve(getNumberCrunchSpectatorUrl(game.id));
+    });
   });
 }

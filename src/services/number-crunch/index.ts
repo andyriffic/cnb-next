@@ -1,16 +1,17 @@
 import * as E from "fp-ts/Either";
 import { pipe } from "fp-ts/lib/function";
+import { Player } from "../../types/Player";
 import { ErrorMessage } from "../../types/common";
 import { selectRandomOneOf } from "../../utils/random";
 import { NumberCrunchGame, NumberCrunchRound } from "./types";
 import {
-  validatePlayerHasNotGuessed,
-  validatePlayerIsMainPlayer,
+  getLatestRound,
+  validatePlayerHasNotGuessedOnLatestRound,
 } from "./validations";
 
 type CreateNumberCrunchGameProps = {
   gameId: string;
-  playerIds: string[];
+  players: Player[];
 };
 
 type RandomPlayerSelection = {
@@ -28,20 +29,15 @@ const chooseRandomPlayer = (playerIds: string[]): RandomPlayerSelection => {
 
 const createGame =
   (gameId: string) =>
-  (randomPlayerSelection: RandomPlayerSelection): NumberCrunchGame => {
+  (players: Player[]): NumberCrunchGame => {
     return {
       id: gameId,
-      mainPlayer: {
-        id: randomPlayerSelection.chosenPlayerId,
-      },
+      players: players.map((p) => ({ id: p.id, name: p.name })),
       rounds: [
         {
-          range: { low: 0, high: 100 },
+          range: { low: 1, high: 100 },
           margin: 25,
-          guessingPlayers: randomPlayerSelection.otherPlayerIds.map((id) => ({
-            id,
-            guesses: [],
-          })),
+          playerGuesses: [],
         },
       ],
     };
@@ -49,64 +45,35 @@ const createGame =
 
 export const createNumberCrunchGame = ({
   gameId,
-  playerIds,
+  players,
 }: CreateNumberCrunchGameProps): E.Either<ErrorMessage, NumberCrunchGame> => {
-  return pipe(chooseRandomPlayer(playerIds), createGame(gameId), E.right);
+  return pipe(createGame(gameId)(players), E.right);
 };
-
-const updateMainPlayerTarget =
-  (target: number) =>
-  (game: NumberCrunchGame): NumberCrunchGame => {
-    return {
-      ...game,
-      mainPlayer: {
-        ...game.mainPlayer,
-        targetNumber: target,
-      },
-    };
-  };
 
 export const setPlayerGuessOnLatestRound =
   (playerId: string, guess: number) =>
-  (game: NumberCrunchGame): NumberCrunchGame => {
-    return {
-      ...game,
-      rounds: game.rounds.map((round, index) =>
-        index === game.rounds.length - 1
-          ? setPlayerGuessOnRound(round)(playerId, guess)
-          : round
-      ),
-    };
+  (game: NumberCrunchGame): E.Either<ErrorMessage, NumberCrunchGame> => {
+    return pipe(
+      validatePlayerHasNotGuessedOnLatestRound(game, playerId),
+      E.chain(getLatestRound),
+      E.map(setPlayerGuessOnRound(playerId, guess)),
+      E.map(replaceLatestRound(game))
+    );
   };
 
-export const setPlayerGuessOnRound =
-  (round: NumberCrunchRound) =>
-  (playerId: string, guess: number): NumberCrunchRound => {
+const setPlayerGuessOnRound =
+  (playerId: string, guess: number) => (round: NumberCrunchRound) => {
     return {
       ...round,
-      guessingPlayers: round.guessingPlayers.map((pg) =>
-        pg.id === playerId ? { ...pg, guess } : pg
-      ),
+      playerGuesses: [...round.playerGuesses, { id: playerId, guess }],
     };
   };
 
-export const mainPlayerChooseTarget = (
-  game: NumberCrunchGame,
-  target: number
-): E.Either<ErrorMessage, NumberCrunchGame> => {
-  return pipe(
-    validatePlayerIsMainPlayer(game, game.mainPlayer.id),
-    E.map(updateMainPlayerTarget(target))
-  );
-};
-
-export const guessingPlayerGuess = (
-  game: NumberCrunchGame,
-  playerId: string,
-  guess: number
-): E.Either<ErrorMessage, NumberCrunchGame> => {
-  return pipe(
-    validatePlayerHasNotGuessed(game, game.mainPlayer.id),
-    E.map(setPlayerGuessOnLatestRound(playerId, guess))
-  );
-};
+function replaceLatestRound(game: NumberCrunchGame) {
+  return (round: NumberCrunchRound) => {
+    return {
+      ...game,
+      rounds: [...game.rounds.slice(0, -1), round],
+    };
+  };
+}

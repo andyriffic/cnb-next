@@ -72,4 +72,4 @@ const XMAS_THEME: ThemeTokens = {
   },
 };
 
-export default XMAS_THEME;
+export default DEFAULT_THEME;

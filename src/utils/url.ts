@@ -55,6 +55,10 @@ export const getAiOverlordPlayerUrl = (
   return `/play/${playerId}/ai-overlord?gameId=${gameId}`;
 };
 
+export const getNumberCrunchSpectatorUrl = (gameId: string): string => {
+  return `/watch/number-crunch/${gameId}`;
+};
+
 export const getClassicCnbPlayerUrl = (playerId: string): string => {
   return `http://cnb.finx-rocks.com/play/${playerId}`;
 };
