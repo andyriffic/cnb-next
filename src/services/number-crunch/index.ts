@@ -3,7 +3,11 @@ import { pipe } from "fp-ts/lib/function";
 import { Player } from "../../types/Player";
 import { ErrorMessage } from "../../types/common";
 import { selectRandomOneOf } from "../../utils/random";
-import { NumberCrunchGame, NumberCrunchRound } from "./types";
+import {
+  NumberCrunchGame,
+  NumberCrunchGameView,
+  NumberCrunchRound,
+} from "./types";
 import {
   getLatestRound,
   validatePlayerHasNotGuessedOnLatestRound,
@@ -12,6 +16,7 @@ import {
 type CreateNumberCrunchGameProps = {
   gameId: string;
   players: Player[];
+  getTarget: () => number;
 };
 
 type RandomPlayerSelection = {
@@ -28,15 +33,15 @@ const chooseRandomPlayer = (playerIds: string[]): RandomPlayerSelection => {
 };
 
 const createGame =
-  (gameId: string) =>
+  (gameId: string, getTarget: () => number) =>
   (players: Player[]): NumberCrunchGame => {
     return {
       id: gameId,
+      target: getTarget(),
       players: players.map((p) => ({ id: p.id, name: p.name })),
       rounds: [
         {
           range: { low: 1, high: 100 },
-          margin: 25,
           playerGuesses: [],
         },
       ],
@@ -46,8 +51,9 @@ const createGame =
 export const createNumberCrunchGame = ({
   gameId,
   players,
+  getTarget,
 }: CreateNumberCrunchGameProps): E.Either<ErrorMessage, NumberCrunchGame> => {
-  return pipe(createGame(gameId)(players), E.right);
+  return pipe(createGame(gameId, getTarget)(players), E.right);
 };
 
 export const setPlayerGuessOnLatestRound =
@@ -76,4 +82,18 @@ function replaceLatestRound(game: NumberCrunchGame) {
       rounds: [...game.rounds.slice(0, -1), round],
     };
   };
+}
+
+export function createGameView(
+  game: NumberCrunchGame
+): E.Either<ErrorMessage, NumberCrunchGameView> {
+  return pipe(
+    getLatestRound(game),
+    E.map((round) => ({
+      id: game.id,
+      roundNumber: game.rounds.length,
+      players: game.players,
+      currentRound: round,
+    }))
+  );
 }

@@ -15,6 +15,10 @@ export function selectRandomOneOf<T>(items: T[]): T {
   return items[randomItemIndex]!;
 }
 
+export function generateRandomInt(min: number, max: number): number {
+  return random.int(min, max);
+}
+
 export function selectWeightedRandomOneOf<T>(
   weightedList: WeightedItem<T>[]
 ): T {

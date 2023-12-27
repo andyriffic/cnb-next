@@ -5,15 +5,14 @@ import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import {
   Heading,
-  PrimaryButton,
   SmallHeading,
   SubHeading,
   ThemedPrimaryButton,
 } from "../../components/Atoms";
 import { DebugPlayerJoin } from "../../components/DebugPlayerJoin";
 import { JoinedPlayer } from "../../components/JoinedPlayer";
-import { CenterSpaced, EvenlySpaced } from "../../components/Layouts";
 import { NumericValue } from "../../components/NumericValue";
+import { AvatarSize } from "../../components/PlayerAvatar";
 import { SpectatorPageLayout } from "../../components/SpectatorPageLayout";
 import { Appear } from "../../components/animations/Appear";
 import { useSomethingWhenArraySizeChanges } from "../../components/hooks/useSomethingWhenArraySizeChanges";
@@ -22,7 +21,10 @@ import { usePlayerNames } from "../../providers/PlayerNamesProvider";
 import { SocketIoService, useSocketIo } from "../../providers/SocketIoProvider";
 import { PlayerWallet } from "../../services/betting/types";
 import { PlayerGroup } from "../../services/player-join/types";
-import { selectRandomOneOf, shuffleArray } from "../../utils/random";
+import THEME_COMPONENTS from "../../themes/themed-components";
+import THEME from "../../themes/types";
+import { isClientSideFeatureEnabled } from "../../utils/feature";
+import { shuffleArray } from "../../utils/random";
 import {
   getAiOverlordSpectatorUrl,
   getGasOutSpectatorUrl,
@@ -31,9 +33,6 @@ import {
   getRockPaperScissorsGameSpectatorUrl,
   urlWithTeamQueryParam,
 } from "../../utils/url";
-import THEME from "../../themes/types";
-import THEME_COMPONENTS from "../../themes/themed-components";
-import { AvatarSize } from "../../components/PlayerAvatar";
 
 const JoinedPlayerContainer = styled.div`
   display: flex;
@@ -112,6 +111,7 @@ function Page() {
   const { getName } = usePlayerNames();
   const { play, loop } = useSound();
   const [qrCodeUrl, setQrCodeUrl] = useState("");
+  const numberCrunchEnabled = isClientSideFeatureEnabled("number-crunch");
 
   useEffect(() => {
     const joinMusic = loop("join-music");
@@ -227,24 +227,26 @@ function Page() {
                 >
                   Balloon 🎈
                 </ThemedPrimaryButton>
-                <ThemedPrimaryButton
-                  disabled={group.playerIds.length < 2}
-                  onClick={() => {
-                    console.log("creatig game");
+                {numberCrunchEnabled && (
+                  <ThemedPrimaryButton
+                    disabled={group.playerIds.length < 2}
+                    onClick={() => {
+                      console.log("creatig game");
 
-                    gameCreators["number-crunch"](
-                      group,
-                      socketService,
-                      getName,
-                      team
-                    ).then((gameUrl) => {
-                      console.log("got herrre");
-                      router.push(urlWithTeamQueryParam(gameUrl, team));
-                    });
-                  }}
-                >
-                  Number Crunch 💯
-                </ThemedPrimaryButton>
+                      gameCreators["number-crunch"](
+                        group,
+                        socketService,
+                        getName,
+                        team
+                      ).then((gameUrl) => {
+                        console.log("got herrre");
+                        router.push(urlWithTeamQueryParam(gameUrl, team));
+                      });
+                    }}
+                  >
+                    Number Crunch 💯
+                  </ThemedPrimaryButton>
+                )}
               </GameButttonContainer>
             </div>
           )}

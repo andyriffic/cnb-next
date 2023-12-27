@@ -1,5 +1,6 @@
 export type NumberCrunchGame = {
   id: string;
+  target: number;
   rounds: NumberCrunchRound[];
   players: NumberCrunchPlayer[];
 };
@@ -16,13 +17,7 @@ type NumberCrunchRoundRange = {
 
 export type NumberCrunchRound = {
   range: NumberCrunchRoundRange;
-  margin: number;
   playerGuesses: NumberCrunchPlayerGuess[];
-};
-
-export type NumberCrunchMainPlayer = {
-  id: string;
-  targetNumber?: number;
 };
 
 export type NumberCrunchPlayerGuess = {
@@ -35,4 +30,11 @@ export type NumberCrunchGuessResultRange = "exact" | "cold" | "warm" | "hot";
 export type NumberCrunchPlayerGuessResult = {
   id: string;
   range: NumberCrunchGuessResultRange;
+};
+
+export type NumberCrunchGameView = {
+  id: string;
+  roundNumber: number;
+  players: NumberCrunchPlayer[];
+  currentRound: NumberCrunchRound;
 };

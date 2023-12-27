@@ -5,16 +5,19 @@ import {
   MakeNumberCrunchPlayerGuessGameHandler,
   NUMBER_CRUNCH_ACTIONS,
 } from "../../services/number-crunch/socket.io";
-import { NumberCrunchGame } from "../../services/number-crunch/types";
+import {
+  NumberCrunchGame,
+  NumberCrunchGameView,
+} from "../../services/number-crunch/types";
 
 export type NumberCrunchSocketService = {
-  games: NumberCrunchGame[];
+  games: NumberCrunchGameView[];
   createGame: CreateNumberCrunchGameHandler;
   makePlayerGuess: MakeNumberCrunchPlayerGuessGameHandler;
 };
 
 export function useNumberCrunch(socket: Socket): NumberCrunchSocketService {
-  const [games, setGames] = useState<NumberCrunchGame[]>([]);
+  const [games, setGames] = useState<NumberCrunchGameView[]>([]);
 
   const createGame = useCallback<CreateNumberCrunchGameHandler>(
     (gameId, players, onCreated) =>
@@ -42,7 +45,7 @@ export function useNumberCrunch(socket: Socket): NumberCrunchSocketService {
     console.log("Setting up Number Crunch socket connection");
     socket.on(
       NUMBER_CRUNCH_ACTIONS.GAME_UPDATE,
-      (games: NumberCrunchGame[]) => {
+      (games: NumberCrunchGameView[]) => {
         console.log("Number Crunch Games", games);
         setGames(games);
       }
