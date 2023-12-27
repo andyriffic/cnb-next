@@ -6,6 +6,7 @@ import { selectRandomOneOf } from "../../utils/random";
 import {
   NumberCrunchGame,
   NumberCrunchGameView,
+  NumberCrunchGuessResultRangeIndicator,
   NumberCrunchRound,
 } from "./types";
 import {
@@ -62,16 +63,24 @@ export const setPlayerGuessOnLatestRound =
     return pipe(
       validatePlayerHasNotGuessedOnLatestRound(game, playerId),
       E.chain(getLatestRound),
-      E.map(setPlayerGuessOnRound(playerId, guess)),
+      E.map(setPlayerGuessOnRound(playerId, guess, game.target)),
       E.map(replaceLatestRound(game))
     );
   };
 
 const setPlayerGuessOnRound =
-  (playerId: string, guess: number) => (round: NumberCrunchRound) => {
+  (playerId: string, guess: number, target: number) =>
+  (round: NumberCrunchRound) => {
     return {
       ...round,
-      playerGuesses: [...round.playerGuesses, { id: playerId, guess }],
+      playerGuesses: [
+        ...round.playerGuesses,
+        {
+          id: playerId,
+          guess,
+          offBy: Math.abs(target - guess),
+        },
+      ],
     };
   };
 
@@ -84,6 +93,25 @@ function replaceLatestRound(game: NumberCrunchGame) {
   };
 }
 
+function getGuessRange(
+  target: number,
+  guess: number
+): NumberCrunchGuessResultRangeIndicator {
+  const diff = Math.abs(target - guess);
+  if (diff === 0) {
+    return "exact";
+  }
+  if (diff <= 5) {
+    return "hot";
+  }
+  if (diff <= 10) {
+    return "warm";
+  }
+  return "cold";
+}
+
+export function processLatestRound(game: NumberCrunchGame) {}
+
 export function createGameView(
   game: NumberCrunchGame
 ): E.Either<ErrorMessage, NumberCrunchGameView> {
@@ -92,8 +120,17 @@ export function createGameView(
     E.map((round) => ({
       id: game.id,
       roundNumber: game.rounds.length,
-      players: game.players,
-      currentRound: round,
+      players: game.players.map((p) => ({
+        ...p,
+        guessedThisRound: round.playerGuesses.some((pg) => pg.id === p.id),
+      })),
+      currentRound: {
+        range: round.range,
+        playerGuesses: round.playerGuesses.map((pg) => ({
+          playerId: pg.id,
+          offBy: pg.offBy,
+        })),
+      },
     }))
   );
 }

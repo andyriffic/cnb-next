@@ -23,18 +23,35 @@ export type NumberCrunchRound = {
 export type NumberCrunchPlayerGuess = {
   id: string;
   guess: number;
+  offBy: number;
 };
 
-export type NumberCrunchGuessResultRange = "exact" | "cold" | "warm" | "hot";
+export type NumberCrunchGuessResultRangeIndicator =
+  | "exact"
+  | "cold"
+  | "warm"
+  | "hot";
 
 export type NumberCrunchPlayerGuessResult = {
   id: string;
-  range: NumberCrunchGuessResultRange;
+  range: NumberCrunchGuessResultRangeIndicator;
 };
 
 export type NumberCrunchGameView = {
   id: string;
   roundNumber: number;
-  players: NumberCrunchPlayer[];
-  currentRound: NumberCrunchRound;
+  players: NumberCrunchPlayerView[];
+  currentRound: NumberCrunchRoundView;
+};
+
+type NumberCrunchPlayerView = NumberCrunchPlayer & {
+  guessedThisRound: boolean;
+};
+
+type NumberCrunchRoundView = {
+  range: NumberCrunchRoundRange;
+  playerGuesses: {
+    playerId: string;
+    offBy: number;
+  }[];
 };

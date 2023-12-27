@@ -13,7 +13,7 @@ export const validatePlayerHasNotGuessedOnLatestRound = (
     E.fold(
       () => E.left("No latest round"),
       (hasGuessed) =>
-        hasGuessed ? E.left("Player has already guessed") : E.right(game)
+        hasGuessed ? E.left(`${playerId} has already guessed`) : E.right(game)
     )
   );
 };

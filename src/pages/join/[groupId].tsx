@@ -231,15 +231,12 @@ function Page() {
                   <ThemedPrimaryButton
                     disabled={group.playerIds.length < 2}
                     onClick={() => {
-                      console.log("creatig game");
-
                       gameCreators["number-crunch"](
                         group,
                         socketService,
                         getName,
                         team
                       ).then((gameUrl) => {
-                        console.log("got herrre");
                         router.push(urlWithTeamQueryParam(gameUrl, team));
                       });
                     }}

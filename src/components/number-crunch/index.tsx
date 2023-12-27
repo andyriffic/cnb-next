@@ -1,18 +1,20 @@
-import styled from "styled-components";
-import { NumberCrunchGame } from "../../services/number-crunch/types";
+import { NumberCrunchGameView } from "../../services/number-crunch/types";
 import { SpectatorPageLayout } from "../SpectatorPageLayout";
-import { SmallHeading } from "../Atoms";
+import { DebugNumberCrunchGame } from "./DebugNumberCrunch";
+import { NumberTarget } from "./NumberTarget";
+import { RoundResultBuckets } from "./RoundResultBuckets";
 import { WaitingToGuessList } from "./WaitingToGuessList";
 
 type Props = {
-  game: NumberCrunchGame;
+  game: NumberCrunchGameView;
 };
 
 const View = ({ game }: Props) => {
   return (
-    <SpectatorPageLayout>
-      <SmallHeading>Found game {game.id}</SmallHeading>
+    <SpectatorPageLayout debug={<DebugNumberCrunchGame game={game} />}>
+      <NumberTarget game={game} />
       <WaitingToGuessList game={game} />
+      <RoundResultBuckets game={game} />
     </SpectatorPageLayout>
   );
 };
