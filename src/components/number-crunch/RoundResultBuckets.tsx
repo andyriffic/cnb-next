@@ -11,7 +11,7 @@ const BUCKET_RANGES = [
   { from: 0, to: 0, title: "Spot on!" },
   { from: 1, to: 5, title: "Very close" },
   { from: 6, to: 10, title: "Pretty good" },
-  { from: 1, to: 30, title: "Needs help" },
+  { from: 11, to: 30, title: "Needs help" },
   { from: 31, to: 50, title: "Not the best" },
   { from: 51, to: 100, title: "Waaaay off" },
 ];
