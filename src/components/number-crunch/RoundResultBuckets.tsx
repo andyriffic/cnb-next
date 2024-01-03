@@ -20,6 +20,12 @@ type Props = {
   game: NumberCrunchGameView;
 };
 
+export const getNumberCrunchRangeBucket = (offBy: number) => {
+  return BUCKET_RANGES.find((bucket) => {
+    return offBy >= bucket.from && offBy <= bucket.to;
+  });
+};
+
 export const RoundResultBuckets = ({ game }: Props) => {
   return (
     <div>

@@ -3,7 +3,11 @@ import { useMemo } from "react";
 import styled from "styled-components";
 import { useSocketIo } from "../../providers/SocketIoProvider";
 import { Card, SubHeading } from "../Atoms";
-import { getAiOverlordPlayerUrl, getGasOutPlayerUrl } from "../../utils/url";
+import {
+  getAiOverlordPlayerUrl,
+  getGasOutPlayerUrl,
+  getNumberCrunchPlayerUrl,
+} from "../../utils/url";
 
 const TappableLink = styled.a`
   display: block;
@@ -21,9 +25,10 @@ export const PlayerGamesList = ({ playerId }: Props): JSX.Element | null => {
     groupBetting: { bettingGames },
     aiOverlord: { aiOverlordGames },
     gasGame: { gasGames },
+    numberCrunch: { games: numberCrunchGames },
   } = useSocketIo();
 
-  const playersGames = useMemo(() => {
+  const playersRPSGames = useMemo(() => {
     return [
       ...activeRPSGames.filter((game) =>
         game.players.find((p) => p.id === playerId)
@@ -46,12 +51,18 @@ export const PlayerGamesList = ({ playerId }: Props): JSX.Element | null => {
     );
   }, [gasGames, playerId]);
 
-  return playersGames ? (
+  const playerNumberCrunchGames = useMemo(() => {
+    return numberCrunchGames.filter((game) =>
+      game.players.map((p) => p.id).includes(playerId)
+    );
+  }, [numberCrunchGames, playerId]);
+
+  return playersRPSGames ? (
     <div>
       <Card>
         <SubHeading>Games in progress</SubHeading>
         <ul>
-          {playersGames.map((game) => (
+          {playersRPSGames.map((game) => (
             <li key={game.id}>
               <Link
                 href={`/play/${playerId}/rock-paper-scissors?gameId=${game.id}`}
@@ -85,6 +96,19 @@ export const PlayerGamesList = ({ playerId }: Props): JSX.Element | null => {
                 legacyBehavior
               >
                 <TappableLink>Balloon: {game.id}</TappableLink>
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <ul>
+          {playerNumberCrunchGames.map((game) => (
+            <li key={game.id}>
+              <Link
+                href={getNumberCrunchPlayerUrl(playerId, game.id)}
+                passHref={true}
+                legacyBehavior
+              >
+                <TappableLink>Number Crunch: {game.id}</TappableLink>
               </Link>
             </li>
           ))}

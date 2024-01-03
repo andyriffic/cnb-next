@@ -78,3 +78,10 @@ export const urlWithTeamQueryParam = (url: string, team?: string): string => {
   const hasQueryAlready = url.indexOf("?") > -1;
   return team ? `${url}${hasQueryAlready ? "&" : "?"}team=${team}` : url;
 };
+
+export const getNumberCrunchPlayerUrl = (
+  playerId: string,
+  gameId: string
+): string => {
+  return `/play/${playerId}/number-crunch?gameId=${gameId}`;
+};
