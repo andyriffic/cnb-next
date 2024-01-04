@@ -22,6 +22,8 @@ const SliderInput = styled.input`
     outline: none;
   }
 
+  /* https://www.smashingmagazine.com/2021/12/create-custom-range-input-consistent-browsers/ */
+
   &:focus::-moz-range-thumb {
     border: 0.1rem solid #f50fd3;
     outline: 0.3rem solid #f50fd3;

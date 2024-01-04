@@ -2,9 +2,23 @@ import styled from "styled-components";
 import { NumberCrunchGameView } from "../../services/number-crunch/types";
 import { SmallHeading } from "../Atoms";
 import { PlayerAvatar } from "../PlayerAvatar";
+import THEME from "../../themes/types";
 
 const BucketContainer = styled.div`
-  margin-bottom: 3rem;
+  display: flex;
+  gap: 1rem;
+`;
+
+const RoundContainer = styled.div`
+  border-radius: 1rem;
+  background: ${THEME.colours.secondaryBackground};
+  padding: 1rem;
+`;
+
+const RoundTitle = styled.div``;
+
+const CellContainer = styled.div`
+  height: 10vh;
 `;
 
 const BUCKET_RANGES = [
@@ -29,29 +43,44 @@ export const getNumberCrunchRangeBucket = (offBy: number) => {
 export const RoundResultBuckets = ({ game }: Props) => {
   return (
     <div>
-      {BUCKET_RANGES.map((bucket, i) => {
-        return (
-          <BucketContainer key={i}>
-            <SmallHeading>{bucket.title}</SmallHeading>
-            <div style={{ display: "flex" }}>
-              {game.currentRound.playerGuesses
-                .filter(
-                  (guess) =>
-                    guess.offBy >= bucket.from && guess.offBy <= bucket.to
-                )
-                .map((guess, i) => {
-                  return (
-                    <PlayerAvatar
-                      key={i}
-                      playerId={guess.playerId}
-                      size="thumbnail"
-                    />
-                  );
-                })}
-            </div>
-          </BucketContainer>
-        );
-      })}
+      <BucketContainer>
+        <RoundContainer>
+          <RoundTitle>&nbsp;</RoundTitle>
+          {BUCKET_RANGES.map((bucket, i) => {
+            return (
+              <CellContainer key={i}>
+                <SmallHeading>{bucket.title}</SmallHeading>
+              </CellContainer>
+            );
+          })}
+        </RoundContainer>
+        <RoundContainer>
+          <RoundTitle>Round 1</RoundTitle>
+
+          {BUCKET_RANGES.map((bucket, i) => {
+            return (
+              <CellContainer key={i}>
+                <div style={{ display: "flex" }}>
+                  {game.currentRound.playerGuesses
+                    .filter(
+                      (guess) =>
+                        guess.offBy >= bucket.from && guess.offBy <= bucket.to
+                    )
+                    .map((guess, i) => {
+                      return (
+                        <PlayerAvatar
+                          key={i}
+                          playerId={guess.playerId}
+                          size="thumbnail"
+                        />
+                      );
+                    })}
+                </div>
+              </CellContainer>
+            );
+          })}
+        </RoundContainer>
+      </BucketContainer>
     </div>
   );
 };

@@ -7,9 +7,10 @@ import { PlayerSelectNumber } from "./PlayerSelectNumber";
 type Props = {
   game: NumberCrunchGameView;
   playerId: string;
+  makePlayerGuess: (guess: number) => void;
 };
 
-const View = ({ game, playerId }: Props) => {
+const View = ({ game, playerId, makePlayerGuess }: Props) => {
   return (
     <PlayerPageLayout playerId={playerId}>
       <SmallHeading>{playerId}</SmallHeading>
@@ -17,7 +18,7 @@ const View = ({ game, playerId }: Props) => {
       <PlayerSelectNumber
         game={game}
         playerId={playerId}
-        onSelected={(val) => console.log(playerId, val)}
+        onSelected={(val) => makePlayerGuess(val)}
       />
     </PlayerPageLayout>
   );

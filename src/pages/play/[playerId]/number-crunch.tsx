@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useSocketIo } from "../../../providers/SocketIoProvider";
 import PlayerGameView from "../../../components/number-crunch/player";
 
@@ -14,8 +14,19 @@ function Page() {
     return numberCrunch.games.find((g) => g.id === gameId);
   }, [gameId, numberCrunch.games]);
 
+  const makePlayerGuess = useCallback(
+    (guess: number) => {
+      numberCrunch.makePlayerGuess(gameId, playerId, guess);
+    },
+    [gameId, numberCrunch, playerId]
+  );
+
   return game ? (
-    <PlayerGameView game={game} playerId={playerId}></PlayerGameView>
+    <PlayerGameView
+      game={game}
+      playerId={playerId}
+      makePlayerGuess={makePlayerGuess}
+    ></PlayerGameView>
   ) : (
     <div>Game not found</div>
   );
