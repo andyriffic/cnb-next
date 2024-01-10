@@ -33,6 +33,7 @@ import {
   getRockPaperScissorsGameSpectatorUrl,
   urlWithTeamQueryParam,
 } from "../../utils/url";
+import { WaitingPlayerNamesHint } from "../../components/pages/join/WaitingPlayerNamesHint";
 
 const JoinedPlayerContainer = styled.div`
   display: flex;
@@ -68,10 +69,20 @@ const WaitingRoomContainer = styled.div`
   overflow-y: scroll;
 `;
 
-const GameButttonContainer = styled.div`
+const GameInfoContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+`;
+
+const PlayerHintContainer = styled.div``;
+
+const GameSelectorContainer = styled.div`
   display: flex;
   justify-content: flex-end;
   gap: 2rem;
+  flex-shrink: 0;
 `;
 
 type GameTypes =
@@ -112,6 +123,7 @@ function Page() {
   const { play, loop } = useSound();
   const [qrCodeUrl, setQrCodeUrl] = useState("");
   const numberCrunchEnabled = isClientSideFeatureEnabled("number-crunch");
+  const [showWaitingPlayersHint, setShowWaitingPlayersHint] = useState(false);
 
   useEffect(() => {
     const joinMusic = loop("join-music");
@@ -129,6 +141,15 @@ function Page() {
       setQrCodeUrl(url);
     });
   }, [groupId]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setShowWaitingPlayersHint(true);
+    }, 10000);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, []);
 
   const group = useMemo(() => {
     return socketService.groupJoin.playerGroups.find((g) => g.id === groupId);
@@ -202,49 +223,56 @@ function Page() {
                   ))}
                 </JoinedPlayerContainer>
               </div>
-              <GameButttonContainer>
-                <ThemedPrimaryButton
-                  disabled={group.playerIds.length < 2}
-                  onClick={() => {
-                    gameCreators
-                      .rps(group, socketService, getName, team)
-                      .then((gameUrl) => {
-                        router.push(urlWithTeamQueryParam(gameUrl, team));
-                      });
-                  }}
-                >
-                  Betting 🎲
-                </ThemedPrimaryButton>
-                <ThemedPrimaryButton
-                  disabled={group.playerIds.length < 2}
-                  onClick={() => {
-                    gameCreators
-                      .balloon(group, socketService, getName, team)
-                      .then((gameUrl) => {
-                        router.push(urlWithTeamQueryParam(gameUrl, team));
-                      });
-                  }}
-                >
-                  Balloon 🎈
-                </ThemedPrimaryButton>
-                {numberCrunchEnabled && (
+              <GameInfoContainer>
+                <PlayerHintContainer>
+                  {showWaitingPlayersHint && (
+                    <WaitingPlayerNamesHint joinedPlayers={group.players} />
+                  )}
+                </PlayerHintContainer>
+                <GameSelectorContainer>
                   <ThemedPrimaryButton
                     disabled={group.playerIds.length < 2}
                     onClick={() => {
-                      gameCreators["number-crunch"](
-                        group,
-                        socketService,
-                        getName,
-                        team
-                      ).then((gameUrl) => {
-                        router.push(urlWithTeamQueryParam(gameUrl, team));
-                      });
+                      gameCreators
+                        .rps(group, socketService, getName, team)
+                        .then((gameUrl) => {
+                          router.push(urlWithTeamQueryParam(gameUrl, team));
+                        });
                     }}
                   >
-                    Number Crunch 💯
+                    Betting 🎲
                   </ThemedPrimaryButton>
-                )}
-              </GameButttonContainer>
+                  <ThemedPrimaryButton
+                    disabled={group.playerIds.length < 2}
+                    onClick={() => {
+                      gameCreators
+                        .balloon(group, socketService, getName, team)
+                        .then((gameUrl) => {
+                          router.push(urlWithTeamQueryParam(gameUrl, team));
+                        });
+                    }}
+                  >
+                    Balloon 🎈
+                  </ThemedPrimaryButton>
+                  {numberCrunchEnabled && (
+                    <ThemedPrimaryButton
+                      disabled={group.playerIds.length < 2}
+                      onClick={() => {
+                        gameCreators["number-crunch"](
+                          group,
+                          socketService,
+                          getName,
+                          team
+                        ).then((gameUrl) => {
+                          router.push(urlWithTeamQueryParam(gameUrl, team));
+                        });
+                      }}
+                    >
+                      Number Crunch 💯
+                    </ThemedPrimaryButton>
+                  )}
+                </GameSelectorContainer>
+              </GameInfoContainer>
             </div>
           )}
         </WaitingRoomContainer>
