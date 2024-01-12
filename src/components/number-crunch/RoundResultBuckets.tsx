@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { NumberCrunchGameView } from "../../services/number-crunch/types";
-import { SmallHeading } from "../Atoms";
+import { Pill, SmallHeading } from "../Atoms";
 import { PlayerAvatar } from "../PlayerAvatar";
 import THEME from "../../themes/types";
 
@@ -19,7 +19,6 @@ const RoundTitle = styled.div``;
 
 const CellContainer = styled.div`
   height: 10vh;
-  padding-right: 3vh;
 `;
 
 const BUCKET_RANGES = [
@@ -72,8 +71,8 @@ export const RoundResultBuckets = ({ gameView }: Props) => {
                         )
                         .map((guess, i) => {
                           return (
-                            <div key={i} style={{ width: "3vh" }}>
-                              {guess.playerId}
+                            <div key={i}>
+                              <Pill>{guess.playerId}</Pill>{" "}
                             </div>
                           );
                         })}
@@ -89,7 +88,7 @@ export const RoundResultBuckets = ({ gameView }: Props) => {
 
           {BUCKET_RANGES.map((bucket, i) => {
             return (
-              <CellContainer key={i}>
+              <CellContainer key={i} style={{ paddingRight: "3vh" }}>
                 <div style={{ display: "flex" }}>
                   {gameView.currentRound.playerGuesses
                     .filter(
