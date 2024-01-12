@@ -2,20 +2,13 @@ import styled from "styled-components";
 import { useMemo } from "react";
 import { Player } from "../../../types/Player";
 import THEME from "../../../themes/types";
-import { SmallHeading } from "../../Atoms";
+import { Pill, SmallHeading } from "../../Atoms";
 import { Appear } from "../../animations/Appear";
 
 const NameListContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 0.2rem;
-`;
-
-const Pill = styled.div`
-  background-color: ${THEME.colours.primaryBackground};
-  padding: 0.5rem 1rem;
-  border-radius: 1rem;
-  display: inline-block;
 `;
 
 const REGULAR_PLAYER_NAMES = [

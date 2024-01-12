@@ -79,6 +79,13 @@ export const ThemedPrimaryButton = styled.button`
   }
 `;
 
+export const Pill = styled.div`
+  background-color: ${THEME.colours.primaryBackground};
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  display: inline-block;
+`;
+
 export const Heading = styled.h1`
   font-weight: 600;
   font-size: 2.3rem;
