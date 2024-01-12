@@ -4,6 +4,7 @@ import {
   CreateNumberCrunchGameHandler,
   MakeNumberCrunchPlayerGuessGameHandler,
   NUMBER_CRUNCH_ACTIONS,
+  NewNumberCrunchRoundHandler,
 } from "../../services/number-crunch/socket.io";
 import {
   NumberCrunchGame,
@@ -14,6 +15,7 @@ export type NumberCrunchSocketService = {
   games: NumberCrunchGameView[];
   createGame: CreateNumberCrunchGameHandler;
   makePlayerGuess: MakeNumberCrunchPlayerGuessGameHandler;
+  newRound: NewNumberCrunchRoundHandler;
 };
 
 export function useNumberCrunch(socket: Socket): NumberCrunchSocketService {
@@ -41,6 +43,11 @@ export function useNumberCrunch(socket: Socket): NumberCrunchSocketService {
     [socket]
   );
 
+  const newRound = useCallback<NewNumberCrunchRoundHandler>(
+    (gameId) => socket.emit(NUMBER_CRUNCH_ACTIONS.NEW_ROUND, gameId),
+    [socket]
+  );
+
   useEffect(() => {
     console.log("Setting up Number Crunch socket connection");
     socket.on(
@@ -61,6 +68,7 @@ export function useNumberCrunch(socket: Socket): NumberCrunchSocketService {
     games,
     createGame,
     makePlayerGuess,
+    newRound,
   };
 }
 

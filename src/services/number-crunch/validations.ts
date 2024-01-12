@@ -23,6 +23,29 @@ function playerHasGuessed(playerId: string) {
     !!round.playerGuesses.find((g) => g.id === playerId);
 }
 
+function allPlayersHaveGuessed(
+  totalPlayers: number,
+  round: NumberCrunchRound
+): boolean {
+  return round.playerGuesses.length === totalPlayers;
+}
+
+export const validateLatestRoundIsComplete = (
+  game: NumberCrunchGame
+): E.Either<ErrorMessage, NumberCrunchGame> => {
+  return pipe(
+    game,
+    getLatestRound,
+    E.fold(
+      () => E.left("No latest round"),
+      (round) =>
+        allPlayersHaveGuessed(game.players.length, round)
+          ? E.right(game)
+          : E.left("Not all players have guessed in current round")
+    )
+  );
+};
+
 export const getLatestRound = (
   game: NumberCrunchGame
 ): E.Either<ErrorMessage, NumberCrunchRound> => {

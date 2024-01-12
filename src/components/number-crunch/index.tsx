@@ -14,7 +14,7 @@ const View = ({ game }: Props) => {
     <SpectatorPageLayout debug={<DebugNumberCrunchGame game={game} />}>
       <NumberTarget game={game} />
       <WaitingToGuessList game={game} />
-      <RoundResultBuckets game={game} />
+      <RoundResultBuckets gameView={game} />
     </SpectatorPageLayout>
   );
 };

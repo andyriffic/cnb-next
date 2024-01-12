@@ -10,6 +10,7 @@ import { NumberCrunchGame } from "./types";
 import {
   createGameView,
   createNumberCrunchGame,
+  newRound,
   setPlayerGuessOnLatestRound,
 } from ".";
 
@@ -17,6 +18,7 @@ export enum NUMBER_CRUNCH_ACTIONS {
   GAME_UPDATE = "NUMBER_CRUNCH_GAME_UPDATE",
   CREATE_GAME = "NUMBER_CRUNCH_CREATE_GAME",
   MAKE_PLAYER_GUESS = "NUMBER_CRUNCH_MAKE_PLAYER_GUESS",
+  NEW_ROUND = "NUMBER_CRUNCH_NEW_ROUND",
 }
 
 export type CreateNumberCrunchGameHandler = (
@@ -31,6 +33,8 @@ export type MakeNumberCrunchPlayerGuessGameHandler = (
   guess: number
 ) => void;
 
+export type NewNumberCrunchRoundHandler = (gameId: string) => void;
+
 let inMemoryGames: NumberCrunchGame[] = [];
 
 const getGameViews = () => A.separate(inMemoryGames.map(createGameView)).right;
@@ -41,6 +45,7 @@ const updateInMemoryGame = (game: NumberCrunchGame): NumberCrunchGame[] => {
 };
 
 const emitUpdatedGamesToAllClients = (io: SocketIOServer) => {
+  console.info("Emitting updated games to all clients", getGameViews());
   io.emit(NUMBER_CRUNCH_ACTIONS.GAME_UPDATE, getGameViews());
 };
 
@@ -101,10 +106,27 @@ export function initialiseNumberCrunchSocket(
     );
   };
 
+  const newNumberCrunchRoundHandler: NewNumberCrunchRoundHandler = (gameId) => {
+    pipe(
+      getGame(gameId, inMemoryGames),
+      E.chain(newRound),
+      E.match(
+        (e) => {
+          console.error(e), sendClientMessage(socket, e);
+        },
+        (updatedGame) => {
+          updateInMemoryGame(updatedGame);
+          emitUpdatedGamesToAllClients(io);
+        }
+      )
+    );
+  };
+
   console.log("Registering Number Crunch SocketIo 🔌");
 
   socket.on(NUMBER_CRUNCH_ACTIONS.CREATE_GAME, createGameHandler);
   socket.on(NUMBER_CRUNCH_ACTIONS.MAKE_PLAYER_GUESS, makePlayerGuessHandler);
+  socket.on(NUMBER_CRUNCH_ACTIONS.NEW_ROUND, newNumberCrunchRoundHandler);
   socket.emit(NUMBER_CRUNCH_ACTIONS.GAME_UPDATE, getGameViews());
   sendClientMessage(socket, "Welcome to Number Crunch 💯");
 }

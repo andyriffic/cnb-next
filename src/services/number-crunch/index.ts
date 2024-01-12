@@ -8,9 +8,11 @@ import {
   NumberCrunchGameView,
   NumberCrunchGuessResultRangeIndicator,
   NumberCrunchRound,
+  NumberCrunchRoundView,
 } from "./types";
 import {
   getLatestRound,
+  validateLatestRoundIsComplete,
   validatePlayerHasNotGuessedOnLatestRound,
 } from "./validations";
 
@@ -24,6 +26,11 @@ type RandomPlayerSelection = {
   chosenPlayerId: string;
   otherPlayerIds: string[];
 };
+
+const createEmptyRound = (): NumberCrunchRound => ({
+  range: { low: 1, high: 100 },
+  playerGuesses: [],
+});
 
 const chooseRandomPlayer = (playerIds: string[]): RandomPlayerSelection => {
   const chosenPlayerId = selectRandomOneOf(playerIds);
@@ -40,12 +47,7 @@ const createGame =
       id: gameId,
       target: getTarget(),
       players: players.map((p) => ({ id: p.id, name: p.name })),
-      rounds: [
-        {
-          range: { low: 1, high: 100 },
-          playerGuesses: [],
-        },
-      ],
+      rounds: [createEmptyRound()],
     };
   };
 
@@ -110,7 +112,28 @@ function getGuessRange(
   return "cold";
 }
 
-export function processLatestRound(game: NumberCrunchGame) {}
+function addRoundToGame(game: NumberCrunchGame): NumberCrunchGame {
+  return {
+    ...game,
+    rounds: [...game.rounds, createEmptyRound()],
+  };
+}
+
+export function newRound(
+  game: NumberCrunchGame
+): E.Either<ErrorMessage, NumberCrunchGame> {
+  return pipe(validateLatestRoundIsComplete(game), E.map(addRoundToGame));
+}
+
+function createRoundView(round: NumberCrunchRound): NumberCrunchRoundView {
+  return {
+    range: round.range,
+    playerGuesses: round.playerGuesses.map((pg) => ({
+      playerId: pg.id,
+      offBy: pg.offBy, // TODO: add range bucket here instead of offby
+    })),
+  };
+}
 
 export function createGameView(
   game: NumberCrunchGame
@@ -124,13 +147,8 @@ export function createGameView(
         ...p,
         guessedThisRound: round.playerGuesses.some((pg) => pg.id === p.id),
       })),
-      currentRound: {
-        range: round.range,
-        playerGuesses: round.playerGuesses.map((pg) => ({
-          playerId: pg.id,
-          offBy: pg.offBy,
-        })),
-      },
+      previousRounds: game.rounds.slice(0, -1).map(createRoundView),
+      currentRound: createRoundView(round),
     }))
   );
 }

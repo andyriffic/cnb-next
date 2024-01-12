@@ -41,6 +41,8 @@ export type NumberCrunchGameView = {
   id: string;
   roundNumber: number;
   players: NumberCrunchPlayerView[];
+  previousRounds: NumberCrunchRoundView[];
+  // allRounds: NumberCrunchRoundView[];
   currentRound: NumberCrunchRoundView;
 };
 
@@ -48,7 +50,7 @@ type NumberCrunchPlayerView = NumberCrunchPlayer & {
   guessedThisRound: boolean;
 };
 
-type NumberCrunchRoundView = {
+export type NumberCrunchRoundView = {
   range: NumberCrunchRoundRange;
   playerGuesses: {
     playerId: string;

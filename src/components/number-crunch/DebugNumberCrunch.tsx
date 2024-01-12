@@ -37,21 +37,29 @@ export const DebugNumberCrunchGame = ({ game }: Props) => {
   const { numberCrunch } = useSocketIo();
 
   return (
-    <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-      {game.players.map((p) => (
-        <div key={p.id}>
-          <p>{p.name}</p>
-          <div>
-            <PlayerRangeInput
-              min={game.currentRound.range.low}
-              max={game.currentRound.range.high}
-              onSubmit={(val) => {
-                numberCrunch.makePlayerGuess(game.id, p.id, val);
-              }}
-            />
+    <>
+      <div>
+        <button type="button" onClick={() => numberCrunch.newRound(game.id)}>
+          New Round
+        </button>
+      </div>
+
+      <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+        {game.players.map((p) => (
+          <div key={p.id}>
+            <p>{p.name}</p>
+            <div>
+              <PlayerRangeInput
+                min={game.currentRound.range.low}
+                max={game.currentRound.range.high}
+                onSubmit={(val) => {
+                  numberCrunch.makePlayerGuess(game.id, p.id, val);
+                }}
+              />
+            </div>
           </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+    </>
   );
 };

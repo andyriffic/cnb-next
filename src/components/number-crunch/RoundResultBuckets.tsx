@@ -19,19 +19,20 @@ const RoundTitle = styled.div``;
 
 const CellContainer = styled.div`
   height: 10vh;
+  padding-right: 3vh;
 `;
 
 const BUCKET_RANGES = [
   { from: 0, to: 0, title: "Spot on!" },
-  { from: 1, to: 5, title: "Very close" },
-  { from: 6, to: 10, title: "Pretty good" },
-  { from: 11, to: 30, title: "Needs help" },
-  { from: 31, to: 50, title: "Not the best" },
-  { from: 51, to: 100, title: "Waaaay off" },
+  { from: 1, to: 5, title: "Within 5" },
+  { from: 6, to: 10, title: "Within 10" },
+  { from: 11, to: 30, title: "Within 30" },
+  { from: 31, to: 50, title: "Within 50" },
+  { from: 51, to: 100, title: "Over 50" },
 ];
 
 type Props = {
-  game: NumberCrunchGameView;
+  gameView: NumberCrunchGameView;
 };
 
 export const getNumberCrunchRangeBucket = (offBy: number) => {
@@ -40,7 +41,7 @@ export const getNumberCrunchRangeBucket = (offBy: number) => {
   });
 };
 
-export const RoundResultBuckets = ({ game }: Props) => {
+export const RoundResultBuckets = ({ gameView }: Props) => {
   return (
     <div>
       <BucketContainer>
@@ -54,25 +55,55 @@ export const RoundResultBuckets = ({ game }: Props) => {
             );
           })}
         </RoundContainer>
+        {gameView.previousRounds.map((round, i) => {
+          return (
+            <RoundContainer key={i}>
+              <RoundTitle>Round {i + 1}</RoundTitle>
+
+              {BUCKET_RANGES.map((bucket, i) => {
+                return (
+                  <CellContainer key={i}>
+                    <div style={{ display: "flex" }}>
+                      {round.playerGuesses
+                        .filter(
+                          (guess) =>
+                            guess.offBy >= bucket.from &&
+                            guess.offBy <= bucket.to
+                        )
+                        .map((guess, i) => {
+                          return (
+                            <div key={i} style={{ width: "3vh" }}>
+                              {guess.playerId}
+                            </div>
+                          );
+                        })}
+                    </div>
+                  </CellContainer>
+                );
+              })}
+            </RoundContainer>
+          );
+        })}
         <RoundContainer>
-          <RoundTitle>Round 1</RoundTitle>
+          <RoundTitle>Round {gameView.roundNumber}</RoundTitle>
 
           {BUCKET_RANGES.map((bucket, i) => {
             return (
               <CellContainer key={i}>
                 <div style={{ display: "flex" }}>
-                  {game.currentRound.playerGuesses
+                  {gameView.currentRound.playerGuesses
                     .filter(
                       (guess) =>
                         guess.offBy >= bucket.from && guess.offBy <= bucket.to
                     )
                     .map((guess, i) => {
                       return (
-                        <PlayerAvatar
-                          key={i}
-                          playerId={guess.playerId}
-                          size="thumbnail"
-                        />
+                        <div key={i} style={{ width: "3vh" }}>
+                          <PlayerAvatar
+                            playerId={guess.playerId}
+                            size="thumbnail"
+                          />{" "}
+                        </div>
                       );
                     })}
                 </div>
