@@ -50,10 +50,13 @@ type NumberCrunchPlayerView = NumberCrunchPlayer & {
   guessedThisRound: boolean;
 };
 
+export type NumberCrunchPlayerGuessView = {
+  playerId: string;
+  bucketRangeIndex: number;
+};
+
 export type NumberCrunchRoundView = {
   range: NumberCrunchRoundRange;
-  playerGuesses: {
-    playerId: string;
-    offBy: number;
-  }[];
+  allPlayersGuessed: boolean;
+  playerGuesses: NumberCrunchPlayerGuessView[];
 };

@@ -3,6 +3,8 @@ import { NumberCrunchGameView } from "../../services/number-crunch/types";
 import { Pill, SmallHeading } from "../Atoms";
 import { PlayerAvatar } from "../PlayerAvatar";
 import THEME from "../../themes/types";
+import { NUMBER_CRUNCH_BUCKET_RANGES } from "../../services/number-crunch";
+import { RevealLatestRoundResultsBucket } from "./RevealLatestRoundResultsBucket";
 
 const BucketContainer = styled.div`
   display: flex;
@@ -19,25 +21,12 @@ const RoundTitle = styled.div``;
 
 const CellContainer = styled.div`
   height: 10vh;
+  flex-wrap: wrap;
+  /* max-width: 10vh; */
 `;
-
-const BUCKET_RANGES = [
-  { from: 0, to: 0, title: "Spot on!" },
-  { from: 1, to: 5, title: "Within 5" },
-  { from: 6, to: 10, title: "Within 10" },
-  { from: 11, to: 30, title: "Within 30" },
-  { from: 31, to: 50, title: "Within 50" },
-  { from: 51, to: 100, title: "Over 50" },
-];
 
 type Props = {
   gameView: NumberCrunchGameView;
-};
-
-export const getNumberCrunchRangeBucket = (offBy: number) => {
-  return BUCKET_RANGES.find((bucket) => {
-    return offBy >= bucket.from && offBy <= bucket.to;
-  });
 };
 
 export const RoundResultBuckets = ({ gameView }: Props) => {
@@ -46,7 +35,7 @@ export const RoundResultBuckets = ({ gameView }: Props) => {
       <BucketContainer>
         <RoundContainer>
           <RoundTitle>&nbsp;</RoundTitle>
-          {BUCKET_RANGES.map((bucket, i) => {
+          {NUMBER_CRUNCH_BUCKET_RANGES.map((bucket, i) => {
             return (
               <CellContainer key={i}>
                 <SmallHeading>{bucket.title}</SmallHeading>
@@ -59,16 +48,18 @@ export const RoundResultBuckets = ({ gameView }: Props) => {
             <RoundContainer key={i}>
               <RoundTitle>Round {i + 1}</RoundTitle>
 
-              {BUCKET_RANGES.map((bucket, i) => {
+              {NUMBER_CRUNCH_BUCKET_RANGES.map((bucket, i) => {
                 return (
                   <CellContainer key={i}>
-                    <div style={{ display: "flex" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexWrap: "wrap",
+                        gap: "0.2rem",
+                      }}
+                    >
                       {round.playerGuesses
-                        .filter(
-                          (guess) =>
-                            guess.offBy >= bucket.from &&
-                            guess.offBy <= bucket.to
-                        )
+                        .filter((guess) => guess.bucketRangeIndex === i)
                         .map((guess, i) => {
                           return (
                             <div key={i}>
@@ -83,25 +74,22 @@ export const RoundResultBuckets = ({ gameView }: Props) => {
             </RoundContainer>
           );
         })}
-        <RoundContainer>
+        {/* <RoundContainer>
           <RoundTitle>Round {gameView.roundNumber}</RoundTitle>
 
-          {BUCKET_RANGES.map((bucket, i) => {
+          {NUMBER_CRUNCH_BUCKET_RANGES.map((bucket, i) => {
             return (
               <CellContainer key={i} style={{ paddingRight: "3vh" }}>
                 <div style={{ display: "flex" }}>
                   {gameView.currentRound.playerGuesses
-                    .filter(
-                      (guess) =>
-                        guess.offBy >= bucket.from && guess.offBy <= bucket.to
-                    )
+                    .filter((guess) => guess.bucketRangeIndex === i)
                     .map((guess, i) => {
                       return (
                         <div key={i} style={{ width: "3vh" }}>
                           <PlayerAvatar
                             playerId={guess.playerId}
                             size="thumbnail"
-                          />{" "}
+                          />
                         </div>
                       );
                     })}
@@ -109,7 +97,10 @@ export const RoundResultBuckets = ({ gameView }: Props) => {
               </CellContainer>
             );
           })}
-        </RoundContainer>
+        </RoundContainer> */}
+        {gameView.currentRound.allPlayersGuessed && (
+          <RevealLatestRoundResultsBucket gameView={gameView} />
+        )}
       </BucketContainer>
     </div>
   );

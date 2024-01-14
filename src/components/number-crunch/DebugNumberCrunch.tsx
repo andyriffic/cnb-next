@@ -42,6 +42,25 @@ export const DebugNumberCrunchGame = ({ game }: Props) => {
         <button type="button" onClick={() => numberCrunch.newRound(game.id)}>
           New Round
         </button>
+        <button
+          type="button"
+          onClick={() => {
+            game.players
+              .filter((p) => !p.guessedThisRound)
+              .forEach((p) =>
+                numberCrunch.makePlayerGuess(
+                  game.id,
+                  p.id,
+                  generateRandomInt(
+                    game.currentRound.range.low,
+                    game.currentRound.range.high
+                  )
+                )
+              );
+          }}
+        >
+          All players random guess
+        </button>
       </div>
 
       <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>

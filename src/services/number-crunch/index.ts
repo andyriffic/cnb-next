@@ -27,6 +27,21 @@ type RandomPlayerSelection = {
   otherPlayerIds: string[];
 };
 
+export const NUMBER_CRUNCH_BUCKET_RANGES = [
+  { from: 0, to: 0, title: "Spot on!" },
+  { from: 1, to: 5, title: "Within 5" },
+  { from: 6, to: 10, title: "Within 10" },
+  { from: 11, to: 30, title: "Within 30" },
+  { from: 31, to: 50, title: "Within 50" },
+  { from: 51, to: 100, title: "Over 50" },
+];
+
+export const getNumberCrunchRangeBucketIndex = (offBy: number): number => {
+  return NUMBER_CRUNCH_BUCKET_RANGES.findIndex((bucket) => {
+    return offBy >= bucket.from && offBy <= bucket.to;
+  });
+};
+
 const createEmptyRound = (): NumberCrunchRound => ({
   range: { low: 1, high: 100 },
   playerGuesses: [],
@@ -125,12 +140,17 @@ export function newRound(
   return pipe(validateLatestRoundIsComplete(game), E.map(addRoundToGame));
 }
 
-function createRoundView(round: NumberCrunchRound): NumberCrunchRoundView {
+function createRoundView(
+  game: NumberCrunchGame,
+  round: NumberCrunchRound
+): NumberCrunchRoundView {
   return {
     range: round.range,
+    allPlayersGuessed: game.players.length === round.playerGuesses.length,
     playerGuesses: round.playerGuesses.map((pg) => ({
       playerId: pg.id,
-      offBy: pg.offBy, // TODO: add range bucket here instead of offby
+      bucketRangeIndex: getNumberCrunchRangeBucketIndex(pg.offBy),
+      // offBy: pg.offBy, // TODO: add range bucket here instead of offby
     })),
   };
 }
@@ -140,15 +160,21 @@ export function createGameView(
 ): E.Either<ErrorMessage, NumberCrunchGameView> {
   return pipe(
     getLatestRound(game),
-    E.map((round) => ({
-      id: game.id,
-      roundNumber: game.rounds.length,
-      players: game.players.map((p) => ({
+    E.map((round) => {
+      const playerViews = game.players.map((p) => ({
         ...p,
         guessedThisRound: round.playerGuesses.some((pg) => pg.id === p.id),
-      })),
-      previousRounds: game.rounds.slice(0, -1).map(createRoundView),
-      currentRound: createRoundView(round),
-    }))
+      }));
+
+      return {
+        id: game.id,
+        roundNumber: game.rounds.length,
+        players: playerViews,
+        previousRounds: game.rounds
+          .slice(0, -1)
+          .map((r) => createRoundView(game, r)),
+        currentRound: createRoundView(game, round),
+      };
+    })
   );
 }
