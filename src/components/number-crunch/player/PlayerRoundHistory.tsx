@@ -26,7 +26,6 @@ export const PlayerRoundHistory = ({ game, playerId }: Props) => {
           {NUMBER_CRUNCH_BUCKET_RANGES[currentGuess.bucketRangeIndex]?.title}
         </div>
       )}
-      <div></div>
     </Container>
   );
 };
