@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useMemo } from "react";
 import { NumberCrunchGameView } from "../../../services/number-crunch/types";
-import { getNumberCrunchRangeBucket } from "../RoundResultBuckets";
+import { NUMBER_CRUNCH_BUCKET_RANGES } from "../../../services/number-crunch";
 
 const Container = styled.div`
   margin-bottom: 3rem;
@@ -22,7 +22,9 @@ export const PlayerRoundHistory = ({ game, playerId }: Props) => {
   return (
     <Container>
       {currentGuess && (
-        <div>{getNumberCrunchRangeBucket(currentGuess.offBy)?.title}</div>
+        <div>
+          {NUMBER_CRUNCH_BUCKET_RANGES[currentGuess.bucketRangeIndex]?.title}
+        </div>
       )}
       <div></div>
     </Container>
