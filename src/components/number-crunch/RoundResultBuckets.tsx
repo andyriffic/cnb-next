@@ -57,7 +57,7 @@ export const RoundResultBuckets = ({ gameView, onRoundRevealed }: Props) => {
         {gameView.previousRounds.slice(-3).map((round, i) => {
           return (
             <RoundContainer key={i} style={{ width: "14vw" }}>
-              <RoundTitle>Round x</RoundTitle>
+              <RoundTitle>Round {round.roundNumber}</RoundTitle>
 
               {NUMBER_CRUNCH_BUCKET_RANGES.map((bucket, i) => {
                 return (

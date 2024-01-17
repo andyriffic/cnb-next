@@ -144,9 +144,11 @@ export function newRound(
 
 function createRoundView(
   game: NumberCrunchGame,
-  round: NumberCrunchRound
+  round: NumberCrunchRound,
+  roundNumber: number
 ): NumberCrunchRoundView {
   return {
+    roundNumber,
     range: round.range,
     allPlayersGuessed: game.players.length === round.playerGuesses.length,
     playerGuesses: round.playerGuesses.map((pg) => ({
@@ -174,8 +176,8 @@ export function createGameView(
         players: playerViews,
         previousRounds: game.rounds
           .slice(0, -1)
-          .map((r) => createRoundView(game, r)),
-        currentRound: createRoundView(game, round),
+          .map((r, i) => createRoundView(game, r, i + 1)),
+        currentRound: createRoundView(game, round, game.rounds.length),
         finalResults: createFinalResultsView(game, round),
       };
     })

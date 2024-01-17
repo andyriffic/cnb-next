@@ -57,6 +57,7 @@ export type NumberCrunchPlayerGuessView = {
 };
 
 export type NumberCrunchRoundView = {
+  roundNumber: number;
   range: NumberCrunchRoundRange;
   allPlayersGuessed: boolean;
   playerGuesses: NumberCrunchPlayerGuessView[];
