@@ -30,7 +30,7 @@ const GuessContainer = styled.div`
 `;
 
 const DotPlayerNameContainer = styled.div`
-  margin-top: 3rem;
+  /* margin-top: 3rem; */
   transform: translateX(-50%);
 `;
 
@@ -91,29 +91,37 @@ export const FinalResults = ({ gameView, finalResults }: Props) => {
         <FinalGuessLine>
           {/* <TargetDot style={{ left: `${finalResults.target}%` }} /> */}
           <FinalGuessDotsContainer>
-            {finalResults.finalRoundSummary.map((roundView, i) => (
-              <GuessContainer
-                key={i}
-                style={{
-                  left: `${roundView.guess}%`,
-                }}
-              >
-                <GuessDot
+            {finalResults.finalRoundSummary.map((roundView, i) => {
+              const namesOffset = roundView.guess % 5;
+              return (
+                <GuessContainer
+                  key={i}
                   style={{
-                    backgroundColor:
-                      NUMBER_CRUNCH_BUCKET_RANGES[roundView.bucketRangeIndex]!
-                        .color,
+                    left: `${roundView.guess}%`,
                   }}
                 >
-                  {roundView.guess}
-                </GuessDot>
-                <DotPlayerNameContainer>
-                  {roundView.playerIds.map((playerId) => (
-                    <PlayerName key={playerId}>{playerId}</PlayerName>
-                  ))}
-                </DotPlayerNameContainer>
-              </GuessContainer>
-            ))}
+                  <GuessDot
+                    style={{
+                      backgroundColor:
+                        NUMBER_CRUNCH_BUCKET_RANGES[roundView.bucketRangeIndex]!
+                          .color,
+                    }}
+                  >
+                    {roundView.guess}
+                  </GuessDot>
+                  <DotPlayerNameContainer
+                    style={{ marginTop: `${namesOffset + 1}rem` }}
+                  >
+                    {roundView.playerIds.map((playerId) => (
+                      <PlayerName key={playerId}>
+                        {playerId}
+                        {roundView.bucketRangeIndex === 0 && "🎉"}
+                      </PlayerName>
+                    ))}
+                  </DotPlayerNameContainer>
+                </GuessContainer>
+              );
+            })}
           </FinalGuessDotsContainer>
         </FinalGuessLine>
       </div>

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useCallback } from "react";
 import { NumberCrunchGameView } from "../../services/number-crunch/types";
 import { Pill, SmallHeading } from "../Atoms";
 import { PlayerAvatar } from "../PlayerAvatar";
@@ -27,9 +28,19 @@ const CellContainer = styled.div`
 
 type Props = {
   gameView: NumberCrunchGameView;
+  onRoundRevealed: () => void;
 };
 
-export const RoundResultBuckets = ({ gameView }: Props) => {
+export const RoundResultBuckets = ({ gameView, onRoundRevealed }: Props) => {
+  const onRevealPlayer = useCallback(
+    (revealedPlayerIds) => {
+      if (revealedPlayerIds.length === gameView.players.length) {
+        onRoundRevealed();
+      }
+    },
+    [gameView.players.length, onRoundRevealed]
+  );
+
   return (
     <div>
       <BucketContainer>
@@ -43,10 +54,10 @@ export const RoundResultBuckets = ({ gameView }: Props) => {
             );
           })}
         </RoundContainer>
-        {gameView.previousRounds.map((round, i) => {
+        {gameView.previousRounds.slice(-3).map((round, i) => {
           return (
             <RoundContainer key={i} style={{ width: "14vw" }}>
-              <RoundTitle>Round {i + 1}</RoundTitle>
+              <RoundTitle>Round x</RoundTitle>
 
               {NUMBER_CRUNCH_BUCKET_RANGES.map((bucket, i) => {
                 return (
@@ -101,7 +112,7 @@ export const RoundResultBuckets = ({ gameView }: Props) => {
         {gameView.currentRound.allPlayersGuessed && (
           <RevealLatestRoundResultsBucket
             gameView={gameView}
-            onReveal={(playerIds) => console.log(playerIds)}
+            onReveal={onRevealPlayer}
           />
         )}
       </BucketContainer>

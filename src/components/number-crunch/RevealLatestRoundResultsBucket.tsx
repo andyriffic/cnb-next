@@ -64,9 +64,9 @@ export const RevealLatestRoundResultsBucket = ({
         ];
         onReveal(playerIdsRevealed.current);
       }
-    }, 1000);
+    }, 600);
     return () => clearInterval(interval);
-  }, [onReveal, playerRevealOrder, playerRevealOrder.length, revealIndex]);
+  }, [onReveal, playerRevealOrder, revealIndex]);
 
   return (
     <RoundContainer>

@@ -33,7 +33,7 @@ export const NUMBER_CRUNCH_BUCKET_RANGES = [
   { from: 0, to: 0, title: "Spot on!", color: "#8774FF" },
   { from: 1, to: 5, title: "Within 5", color: "lightgreen" },
   { from: 6, to: 10, title: "Within 10", color: "darkgreen" },
-  { from: 11, to: 30, title: "Within 30", color: "yellow" },
+  { from: 11, to: 30, title: "Within 30", color: "goldenrod" },
   { from: 31, to: 50, title: "Within 50", color: "darkred" },
   { from: 51, to: 100, title: "Over 50", color: "red" },
 ];
@@ -190,7 +190,10 @@ function createFinalResultsView(
     (pg) => getNumberCrunchRangeBucketIndex(pg.offBy) === 0
   );
 
-  if (!winningPlayers.length) {
+  const allPlayersGuessed =
+    game.players.length === latestRound.playerGuesses.length;
+
+  if (!(winningPlayers.length && allPlayersGuessed)) {
     return;
   }
 

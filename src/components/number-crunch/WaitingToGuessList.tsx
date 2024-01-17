@@ -11,7 +11,6 @@ export const WaitingToGuessList = ({ game }: Props) => {
     <div
       style={{
         display: "flex",
-        gap: "1rem",
         justifyContent: "center",
         margin: "2rem 0",
       }}

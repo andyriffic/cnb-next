@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { NumberCrunchGameView } from "../../services/number-crunch/types";
 import { SpectatorPageLayout } from "../SpectatorPageLayout";
+import { useSocketIo } from "../../providers/SocketIoProvider";
 import { DebugNumberCrunchGame } from "./DebugNumberCrunch";
 import { FinalResults } from "./FinalResults";
 import { NumberTarget } from "./NumberTarget";
@@ -11,13 +13,28 @@ type Props = {
 };
 
 const View = ({ game }: Props) => {
+  const [revealWinner, setRevealWinner] = useState(false);
+  const { numberCrunch } = useSocketIo();
   return (
     <SpectatorPageLayout debug={<DebugNumberCrunchGame game={game} />}>
-      {/* <NumberTarget game={game} />
-      <WaitingToGuessList game={game} />
-      <RoundResultBuckets gameView={game} />
- */}
-      {game.finalResults && (
+      {!revealWinner && (
+        <>
+          <NumberTarget game={game} />
+          <WaitingToGuessList game={game} />
+          <RoundResultBuckets
+            gameView={game}
+            onRoundRevealed={() => {
+              if (game.finalResults) {
+                setTimeout(() => setRevealWinner(true), 2000);
+              } else {
+                setTimeout(() => numberCrunch.newRound(game.id), 2000);
+              }
+            }}
+          />
+        </>
+      )}
+
+      {game.finalResults && revealWinner && (
         <FinalResults gameView={game} finalResults={game.finalResults} />
       )}
     </SpectatorPageLayout>
