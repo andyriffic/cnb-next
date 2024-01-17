@@ -33,7 +33,7 @@ export const RoundResultBuckets = ({ gameView }: Props) => {
   return (
     <div>
       <BucketContainer>
-        <RoundContainer>
+        <RoundContainer style={{ width: "14vw" }}>
           <RoundTitle>&nbsp;</RoundTitle>
           {NUMBER_CRUNCH_BUCKET_RANGES.map((bucket, i) => {
             return (
@@ -45,7 +45,7 @@ export const RoundResultBuckets = ({ gameView }: Props) => {
         </RoundContainer>
         {gameView.previousRounds.map((round, i) => {
           return (
-            <RoundContainer key={i}>
+            <RoundContainer key={i} style={{ width: "14vw" }}>
               <RoundTitle>Round {i + 1}</RoundTitle>
 
               {NUMBER_CRUNCH_BUCKET_RANGES.map((bucket, i) => {
@@ -99,7 +99,10 @@ export const RoundResultBuckets = ({ gameView }: Props) => {
           })}
         </RoundContainer> */}
         {gameView.currentRound.allPlayersGuessed && (
-          <RevealLatestRoundResultsBucket gameView={gameView} />
+          <RevealLatestRoundResultsBucket
+            gameView={gameView}
+            onReveal={(playerIds) => console.log(playerIds)}
+          />
         )}
       </BucketContainer>
     </div>

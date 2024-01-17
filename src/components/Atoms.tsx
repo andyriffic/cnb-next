@@ -21,13 +21,14 @@ export const FeatureSubHeading = styled.h2`
   letter-spacing: 0.2rem;
 `;
 
-export const SmallHeading = styled.h3`
+export const SmallHeading = styled.h3<{ centered?: boolean }>`
   font-size: 2rem;
   margin: 0;
   font-family: ${THEME.fonts.feature};
   color: ${THEME.colours.primaryText};
   text-transform: uppercase;
   letter-spacing: 0.2rem;
+  text-align: ${({ centered }) => (centered ? "center" : "left")};
 `;
 
 export const NormalText = styled.p`

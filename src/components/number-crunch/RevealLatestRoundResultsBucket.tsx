@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   NumberCrunchGameView,
   NumberCrunchPlayerGuessView,
@@ -7,6 +7,7 @@ import {
 import THEME from "../../themes/types";
 import { PlayerAvatar } from "../PlayerAvatar";
 import { NUMBER_CRUNCH_BUCKET_RANGES } from "../../services/number-crunch";
+import { Appear } from "../animations/Appear";
 
 const BucketContainer = styled.div`
   display: flex;
@@ -29,6 +30,7 @@ const CellContainer = styled.div`
 
 type Props = {
   gameView: NumberCrunchGameView;
+  onReveal: (playerIds: string[]) => void;
 };
 
 const sortGuessesFurthestFirst = (
@@ -36,11 +38,15 @@ const sortGuessesFurthestFirst = (
   b: NumberCrunchPlayerGuessView
 ) => b.bucketRangeIndex - a.bucketRangeIndex;
 
-export const RevealLatestRoundResultsBucket = ({ gameView }: Props) => {
+export const RevealLatestRoundResultsBucket = ({
+  gameView,
+  onReveal,
+}: Props) => {
   const [playerRevealOrder] = useState(
     gameView.currentRound.playerGuesses.sort(sortGuessesFurthestFirst)
   );
   const [revealIndex, setRevealIndex] = useState(-1);
+  const playerIdsRevealed = useRef<string[]>([]);
 
   useEffect(() => {
     if (revealIndex >= playerRevealOrder.length) {
@@ -50,9 +56,17 @@ export const RevealLatestRoundResultsBucket = ({ gameView }: Props) => {
     const interval = setInterval(() => {
       console.log("interval", revealIndex);
       setRevealIndex((revealIndex) => revealIndex + 1);
+      const revealedPlayerId = playerRevealOrder[revealIndex]?.playerId;
+      if (revealedPlayerId) {
+        playerIdsRevealed.current = [
+          ...playerIdsRevealed.current,
+          revealedPlayerId,
+        ];
+        onReveal(playerIdsRevealed.current);
+      }
     }, 1000);
     return () => clearInterval(interval);
-  }, [playerRevealOrder.length, revealIndex]);
+  }, [onReveal, playerRevealOrder, playerRevealOrder.length, revealIndex]);
 
   return (
     <RoundContainer>
@@ -68,10 +82,12 @@ export const RevealLatestRoundResultsBucket = ({ gameView }: Props) => {
                 .map((guess, i) => {
                   return (
                     <div key={i} style={{ width: "3vh" }}>
-                      <PlayerAvatar
-                        playerId={guess.playerId}
-                        size="thumbnail"
-                      />
+                      <Appear>
+                        <PlayerAvatar
+                          playerId={guess.playerId}
+                          size="thumbnail"
+                        />
+                      </Appear>
                     </div>
                   );
                 })}

@@ -44,6 +44,7 @@ export type NumberCrunchGameView = {
   previousRounds: NumberCrunchRoundView[];
   // allRounds: NumberCrunchRoundView[];
   currentRound: NumberCrunchRoundView;
+  finalResults?: NumberCrunchFinalResultsView;
 };
 
 type NumberCrunchPlayerView = NumberCrunchPlayer & {
@@ -59,4 +60,26 @@ export type NumberCrunchRoundView = {
   range: NumberCrunchRoundRange;
   allPlayersGuessed: boolean;
   playerGuesses: NumberCrunchPlayerGuessView[];
+};
+
+export type NumberCrunchFinalResultsView = {
+  target: number;
+  winningPlayerIds: string[];
+  allRounds: NumberCrunchFinalResultsRoundView[];
+  finalRoundSummary: NumberCrunchFinalRoundSummaryView[];
+};
+
+type NumberCrunchFinalResultsRoundView = {
+  playerGuesses: NumberCrunchFinalResultsRoundPlayerGuessView[];
+};
+
+export type NumberCrunchFinalResultsRoundPlayerGuessView = {
+  playerId: string;
+  guess: number;
+};
+
+export type NumberCrunchFinalRoundSummaryView = {
+  guess: number;
+  playerIds: string[];
+  bucketRangeIndex: number;
 };

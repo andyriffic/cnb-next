@@ -4,6 +4,8 @@ import { Player } from "../../types/Player";
 import { ErrorMessage } from "../../types/common";
 import { selectRandomOneOf } from "../../utils/random";
 import {
+  NumberCrunchFinalResultsView,
+  NumberCrunchFinalRoundSummaryView,
   NumberCrunchGame,
   NumberCrunchGameView,
   NumberCrunchGuessResultRangeIndicator,
@@ -28,12 +30,12 @@ type RandomPlayerSelection = {
 };
 
 export const NUMBER_CRUNCH_BUCKET_RANGES = [
-  { from: 0, to: 0, title: "Spot on!" },
-  { from: 1, to: 5, title: "Within 5" },
-  { from: 6, to: 10, title: "Within 10" },
-  { from: 11, to: 30, title: "Within 30" },
-  { from: 31, to: 50, title: "Within 50" },
-  { from: 51, to: 100, title: "Over 50" },
+  { from: 0, to: 0, title: "Spot on!", color: "#8774FF" },
+  { from: 1, to: 5, title: "Within 5", color: "lightgreen" },
+  { from: 6, to: 10, title: "Within 10", color: "darkgreen" },
+  { from: 11, to: 30, title: "Within 30", color: "yellow" },
+  { from: 31, to: 50, title: "Within 50", color: "darkred" },
+  { from: 51, to: 100, title: "Over 50", color: "red" },
 ];
 
 export const getNumberCrunchRangeBucketIndex = (offBy: number): number => {
@@ -174,7 +176,59 @@ export function createGameView(
           .slice(0, -1)
           .map((r) => createRoundView(game, r)),
         currentRound: createRoundView(game, round),
+        finalResults: createFinalResultsView(game, round),
       };
     })
   );
+}
+
+function createFinalResultsView(
+  game: NumberCrunchGame,
+  latestRound: NumberCrunchRound
+): NumberCrunchFinalResultsView | undefined {
+  const winningPlayers = latestRound.playerGuesses.filter(
+    (pg) => getNumberCrunchRangeBucketIndex(pg.offBy) === 0
+  );
+
+  if (!winningPlayers.length) {
+    return;
+  }
+
+  return {
+    winningPlayerIds: winningPlayers.map((pg) => pg.id),
+    target: game.target,
+    allRounds: game.rounds.map((round) => {
+      return {
+        playerGuesses: round.playerGuesses.map((pg) => {
+          return {
+            playerId: pg.id,
+            guess: pg.guess,
+            // bucketRangeIndex: getNumberCrunchRangeBucketIndex(pg.offBy),
+          };
+        }),
+      };
+    }),
+    finalRoundSummary: createFinalRoundSummary(game, latestRound),
+  };
+}
+
+function createFinalRoundSummary(
+  game: NumberCrunchGame,
+  latestRound: NumberCrunchRound
+): NumberCrunchFinalRoundSummaryView[] {
+  const allGuessedNumbers = Array.from(
+    new Set(latestRound.playerGuesses.map((pg) => pg.guess))
+  ).sort((a, b) => b - a);
+
+  return allGuessedNumbers.map((guessNumber) => {
+    return {
+      guess: guessNumber,
+      playerIds: latestRound.playerGuesses
+        .filter((pg) => pg.guess === guessNumber)
+        .map((pg) => pg.id),
+      bucketRangeIndex: getNumberCrunchRangeBucketIndex(
+        Math.abs(game.target - guessNumber)
+      ),
+    };
+  });
 }

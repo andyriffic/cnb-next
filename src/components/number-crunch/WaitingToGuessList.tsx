@@ -1,4 +1,6 @@
 import { NumberCrunchGameView } from "../../services/number-crunch/types";
+import { Pill } from "../Atoms";
+import { PlayerAvatar } from "../PlayerAvatar";
 
 type Props = {
   game: NumberCrunchGameView;
@@ -6,14 +8,26 @@ type Props = {
 
 export const WaitingToGuessList = ({ game }: Props) => {
   return (
-    <div style={{ display: "flex", gap: "1rem" }}>
+    <div
+      style={{
+        display: "flex",
+        gap: "1rem",
+        justifyContent: "center",
+        margin: "2rem 0",
+      }}
+    >
       {game.players.map((p) => (
         <div
           key={p.id}
-          style={{ color: p.guessedThisRound ? "lightgreen" : "darkred" }}
+          style={{
+            color: p.guessedThisRound ? "lightgreen" : "darkred",
+            textAlign: "center",
+            opacity: p.guessedThisRound ? 1 : 0.5,
+          }}
         >
-          <p>{p.name}</p>
-          {p.guessedThisRound && <>✅</>}
+          <PlayerAvatar playerId={p.id} size="thumbnail" />
+          <Pill>{p.name}</Pill>
+          <p>{p.guessedThisRound ? "✅" : " "}</p>
         </div>
       ))}
     </div>
