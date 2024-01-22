@@ -2,7 +2,8 @@ import { useEffect, useRef } from "react";
 
 export const useSomethingWhenArraySizeChanges = (
   array: Array<any> | undefined,
-  doTheThing: () => void
+  doTheThing: () => void,
+  deps: any[] = []
 ): void => {
   const lastArrayLength = useRef(array ? array.length : 0);
 
@@ -11,7 +12,7 @@ export const useSomethingWhenArraySizeChanges = (
       doTheThing();
       lastArrayLength.current = array.length;
     }
-  }, [array, doTheThing]);
+  }, [array, doTheThing, ...deps]);
 
   return;
 };

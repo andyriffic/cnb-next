@@ -40,4 +40,7 @@ export type SoundName =
   | "zombie-run-zombie-moving"
   | "zombie-run-player-zombie-moving"
   | "zombie-run-player-bitten"
-  | "zombie-run-party";
+  | "zombie-run-party"
+  | "number-crunch-guessing-music"
+  | "number-crunch-player-guessed"
+  | "number-crunch-reveal-guess";

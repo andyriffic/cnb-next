@@ -8,6 +8,7 @@ import THEME from "../../themes/types";
 import { PlayerAvatar } from "../PlayerAvatar";
 import { NUMBER_CRUNCH_BUCKET_RANGES } from "../../services/number-crunch";
 import { Appear } from "../animations/Appear";
+import { useSound } from "../hooks/useSound";
 
 const BucketContainer = styled.div`
   display: flex;
@@ -47,6 +48,7 @@ export const RevealLatestRoundResultsBucket = ({
   );
   const [revealIndex, setRevealIndex] = useState(-1);
   const playerIdsRevealed = useRef<string[]>([]);
+  const { play } = useSound();
 
   useEffect(() => {
     if (revealIndex >= playerRevealOrder.length) {
@@ -58,6 +60,7 @@ export const RevealLatestRoundResultsBucket = ({
       setRevealIndex((revealIndex) => revealIndex + 1);
       const revealedPlayerId = playerRevealOrder[revealIndex]?.playerId;
       if (revealedPlayerId) {
+        play("number-crunch-reveal-guess");
         playerIdsRevealed.current = [
           ...playerIdsRevealed.current,
           revealedPlayerId,
@@ -66,7 +69,7 @@ export const RevealLatestRoundResultsBucket = ({
       }
     }, 600);
     return () => clearInterval(interval);
-  }, [onReveal, playerRevealOrder, revealIndex]);
+  }, [onReveal, play, playerRevealOrder, revealIndex]);
 
   return (
     <RoundContainer>

@@ -6,6 +6,7 @@ import { PlayerAvatar } from "../PlayerAvatar";
 import THEME from "../../themes/types";
 import { NUMBER_CRUNCH_BUCKET_RANGES } from "../../services/number-crunch";
 import { RevealLatestRoundResultsBucket } from "./RevealLatestRoundResultsBucket";
+import { NUMBER_CRUNCH_GAME_STATE } from "./hooks/useNumberCrunchGameTiming";
 
 const BucketContainer = styled.div`
   display: flex;
@@ -28,10 +29,15 @@ const CellContainer = styled.div`
 
 type Props = {
   gameView: NumberCrunchGameView;
+  gameState: NUMBER_CRUNCH_GAME_STATE;
   onRoundRevealed: () => void;
 };
 
-export const RoundResultBuckets = ({ gameView, onRoundRevealed }: Props) => {
+export const RoundResultBuckets = ({
+  gameView,
+  gameState,
+  onRoundRevealed,
+}: Props) => {
   const onRevealPlayer = useCallback(
     (revealedPlayerIds) => {
       if (revealedPlayerIds.length === gameView.players.length) {
@@ -109,7 +115,13 @@ export const RoundResultBuckets = ({ gameView, onRoundRevealed }: Props) => {
             );
           })}
         </RoundContainer> */}
-        {gameView.currentRound.allPlayersGuessed && (
+        {[
+          NUMBER_CRUNCH_GAME_STATE.WAITING_TO_REVEAL_ROUND,
+          NUMBER_CRUNCH_GAME_STATE.REVEALING_LATEST_ROUND,
+          NUMBER_CRUNCH_GAME_STATE.LATEST_ROUND_REVEALED,
+          NUMBER_CRUNCH_GAME_STATE.START_NEW_ROUND,
+          NUMBER_CRUNCH_GAME_STATE.REVEAL_WINNER,
+        ].includes(gameState) && (
           <RevealLatestRoundResultsBucket
             gameView={gameView}
             onReveal={onRevealPlayer}

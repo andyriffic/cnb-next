@@ -43,6 +43,9 @@ const DEFAULT_SOUND_MAP: { [key in SoundName]: string } = {
   "zombie-run-player-zombie-moving": "/sounds/zombie_groan.mp3",
   "zombie-run-player-bitten": "/sounds/eating_minecraft.mp3",
   "zombie-run-party": "/sounds/thriller_long_intro.mp3",
+  "number-crunch-guessing-music": "/sounds/music/tmnt_sewers.mp3",
+  "number-crunch-player-guessed": "/sounds/bubble_pop.mp3",
+  "number-crunch-reveal-guess": "/sounds/default/final_jeopardy.mp3",
 };
 
 const XMAS_SOUND_MAP: { [key in SoundName]: string } = {
