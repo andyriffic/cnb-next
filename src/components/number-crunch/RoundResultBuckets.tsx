@@ -5,6 +5,7 @@ import { Pill, SmallHeading } from "../Atoms";
 import { PlayerAvatar } from "../PlayerAvatar";
 import THEME from "../../themes/types";
 import { NUMBER_CRUNCH_BUCKET_RANGES } from "../../services/number-crunch";
+import { usePlayerNames } from "../../providers/PlayerNamesProvider";
 import { RevealLatestRoundResultsBucket } from "./RevealLatestRoundResultsBucket";
 import { NUMBER_CRUNCH_GAME_STATE } from "./hooks/useNumberCrunchGameTiming";
 
@@ -27,6 +28,11 @@ const CellContainer = styled.div`
   /* max-width: 10vh; */
 `;
 
+const PlayerName = styled.div`
+  font-size: 0.7rem;
+  padding: 0.2rem;
+`;
+
 type Props = {
   gameView: NumberCrunchGameView;
   gameState: NUMBER_CRUNCH_GAME_STATE;
@@ -46,6 +52,7 @@ export const RoundResultBuckets = ({
     },
     [gameView.players.length, onRoundRevealed]
   );
+  const { getName } = usePlayerNames();
 
   return (
     <div>
@@ -83,9 +90,9 @@ export const RoundResultBuckets = ({
                         .filter((guess) => guess.bucketRangeIndex === i)
                         .map((guess, i) => {
                           return (
-                            <div key={i}>
-                              <Pill>{guess.playerId}</Pill>{" "}
-                            </div>
+                            <PlayerName key={i}>
+                              {getName(guess.playerId)}
+                            </PlayerName>
                           );
                         })}
                     </div>

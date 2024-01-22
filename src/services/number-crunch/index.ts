@@ -112,23 +112,6 @@ function replaceLatestRound(game: NumberCrunchGame) {
   };
 }
 
-function getGuessRange(
-  target: number,
-  guess: number
-): NumberCrunchGuessResultRangeIndicator {
-  const diff = Math.abs(target - guess);
-  if (diff === 0) {
-    return "exact";
-  }
-  if (diff <= 5) {
-    return "hot";
-  }
-  if (diff <= 10) {
-    return "warm";
-  }
-  return "cold";
-}
-
 function addRoundToGame(game: NumberCrunchGame): NumberCrunchGame {
   return {
     ...game,
