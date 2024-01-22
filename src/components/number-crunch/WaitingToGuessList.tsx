@@ -1,6 +1,7 @@
 import { NumberCrunchGameView } from "../../services/number-crunch/types";
 import { Pill } from "../Atoms";
 import { PlayerAvatar } from "../PlayerAvatar";
+import { Attention } from "../animations/Attention";
 
 type Props = {
   game: NumberCrunchGameView;
@@ -21,12 +22,14 @@ export const WaitingToGuessList = ({ game }: Props) => {
           style={{
             color: p.guessedThisRound ? "lightgreen" : "darkred",
             textAlign: "center",
-            opacity: p.guessedThisRound ? 1 : 0.5,
+            opacity: p.guessedThisRound ? 1 : 0.7,
           }}
         >
-          <PlayerAvatar playerId={p.id} size="thumbnail" />
+          <Attention animate={!p.guessedThisRound} animation="shake">
+            <PlayerAvatar playerId={p.id} size="thumbnail" />
+          </Attention>
           <Pill>{p.name}</Pill>
-          <p>{p.guessedThisRound ? "✅" : " "}</p>
+          {/* <p>{p.guessedThisRound ? "✅" : " "}</p> */}
         </div>
       ))}
     </div>

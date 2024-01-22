@@ -30,12 +30,12 @@ type RandomPlayerSelection = {
 };
 
 export const NUMBER_CRUNCH_BUCKET_RANGES = [
-  { from: 0, to: 0, title: "Spot on!", color: "#8774FF" },
-  { from: 1, to: 5, title: "Within 5", color: "lightgreen" },
-  { from: 6, to: 10, title: "Within 10", color: "darkgreen" },
-  { from: 11, to: 30, title: "Within 30", color: "goldenrod" },
-  { from: 31, to: 50, title: "Within 50", color: "darkred" },
-  { from: 51, to: 100, title: "Over 50", color: "red" },
+  { from: 0, to: 0, title: "Spot on!", color: "#00FF00", points: 6 },
+  { from: 1, to: 5, title: "Within 5", color: "#009900", points: 4 },
+  { from: 6, to: 10, title: "Within 10", color: "#FFFF00", points: 3 },
+  { from: 11, to: 30, title: "Within 30", color: "#FFCC66", points: 2 },
+  { from: 31, to: 50, title: "Within 50", color: "#FF6600", points: 1 },
+  { from: 51, to: 100, title: "Over 50", color: "#FF3300", points: 0 },
 ];
 
 export const getNumberCrunchRangeBucketIndex = (offBy: number): number => {

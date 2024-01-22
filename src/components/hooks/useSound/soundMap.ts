@@ -46,6 +46,11 @@ const DEFAULT_SOUND_MAP: { [key in SoundName]: string } = {
   "number-crunch-guessing-music": "/sounds/music/tmnt_sewers.mp3",
   "number-crunch-player-guessed": "/sounds/bubble_pop.mp3",
   "number-crunch-reveal-guess": "/sounds/default/final_jeopardy.mp3",
+  "number-crunch-player-gusssed-number": "/sounds/power_mode.mp3",
+  "number-crunch-player-guessed-close": "/sounds/crowd_oooo.mp3",
+  "number-crunch-player-guessed-far": "/sounds/default/price_is_right_fail.mp3",
+  "number-crunch-final-show-winner": "/sounds/nfl.mp3",
+  "number-crunch-final-show-rest": "/sounds/meh.mp3",
 };
 
 const XMAS_SOUND_MAP: { [key in SoundName]: string } = {

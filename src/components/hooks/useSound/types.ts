@@ -43,4 +43,9 @@ export type SoundName =
   | "zombie-run-party"
   | "number-crunch-guessing-music"
   | "number-crunch-player-guessed"
-  | "number-crunch-reveal-guess";
+  | "number-crunch-reveal-guess"
+  | "number-crunch-player-gusssed-number"
+  | "number-crunch-player-guessed-close"
+  | "number-crunch-player-guessed-far"
+  | "number-crunch-final-show-winner"
+  | "number-crunch-final-show-rest";

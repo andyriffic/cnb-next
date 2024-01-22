@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
   NumberCrunchFinalResultsRoundPlayerGuessView,
@@ -10,14 +10,18 @@ import { FeatureHeading, Pill, SmallHeading } from "../Atoms";
 import { CenterSpaced } from "../Layouts";
 import { PlayerAvatar } from "../PlayerAvatar";
 import { NUMBER_CRUNCH_BUCKET_RANGES } from "../../services/number-crunch";
+import { usePlayerNames } from "../../providers/PlayerNamesProvider";
+import { Appear } from "../animations/Appear";
+import { useSound } from "../hooks/useSound";
 
 const FinalGuessLine = styled.div`
   width: 100%;
-  height: 2vh;
+  height: 1vh;
   background-color: ${THEME.colours.textAccent};
   border-radius: 1rem;
   display: flex;
   justify-content: center;
+  margin-top: 1rem;
 `;
 
 const FinalGuessDotsContainer = styled.div`
@@ -25,16 +29,37 @@ const FinalGuessDotsContainer = styled.div`
   position: relative;
 `;
 
-const GuessContainer = styled.div`
-  position: absolute;
-`;
-
 const DotPlayerNameContainer = styled.div`
   /* margin-top: 3rem; */
   transform: translateX(-50%);
+  padding: 0.3rem;
+  border: 1px solid white;
+  border-radius: 0.5rem;
+  background-color: ${THEME.colours.secondaryBackground};
 `;
 
-const PlayerName = styled.div``;
+const GuessContainer = styled.div`
+  position: absolute;
+  cursor: default;
+  transform: translateY(-0.5rem);
+  &:hover {
+    z-index: 1;
+
+    ${DotPlayerNameContainer} {
+      background-color: ${THEME.colours.textAccent};
+    }
+  }
+`;
+
+const GuessDotNameConnectorGuide = styled.div`
+  width: 2px;
+  background-color: white;
+`;
+
+const PlayerName = styled.div`
+  color: black;
+  font-size: 0.8rem;
+`;
 
 const GuessDot = styled.div`
   width: 2vh;
@@ -42,7 +67,9 @@ const GuessDot = styled.div`
   border-radius: 50%;
   background: white;
   transform: translateX(-50%);
-  color: white;
+  color: black;
+  font-size: 1rem;
+  font-weight: bold;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -58,73 +85,118 @@ type Props = {
   finalResults: NumberCrunchFinalResultsView;
 };
 
-const sortGuessesFurthestFirst = (
-  a: NumberCrunchFinalResultsRoundPlayerGuessView,
-  b: NumberCrunchFinalResultsRoundPlayerGuessView
-) => b.guess - a.guess;
+enum RevealState {
+  SHOW_TARGET = 0,
+  SHOW_WINNERS = 1,
+  SHOW_REST = 2,
+  SHOW_POINTS_LEGEND = 3,
+}
 
 export const FinalResults = ({ gameView, finalResults }: Props) => {
-  const [playerRevealOrder] = useState(
-    finalResults.allRounds[
-      finalResults.allRounds.length - 1
-    ]!.playerGuesses.sort(sortGuessesFurthestFirst)
-  );
+  const [revealState, setRevealState] = useState(RevealState.SHOW_TARGET);
+  useRevealTiming(revealState, setRevealState);
+
+  const { getName } = usePlayerNames();
 
   return (
     <CenterSpaced stacked={true}>
-      <div>
-        <SmallHeading centered={true}>Target</SmallHeading>
-        <FeatureHeading>{finalResults.target}</FeatureHeading>
-      </div>
-      <div>
-        <SmallHeading centered={true}>
-          Winner{finalResults.winningPlayerIds.length > 1 ? "s" : ""}
-        </SmallHeading>
-        <CenterSpaced>
-          {finalResults.winningPlayerIds.map((playerId) => (
-            <PlayerAvatar key={playerId} playerId={playerId} size="small" />
-          ))}
-        </CenterSpaced>
-      </div>
-      <div style={{ width: "90vw" }}>
-        <SmallHeading centered={true}>Final Guesses</SmallHeading>
-        <FinalGuessLine>
-          {/* <TargetDot style={{ left: `${finalResults.target}%` }} /> */}
-          <FinalGuessDotsContainer>
-            {finalResults.finalRoundSummary.map((roundView, i) => {
-              const namesOffset = roundView.guess % 5;
-              return (
-                <GuessContainer
-                  key={i}
-                  style={{
-                    left: `${roundView.guess}%`,
-                  }}
-                >
-                  <GuessDot
-                    style={{
-                      backgroundColor:
-                        NUMBER_CRUNCH_BUCKET_RANGES[roundView.bucketRangeIndex]!
-                          .color,
-                    }}
-                  >
-                    {roundView.guess}
-                  </GuessDot>
-                  <DotPlayerNameContainer
-                    style={{ marginTop: `${namesOffset + 1}rem` }}
-                  >
-                    {roundView.playerIds.map((playerId) => (
-                      <PlayerName key={playerId}>
-                        {playerId}
-                        {roundView.bucketRangeIndex === 0 && "🎉"}
-                      </PlayerName>
-                    ))}
-                  </DotPlayerNameContainer>
-                </GuessContainer>
-              );
-            })}
-          </FinalGuessDotsContainer>
-        </FinalGuessLine>
-      </div>
+      {revealState >= RevealState.SHOW_TARGET && (
+        <Appear>
+          <SmallHeading centered={true}>Target</SmallHeading>
+          <FeatureHeading>{finalResults.target}</FeatureHeading>
+        </Appear>
+      )}
+      {revealState >= RevealState.SHOW_WINNERS && (
+        <Appear>
+          <SmallHeading centered={true}>
+            Winner{finalResults.winningPlayerIds.length > 1 ? "s" : ""}
+          </SmallHeading>
+          <CenterSpaced>
+            {finalResults.winningPlayerIds.map((playerId) => (
+              <PlayerAvatar key={playerId} playerId={playerId} size="small" />
+            ))}
+          </CenterSpaced>
+        </Appear>
+      )}
+      {revealState >= RevealState.SHOW_REST && (
+        <Appear animation="text-focus-in">
+          <div style={{ width: "90vw" }}>
+            <SmallHeading centered={true}>Final Guesses</SmallHeading>
+            <FinalGuessLine>
+              {/* <TargetDot style={{ left: `${finalResults.target}%` }} /> */}
+              <FinalGuessDotsContainer>
+                {finalResults.finalRoundSummary.map((roundView, i) => {
+                  const namesOffset = roundView.guess % 5;
+                  return (
+                    <GuessContainer
+                      key={i}
+                      style={{
+                        left: `${roundView.guess}%`,
+                      }}
+                    >
+                      <GuessDot
+                        style={{
+                          backgroundColor:
+                            NUMBER_CRUNCH_BUCKET_RANGES[
+                              roundView.bucketRangeIndex
+                            ]!.color,
+                        }}
+                      >
+                        {roundView.guess}
+                      </GuessDot>
+                      <GuessDotNameConnectorGuide
+                        style={{ height: `${namesOffset * 2 + 1}rem` }}
+                      />
+                      <DotPlayerNameContainer
+                        style={{
+                          backgroundColor:
+                            NUMBER_CRUNCH_BUCKET_RANGES[
+                              roundView.bucketRangeIndex
+                            ]!.color,
+                        }}
+                      >
+                        {roundView.playerIds.map((playerId) => (
+                          <PlayerName key={playerId}>
+                            {getName(playerId)}
+                            {roundView.bucketRangeIndex === 0 && "🎉"}
+                          </PlayerName>
+                        ))}
+                      </DotPlayerNameContainer>
+                    </GuessContainer>
+                  );
+                })}
+              </FinalGuessDotsContainer>
+            </FinalGuessLine>
+          </div>
+        </Appear>
+      )}
     </CenterSpaced>
   );
 };
+
+function useRevealTiming(
+  revealState: RevealState,
+  setRevealState: (revealState: RevealState) => void
+) {
+  const { play } = useSound();
+
+  useEffect(() => {
+    if (revealState === RevealState.SHOW_TARGET) {
+      play("number-crunch-final-show-winner");
+      setTimeout(() => setRevealState(RevealState.SHOW_WINNERS), 1500);
+    }
+  }, [play, revealState, setRevealState]);
+
+  useEffect(() => {
+    if (revealState === RevealState.SHOW_WINNERS) {
+      setTimeout(() => setRevealState(RevealState.SHOW_REST), 2000);
+    }
+  }, [revealState, setRevealState]);
+
+  useEffect(() => {
+    if (revealState === RevealState.SHOW_REST) {
+      play("number-crunch-final-show-rest");
+      setTimeout(() => setRevealState(RevealState.SHOW_POINTS_LEGEND), 2000);
+    }
+  }, [play, revealState, setRevealState]);
+}

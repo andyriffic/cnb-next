@@ -55,7 +55,11 @@ export const RoundResultBuckets = ({
           {NUMBER_CRUNCH_BUCKET_RANGES.map((bucket, i) => {
             return (
               <CellContainer key={i}>
-                <SmallHeading>{bucket.title}</SmallHeading>
+                <SmallHeading
+                  style={{ color: NUMBER_CRUNCH_BUCKET_RANGES[i]!.color }}
+                >
+                  {bucket.title}
+                </SmallHeading>
               </CellContainer>
             );
           })}

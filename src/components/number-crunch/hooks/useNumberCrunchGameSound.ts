@@ -29,4 +29,25 @@ export const useNumberCrunchGameSound = (
       };
     }
   }, [gameState, loop]);
+
+  useEffect(() => {
+    if (gameState === NUMBER_CRUNCH_GAME_STATE.LATEST_ROUND_REVEALED) {
+      if (
+        gameView.currentRound.playerGuesses.some(
+          (guess) => guess.bucketRangeIndex === 0
+        )
+      ) {
+        play("number-crunch-player-gusssed-number");
+      } else if (
+        gameView.currentRound.playerGuesses.some(
+          (guess) =>
+            guess.bucketRangeIndex === 1 || guess.bucketRangeIndex === 2
+        )
+      ) {
+        play("number-crunch-player-guessed-close");
+      } else {
+        play("number-crunch-player-guessed-far");
+      }
+    }
+  }, [gameState, gameView.currentRound.playerGuesses, loop, play]);
 };
