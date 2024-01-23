@@ -29,6 +29,7 @@ const REGULAR_PLAYER_NAMES = [
   "Yishen",
   "Sixiao",
   "Pingsheng",
+  "Michelle"
 ];
 
 type Props = {
