@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { usePlayerNames } from "../../providers/PlayerNamesProvider";
+import { NUMBER_CRUNCH_BUCKET_RANGES } from "../../services/number-crunch";
 import {
-  NumberCrunchFinalResultsRoundPlayerGuessView,
   NumberCrunchFinalResultsView,
   NumberCrunchGameView,
 } from "../../services/number-crunch/types";
 import THEME from "../../themes/types";
-import { FeatureHeading, Pill, SmallHeading } from "../Atoms";
+import { FeatureHeading, SmallHeading } from "../Atoms";
 import { CenterSpaced } from "../Layouts";
 import { PlayerAvatar } from "../PlayerAvatar";
-import { NUMBER_CRUNCH_BUCKET_RANGES } from "../../services/number-crunch";
-import { usePlayerNames } from "../../providers/PlayerNamesProvider";
 import { Appear } from "../animations/Appear";
 import { useSound } from "../hooks/useSound";
 
