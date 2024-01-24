@@ -6,6 +6,7 @@ import {
   explodeAnimation,
   shakeExtremeAnimation,
 } from "../../animations/keyframes/extreme";
+import carolFaceImage from "./carol-face.png";
 
 function getCloudAnimationSpeedMilliSeconds(intensity: number): number {
   return Math.max(8000 - intensity * 500, 100);
@@ -60,7 +61,7 @@ const Ballon = styled.div<{ size: number }>`
   }
 `;
 
-const Gift = styled(Image)<{ size: number }>`
+const Carol = styled(Image)<{ size: number }>`
   display: inline-block;
   width: ${({ size }) => size * 10 + 80}px;
   height: ${({ size }) => size * 10 + 80}px;
@@ -75,12 +76,12 @@ export function GasBallon({ gasCloud }: Props): JSX.Element {
   const visibleSize = gasCloud.exploded ? 10 : gasCloud.pressed;
   return (
     <Container size={visibleSize} exploded={gasCloud.exploded}>
-      <Ballon size={visibleSize} />
-      {/* <Gift
+      {/* <Ballon size={visibleSize} /> */}
+      <Carol
         size={visibleSize}
-        src={xmasGiftImage}
+        src={carolFaceImage}
         alt="Wrapped christmas gift box"
-      /> */}
+      />
     </Container>
   );
 }

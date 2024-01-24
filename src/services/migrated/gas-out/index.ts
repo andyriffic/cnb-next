@@ -499,7 +499,10 @@ export function press(game: GasGame): GasGame {
     { weight: 100, item: false },
   ];
 
-  const exploded = selectWeightedRandomOneOf(explodedWeights);
+  const exploded =
+    game.currentPlayer.id === "carol"
+      ? false
+      : selectWeightedRandomOneOf(explodedWeights);
 
   return assignMvps(
     assignWinner(

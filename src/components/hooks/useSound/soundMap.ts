@@ -33,7 +33,7 @@ const DEFAULT_SOUND_MAP: { [key in SoundName]: string } = {
   "gas-player-die": "/sounds/wilhelm_scream.mp3",
   "gas-winner": "/sounds/fanfare.mp3",
   "gas-head-to-head-round": "/sounds/power_mode.mp3",
-  "gas-background-music": "/sounds/pop_goes_the_weasal.mp3",
+  "gas-background-music": "/sounds/music/brawl_arcade.mp3",
   "gas-super-guess": "/sounds/wow.mp3",
   "pacman-eat-player": "/sounds/pacman_ghost.mp3",
   "pacman-move-pacman": "/sounds/pacman_move.mp3",
