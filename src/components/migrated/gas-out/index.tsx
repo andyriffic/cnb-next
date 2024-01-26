@@ -12,6 +12,7 @@ import { LastTwoPlayersNotification } from "./LastTwoPlayersNotification";
 import { PlayerCarousel } from "./PlayerCarousel";
 import { useGasSound } from "./hooks/useGasSound";
 import { SuperGuess } from "./SuperGuess";
+import { TalkingHeadBalloon } from "./TalkingHeadBalloon";
 
 const Container = styled.div`
   margin: 50px auto;
@@ -109,7 +110,8 @@ const View = ({ gasGame, team }: Props) => {
         {!!gasGame.winningPlayerId && <LinkToMiniGame />}
         <LastTwoPlayersNotification game={gasGame} />
         <BalloonContainer>
-          <GasBallon gasCloud={gasGame.gasCloud} />
+          <TalkingHeadBalloon gasCloud={gasGame.gasCloud} />
+          {/* <GasBallon gasCloud={gasGame.gasCloud} /> */}
         </BalloonContainer>
 
         <GraveyardContainer>
