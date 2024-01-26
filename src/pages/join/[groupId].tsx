@@ -163,7 +163,30 @@ function Page() {
     (group && group.players.length > 20 ? "thumbnail" : "small") || "small";
 
   return (
-    <SpectatorPageLayout debug={group && <DebugPlayerJoin group={group} />}>
+    <SpectatorPageLayout
+      debug={
+        group && (
+          <>
+            <DebugPlayerJoin group={group} />{" "}
+            <button
+              disabled={group.playerIds.length < 2}
+              onClick={() => {
+                gameCreators["number-crunch"](
+                  group,
+                  socketService,
+                  getName,
+                  team
+                ).then((gameUrl) => {
+                  router.push(urlWithTeamQueryParam(gameUrl, team));
+                });
+              }}
+            >
+              Number Crunch 💯
+            </button>
+          </>
+        )
+      }
+    >
       <SplitScreenContainer>
         <JoinDetailsContainer>
           <JoinDetailsInfoContainer>
