@@ -18,11 +18,13 @@ function getCloudAnimationSpeedMilliSeconds(intensity: number): number {
 const SpeechText = [
   "I left some comments on your PR",
   "I'm never baking pastries again",
-  "Please don't pop me 😥",
+  "Please don't pop me",
   "I won't be writing any tests at BuildPass",
-  "Kangaroo jerky rules 🦘",
+  "Kangaroo jerky rules",
   "You can probably just replace me with ChatGPT",
   "Please clean your dishes",
+  "Do we really need all these analytics?",
+  "We have shown Broker Carousel 7 times in FS showcase",
 ];
 
 const Container = styled.div`
