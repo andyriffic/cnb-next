@@ -9,17 +9,20 @@ import {
   explodeAnimation,
   shakeExtremeAnimation,
 } from "../../animations/keyframes/extreme";
-import carolFaceImage from "./carol-face.png";
+import faceImage from "./hugh-face.png";
 
 function getCloudAnimationSpeedMilliSeconds(intensity: number): number {
   return Math.max(8000 - intensity * 500, 100);
 }
 
 const SpeechText = [
-  "Is your system green?",
-  "Please make sure you drink plenty of water",
+  "I left some comments on your PR",
+  "I'm never baking pastries again",
   "Please don't pop me 😥",
-  "Have a Marvel-ous day",
+  "I won't be writing any tests at BuildPass",
+  "Kangaroo jerky rules! 🦘",
+  "You can probably just replace me with ChatGPT",
+  "Please clean your dishes",
 ];
 
 const Container = styled.div`
@@ -51,7 +54,7 @@ const ImageContainer = styled.div<{ size: number; exploded: boolean }>`
 `;
 
 const TextContainer = styled.div`
-  min-width: 250px;
+  min-width: 300px;
 `;
 
 const FaceImage = styled(Image)<{ size: number }>`
@@ -68,7 +71,7 @@ const SpeechBubble = styled.div`
   margin: 20px;
   text-align: center;
   font-family: ${THEME.fonts.feature};
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   line-height: 1;
   // letter-spacing: -0.04em;
   background-color: white;
@@ -107,8 +110,10 @@ function getRandomSpeechText() {
   return selectRandomOneOf(SpeechText);
 }
 
+const SPEECH_INTERVAL_MILLISECONDS = 3000;
+
 export function TalkingHeadBalloon({ gasCloud }: Props): JSX.Element {
-  const [speechText, setSpeechText] = useState(selectRandomOneOf(SpeechText));
+  const [speechText, setSpeechText] = useState("");
   const visibleSize = gasCloud.exploded ? 10 : gasCloud.pressed;
 
   useEffect(() => {
@@ -122,7 +127,7 @@ export function TalkingHeadBalloon({ gasCloud }: Props): JSX.Element {
       } else {
         setSpeechText(getRandomSpeechText());
       }
-    }, 5000);
+    }, SPEECH_INTERVAL_MILLISECONDS);
     return () => clearInterval(interval);
   }, [gasCloud.exploded, speechText]);
 
@@ -131,12 +136,15 @@ export function TalkingHeadBalloon({ gasCloud }: Props): JSX.Element {
       <ImageContainer size={visibleSize} exploded={gasCloud.exploded}>
         <FaceImage
           size={visibleSize}
-          src={carolFaceImage}
+          src={faceImage}
           alt="Wrapped christmas gift box"
         />
       </ImageContainer>
       <TextContainer>
-        <Appear show={!!speechText} animation="text-focus-in">
+        <Appear
+          show={!!speechText && !gasCloud.exploded}
+          animation="text-focus-in"
+        >
           <SpeechBubble>{speechText}</SpeechBubble>
         </Appear>
       </TextContainer>
