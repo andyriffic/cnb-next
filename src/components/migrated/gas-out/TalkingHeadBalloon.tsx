@@ -20,7 +20,7 @@ const SpeechText = [
   "I'm never baking pastries again",
   "Please don't pop me 😥",
   "I won't be writing any tests at BuildPass",
-  "Kangaroo jerky rules! 🦘",
+  "Kangaroo jerky rules 🦘",
   "You can probably just replace me with ChatGPT",
   "Please clean your dishes",
 ];
@@ -110,7 +110,7 @@ function getRandomSpeechText() {
   return selectRandomOneOf(SpeechText);
 }
 
-const SPEECH_INTERVAL_MILLISECONDS = 3000;
+const SPEECH_INTERVAL_MILLISECONDS = 9000;
 
 export function TalkingHeadBalloon({ gasCloud }: Props): JSX.Element {
   const [speechText, setSpeechText] = useState("");
