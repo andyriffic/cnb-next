@@ -1,8 +1,11 @@
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 import tinycolor from "tinycolor2";
 import { FONT_FAMILY } from "../../colors";
 import { spinAnimation } from "../animations/keyframes/spinAnimations";
+import THEME from "../../themes/types";
+import { Appear } from "../animations/Appear";
+import { useSound } from "../hooks/useSound";
 import { PacManGhost } from "./PacManGhost";
 import { PacManPlayer } from "./types";
 
@@ -55,12 +58,44 @@ const PowerPill = styled.div`
   font-size: 0.8rem;
 `;
 
+const SafeIndicator = styled.div`
+  position: absolute;
+  bottom: 0;
+  right: 50%;
+  transform: translateX(50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  background: ${THEME.colours.buttonPrimaryBackground};
+  padding: 0.2rem;
+  color: ${THEME.colours.buttonPrimaryText};
+  border-radius: 0.5rem;
+  border: 1px solid white;
+`;
+
 type Props = {
   pacPlayer: PacManPlayer;
 };
 
 export function BoardPlayer({ pacPlayer }: Props): JSX.Element {
   const startingJailMoves = useRef(pacPlayer.jailTurnsCount);
+  const initialPowerPill = useRef(pacPlayer.powerPill);
+  const { play } = useSound();
+
+  const usedPowerPill = useMemo(() => {
+    if (!initialPowerPill.current) {
+      return false;
+    }
+    return !pacPlayer.powerPill;
+  }, [pacPlayer.powerPill]);
+
+  useEffect(() => {
+    if (usedPowerPill) {
+      play("pacman-pill-safe");
+    }
+  }, [play, usedPowerPill]);
+
   const inJail = pacPlayer.jailTurnsCount > 0;
   const accentColor = tinycolor
     .mostReadable(pacPlayer.color, ["#fff", "#000"])
@@ -86,6 +121,11 @@ export function BoardPlayer({ pacPlayer }: Props): JSX.Element {
         <MovesRemaining>{pacPlayer.movesRemaining}</MovesRemaining>
       )}
       {pacPlayer.powerPill && <PowerPill>💊</PowerPill>}
+      {usedPowerPill && (
+        <Appear>
+          <SafeIndicator>SAFE</SafeIndicator>
+        </Appear>
+      )}
     </Container>
   );
 }

@@ -33,6 +33,7 @@ export type SoundName =
   | "pacman-move-pacman"
   | "pacman-move-player"
   | "pacman-eat-player"
+  | "pacman-pill-safe"
   | "ai-thinking"
   | "ai-speaking"
   | "ai-typing"
