@@ -12,6 +12,11 @@ import { CenterSpaced } from "../Layouts";
 import { PlayerAvatar } from "../PlayerAvatar";
 import { Appear } from "../animations/Appear";
 import { useSound } from "../hooks/useSound";
+import { useDoOnce } from "../hooks/useDoOnce";
+import { numberCrunchGameToPoints } from "../../services/number-crunch/points";
+import { savePlayerGameMovesFetch } from "../../utils/api";
+import { LinkToMiniGame } from "../LinkToMiniGame";
+import { Positioned } from "../Positioned";
 
 const FinalGuessLine = styled.div`
   width: 100%;
@@ -26,6 +31,7 @@ const FinalGuessLine = styled.div`
 const FinalGuessDotsContainer = styled.div`
   width: calc(100% - 1vh);
   position: relative;
+  height: 20rem;
 `;
 
 const DotPlayerNameContainer = styled.div`
@@ -94,8 +100,13 @@ enum RevealState {
 export const FinalResults = ({ gameView, finalResults }: Props) => {
   const [revealState, setRevealState] = useState(RevealState.SHOW_TARGET);
   useRevealTiming(revealState, setRevealState);
-
   const { getName } = usePlayerNames();
+
+  useDoOnce(() => {
+    const gameMoves = numberCrunchGameToPoints(gameView);
+    savePlayerGameMovesFetch(gameView.id, gameMoves);
+    console.log("saving game moves", gameMoves);
+  }, revealState === RevealState.SHOW_POINTS_LEGEND);
 
   return (
     <CenterSpaced stacked={true}>
@@ -169,6 +180,11 @@ export const FinalResults = ({ gameView, finalResults }: Props) => {
           </div>
         </Appear>
       )}
+      {revealState >= RevealState.SHOW_POINTS_LEGEND && (
+        <Positioned horizontalAlign={{ align: "center", bottomPercent: 20 }}>
+          <LinkToMiniGame />
+        </Positioned>
+      )}
     </CenterSpaced>
   );
 };
@@ -182,7 +198,7 @@ function useRevealTiming(
   useEffect(() => {
     if (revealState === RevealState.SHOW_TARGET) {
       play("number-crunch-final-show-winner");
-      setTimeout(() => setRevealState(RevealState.SHOW_WINNERS), 1500);
+      setTimeout(() => setRevealState(RevealState.SHOW_WINNERS), 1300);
     }
   }, [play, revealState, setRevealState]);
 

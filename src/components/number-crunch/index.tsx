@@ -31,9 +31,9 @@ const View = ({ game }: Props) => {
   useNumberCrunchGameSound(game, gameState.state);
   return (
     <SpectatorPageLayout debug={<DebugNumberCrunchGame game={game} />}>
-      <SmallHeading centered={true}>
+      {/* <SmallHeading centered={true}>
         {NUMBER_CRUNCH_GAME_STATE[gameState.state]}
-      </SmallHeading>
+      </SmallHeading> */}
       {gameState.state <= NUMBER_CRUNCH_GAME_STATE.REVEAL_WINNER && (
         <>
           <NumberTarget game={game} />
