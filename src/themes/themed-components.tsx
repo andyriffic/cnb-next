@@ -1,3 +1,4 @@
+import { CnyJoinScreenDecoration } from "./chinese-new-year/JoinScreenDecoration";
 import { JoinScreenDecoration } from "./default/JoinScreenDecoration";
 import { ThemedComponents } from "./types";
 import { XmasJoinScreenDecoration } from "./xmas/JoinScreenDecoration";
@@ -10,4 +11,8 @@ const XMAS_COMPONENTS: ThemedComponents = {
   JoinScreenDecoration: <XmasJoinScreenDecoration />,
 };
 
-export default DEFAULT_COMPONENTS;
+const CNY_COMPONENTS: ThemedComponents = {
+  JoinScreenDecoration: <CnyJoinScreenDecoration />,
+};
+
+export default CNY_COMPONENTS;

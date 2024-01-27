@@ -65,6 +65,12 @@ const XMAS_SOUND_MAP: { [key in SoundName]: string } = {
   "rps-spectator-choice-reveal": "/sounds/xmas/sleigh_bell.mp3",
 };
 
-export const SOUND_MAP = {
+const CNY_SOUND_MAP: { [key in SoundName]: string } = {
   ...DEFAULT_SOUND_MAP,
+  "join-music": "/sounds/chinese-new-year/988_cny.mp3",
+  "gas-background-music": "/sounds/chinese-new-year/god_of_wealth.mp3",
+};
+
+export const SOUND_MAP = {
+  ...CNY_SOUND_MAP,
 };

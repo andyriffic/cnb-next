@@ -72,4 +72,20 @@ const XMAS_THEME: ThemeTokens = {
   },
 };
 
-export default DEFAULT_THEME;
+const CNY_THEME: ThemeTokens = {
+  ...DEFAULT_THEME,
+  colours: {
+    ...DEFAULT_THEME.colours,
+    primaryText: "#FFDE62",
+    textAccent: "#ea4630",
+    primaryBackground: "#E27676",
+    secondaryBackground: "#AA381E",
+    buttonPrimaryBackground: "#FFB200",
+    buttonSecondaryBackground: "#FFF0D9",
+    ballonGame: {
+      ...DEFAULT_THEME.colours.ballonGame,
+    },
+  },
+};
+
+export default CNY_THEME;
