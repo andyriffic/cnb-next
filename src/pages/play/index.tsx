@@ -53,17 +53,13 @@ function Page({ players }: Props) {
   );
 }
 
-const activePlayer = (player: Player): boolean => {
-  return !player.tags.includes("retired");
-};
-
 export const getStaticProps: GetStaticProps = async () => {
   const players = await getAllPlayers();
 
   return {
     props: {
       players: players
-        ? players.filter(activePlayer).sort(sortByPlayerName)
+        ? players.filter((p) => !p.details?.retired).sort(sortByPlayerName)
         : [],
     },
   };
