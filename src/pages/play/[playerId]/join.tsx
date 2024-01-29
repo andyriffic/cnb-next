@@ -8,12 +8,14 @@ import {
   PrimaryButton,
   PrimaryLinkButton,
   SubHeading,
+  ThemedPrimaryLinkButton,
 } from "../../../components/Atoms";
 import { PlayerPageLayout } from "../../../components/PlayerPageLayout";
 import { useSocketIo } from "../../../providers/SocketIoProvider";
 import {
   getAiOverlordPlayerUrl,
   getGasOutPlayerUrl,
+  getNumberCrunchPlayerUrl,
   playersBettingGameUrl,
   playersRockPaperScissorsGameUrl,
 } from "../../../utils/url";
@@ -29,8 +31,14 @@ function Page({}: Props) {
   const autoJoinId = (router.query.autoJoinId as string) || "";
   const playerId = router.query.playerId as string;
   const joinedId = router.query.joinedId as string;
-  const { groupJoin, rockPaperScissors, groupBetting, aiOverlord, gasGame } =
-    useSocketIo();
+  const {
+    groupJoin,
+    rockPaperScissors,
+    groupBetting,
+    aiOverlord,
+    gasGame,
+    numberCrunch,
+  } = useSocketIo();
   const [groupId, setGroupId] = useState(autoJoinId || joinedId || "");
 
   const joinedGroup = useMemo(() => {
@@ -84,6 +92,17 @@ function Page({}: Props) {
     );
   }, [joinedGroup, gasGame.gasGames, playerId]);
 
+  const relatedNumberCrunchGame = useMemo(() => {
+    return (
+      joinedGroup &&
+      numberCrunch.games.find(
+        (g) =>
+          g.id === joinedGroup.id &&
+          g.players.map((p) => p.id).includes(playerId)
+      )
+    );
+  }, [joinedGroup, numberCrunch.games, playerId]);
+
   return (
     <PlayerPageLayout headerContent={<>Header</>} playerId={playerId}>
       {joinedGroup ? (
@@ -133,6 +152,16 @@ function Page({}: Props) {
             >
               <PrimaryLinkButton>Play Balloon</PrimaryLinkButton>
             </Link>
+          )}
+          {relatedNumberCrunchGame && (
+            <ThemedPrimaryLinkButton
+              href={getNumberCrunchPlayerUrl(
+                playerId,
+                relatedNumberCrunchGame.id
+              )}
+            >
+              Play Number Crunch 💯
+            </ThemedPrimaryLinkButton>
           )}
         </div>
       ) : (
