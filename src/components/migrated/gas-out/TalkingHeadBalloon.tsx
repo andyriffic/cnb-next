@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 import { GasCloud } from "../../../services/migrated/gas-out/types";
 import THEME from "../../../themes/types";
@@ -18,15 +18,35 @@ function getCloudAnimationSpeedMilliSeconds(intensity: number): number {
 const SpeechText = [
   "I left some comments on your PR",
   "I'm never baking pastries again",
-  "Please don't pop me",
   "I won't be writing any tests at BuildPass",
-  "Kangaroo jerky rules",
   "You can probably just replace me with ChatGPT",
-  "Please clean your dishes",
+  "Kangaroo jerky rules",
   "Do we really need all these analytics?",
-  "We have shown Broker Carousel 7 times in FS showcase",
+  "Please clean your dishes",
+  "We've shown Broker Carousel 20 times in FS showcase",
   "I can turn anything into Ice Cream 🍦",
+  "Please don't pop me",
 ];
+
+const createSpeechManager = (textOptions: string[]) => {
+  let index = -1;
+  let showText = false;
+  return {
+    next: (): string => {
+      showText = !showText;
+
+      if (showText) {
+        index++;
+        if (index >= textOptions.length) {
+          index = 0;
+        }
+        return textOptions[index] || "";
+      } else {
+        return "";
+      }
+    },
+  };
+};
 
 const Container = styled.div`
   // position: relative;
@@ -113,10 +133,11 @@ function getRandomSpeechText() {
   return selectRandomOneOf(SpeechText);
 }
 
-const SPEECH_INTERVAL_MILLISECONDS = 9000;
+const SPEECH_INTERVAL_MILLISECONDS = 8000;
 
 export function TalkingHeadBalloon({ gasCloud }: Props): JSX.Element {
   const [speechText, setSpeechText] = useState("");
+  const speechManager = useRef(createSpeechManager(SpeechText));
   const visibleSize = gasCloud.exploded ? 10 : gasCloud.pressed;
 
   useEffect(() => {
@@ -125,11 +146,7 @@ export function TalkingHeadBalloon({ gasCloud }: Props): JSX.Element {
     }
 
     const interval = setInterval(() => {
-      if (speechText) {
-        setSpeechText("");
-      } else {
-        setSpeechText(getRandomSpeechText());
-      }
+      setSpeechText(speechManager.current.next());
     }, SPEECH_INTERVAL_MILLISECONDS);
     return () => clearInterval(interval);
   }, [gasCloud.exploded, speechText]);
