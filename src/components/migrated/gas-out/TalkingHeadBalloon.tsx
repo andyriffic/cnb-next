@@ -25,6 +25,7 @@ const SpeechText = [
   "Please clean your dishes",
   "Do we really need all these analytics?",
   "We have shown Broker Carousel 7 times in FS showcase",
+  "I can turn anything into Ice Cream 🍦",
 ];
 
 const Container = styled.div`
