@@ -44,6 +44,7 @@ export type NumberCrunchGameView = {
   previousRounds: NumberCrunchRoundView[];
   // allRounds: NumberCrunchRoundView[];
   currentRound: NumberCrunchRoundView;
+  guessedNumbers: number[];
   finalResults?: NumberCrunchFinalResultsView;
 };
 

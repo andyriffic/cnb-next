@@ -145,6 +145,11 @@ function createRoundView(
 export function createGameView(
   game: NumberCrunchGame
 ): E.Either<ErrorMessage, NumberCrunchGameView> {
+  const allGuessedNumbers = Array.from(
+    new Set(
+      game.rounds.map((r) => r.playerGuesses.map((pg) => pg.guess)).flat()
+    )
+  );
   return pipe(
     getLatestRound(game),
     E.map((round) => {
@@ -162,6 +167,7 @@ export function createGameView(
           .map((r, i) => createRoundView(game, r, i + 1)),
         currentRound: createRoundView(game, round, game.rounds.length),
         finalResults: createFinalResultsView(game, round),
+        guessedNumbers: allGuessedNumbers,
       };
     })
   );

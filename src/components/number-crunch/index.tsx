@@ -14,6 +14,7 @@ import {
   NUMBER_CRUNCH_GAME_STATE,
   useNumberCrunchGameTiming,
 } from "./hooks/useNumberCrunchGameTiming";
+import { NumbersRemainingIndicator } from "./NumbersRemainingIndicator";
 
 type Props = {
   game: NumberCrunchGameView;
@@ -38,6 +39,7 @@ const View = ({ game }: Props) => {
         <>
           <NumberTarget game={game} />
           <WaitingToGuessList game={game} />
+          <NumbersRemainingIndicator gameView={game} />
           <RoundResultBuckets
             gameView={game}
             gameState={gameState.state}
