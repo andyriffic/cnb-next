@@ -37,12 +37,14 @@ type Props = {
   children: ReactNode;
   showForMilliseconds?: number;
   onShowEffect?: () => void;
+  onComplete?: () => void;
 };
 
 export function SplashContent({
   children,
   showForMilliseconds = 2000,
   onShowEffect,
+  onComplete,
 }: Props): JSX.Element {
   const [show, setShow] = useState(true);
 
@@ -51,12 +53,12 @@ export function SplashContent({
   }, [onShowEffect]);
 
   useEffect(() => {
-    const timeout = setTimeout(
-      () => setShow(false),
-      showForMilliseconds + ANIMATION_DURATION_MS
-    );
+    const timeout = setTimeout(() => {
+      setShow(false);
+      onComplete && onComplete();
+    }, showForMilliseconds + ANIMATION_DURATION_MS);
     return () => clearTimeout(timeout);
-  }, [showForMilliseconds]);
+  }, [onComplete, showForMilliseconds]);
 
   return (
     <Container>

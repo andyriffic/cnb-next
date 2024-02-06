@@ -1,7 +1,12 @@
 import { useReducer } from "react";
 import { PacManBoard } from "../../types";
 import { Player } from "../../../../types/Player";
-import { createInitialState, PacManUiState, reducer } from "./reducer";
+import {
+  createInitialState,
+  GameUiStatus,
+  PacManUiState,
+  reducer,
+} from "./reducer";
 
 export type UsePacMan = {
   uiState: PacManUiState;
@@ -9,6 +14,7 @@ export type UsePacMan = {
   movePlayer: () => void;
   startMovePacman: () => void;
   movePacmanOneSquare: () => void;
+  setUiStatus: (status: GameUiStatus) => void;
 };
 
 export function usePacMan(
@@ -29,5 +35,7 @@ export function usePacMan(
     startMovePacman: () => dispatch({ type: "START_MOVE_PACMAN" }),
     movePacmanOneSquare: () => dispatch({ type: "MOVE_PACMAN" }),
     startGame: () => dispatch({ type: "RELEASE_PLAYERS_FROM_JAIL" }),
+    setUiStatus: (status) =>
+      dispatch({ type: "SET_UI_STATE", payload: status }),
   };
 }

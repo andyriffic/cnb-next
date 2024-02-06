@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled, { css, keyframes } from "styled-components";
 import { FONT_FAMILY } from "../../colors";
 import { PacManUiState } from "./hooks/usePacman/reducer";

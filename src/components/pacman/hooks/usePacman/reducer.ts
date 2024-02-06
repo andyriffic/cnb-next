@@ -7,13 +7,15 @@ import {
   PacManPlayerStatus,
 } from "../../types";
 
-const MIN_PACMAN_MOVES = 25;
+export const MIN_PACMAN_MOVES = 25;
 
-type GameUiStatus =
+export type GameUiStatus =
   | "loading"
   | "ready"
   | "moving-players"
   | "moving-players-done"
+  | "show-pacman-moves"
+  | "ready-to-move-pacman"
   | "moving-pacman"
   | "game-over";
 
@@ -94,6 +96,11 @@ type ReleasePlayersFromJailAction = {
   type: "RELEASE_PLAYERS_FROM_JAIL";
 };
 
+type SetGameUiStatus = {
+  type: "SET_UI_STATE";
+  payload: GameUiStatus;
+};
+
 export function reducer(
   state: PacManUiState,
   action:
@@ -101,6 +108,7 @@ export function reducer(
     | MovePacManAction
     | StartMovePacManAction
     | ReleasePlayersFromJailAction
+    | SetGameUiStatus
 ): PacManUiState {
   switch (action.type) {
     case "MOVE_PLAYERS": {
@@ -140,6 +148,9 @@ export function reducer(
       //   setGameUiStatus('moving-players')
       // );
     }
+    case "SET_UI_STATE": {
+      return setGameUiStatus(action.payload)(state);
+    }
     default: {
       return state;
     }
@@ -160,7 +171,7 @@ function pickPlayerToMove(state: PacManUiState): PacManUiState {
     .find((p) => p.movesRemaining > 0);
 
   if (!nextPlayer) {
-    return setGameUiStatus("moving-players-done")(state);
+    return setGameUiStatus("show-pacman-moves")(state);
     // return pipe(
     //   state,
     //   setGameUiStatus('moving-players-done')
@@ -245,11 +256,19 @@ function setPlayerPositionOffset(
   // )(state);
 }
 
-function initialisePacmanMoves(state: PacManUiState): PacManUiState {
-  const allPlayersInJail = state.allPacPlayers.filter(playerInJail);
-  const totalMovesForPlayersInJail = allPlayersInJail
+export function getJailedPlayers(players: PacManPlayer[]): PacManPlayer[] {
+  return players.filter(playerInJail);
+}
+
+export function sumPlayerMoves(players: PacManPlayer[]): number {
+  return players
     .map<number>((p) => p.movesRemaining)
     .reduce((acc, v) => acc + v, 0);
+}
+
+function initialisePacmanMoves(state: PacManUiState): PacManUiState {
+  const allPlayersInJail = getJailedPlayers(state.allPacPlayers);
+  const totalMovesForPlayersInJail = sumPlayerMoves(allPlayersInJail);
 
   return {
     ...updatePlayers(allPlayersInJail.map(resetPlayersMoves))(state),

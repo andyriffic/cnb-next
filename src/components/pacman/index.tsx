@@ -1,10 +1,12 @@
 import { useRouter } from "next/router";
 import styled from "styled-components";
+import { useMemo, useRef, useState } from "react";
 import { Player } from "../../types/Player";
 import { isClientSideFeatureEnabled } from "../../utils/feature";
-import { PrimaryButton } from "../Atoms";
+import { Card, PrimaryButton } from "../Atoms";
 import { SpectatorPageLayout } from "../SpectatorPageLayout";
 import { SplashContent } from "../SplashContent";
+import { Positioned } from "../Positioned";
 import { Board } from "./Board";
 import { boardConfig } from "./boardConfig";
 import { usePacMan } from "./hooks/usePacman";
@@ -12,6 +14,7 @@ import { usePacmanSound } from "./hooks/usePacmanSound";
 import { usePlayerAutoMove } from "./hooks/usePlayerMoveTick";
 import { useSyncData } from "./hooks/useSyncData";
 import { WinningPlayer } from "./WinningPlayer";
+import { PacmanMovesInfo } from "./PacmanMovesInfo";
 
 const Container = styled.div`
   margin: 0 auto;
@@ -39,17 +42,22 @@ const View = ({ players, pacmanStartingIndex }: Props) => {
   usePlayerAutoMove(pacManService);
   useSyncData(pacManService.uiState, saveDisabled);
 
-  // useEffect(() => {
-  //   triggerUpdate();
-  // }, []);
-
   return (
     <SpectatorPageLayout scrollable={true}>
       <Container>
         <Board uiState={pacManService.uiState} />
       </Container>
       {pacManService.uiState.status === "game-over" && (
-        <SplashContent>Game Over</SplashContent>
+        <SplashContent>
+          <Card>Game Over</Card>
+        </SplashContent>
+      )}
+      {pacManService.uiState.status === "show-pacman-moves" && (
+        <SplashContent
+          onComplete={() => pacManService.setUiStatus("ready-to-move-pacman")}
+        >
+          <PacmanMovesInfo uiState={pacManService.uiState} />
+        </SplashContent>
       )}
       {pacManService.uiState.status === "ready" && (
         <div
@@ -70,11 +78,12 @@ const View = ({ players, pacmanStartingIndex }: Props) => {
         </div>
       )}
       {pacManService.uiState.status === "game-over" && (
-      <WinningPlayer
-        winningPlayer={pacManService.uiState.allPacPlayers.find(
-          (p) => p.finishPosition === 1
-        )}
-      />)}
+        <WinningPlayer
+          winningPlayer={pacManService.uiState.allPacPlayers.find(
+            (p) => p.finishPosition === 1
+          )}
+        />
+      )}
     </SpectatorPageLayout>
   );
 };
