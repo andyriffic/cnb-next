@@ -16,16 +16,14 @@ function getCloudAnimationSpeedMilliSeconds(intensity: number): number {
 }
 
 const SpeechText = [
-  "I left some comments on your PR",
-  "I'm never baking pastries again",
-  "I won't be writing any tests at BuildPass",
-  "You can probably just replace me with ChatGPT",
-  "Kangaroo jerky rules",
-  "Do we really need all these analytics?",
-  "Please clean your dishes",
-  "We've shown Broker Carousel 20 times in FS showcase",
-  "I can turn anything into Ice Cream 🍦",
-  "Please don't pop me",
+  "May the dragon bring you prosperity and energy in the new year",
+  "祝龍年好運",
+  "May good luck fall on you for that promotion this year",
+  "日进斗金",
+  "Hoping your year is one of abundance and health",
+  "說英語的人不會知道這是什麼意思",
+  "May your work go smoothly and successfully this year",
+  "金玉满堂",
 ];
 
 const createSpeechManager = (textOptions: string[]) => {
@@ -154,11 +152,7 @@ export function TalkingHeadBalloon({ gasCloud }: Props): JSX.Element {
   return (
     <Container>
       <ImageContainer size={visibleSize} exploded={gasCloud.exploded}>
-        <FaceImage
-          size={visibleSize}
-          src={faceImage}
-          alt="Wrapped christmas gift box"
-        />
+        <div style={{ fontSize: "3rem" }}>🧧</div>
       </ImageContainer>
       <TextContainer>
         <Appear
