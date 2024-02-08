@@ -9,7 +9,7 @@ import {
   explodeAnimation,
   shakeExtremeAnimation,
 } from "../../animations/keyframes/extreme";
-import faceImage from "./hugh-face.png";
+import dragon from "./dragon.png";
 
 function getCloudAnimationSpeedMilliSeconds(intensity: number): number {
   return Math.max(8000 - intensity * 500, 100);
@@ -152,7 +152,7 @@ export function TalkingHeadBalloon({ gasCloud }: Props): JSX.Element {
   return (
     <Container>
       <ImageContainer size={visibleSize} exploded={gasCloud.exploded}>
-        <div style={{ fontSize: "3rem" }}>🧧</div>
+        <FaceImage src={dragon} alt="Dragon" size={visibleSize} />
       </ImageContainer>
       <TextContainer>
         <Appear
