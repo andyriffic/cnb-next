@@ -1,7 +1,6 @@
-import styled from "styled-components";
 import { useMemo } from "react";
+import styled from "styled-components";
 import { Player } from "../../../types/Player";
-import THEME from "../../../themes/types";
 import { Pill, SmallHeading } from "../../Atoms";
 import { Appear } from "../../animations/Appear";
 
@@ -16,20 +15,19 @@ const REGULAR_PLAYER_NAMES = [
   "Nina",
   "Cathy",
   "Kathleen",
-  "Carol",
+  "Brett",
   "Chris",
-  "Hugh",
   "Byron",
   "Stacey",
   "Ashlee",
-  "Shuming",
-  "Albert",
-  "Ben",
-  "Xueming",
-  "Yishen",
-  "Sixiao",
-  "Pingsheng",
-  "Michelle"
+  "Michelle",
+  // "Shuming",
+  // "Albert",
+  // "Ben",
+  // "Xueming",
+  // "Yishen",
+  // "Sixiao",
+  // "Pingsheng",
 ];
 
 type Props = {
