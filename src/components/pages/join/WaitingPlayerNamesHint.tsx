@@ -21,6 +21,7 @@ const REGULAR_PLAYER_NAMES = [
   "Stacey",
   "Ashlee",
   "Michelle",
+  "Michelle L",
   // "Shuming",
   // "Albert",
   // "Ben",
