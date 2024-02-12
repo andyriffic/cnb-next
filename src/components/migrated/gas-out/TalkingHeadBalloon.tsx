@@ -134,34 +134,34 @@ function getRandomSpeechText() {
 const SPEECH_INTERVAL_MILLISECONDS = 8000;
 
 export function TalkingHeadBalloon({ gasCloud }: Props): JSX.Element {
-  const [speechText, setSpeechText] = useState("");
-  const speechManager = useRef(createSpeechManager(SpeechText));
+  // const [speechText, setSpeechText] = useState("");
+  // const speechManager = useRef(createSpeechManager(SpeechText));
   const visibleSize = gasCloud.exploded ? 10 : gasCloud.pressed;
 
-  useEffect(() => {
-    if (gasCloud.exploded) {
-      return;
-    }
+  // useEffect(() => {
+  //   if (gasCloud.exploded) {
+  //     return;
+  //   }
 
-    const interval = setInterval(() => {
-      setSpeechText(speechManager.current.next());
-    }, SPEECH_INTERVAL_MILLISECONDS);
-    return () => clearInterval(interval);
-  }, [gasCloud.exploded, speechText]);
+  //   const interval = setInterval(() => {
+  //     setSpeechText(speechManager.current.next());
+  //   }, SPEECH_INTERVAL_MILLISECONDS);
+  //   return () => clearInterval(interval);
+  // }, [gasCloud.exploded, speechText]);
 
   return (
     <Container>
       <ImageContainer size={visibleSize} exploded={gasCloud.exploded}>
         <FaceImage src={dragon} alt="Dragon" size={visibleSize} />
       </ImageContainer>
-      <TextContainer>
+      {/* <TextContainer>
         <Appear
           show={!!speechText && !gasCloud.exploded}
           animation="text-focus-in"
         >
           <SpeechBubble>{speechText}</SpeechBubble>
         </Appear>
-      </TextContainer>
+      </TextContainer> */}
     </Container>
   );
 }
