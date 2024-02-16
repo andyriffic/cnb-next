@@ -22,13 +22,13 @@ const REGULAR_PLAYER_NAMES = [
   "Ashlee",
   "Michelle",
   "Michelle L",
-  // "Shuming",
-  // "Albert",
-  // "Ben",
-  // "Xueming",
-  // "Yishen",
-  // "Sixiao",
-  // "Pingsheng",
+  "Shuming",
+  "Albert",
+  "Ben",
+  "Xueming",
+  "Yishen",
+  "Sixiao",
+  "Pingsheng",
 ];
 
 type Props = {
