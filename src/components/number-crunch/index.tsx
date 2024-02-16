@@ -39,7 +39,7 @@ const View = ({ game }: Props) => {
         <>
           <NumberTarget game={game} />
           <WaitingToGuessList game={game} />
-          <NumbersRemainingIndicator gameView={game} />
+          {/* <NumbersRemainingIndicator gameView={game} /> */}
           <RoundResultBuckets
             gameView={game}
             gameState={gameState.state}
