@@ -75,5 +75,5 @@ const CNY_SOUND_MAP: { [key in SoundName]: string } = {
 };
 
 export const SOUND_MAP = {
-  ...CNY_SOUND_MAP,
+  ...DEFAULT_SOUND_MAP,
 };

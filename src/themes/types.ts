@@ -88,4 +88,4 @@ const CNY_THEME: ThemeTokens = {
   },
 };
 
-export default CNY_THEME;
+export default DEFAULT_THEME;

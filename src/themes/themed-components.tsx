@@ -15,4 +15,4 @@ const CNY_COMPONENTS: ThemedComponents = {
   JoinScreenDecoration: <CnyJoinScreenDecoration />,
 };
 
-export default CNY_COMPONENTS;
+export default DEFAULT_COMPONENTS;
