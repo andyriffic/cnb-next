@@ -9,11 +9,13 @@ export type PlayerDetails = {
   gameMoves?: number;
   colourHex?: string;
   retired?: boolean;
+  role?: string;
   whosThatCount?: number;
   pacmanPlayer?: boolean;
   team?: string;
   pacmanDetails?: PacmanDetails;
   zombieRun?: ZombieRunDetails;
+  achievements?: PlayerAchievements;
 };
 
 export type PacmanDetails = {
@@ -29,6 +31,17 @@ export type ZombieRunDetails = {
   // playersBitten: string[];
 };
 
+export type PlayerAchievements = {
+  blah: string;
+  pacman: {
+    totalWins: number;
+  };
+  zombieRun: {
+    totalWins: number;
+    timesBitten: number;
+  };
+};
+
 export type PlayerNames = { [playerId: string]: string };
 
 export const DEFAULT_PACMAN_DETAILS: PacmanDetails = {
@@ -41,6 +54,20 @@ const DEFAULT_ZOMBIE_RUN_DETAILS: ZombieRunDetails = {
   totalMetresRun: 0,
   isZombie: false,
   // playersBitten: [],
+};
+
+export const getPlayerAchievements = (player: Player): PlayerAchievements => {
+  return {
+    blah: "blah",
+    pacman: {
+      totalWins: 0,
+    },
+    zombieRun: {
+      totalWins: 0,
+      timesBitten: 0,
+    },
+    ...player.details?.achievements,
+  };
 };
 
 export const getPlayerPacManDetails = (player: Player): PacmanDetails => {

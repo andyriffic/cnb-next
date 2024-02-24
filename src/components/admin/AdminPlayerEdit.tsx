@@ -3,6 +3,7 @@ import styled from "styled-components";
 import {
   Player,
   PlayerDetails,
+  getPlayerAchievements,
   getPlayerPacManDetails,
   getPlayerZombieRunDetails,
 } from "../../types/Player";
@@ -15,6 +16,7 @@ import { EvenlySpaced } from "../Layouts";
 import { PlayerAvatar } from "../PlayerAvatar";
 import { AdminPlayerEditBooleanValue } from "./AdminPlayerEditBooleanValue";
 import { AdminPlayerEditNumberValue } from "./AdminPlayerEditNumberValue";
+import { AdminPlayerEditStringValue } from "./AdminPlayerEditStringValue";
 
 const PlayerDetailsContainer = styled.div`
   flex: 1;
@@ -73,6 +75,20 @@ export const AdminPlayerEdit = ({ player, onClose }: Props) => {
                 },
               })
             }
+          />
+          <AdminPlayerEditStringValue
+            label="Role"
+            id="role"
+            value={playerCopy.details?.role || ""}
+            onChange={(value) => {
+              setPlayerCopy({
+                ...playerCopy,
+                details: {
+                  ...playerCopy.details,
+                  role: value,
+                },
+              });
+            }}
           />
           <fieldset>
             <label htmlFor="game_moves">Game Moves</label>
@@ -256,12 +272,38 @@ export const AdminPlayerEdit = ({ player, onClose }: Props) => {
               })
             }
           />
+          <hr />
+          <fieldset>
+            <legend>Achievements</legend>
+            <AdminPlayerEditNumberValue
+              label="Total Pacman Wins"
+              id="achievements_pacman_totalwins"
+              value={playerCopy.details?.achievements?.pacman?.totalWins || 0}
+              onChange={(value) => {
+                const achievements = getPlayerAchievements(playerCopy);
+                setPlayerCopy({
+                  ...playerCopy,
+                  details: {
+                    ...playerCopy.details,
+                    achievements: {
+                      ...achievements,
+                      pacman: {
+                        ...achievements.pacman,
+                        totalWins: value,
+                      },
+                    },
+                  },
+                });
+              }}
+            />
+          </fieldset>
         </form>
       </div>
       <EvenlySpaced>
         <button onClick={() => onClose(false)}>Cancel</button>
         <button
           onClick={() => {
+            console.log("Saving", playerCopy);
             updatePlayerDetails(playerCopy.id, playerCopy.details || {}).then(
               () => onClose(true)
             );

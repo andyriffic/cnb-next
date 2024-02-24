@@ -5,7 +5,7 @@ type Props = {
   onChange: (value: string) => void;
 };
 
-export const AdminPlayerEditBooleanValue = ({
+export const AdminPlayerEditStringValue = ({
   label,
   id,
   value,

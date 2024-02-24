@@ -49,7 +49,7 @@ function buildAttributes(obj: { [key: string]: any }): Attribute[] {
     const value = obj[attributeName];
     return {
       name: attributeName,
-      value: obj[attributeName],
+      value: typeof value === "object" ? undefined : value,
       children: typeof value === "object" ? buildAttributes(value) : undefined,
     };
   });
@@ -79,7 +79,7 @@ const DisplayAttributes = ({
         ) : (
           <DisplayAttributes
             key={`${prefix}_${attribute.name}`}
-            prefix={attribute.name}
+            prefix={`${prefix}${prefix ? "/" : ""}${attribute.name}`}
             attributes={attribute.children}
           />
         );
