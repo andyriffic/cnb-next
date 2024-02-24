@@ -3,12 +3,7 @@ import {
   getPlayerPacManDetails,
 } from "../../types/Player";
 import { getPlayer, updatePlayer } from "../../utils/data/aws-dynamodb";
-
-export type PlayerGameMoves = {
-  playerId: string;
-  moves: number;
-  winner?: boolean;
-};
+import { PlayerGameMoves } from "./types";
 
 const updatePlayerGameMoves = (
   playerMoves: PlayerGameMoves,

@@ -1,6 +1,6 @@
 import { WinningConditions } from "../../components/rock-paper-scissors/hooks/useGameWinningConditions";
 import { GroupBettingGame, PlayerWallet } from "../betting/types";
-import { PlayerGameMoves } from "../save-game-moves/saveGameMovesKong";
+import { PlayerGameMoves } from "../save-game-moves/types";
 import { RPSSpectatorGameView } from "./types";
 
 const WINNER_POINTS = 6;

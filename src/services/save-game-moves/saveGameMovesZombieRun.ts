@@ -4,12 +4,7 @@ import {
   getPlayerZombieRunDetails,
 } from "../../types/Player";
 import { getPlayer, updatePlayer } from "../../utils/data/aws-dynamodb";
-
-export type PlayerGameMoves = {
-  playerId: string;
-  moves: number;
-  winner?: boolean;
-};
+import { PlayerGameMoves } from "./types";
 
 const STARTING_DISTANCE_FROM_ZOMBIE = 4;
 

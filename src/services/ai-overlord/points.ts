@@ -1,4 +1,4 @@
-import { PlayerGameMoves } from "../save-game-moves/saveGameMovesKong";
+import { PlayerGameMoves } from "../save-game-moves/types";
 import {
   AiOverlordGame,
   AiOverlordOpponentMoveWithTextAndOutcome,

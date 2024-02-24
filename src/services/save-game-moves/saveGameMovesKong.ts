@@ -4,12 +4,7 @@ import {
   updatePlayer,
   updatePlayerLegacyTags,
 } from "../../utils/data/aws-dynamodb";
-
-export type PlayerGameMoves = {
-  playerId: string;
-  moves: number;
-  winner?: boolean;
-};
+import { PlayerGameMoves } from "./types";
 
 export const incrementIntegerTag = (
   tagPrefix: string,

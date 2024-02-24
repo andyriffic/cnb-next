@@ -4,7 +4,7 @@ import {
 } from "../pages/api/ai-overlord";
 import { CreatePlayerParams } from "../pages/api/player";
 import { AiOverlordGame } from "../services/ai-overlord/types";
-import { PlayerGameMoves } from "../services/save-game-moves/saveGameMovesKong";
+import { PlayerGameMoves } from "../services/save-game-moves/types";
 import { Player, PlayerDetails } from "../types/Player";
 
 export const addPlayerFetch = (params: CreatePlayerParams): Promise<void> => {

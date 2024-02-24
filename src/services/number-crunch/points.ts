@@ -1,4 +1,4 @@
-import { PlayerGameMoves } from "../save-game-moves/saveGameMovesPacman";
+import { PlayerGameMoves } from "../save-game-moves/types";
 import { NumberCrunchGameView } from "./types";
 import {
   NUMBER_CRUNCH_BUCKET_RANGES,
