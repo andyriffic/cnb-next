@@ -55,6 +55,11 @@ export default class MyDocument extends Document {
           />
           <link
             href="https://fonts.cdnfonts.com/css/pokemon-solid"
+            rel="preload"
+            as="style"
+          />
+          <link
+            href="https://fonts.cdnfonts.com/css/pokemon-solid"
             rel="stylesheet"
           />
           <link
