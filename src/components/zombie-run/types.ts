@@ -22,6 +22,7 @@ export type ZombiePlayer = {
   isZombie: boolean;
   gotBitten: boolean;
   finishPosition?: number;
+  obstacle?: ZombieObstacle;
 };
 
 export type OriginalZombieDetails = {
@@ -35,4 +36,11 @@ export type ZombieRunGame = {
   zombies: ZombiePlayer[];
   survivors: ZombiePlayer[];
   originalZombie: OriginalZombieDetails;
+  obstacles: ZombieObstacle[];
+};
+
+export type ZombieObstacle = {
+  index: number;
+  name: string;
+  icon: string;
 };

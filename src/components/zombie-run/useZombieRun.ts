@@ -3,6 +3,8 @@ import { Player } from "../../types/Player";
 import {
   OriginalZombieDetails,
   ZOMBIE_RUNNING_TRACK_LENGTH_METRES,
+  ZombieObstacle,
+  ZombiePlayer,
   ZombieRunEndGameStatus,
   ZombieRunGame,
   ZombieRunGameStatus,
@@ -39,9 +41,11 @@ const createZombieGame = (
   const minZombiePlayerMoves =
     zombiePlayersWithMoves.length > 0
       ? Math.min(
-          ...zombiePlayersWithMoves.map((p) => p.details?.gameMoves || 0)
+          ...zombiePlayersWithMoves.map(
+            (p) => p.details?.gameMoves || originalZombie.totalMetresToRun
+          )
         )
-      : 0;
+      : originalZombie.totalMetresToRun;
 
   return {
     gameStatus: ZombieRunGameStatus.READY_TO_START,
@@ -67,6 +71,31 @@ const createZombieGame = (
         gotBitten: false,
       })),
     originalZombie,
+    obstacles: [{ index: 10, name: "Banana", icon: "🍌" }],
+  };
+};
+
+type MovePlayerResult = {
+  finalIndex: number;
+  hitObstacle?: ZombieObstacle;
+};
+
+const getMovePlayerResult = (
+  player: ZombiePlayer,
+  game: ZombieRunGame
+): MovePlayerResult => {
+  const startingIndex = player.totalMetresRun;
+  const finalIndex = Math.min(
+    player.totalMetresRun + player.totalMetresToRun,
+    ZOMBIE_RUNNING_TRACK_LENGTH_METRES
+  );
+  const hitObstacle = game.obstacles.find(
+    (o) => o.index > startingIndex && o.index <= finalIndex
+  );
+
+  return {
+    finalIndex: hitObstacle ? hitObstacle.index : finalIndex,
+    hitObstacle,
   };
 };
 
@@ -82,14 +111,16 @@ export const useZombieRun = (
     setZombieGame({
       ...zombieGame,
       gameStatus: ZombieRunGameStatus.PLAYERS_RUNNING,
-      survivors: zombieGame.survivors.map((s) => ({
-        ...s,
-        totalMetresRun: Math.min(
-          s.totalMetresRun + s.totalMetresToRun,
-          ZOMBIE_RUNNING_TRACK_LENGTH_METRES
-        ),
-        totalMetresToRun: 0,
-      })),
+      survivors: zombieGame.survivors.map((s) => {
+        const moveResult = getMovePlayerResult(s, zombieGame);
+
+        return {
+          ...s,
+          totalMetresRun: moveResult.finalIndex,
+          obstacle: moveResult.hitObstacle,
+          totalMetresToRun: 0,
+        };
+      }),
     });
   }, [zombieGame]);
 

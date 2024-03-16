@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
-import styled, { css } from "styled-components";
+import { useEffect, useRef, useState } from "react";
+import styled, { css, keyframes } from "styled-components";
 import { usePlayerNames } from "../../providers/PlayerNamesProvider";
 import { PlayerAvatar } from "../PlayerAvatar";
 import { fadeInBottom } from "../animations/keyframes/fade";
@@ -10,8 +10,27 @@ import { ZombiePlayer } from "./types";
 const ZOMBIE_COLOR = "#69B362";
 const PLAYER_COLOR = "#A41E1F";
 
+const SlippedAnimation = keyframes`
+  from {
+    transform: rotate(0deg);
+    transform-origin: bottom center;
+  }
+  to {
+    transform: rotate(-90deg);
+    transform-origin: bottom center;
+  }
+`;
+
 const ZombiePlayerContainer = styled.div`
   position: relative;
+`;
+
+const SlippedOver = styled.div<{ fallen: boolean }>`
+  ${({ fallen }) =>
+    fallen &&
+    css`
+      animation: ${SlippedAnimation} 0.5s ease-in-out 0.5s 1 both;
+    `};
 `;
 
 const ZombieTransform = styled.div<{ isZombie: boolean }>`
@@ -36,6 +55,11 @@ const BittenIndicator = styled.div`
 const FinishedIndicator = styled(BittenIndicator)`
   background: yellow;
   color: black;
+`;
+
+const ObstacleIndicator = styled(BittenIndicator)`
+  background: black;
+  color: yellow;
 `;
 
 const PlayerDetailsContainer = styled.div`
@@ -77,6 +101,7 @@ type Props = {
 export const ZombieRunPlayer = ({ zombiePlayer, stackIndex = 0 }: Props) => {
   const { getName } = usePlayerNames();
   const { play } = useSound();
+  const [fallOver, setFallOver] = useState(false);
 
   const originalFinishedPosition = useRef(zombiePlayer.finishPosition || 0);
 
@@ -89,6 +114,15 @@ export const ZombieRunPlayer = ({ zombiePlayer, stackIndex = 0 }: Props) => {
     }
   }, [play, zombiePlayer.finishPosition]);
 
+  useEffect(() => {
+    if (zombiePlayer.obstacle) {
+      setTimeout(() => {
+        play("zombie-run-banana");
+        setFallOver(true);
+      }, 2000);
+    }
+  }, [zombiePlayer.obstacle, play]);
+
   const isZombie = zombiePlayer.gotBitten || zombiePlayer.isZombie;
   const playerName = isZombie
     ? replaceFirstLetterWithZ(getName(zombiePlayer.id))
@@ -96,9 +130,11 @@ export const ZombieRunPlayer = ({ zombiePlayer, stackIndex = 0 }: Props) => {
 
   return (
     <ZombiePlayerContainer>
-      <ZombieTransform isZombie={isZombie}>
-        <PlayerAvatar playerId={zombiePlayer.id} size="thumbnail" />
-      </ZombieTransform>
+      <SlippedOver fallen={fallOver}>
+        <ZombieTransform isZombie={isZombie}>
+          <PlayerAvatar playerId={zombiePlayer.id} size="thumbnail" />
+        </ZombieTransform>
+      </SlippedOver>
       {zombiePlayer.gotBitten && (
         <BittenIndicator style={{ top: `-${(stackIndex + 1) * 30}%` }}>
           {getName(zombiePlayer.id)} got bitten 😱
@@ -109,6 +145,13 @@ export const ZombieRunPlayer = ({ zombiePlayer, stackIndex = 0 }: Props) => {
           {`${getName(zombiePlayer.id)} 🏁 # ${zombiePlayer.finishPosition}`}
         </FinishedIndicator>
       )}
+      {zombiePlayer.obstacle && (
+        <ObstacleIndicator style={{ top: `-${(stackIndex + 1) * 30}%` }}>
+          {`${getName(zombiePlayer.id)} slipped on a ${
+            zombiePlayer.obstacle.name
+          }`}
+        </ObstacleIndicator>
+      )}
       <PlayerDetailsContainer>
         <ArrowIndicator isZombie={isZombie} />
         <PlayerName
@@ -116,8 +159,9 @@ export const ZombieRunPlayer = ({ zombiePlayer, stackIndex = 0 }: Props) => {
           style={{ transform: `translateY(${stackIndex * 100}%)` }}
         >
           {playerName}{" "}
-          {zombiePlayer.totalMetresToRun > 0 &&
-            `(${zombiePlayer.totalMetresToRun})`}
+          {/* {zombiePlayer.totalMetresToRun > 0 &&
+            `(${zombiePlayer.totalMetresToRun})`} */}
+          {`(index ${zombiePlayer.totalMetresRun})`}
         </PlayerName>
       </PlayerDetailsContainer>
     </ZombiePlayerContainer>

@@ -21,8 +21,7 @@ const ZombieBackground = styled.div`
   width: 100vw;
   margin: 0 auto;
   box-sizing: border-box;
-  background: url("/images/zombie-background-violet.png") no-repeat bottom
-    center;
+  background: url("/images/zombie-background-dusk.png") no-repeat bottom center;
   background-size: 100% 100%;
 `;
 
@@ -54,6 +53,12 @@ const DistanceMarker = styled.div`
   margin: 0;
   padding: 0;
   font-weight: bold;
+`;
+
+const Obstacle = styled.div`
+  position: absolute;
+  bottom: -1vh;
+  font-size: 3rem;
 `;
 
 const allMarkers: number[] = Array.from(
@@ -117,7 +122,7 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
               style={{
                 left: `${
                   (TOTAL_TRACK_WIDTH / ZOMBIE_RUNNING_TRACK_LENGTH_METRES) *
-                  (zp.totalMetresRun - 1)
+                  zp.totalMetresRun
                 }vw`,
               }}
             >
@@ -137,7 +142,7 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
               style={{
                 left: `${
                   (TOTAL_TRACK_WIDTH / ZOMBIE_RUNNING_TRACK_LENGTH_METRES) *
-                  (zp.totalMetresRun - 1)
+                  zp.totalMetresRun
                 }vw`,
               }}
             >
@@ -148,6 +153,22 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
                 />
               </Attention>
             </PositionedZombiePlayer>
+          );
+        })}
+        {zombieGame.obstacles.map((obstacle, i) => {
+          return (
+            <Obstacle
+              key={i}
+              style={{
+                left: `${
+                  (TOTAL_TRACK_WIDTH / ZOMBIE_RUNNING_TRACK_LENGTH_METRES) *
+                    obstacle.index +
+                  1
+                }vw`,
+              }}
+            >
+              {obstacle.icon}
+            </Obstacle>
           );
         })}
       </ZombieBackground>
