@@ -135,6 +135,14 @@ export const ZombieRunPlayer = ({ zombiePlayer, stackIndex = 0 }: Props) => {
           <PlayerAvatar playerId={zombiePlayer.id} size="thumbnail" />
         </ZombieTransform>
       </SlippedOver>
+      {zombiePlayer.obstacle && (
+        <ObstacleIndicator style={{ top: `-${(stackIndex + 1) * 30}%` }}>
+          {`${getName(zombiePlayer.id)} slipped on a ${
+            zombiePlayer.obstacle.name
+          }`}
+        </ObstacleIndicator>
+      )}
+
       {zombiePlayer.gotBitten && (
         <BittenIndicator style={{ top: `-${(stackIndex + 1) * 30}%` }}>
           {getName(zombiePlayer.id)} got bitten 😱
@@ -144,13 +152,6 @@ export const ZombieRunPlayer = ({ zombiePlayer, stackIndex = 0 }: Props) => {
         <FinishedIndicator style={{ top: `-${(stackIndex + 1) * 30}%` }}>
           {`${getName(zombiePlayer.id)} 🏁 # ${zombiePlayer.finishPosition}`}
         </FinishedIndicator>
-      )}
-      {zombiePlayer.obstacle && (
-        <ObstacleIndicator style={{ top: `-${(stackIndex + 1) * 30}%` }}>
-          {`${getName(zombiePlayer.id)} slipped on a ${
-            zombiePlayer.obstacle.name
-          }`}
-        </ObstacleIndicator>
       )}
       <PlayerDetailsContainer>
         <ArrowIndicator isZombie={isZombie} />
