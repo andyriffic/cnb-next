@@ -34,6 +34,10 @@ const createZombieGame = (
       ? Math.min(...survivorsWithMoves.map((p) => p.details?.gameMoves || 0))
       : 0;
 
+  // const medianSurvivorMoves = calculateMedian(
+  //   survivorsWithMoves.map((p) => p.details?.gameMoves || 0)
+  // );
+
   const zombiePlayersWithMoves = players
     .filter((p) => !!p.details?.zombieRun?.isZombie)
     .filter((p) => (p.details?.gameMoves || 0) > 0);
@@ -71,7 +75,14 @@ const createZombieGame = (
         gotBitten: false,
       })),
     originalZombie,
-    obstacles: [{ index: 10, name: "Banana", icon: "🍌" }],
+    obstacles: [
+      { index: 15, name: "Banana", icon: "🍌" },
+      { index: 22, name: "Banana", icon: "🍌" },
+      { index: 25, name: "Banana", icon: "🍌" },
+      { index: 35, name: "Banana", icon: "🍌" },
+      { index: 44, name: "Banana", icon: "🍌" },
+      { index: 48, name: "Banana", icon: "🍌" },
+    ],
   };
 };
 

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Image from "next/image";
 import { isNumberInRange } from "../../utils/number";
 import { Attention } from "../animations/Attention";
 import { Zombie } from "./Zombie";
@@ -10,6 +11,7 @@ import {
   ZombieRunGame,
   ZombieRunGameStatus,
 } from "./types";
+import bewareBananaSignImage from "./beware-banana-02.png";
 
 const TOTAL_TRACK_WIDTH = 94;
 const STACK_INDEX_RANGE = 2;
@@ -31,6 +33,15 @@ const PositionedZombiePlayer = styled.div`
   transition: left 3s ease-in-out;
   /* border: 1px solid black; */
   box-sizing: border-box;
+  transform: translateX(-50%);
+`;
+
+const ZombieCharactersContainer = styled.div`
+  /* position: relative; */
+  width: ${TOTAL_TRACK_WIDTH}vw;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 0;
 `;
 
 const DistanceMarkerContainer = styled.div`
@@ -57,8 +68,15 @@ const DistanceMarker = styled.div`
 
 const Obstacle = styled.div`
   position: absolute;
-  bottom: -1vh;
-  font-size: 3rem;
+  bottom: 0;
+  font-size: 2rem;
+  transform: rotate(-45deg);
+`;
+
+const BewareSign = styled.div`
+  position: absolute;
+  bottom: 5vh;
+  left: 55vw;
 `;
 
 const allMarkers: number[] = Array.from(
@@ -102,92 +120,99 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
   return (
     <div>
       <ZombieBackground>
-        <PositionedZombiePlayer
-          style={{
-            left: `${
-              (TOTAL_TRACK_WIDTH / ZOMBIE_RUNNING_TRACK_LENGTH_METRES) *
-              (zombieGame.originalZombie.totalMetresRun - 1)
-            }vw`,
-          }}
-        >
-          <Attention animate={zombieParty} animation="slow-vibrate">
-            <Zombie />
-          </Attention>
-        </PositionedZombiePlayer>
+        <BewareSign>
+          <Image
+            src={bewareBananaSignImage}
+            width={100}
+            alt="A sign indicating to beware of bananas"
+          />
+        </BewareSign>
+        <ZombieCharactersContainer>
+          <PositionedZombiePlayer
+            style={{
+              left: `${
+                (TOTAL_TRACK_WIDTH / ZOMBIE_RUNNING_TRACK_LENGTH_METRES) *
+                (zombieGame.originalZombie.totalMetresRun - 1)
+              }vw`,
+            }}
+          >
+            <Attention animate={zombieParty} animation="slow-vibrate">
+              <Zombie zombieDetails={zombieGame.originalZombie} />
+            </Attention>
+          </PositionedZombiePlayer>
 
-        {zombieGame.survivors.map((zp) => {
-          return (
-            <PositionedZombiePlayer
-              key={zp.id}
-              style={{
-                left: `${
-                  (TOTAL_TRACK_WIDTH / ZOMBIE_RUNNING_TRACK_LENGTH_METRES) *
-                  zp.totalMetresRun
-                }vw`,
-              }}
-            >
-              <Attention animate={zombieParty} animation="slow-vibrate">
-                <ZombieRunPlayer
-                  zombiePlayer={zp}
-                  stackIndex={getPlayerStackIndex(zombieGame, zp)}
-                />
-              </Attention>
-            </PositionedZombiePlayer>
-          );
-        })}
-        {zombieGame.zombies.map((zp) => {
-          return (
-            <PositionedZombiePlayer
-              key={zp.id}
-              style={{
-                left: `${
-                  (TOTAL_TRACK_WIDTH / ZOMBIE_RUNNING_TRACK_LENGTH_METRES) *
-                  zp.totalMetresRun
-                }vw`,
-              }}
-            >
-              <Attention animate={zombieParty} animation="slow-vibrate">
-                <ZombieRunPlayer
-                  zombiePlayer={zp}
-                  stackIndex={getPlayerStackIndex(zombieGame, zp)}
-                />
-              </Attention>
-            </PositionedZombiePlayer>
-          );
-        })}
-        {zombieGame.obstacles.map((obstacle, i) => {
-          return (
-            <Obstacle
-              key={i}
-              style={{
-                left: `${
-                  (TOTAL_TRACK_WIDTH / ZOMBIE_RUNNING_TRACK_LENGTH_METRES) *
-                    obstacle.index +
-                  1
-                }vw`,
-              }}
-            >
-              {obstacle.icon}
-            </Obstacle>
-          );
-        })}
+          {zombieGame.survivors.map((zp) => {
+            return (
+              <PositionedZombiePlayer
+                key={zp.id}
+                style={{
+                  left: `${
+                    (TOTAL_TRACK_WIDTH / ZOMBIE_RUNNING_TRACK_LENGTH_METRES) *
+                    zp.totalMetresRun
+                  }vw`,
+                }}
+              >
+                <Attention animate={zombieParty} animation="slow-vibrate">
+                  <ZombieRunPlayer
+                    zombiePlayer={zp}
+                    stackIndex={getPlayerStackIndex(zombieGame, zp)}
+                  />
+                </Attention>
+              </PositionedZombiePlayer>
+            );
+          })}
+          {zombieGame.zombies.map((zp) => {
+            return (
+              <PositionedZombiePlayer
+                key={zp.id}
+                style={{
+                  left: `${
+                    (TOTAL_TRACK_WIDTH / ZOMBIE_RUNNING_TRACK_LENGTH_METRES) *
+                    zp.totalMetresRun
+                  }vw`,
+                }}
+              >
+                <Attention animate={zombieParty} animation="slow-vibrate">
+                  <ZombieRunPlayer
+                    zombiePlayer={zp}
+                    stackIndex={getPlayerStackIndex(zombieGame, zp)}
+                  />
+                </Attention>
+              </PositionedZombiePlayer>
+            );
+          })}
+          {zombieGame.obstacles.map((obstacle, i) => {
+            return (
+              <Obstacle
+                key={i}
+                style={{
+                  left: `${
+                    (TOTAL_TRACK_WIDTH / ZOMBIE_RUNNING_TRACK_LENGTH_METRES) *
+                    obstacle.index
+                  }vw`,
+                }}
+              >
+                {obstacle.icon}
+              </Obstacle>
+            );
+          })}
+        </ZombieCharactersContainer>
       </ZombieBackground>
-      <DistanceMarkerContainer>
+      {/* <DistanceMarkerContainer>
         {allMarkers.map((marker) => (
           <DistanceMarker
             key={marker}
             style={{
               left: `${
                 (TOTAL_TRACK_WIDTH / ZOMBIE_RUNNING_TRACK_LENGTH_METRES) *
-                (marker - 1)
+                marker
               }vw`,
             }}
           >
-            {/* {marker} */}
             {marker % 10 === 0 && marker}
           </DistanceMarker>
         ))}
-      </DistanceMarkerContainer>
+      </DistanceMarkerContainer> */}
     </div>
   );
 };

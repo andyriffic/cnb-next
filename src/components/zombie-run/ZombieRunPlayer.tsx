@@ -7,7 +7,7 @@ import { useSound } from "../hooks/useSound";
 import { replaceFirstLetterWithZ } from "../../utils/string";
 import { ZombiePlayer } from "./types";
 
-const ZOMBIE_COLOR = "#69B362";
+export const ZOMBIE_COLOR = "#69B362";
 const PLAYER_COLOR = "#A41E1F";
 
 const SlippedAnimation = keyframes`
@@ -159,9 +159,9 @@ export const ZombieRunPlayer = ({ zombiePlayer, stackIndex = 0 }: Props) => {
           style={{ transform: `translateY(${stackIndex * 100}%)` }}
         >
           {playerName}{" "}
-          {/* {zombiePlayer.totalMetresToRun > 0 &&
-            `(${zombiePlayer.totalMetresToRun})`} */}
-          {`(index ${zombiePlayer.totalMetresRun})`}
+          {zombiePlayer.totalMetresToRun > 0 &&
+            `(${zombiePlayer.totalMetresToRun})`}
+          {/* {`(index ${zombiePlayer.totalMetresRun})`} */}
         </PlayerName>
       </PlayerDetailsContainer>
     </ZombiePlayerContainer>
