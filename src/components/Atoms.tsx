@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import Link from "next/link";
 
 import THEME from "../themes/types";
@@ -58,16 +58,29 @@ export const ThemedPrimaryLinkButton = styled(Link)`
   }
 `;
 
-export const ThemedPrimaryButton = styled.button`
+export const ThemedPrimaryButton = styled.button<{ highlight?: boolean }>`
   display: block;
   padding: 1rem 2rem;
   font-weight: 600;
   font-size: 1.4rem;
   text-decoration: none;
-  background: linear-gradient(
-    ${THEME.colours.buttonPrimaryBackground},
-    ${THEME.colours.buttonSecondaryBackground}
-  );
+  ${({ highlight }) =>
+    highlight
+      ? css`
+          background-image: linear-gradient(
+            to right,
+            #ff8008 0%,
+            #ffc837 51%,
+            #ff8008 100%
+          );
+        `
+      : css`
+          background: linear-gradient(
+            ${THEME.colours.buttonPrimaryBackground},
+            ${THEME.colours.buttonSecondaryBackground}
+          );
+        `}
+
   color: ${THEME.colours.buttonPrimaryText};
   border: 0;
   box-shadow: 0 4px ${THEME.colours.buttonAccent};
@@ -77,6 +90,10 @@ export const ThemedPrimaryButton = styled.button`
   &:disabled {
     background: #777;
     opacity: 0.8;
+  }
+
+  &:hover {
+    background-position: right center;
   }
 `;
 
