@@ -35,6 +35,7 @@ import {
 } from "../../utils/url";
 import { WaitingPlayerNamesHint } from "../../components/pages/join/WaitingPlayerNamesHint";
 import { getSuggestedGame } from "../../utils/join/joinHelper";
+import { Attention } from "../../components/animations/Attention";
 
 const JoinedPlayerContainer = styled.div`
   display: flex;
@@ -250,29 +251,34 @@ function Page() {
                 <GameSelectorContainer>
                   {availableGameTypes.map((gameType) => {
                     return (
-                      <ThemedPrimaryButton
+                      <Attention
                         key={gameType}
-                        highlight={gameType === suggestedGame}
-                        disabled={group.playerIds.length < 3}
-                        onClick={() => {
-                          gameCreators[gameType](
-                            group,
-                            socketService,
-                            getName,
-                            team
-                          ).then((gameUrl) => {
-                            router.push(urlWithTeamQueryParam(gameUrl, team));
-                          });
-                        }}
+                        animation="slow-vibrate"
+                        animate={gameType === suggestedGame}
                       >
-                        {gameType === suggestedGame && (
-                          <>
-                            <SuggestedText>🌟Recommended🌟</SuggestedText>
-                            <br />
-                          </>
-                        )}
-                        {GAME_NAMES[gameType]}
-                      </ThemedPrimaryButton>
+                        <ThemedPrimaryButton
+                          highlight={gameType === suggestedGame}
+                          disabled={group.playerIds.length < 3}
+                          onClick={() => {
+                            gameCreators[gameType](
+                              group,
+                              socketService,
+                              getName,
+                              team
+                            ).then((gameUrl) => {
+                              router.push(urlWithTeamQueryParam(gameUrl, team));
+                            });
+                          }}
+                        >
+                          {gameType === suggestedGame && (
+                            <>
+                              <SuggestedText>🌟Recommended🌟</SuggestedText>
+                              <br />
+                            </>
+                          )}
+                          {GAME_NAMES[gameType]}
+                        </ThemedPrimaryButton>
+                      </Attention>
                     );
                   })}
                   {/* <ThemedPrimaryButton
