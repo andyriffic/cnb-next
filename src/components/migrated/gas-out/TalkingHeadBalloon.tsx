@@ -9,21 +9,21 @@ import {
   explodeAnimation,
   shakeExtremeAnimation,
 } from "../../animations/keyframes/extreme";
-import dragon from "./dragon.png";
+import bananaImage from "./banana-01.png";
 
 function getCloudAnimationSpeedMilliSeconds(intensity: number): number {
   return Math.max(8000 - intensity * 500, 100);
 }
 
 const SpeechText = [
-  "May the dragon bring you prosperity and energy in the new year",
-  "祝龍年好運",
-  "May good luck fall on you for that promotion this year",
-  "日进斗金",
-  "Hoping your year is one of abundance and health",
-  "說英語的人不會知道這是什麼意思",
-  "May your work go smoothly and successfully this year",
-  "金玉满堂",
+  "I just applied for a home loan because I want to upgrade to a banana split-level house",
+  "I talked to my mortgage broker and a-peeled for a good rate",
+  "I don't like computers because I'm afraid I'll get 'byte-n'",
+  "I'm normally late to meetings because I keep slipping on the keyboard",
+  "I would like to become a DL to make sure everything runs smoothie",
+  "My favorite holiday is Peel-o-ween",
+  "I don't wear shoes, I prefer slippers",
+  "我正在練習中文: Ni hao-ma-nana 👋",
 ];
 
 const createSpeechManager = (textOptions: string[]) => {
@@ -131,37 +131,37 @@ function getRandomSpeechText() {
   return selectRandomOneOf(SpeechText);
 }
 
-const SPEECH_INTERVAL_MILLISECONDS = 8000;
+const SPEECH_INTERVAL_MILLISECONDS = 10000;
 
 export function TalkingHeadBalloon({ gasCloud }: Props): JSX.Element {
-  // const [speechText, setSpeechText] = useState("");
-  // const speechManager = useRef(createSpeechManager(SpeechText));
+  const [speechText, setSpeechText] = useState("");
+  const speechManager = useRef(createSpeechManager(SpeechText));
   const visibleSize = gasCloud.exploded ? 10 : gasCloud.pressed;
 
-  // useEffect(() => {
-  //   if (gasCloud.exploded) {
-  //     return;
-  //   }
+  useEffect(() => {
+    if (gasCloud.exploded) {
+      return;
+    }
 
-  //   const interval = setInterval(() => {
-  //     setSpeechText(speechManager.current.next());
-  //   }, SPEECH_INTERVAL_MILLISECONDS);
-  //   return () => clearInterval(interval);
-  // }, [gasCloud.exploded, speechText]);
+    const interval = setInterval(() => {
+      setSpeechText(speechManager.current.next());
+    }, SPEECH_INTERVAL_MILLISECONDS);
+    return () => clearInterval(interval);
+  }, [gasCloud.exploded, speechText]);
 
   return (
     <Container>
       <ImageContainer size={visibleSize} exploded={gasCloud.exploded}>
-        <FaceImage src={dragon} alt="Dragon" size={visibleSize} />
+        <FaceImage src={bananaImage} alt="Dragon" size={visibleSize} />
       </ImageContainer>
-      {/* <TextContainer>
+      <TextContainer>
         <Appear
           show={!!speechText && !gasCloud.exploded}
           animation="text-focus-in"
         >
           <SpeechBubble>{speechText}</SpeechBubble>
         </Appear>
-      </TextContainer> */}
+      </TextContainer>
     </Container>
   );
 }
