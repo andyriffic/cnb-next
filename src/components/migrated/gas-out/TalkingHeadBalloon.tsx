@@ -18,12 +18,12 @@ function getCloudAnimationSpeedMilliSeconds(intensity: number): number {
 const SpeechText = [
   "I just applied for a home loan because I want to upgrade to a banana split-level house",
   "I talked to my mortgage broker and a-peeled for a good rate",
-  "I don't like computers because I'm afraid I'll get 'byte-n'",
+  "I don't like computers because I'm afraid I'll get byte-n",
+  "我正在練習中文: Ni hao-ma-nana 👋",
   "I'm normally late to meetings because I keep slipping on the keyboard",
   "I would like to become a DL to make sure everything runs smoothie",
   "My favorite holiday is Peel-o-ween",
   "I don't wear shoes, I prefer slippers",
-  "我正在練習中文: Ni hao-ma-nana 👋",
 ];
 
 const createSpeechManager = (textOptions: string[]) => {
