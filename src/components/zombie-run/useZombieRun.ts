@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import { Player } from "../../types/Player";
+import { calculateMedian } from "../../utils/number";
 import {
   OriginalZombieDetails,
   ZOMBIE_RUNNING_TRACK_LENGTH_METRES,
@@ -34,9 +35,9 @@ const createZombieGame = (
       ? Math.min(...survivorsWithMoves.map((p) => p.details?.gameMoves || 0))
       : 0;
 
-  // const medianSurvivorMoves = calculateMedian(
-  //   survivorsWithMoves.map((p) => p.details?.gameMoves || 0)
-  // );
+  const medianSurvivorMoves =
+    calculateMedian(survivorsWithMoves.map((p) => p.details?.gameMoves || 0)) ||
+    0;
 
   const zombiePlayersWithMoves = players
     .filter((p) => !!p.details?.zombieRun?.isZombie)
@@ -74,7 +75,10 @@ const createZombieGame = (
         isZombie: true,
         gotBitten: false,
       })),
-    originalZombie,
+    originalZombie: {
+      ...originalZombie,
+      totalMetresToRun: medianSurvivorMoves,
+    },
     obstacles: [
       { index: 15, name: "Banana", icon: "🍌" },
       { index: 22, name: "Banana", icon: "🍌" },
