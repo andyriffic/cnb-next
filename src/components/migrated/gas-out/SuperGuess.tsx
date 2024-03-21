@@ -10,7 +10,7 @@ const TextClipKeyframe = keyframes`
 `;
 
 // https://codepen.io/alvarotrigo/pen/PoKMyNO
-const AnimatedText = styled.div`
+export const AnimatedText = styled.div`
   text-transform: uppercase;
   background-image: linear-gradient(
     -225deg,

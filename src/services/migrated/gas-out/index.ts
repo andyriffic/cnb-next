@@ -758,12 +758,10 @@ function getRandomCardType(
   isFinalRound: boolean
 ): CardType {
   const cardWeights: WeightedItem<CardType>[] =
-    gameType === "quick"
+    gameType === "crazy"
       ? [
-          { weight: 1, item: "bomb" },
-          { weight: 2, item: "risky" },
-          { weight: 3, item: "reverse" },
-          { weight: 14, item: "press" },
+          { weight: 10, item: "bomb" },
+          { weight: 1, item: "reverse" },
         ]
       : [
           { weight: 1, item: "skip" },
@@ -797,9 +795,7 @@ function createRandomCard(
   const nextCardType = getRandomCardType(gameType, isFinalRound);
   const card = createCard(
     nextCardType,
-    gameType === "quick"
-      ? selectRandomOneOf([3, 4, 5])
-      : selectRandomOneOf([1, 2, 3, 4, 5])
+    gameType === "crazy" ? 1 : selectRandomOneOf([1, 2, 3, 4, 5])
   );
 
   return card;

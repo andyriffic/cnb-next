@@ -10,7 +10,7 @@ import { GasPlayerDebug } from "./GasPlayerDebug";
 import { Graveyard } from "./Graveyard";
 import { LastTwoPlayersNotification } from "./LastTwoPlayersNotification";
 import { PlayerCarousel } from "./PlayerCarousel";
-import { SuperGuess } from "./SuperGuess";
+import { AnimatedText, SuperGuess } from "./SuperGuess";
 import { useGasSound } from "./hooks/useGasSound";
 import { TalkingHeadBalloon } from "./TalkingHeadBalloon";
 
@@ -91,7 +91,13 @@ const View = ({ gasGame, team }: Props) => {
       debug={<GasPlayerDebug game={gasGame} />}
     >
       <Container>
-        <GameModeDisplay>{gasGame.gameType} mode</GameModeDisplay>
+        <GameModeDisplay>
+          {gasGame.gameType === "crazy" ? (
+            <AnimatedText>Crazy mode</AnimatedText>
+          ) : (
+            `${gasGame.gameType} mode`
+          )}
+        </GameModeDisplay>
         {gasGame.superGuessInEffect && (
           <SuperGuessDisplay>
             <SuperGuess />

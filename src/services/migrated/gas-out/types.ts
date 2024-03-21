@@ -2,7 +2,7 @@ import { Player } from "../../../types/Player";
 
 export type Direction = "left" | "right";
 
-export type GasGameType = "normal" | "quick";
+export type GasGameType = "normal" | "quick" | "crazy";
 
 export type GasGame = {
   id: string;
