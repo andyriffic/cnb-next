@@ -9,6 +9,7 @@ import { Player } from "../types/Player";
 import { incrementPlayersWhosThatCountFetch } from "../utils/api";
 import { getAllPlayers, getPlayer } from "../utils/data/aws-dynamodb";
 import { selectRandomOneOf } from "../utils/random";
+import THEME from "../themes/types";
 
 const Background = styled.div`
   position: fixed;
@@ -31,17 +32,30 @@ const PlayerContainer = styled.div<{ reveal: boolean }>`
   transition: filter 200ms linear;
 `;
 
+const TextContainer = styled.div`
+  text-align: right;
+  padding: 0 5rem 5rem 0;
+`;
+
 const PlayerName = styled.div`
   margin: 0;
   padding: 0;
-  font-family: "Pokemon Solid", sans-serif;
-  font-size: 10rem;
+  font-family: ${THEME.fonts.feature};
+  font-size: 15rem;
   text-transform: uppercase;
   font-weight: bold;
   color: #fecb03;
   -webkit-text-stroke-width: 4px;
   -webkit-text-stroke-color: #38649d;
-  letter-spacing: 0.5rem;
+`;
+
+const PlayerRole = styled.div`
+  font-size: 6rem;
+  line-height: 0;
+  color: #fecb03;
+  margin: 0;
+  padding: 0;
+  font-family: ${THEME.fonts.feature};
 `;
 
 type Props = {
@@ -98,11 +112,14 @@ export default function Page({ player, continueUrl }: Props) {
       <PlayerContainer reveal={reveal}>
         <PlayerAvatar playerId={player.id} />
       </PlayerContainer>
-      <div style={{ position: "fixed", bottom: "10%", right: "10%" }}>
+      <TextContainer style={{ position: "absolute", bottom: 0, right: 0 }}>
         <Appear show={reveal} animation="flip-in">
           <PlayerName>{player.name}</PlayerName>
+          {player.details?.role && (
+            <PlayerRole>{player.details?.role}</PlayerRole>
+          )}
         </Appear>
-      </div>
+      </TextContainer>
     </Background>
   );
 }
