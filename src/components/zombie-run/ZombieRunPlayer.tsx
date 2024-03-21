@@ -88,7 +88,7 @@ const PlayerName = styled.div<{ isZombie: boolean }>`
   padding: 0.2rem;
   font-size: 0.9rem;
   border-radius: 0.5rem;
-  margin: 0 0.5rem;
+  margin: 1rem 0.5rem 0;
   transition: background 1s ease-in-out;
   min-width: 100%;
 `;
@@ -154,7 +154,7 @@ export const ZombieRunPlayer = ({ zombiePlayer, stackIndex = 0 }: Props) => {
         </FinishedIndicator>
       )}
       <PlayerDetailsContainer>
-        <ArrowIndicator isZombie={isZombie} />
+        {/* <ArrowIndicator isZombie={isZombie} /> */}
         <PlayerName
           isZombie={isZombie}
           style={{ transform: `translateY(${stackIndex * 100}%)` }}
