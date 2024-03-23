@@ -18,6 +18,7 @@ import {
   GasGameType,
   GasPlayer,
   GlobalEffect,
+  PlayerKilledBy,
 } from "./types";
 
 export function createGame({
@@ -83,32 +84,32 @@ export function moveToNextAlivePlayerWithExtraCardRules(
   );
 }
 
-export function moveToNextAlivePlayerWithReverseDeath(game: GasGame): GasGame {
-  const gameWithNextPlayer = applyCursesToCurrentPlayer(
-    moveToNextAlivePlayer(game)
-  );
+// export function moveToNextAlivePlayerWithReverseDeath(game: GasGame): GasGame {
+//   const gameWithNextPlayer = applyCursesToCurrentPlayer(
+//     moveToNextAlivePlayer(game)
+//   );
 
-  if (gameWithNextPlayer.alivePlayersIds.length === 2) {
-    return gameWithNextPlayer;
-  }
+//   if (gameWithNextPlayer.alivePlayersIds.length === 2) {
+//     return gameWithNextPlayer;
+//   }
 
-  if (gameWithNextPlayer.moveHistory.length < 2) {
-    return gameWithNextPlayer;
-  }
+//   if (gameWithNextPlayer.moveHistory.length < 2) {
+//     return gameWithNextPlayer;
+//   }
 
-  const lastCardMove = gameWithNextPlayer.moveHistory[0]!;
-  const secondLastCarMove = gameWithNextPlayer.moveHistory[1]!;
+//   const lastCardMove = gameWithNextPlayer.moveHistory[0]!;
+//   const secondLastCarMove = gameWithNextPlayer.moveHistory[1]!;
 
-  if (
-    lastCardMove.cardPlayed.type === "reverse" &&
-    secondLastCarMove.cardPlayed.type === "reverse" &&
-    secondLastCarMove.playerId === gameWithNextPlayer.currentPlayer.id
-  ) {
-    return explode(gameWithNextPlayer, "boomerang");
-  }
+//   if (
+//     lastCardMove.cardPlayed.type === "reverse" &&
+//     secondLastCarMove.cardPlayed.type === "reverse" &&
+//     secondLastCarMove.playerId === gameWithNextPlayer.currentPlayer.id
+//   ) {
+//     return explode(gameWithNextPlayer, "boomerang");
+//   }
 
-  return gameWithNextPlayer;
-}
+//   return gameWithNextPlayer;
+// }
 
 function applyBoomerangDeath(game: GasGame): GasGame {
   if (game.alivePlayersIds.length === 2) {
@@ -127,7 +128,10 @@ function applyBoomerangDeath(game: GasGame): GasGame {
     secondLastCarMove.cardPlayed.type === "reverse" &&
     secondLastCarMove.playerId === game.currentPlayer.id
   ) {
-    return explode(game, "boomerang");
+    return explode(game, {
+      playerId: lastCardMove.playerId,
+      deathType: "boomerang",
+    });
   }
 
   return game;
@@ -143,16 +147,19 @@ function applyBombDeath(game: GasGame): GasGame {
   }
 
   const lastDeadPlayerId = game.deadPlayerIds[game.deadPlayerIds.length - 1];
+  const lastCardMove = game.moveHistory[0]!;
 
   if (lastDeadPlayerId) {
     const lastDeadPlayer = getPlayerOrThrow(game, lastDeadPlayerId);
 
-    if (lastDeadPlayer.killedBy === "bomb") {
+    if (
+      lastDeadPlayer.killedBy &&
+      lastDeadPlayer.killedBy.deathType === "bomb" &&
+      lastDeadPlayer.killedBy.playerId === lastCardMove.playerId
+    ) {
       return game;
     }
   }
-
-  const lastCardMove = game.moveHistory[0]!;
 
   if (
     lastCardMove.cardPlayed.type === "bomb" &&
@@ -170,7 +177,7 @@ function applyBombDeath(game: GasGame): GasGame {
           pressesRemaining: 0,
         },
       },
-      "bomb"
+      { playerId: lastCardMove.playerId, deathType: "bomb" }
     );
   }
 
@@ -508,14 +515,19 @@ export function press(game: GasGame): GasGame {
     assignWinner(
       resetPlayerGuessesAndGivePoints(
         takeOnePressFromCurrentPlayer(
-          exploded ? explode(game, "balloon") : game
+          exploded
+            ? explode(game, {
+                playerId: game.currentPlayer.id,
+                deathType: "balloon",
+              })
+            : game
         )
       )
     )
   );
 }
 
-function explode(game: GasGame, killedBy: DeathType | undefined): GasGame {
+function explode(game: GasGame, killedBy: PlayerKilledBy | undefined): GasGame {
   const deadPlayerIds = [...game.deadPlayerIds, game.currentPlayer.id];
   const alivePlayersIds = game.alivePlayersIds.filter(
     (id) => id !== game.currentPlayer.id
@@ -691,7 +703,7 @@ export function playerTimedOut(game: GasGame, playerId: string): GasGame {
     return game;
   }
 
-  return explode(game, "timeout");
+  return explode(game, { playerId, deathType: "timeout" });
 }
 
 function updatePlayerInList(
