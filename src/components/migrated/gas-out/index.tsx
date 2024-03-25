@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import styled from "styled-components";
 import { useSocketIo } from "../../../providers/SocketIoProvider";
 import { GasGame } from "../../../services/migrated/gas-out/types";
@@ -13,6 +13,7 @@ import { PlayerCarousel } from "./PlayerCarousel";
 import { AnimatedText, SuperGuess } from "./SuperGuess";
 import { useGasSound } from "./hooks/useGasSound";
 import { TalkingHeadBalloon } from "./TalkingHeadBalloon";
+import { FinalShowdown } from "./FinalShowdown";
 
 const Container = styled.div`
   margin: 50px auto;
@@ -85,6 +86,10 @@ const View = ({ gasGame, team }: Props) => {
     }
   }, [gasGame, nextPlayerForThisGame]);
 
+  const lastTwoPlayers = useMemo(() => {
+    return gasGame.allPlayers.filter((p) => p.status === "alive").length === 2;
+  }, [gasGame.allPlayers]);
+
   return (
     <SpectatorPageLayout
       scrollable={false}
@@ -103,13 +108,16 @@ const View = ({ gasGame, team }: Props) => {
             <SuperGuess />
           </SuperGuessDisplay>
         )}
-        {!gasGame.winningPlayerId && (
+        {!gasGame.winningPlayerId && !lastTwoPlayers && (
           <CarouselContainer>
             <PlayerCarousel
               game={gasGame}
               gameOver={!!gasGame.winningPlayerId}
             />
           </CarouselContainer>
+        )}
+        {lastTwoPlayers && (
+          <FinalShowdown game={gasGame} gameOver={!!gasGame.winningPlayerId} />
         )}
         {/* <Winner game={game} /> */}
         {!!gasGame.winningPlayerId && <FinalPodium game={gasGame} />}
