@@ -772,8 +772,8 @@ function getRandomCardType(
   const cardWeights: WeightedItem<CardType>[] =
     gameType === "crazy"
       ? [
-          { weight: 10, item: "bomb" },
-          { weight: 1, item: "reverse" },
+          { weight: 9, item: "bomb" },
+          { weight: 1, item: isFinalRound ? "press" : "reverse" },
         ]
       : [
           { weight: 1, item: "skip" },
@@ -782,6 +782,10 @@ function getRandomCardType(
           { weight: 3, item: "reverse" },
           { weight: 14, item: "press" },
         ];
+
+  if (gameType === "crazy") {
+    return selectWeightedRandomOneOf(cardWeights);
+  }
 
   return isFinalRound ? "press" : selectWeightedRandomOneOf(cardWeights);
 }

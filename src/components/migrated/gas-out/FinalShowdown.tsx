@@ -1,15 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import styled from "styled-components";
+import { useMemo, useState } from "react";
+import styled, { css } from "styled-components";
 import { FONT_FAMILY } from "../../../colors";
 import { GasGame } from "../../../services/migrated/gas-out/types";
-import { SubHeading } from "../../Atoms";
-import { PlayerAvatar } from "../../PlayerAvatar";
-import {
-  fadeInDownAnimation,
-  fadeInLeftAnimation,
-} from "../../animations/keyframes/fade";
-import { useSound } from "../../hooks/useSound";
-import { PlayerListPlayer } from "./PlayerListPlayer";
 import { PlayerCarouselPlayer } from "./PlayerCarouselPlayer";
 
 const Container = styled.div`
@@ -19,13 +11,18 @@ const Container = styled.div`
   gap: 30px;
 `;
 
-const PlayerContainer = styled.div`
+const PlayerContainer = styled.div<{ isActive: boolean }>`
   width: 100%;
   box-sizing: border-box;
   padding: 0;
   display: flex;
   justify-content: center;
   position: relative;
+  transition: transform 0.3s;
+  ${({ isActive }) =>
+    css`
+      transform: scale(${isActive ? 1 : 0.7});
+    `}
 `;
 
 const Number = styled.div`
@@ -42,8 +39,9 @@ type Props = {
 };
 
 export function FinalShowdown({ game, gameOver }: Props): JSX.Element | null {
-  const [allSurvivingPlayers] = useState(
-    game.allPlayers.filter((p) => p.status === "alive")
+  const allSurvivingPlayers = useMemo(
+    () => game.allPlayers.filter((p) => p.status === "alive"),
+    [game]
   );
 
   const [player1Id] = useState(allSurvivingPlayers[0]);
@@ -59,7 +57,7 @@ export function FinalShowdown({ game, gameOver }: Props): JSX.Element | null {
   return (
     <Container>
       {player1 && (
-        <PlayerContainer>
+        <PlayerContainer isActive={game.currentPlayer.id === player1.player.id}>
           <PlayerCarouselPlayer
             game={game}
             gameOver={gameOver}
@@ -68,7 +66,7 @@ export function FinalShowdown({ game, gameOver }: Props): JSX.Element | null {
         </PlayerContainer>
       )}
       {player2 && (
-        <PlayerContainer>
+        <PlayerContainer isActive={game.currentPlayer.id === player2.player.id}>
           <PlayerCarouselPlayer
             game={game}
             gameOver={gameOver}
