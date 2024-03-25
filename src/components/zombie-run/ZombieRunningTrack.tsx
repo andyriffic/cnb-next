@@ -156,6 +156,7 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
                   <ZombieRunPlayer
                     zombiePlayer={zp}
                     stackIndex={getPlayerStackIndex(zombieGame, zp)}
+                    endGameStatus={zombieGame.endGameStatus}
                   />
                 </Attention>
               </PositionedZombiePlayer>
@@ -176,6 +177,7 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
                   <ZombieRunPlayer
                     zombiePlayer={zp}
                     stackIndex={getPlayerStackIndex(zombieGame, zp)}
+                    endGameStatus={zombieGame.endGameStatus}
                   />
                 </Attention>
               </PositionedZombiePlayer>

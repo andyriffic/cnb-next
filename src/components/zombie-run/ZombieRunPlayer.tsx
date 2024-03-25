@@ -5,7 +5,7 @@ import { PlayerAvatar } from "../PlayerAvatar";
 import { fadeInBottom } from "../animations/keyframes/fade";
 import { useSound } from "../hooks/useSound";
 import { replaceFirstLetterWithZ } from "../../utils/string";
-import { ZombiePlayer } from "./types";
+import { ZombiePlayer, ZombieRunEndGameStatus } from "./types";
 
 export const ZOMBIE_COLOR = "#69B362";
 const PLAYER_COLOR = "#A41E1F";
@@ -96,9 +96,14 @@ const PlayerName = styled.div<{ isZombie: boolean }>`
 type Props = {
   zombiePlayer: ZombiePlayer;
   stackIndex?: number;
+  endGameStatus?: ZombieRunEndGameStatus;
 };
 
-export const ZombieRunPlayer = ({ zombiePlayer, stackIndex = 0 }: Props) => {
+export const ZombieRunPlayer = ({
+  zombiePlayer,
+  endGameStatus,
+  stackIndex = 0,
+}: Props) => {
   const { getName } = usePlayerNames();
   const { play } = useSound();
   const [fallOver, setFallOver] = useState(false);
@@ -130,41 +135,49 @@ export const ZombieRunPlayer = ({ zombiePlayer, stackIndex = 0 }: Props) => {
 
   return (
     <ZombiePlayerContainer>
-      <SlippedOver fallen={fallOver}>
+      <SlippedOver
+        fallen={
+          endGameStatus !== ZombieRunEndGameStatus.ZOMBIE_PARTY && fallOver
+        }
+      >
         <ZombieTransform isZombie={isZombie}>
           <PlayerAvatar playerId={zombiePlayer.id} size="thumbnail" />
         </ZombieTransform>
       </SlippedOver>
-      {zombiePlayer.obstacle && (
-        <ObstacleIndicator style={{ top: `-${(stackIndex + 1) * 30}%` }}>
-          {`${getName(zombiePlayer.id)} slipped on a ${
-            zombiePlayer.obstacle.name
-          }`}
-        </ObstacleIndicator>
-      )}
+      {zombiePlayer.obstacle &&
+        endGameStatus !== ZombieRunEndGameStatus.ZOMBIE_PARTY && (
+          <ObstacleIndicator style={{ top: `-${(stackIndex + 1) * 30}%` }}>
+            {`${getName(zombiePlayer.id)} slipped on a ${
+              zombiePlayer.obstacle.name
+            }`}
+          </ObstacleIndicator>
+        )}
 
-      {zombiePlayer.gotBitten && (
-        <BittenIndicator style={{ top: `-${(stackIndex + 1) * 30}%` }}>
-          {getName(zombiePlayer.id)} got bitten 😱
-        </BittenIndicator>
-      )}
+      {zombiePlayer.gotBitten &&
+        endGameStatus !== ZombieRunEndGameStatus.ZOMBIE_PARTY && (
+          <BittenIndicator style={{ top: `-${(stackIndex + 1) * 30}%` }}>
+            {getName(zombiePlayer.id)} got bitten 😱
+          </BittenIndicator>
+        )}
       {!!zombiePlayer.finishPosition && (
         <FinishedIndicator style={{ top: `-${(stackIndex + 1) * 30}%` }}>
           {`${getName(zombiePlayer.id)} 🏁 # ${zombiePlayer.finishPosition}`}
         </FinishedIndicator>
       )}
-      <PlayerDetailsContainer>
-        {/* <ArrowIndicator isZombie={isZombie} /> */}
-        <PlayerName
-          isZombie={isZombie}
-          style={{ transform: `translateY(${stackIndex * 100}%)` }}
-        >
-          {playerName}{" "}
-          {zombiePlayer.totalMetresToRun > 0 &&
-            `(${zombiePlayer.totalMetresToRun})`}
-          {/* {`(index ${zombiePlayer.totalMetresRun})`} */}
-        </PlayerName>
-      </PlayerDetailsContainer>
+      {endGameStatus !== ZombieRunEndGameStatus.ZOMBIE_PARTY && (
+        <PlayerDetailsContainer>
+          {/* <ArrowIndicator isZombie={isZombie} /> */}
+          <PlayerName
+            isZombie={isZombie}
+            style={{ transform: `translateY(${stackIndex * 100}%)` }}
+          >
+            {playerName}{" "}
+            {zombiePlayer.totalMetresToRun > 0 &&
+              `(${zombiePlayer.totalMetresToRun})`}
+            {/* {`(index ${zombiePlayer.totalMetresRun})`} */}
+          </PlayerName>
+        </PlayerDetailsContainer>
+      )}
     </ZombiePlayerContainer>
   );
 };

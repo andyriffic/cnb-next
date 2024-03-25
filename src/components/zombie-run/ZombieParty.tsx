@@ -4,6 +4,7 @@ import { Heading } from "../Atoms";
 import { SplashContent } from "../SplashContent";
 import { useSound } from "../hooks/useSound";
 import { Appear } from "../animations/Appear";
+import THEME from "../../themes/types";
 
 const Container = styled.div`
   position: fixed;
@@ -16,6 +17,7 @@ const Text = styled(Heading)`
   font-size: 8rem;
   text-transform: uppercase;
   font-weight: bold;
+  font-family: ${THEME.fonts.feature};
   color: #69b362;
   -webkit-text-stroke-width: 4px;
   -webkit-text-stroke-color: darkgreen;
