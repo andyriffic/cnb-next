@@ -2,7 +2,7 @@ import { Player } from "../../../types/Player";
 
 export type Direction = "left" | "right";
 
-export type GasGameType = "normal" | "quick";
+export type GasGameType = "normal" | "quick" | "crazy";
 
 export type GasGame = {
   id: string;
@@ -39,6 +39,10 @@ export type GasCloud = {
 
 export type DeathType = "balloon" | "timeout" | "boomerang" | "bomb";
 export type CurseType = "double-press";
+export type PlayerKilledBy = {
+  playerId: string;
+  deathType: DeathType;
+};
 
 export type GasPlayer = {
   player: Player;
@@ -48,7 +52,7 @@ export type GasPlayer = {
   finishedPosition?: number;
   points: number;
   totalPresses: number;
-  killedBy?: DeathType;
+  killedBy?: PlayerKilledBy;
   guesses: {
     nextPlayerOutGuess?: string;
     nominatedCount: number;

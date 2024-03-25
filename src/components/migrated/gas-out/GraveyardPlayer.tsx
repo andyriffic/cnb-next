@@ -103,9 +103,13 @@ export function GraveyardPlayer({ player, game }: Props): JSX.Element {
         </NextVoteName>
       )}
       {(!notDead || winner) && <PlayerPoints>{player.points}</PlayerPoints>}
-      {player.killedBy === "timeout" && <TimedOutIcon>⏰</TimedOutIcon>}
-      {player.killedBy === "bomb" && <TimedOutIcon>💣</TimedOutIcon>}
-      {player.killedBy === "boomerang" && <TimedOutIcon>🪃</TimedOutIcon>}
+      {player.killedBy?.deathType === "timeout" && (
+        <TimedOutIcon>⏰</TimedOutIcon>
+      )}
+      {player.killedBy?.deathType === "bomb" && <TimedOutIcon>💣</TimedOutIcon>}
+      {player.killedBy?.deathType === "boomerang" && (
+        <TimedOutIcon>🪃</TimedOutIcon>
+      )}
     </PlayerListItem>
   );
 }
