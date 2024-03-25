@@ -1,10 +1,9 @@
 import { useEffect } from "react";
 import styled from "styled-components";
-import { Heading } from "../Atoms";
-import { SplashContent } from "../SplashContent";
-import { useSound } from "../hooks/useSound";
-import { Appear } from "../animations/Appear";
 import THEME from "../../themes/types";
+import { Heading } from "../Atoms";
+import { Appear } from "../animations/Appear";
+import { useSound } from "../hooks/useSound";
 
 const Container = styled.div`
   position: fixed;
