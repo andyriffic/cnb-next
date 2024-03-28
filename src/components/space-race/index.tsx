@@ -1,6 +1,8 @@
 import { Player } from "../../types/Player";
 import { Heading } from "../Atoms";
 import { SpectatorPageLayout } from "../SpectatorPageLayout";
+import { StarMap } from "./Starmap";
+import { STARMAP_CHART } from "./constants";
 
 type Props = {
   players: Player[];
@@ -9,7 +11,7 @@ type Props = {
 const View = ({ players }: Props) => {
   return (
     <SpectatorPageLayout scrollable={false}>
-      <Heading style={{ textAlign: "center" }}>🪐 Space Race 🚀</Heading>
+      <StarMap starmap={STARMAP_CHART} />
     </SpectatorPageLayout>
   );
 };
