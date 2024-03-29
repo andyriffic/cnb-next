@@ -19,7 +19,13 @@ export type SpaceRaceStarmap = {
 export type SpaceRacePlayer = {
   id: string;
   name: string;
-  position: SpaceRaceCoordinates;
+  courseMovesRemaining: number;
+  currentPosition: SpaceRaceCoordinates;
+  plannedCourse: {
+    up: number;
+    down: number;
+    right: number;
+  };
 };
 
 export type SpaceRaceCoordinates = {
