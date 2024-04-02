@@ -11,6 +11,7 @@ import { setPlayerLocalStorageSettings } from "../../../utils/client-only/localS
 import { getPlayer } from "../../../utils/data/aws-dynamodb";
 import { getPlayerJoinUrl } from "../../../utils/url";
 import { Player } from "../../../types/Player";
+import { PlayerQuestionDialog } from "../../../components/player/PlayerQuestionDialog";
 
 type Props = {
   player: Player;
@@ -41,6 +42,7 @@ function Page({ player }: Props) {
         playerId={player.id}
         groupId={query.autoJoinId as string}
       />
+      <PlayerQuestionDialog playerId={player.id} />
     </PlayerPageLayout>
   );
 }

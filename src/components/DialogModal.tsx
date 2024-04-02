@@ -25,10 +25,10 @@ const DialogBodyContainer = styled.div`
   margin-bottom: 2rem;
 `;
 
-const DialogOptionsContainer = styled.div``;
+export const DialogOptionsContainer = styled.div``;
 
 type Props = {
-  options: { text: string; onSelected: () => void }[];
+  options?: { text: string; onSelected: () => void }[];
   show: boolean;
   children: React.ReactNode | React.ReactNodeArray;
 };
@@ -40,15 +40,17 @@ export function DialogModal({ children, options, show }: Props) {
         <Card>
           <CenterSpaced stacked={true}>
             <DialogBodyContainer>{children}</DialogBodyContainer>
-            <DialogOptionsContainer>
-              <EvenlySpaced>
-                {options.map((option, i) => (
-                  <PrimaryButton key={i} onClick={option.onSelected}>
-                    {option.text}
-                  </PrimaryButton>
-                ))}
-              </EvenlySpaced>
-            </DialogOptionsContainer>
+            {options && (
+              <DialogOptionsContainer>
+                <EvenlySpaced>
+                  {options.map((option, i) => (
+                    <PrimaryButton key={i} onClick={option.onSelected}>
+                      {option.text}
+                    </PrimaryButton>
+                  ))}
+                </EvenlySpaced>
+              </DialogOptionsContainer>
+            )}
           </CenterSpaced>
         </Card>
       </DialogContainer>

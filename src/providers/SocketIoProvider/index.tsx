@@ -13,6 +13,7 @@ import {
 } from "./useRockPaperScissorsSocket";
 import { GasGameSocketService, useGasGame } from "./useGasGame";
 import { NumberCrunchSocketService, useNumberCrunch } from "./useNumberCrunch";
+import { PlayerQuerySocketService, usePlayerQuery } from "./useQueryUser";
 
 export type SocketIoService = {
   rockPaperScissors: RPSSocketService;
@@ -21,6 +22,7 @@ export type SocketIoService = {
   aiOverlord: AiOverlordSocketService;
   gasGame: GasGameSocketService;
   numberCrunch: NumberCrunchSocketService;
+  playerQuery: PlayerQuerySocketService;
 };
 
 type Props = {
@@ -75,6 +77,7 @@ export const SocketIoProvider = ({ children }: Props): JSX.Element => {
   const aiOverlordSocket = useAiOverlord(socket);
   const gasGameSocket = useGasGame(socket);
   const numberCrunchSocket = useNumberCrunch(socket);
+  const playerQuerySocket = usePlayerQuery(socket);
 
   return (
     <SocketIoContent.Provider
@@ -85,6 +88,7 @@ export const SocketIoProvider = ({ children }: Props): JSX.Element => {
         aiOverlord: aiOverlordSocket,
         gasGame: gasGameSocket,
         numberCrunch: numberCrunchSocket,
+        playerQuery: playerQuerySocket,
       }}
     >
       {/* <button onClick={() => socket.emit("hello", "are you there?")}>
