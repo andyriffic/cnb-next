@@ -21,7 +21,7 @@ export type CreatePlayerQuestion = (
 export type AnswerPlayerQuestion = (
   playerId: string,
   questionId: string,
-  answerId: string
+  answerIndex: number
 ) => void;
 
 // export type PlayerJoinGroupSocketHandler = (
@@ -61,7 +61,7 @@ export function initialisePlayerQuestionSocket(
   const answerPlayerQuestionHandler: AnswerPlayerQuestion = (
     playerId,
     questionId,
-    answerId
+    answerIndex
   ) => {
     const question = inMemoryQuestionsByPlayerId[playerId];
     if (!question) {
@@ -71,7 +71,7 @@ export function initialisePlayerQuestionSocket(
       return;
     }
 
-    const answer = question.options.find((option) => option.id === answerId);
+    const answer = question.options[answerIndex];
 
     if (!answer) {
       return;
@@ -79,7 +79,7 @@ export function initialisePlayerQuestionSocket(
 
     inMemoryQuestionsByPlayerId[playerId] = {
       ...question,
-      selectedOptionId: answer.id,
+      selectedOptionIndex: answerIndex,
     };
     // socket
     //   .to(getPlayerRoomId(playerId))

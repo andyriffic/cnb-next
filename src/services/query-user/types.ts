@@ -8,11 +8,10 @@ export type QueryUserQuestion<T = string> = {
   title?: string;
   question: string;
   options: QueryUserOption<T>[];
-  selectedOptionId?: string;
+  selectedOptionIndex?: number;
 };
 
 export type QueryUserOption<T = string> = {
-  id: string;
   text: string;
   value: T;
 };

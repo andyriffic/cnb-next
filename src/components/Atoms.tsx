@@ -169,7 +169,7 @@ export const Card = styled.div`
   border-radius: 1rem;
   padding: 1rem;
   margin-bottom: 2rem;
-  border: 0.5rem solid transparent;
+  border: 0.2rem solid white;
 `;
 
 export const CenteredCard = styled(Card)`

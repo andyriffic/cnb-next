@@ -32,12 +32,12 @@ export function usePlayerQuery(socket: Socket): PlayerQuerySocketService {
   );
 
   const answerPlayerQuestion = useCallback<AnswerPlayerQuestion>(
-    (playerId, questionId, answerId) =>
+    (playerId, questionId, answerIndex) =>
       socket.emit(
         PLAYER_QUESTION_ACTIONS.ANSWER_QUESTION_FOR_PLAYER,
         playerId,
         questionId,
-        answerId
+        answerIndex
       ),
     [socket]
   );

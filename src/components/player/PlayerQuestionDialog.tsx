@@ -1,13 +1,19 @@
-import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
-import { usePlayerNames } from "../../providers/PlayerNamesProvider";
-import {
-  clearAllPlayerSettings,
-  getPlayerLocalStorageSettings,
-} from "../../utils/client-only/localStorage";
-import { getPlayerHomeUrl } from "../../utils/url";
-import { DialogModal } from "../DialogModal";
+import { useMemo } from "react";
+import styled from "styled-components";
 import { useSocketIo } from "../../providers/SocketIoProvider";
+import { FeatureSubHeading, SmallHeading, SubHeading } from "../Atoms";
+import { DialogModal } from "../DialogModal";
+
+const QuestionOptionsContainer = styled.div`
+  display: flex;
+  margin: 1rem 0;
+  gap: 1rem;
+  flex-direction: column;
+`;
+const QuestionOptionButton = styled.button`
+  padding: 1rem;
+  font-size: 1.5rem;
+`;
 
 type Props = {
   playerId: string;
@@ -34,8 +40,24 @@ export const PlayerQuestionDialog = ({ playerId }: Props) => {
   }
 
   return (
-    <DialogModal show={!activePlayerQuestion.selectedOptionId}>
-      {activePlayerQuestion.question}
+    <DialogModal show={activePlayerQuestion.selectedOptionIndex === undefined}>
+      <SmallHeading>{activePlayerQuestion.question}</SmallHeading>
+      <QuestionOptionsContainer>
+        {activePlayerQuestion.options.map((option, i) => (
+          <QuestionOptionButton
+            key={option.value}
+            onClick={() => {
+              playerQuery.answerPlayerQuestion(
+                playerId,
+                activePlayerQuestion.id,
+                i
+              );
+            }}
+          >
+            {option.text}
+          </QuestionOptionButton>
+        ))}
+      </QuestionOptionsContainer>
     </DialogModal>
   );
 };

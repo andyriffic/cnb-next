@@ -22,9 +22,10 @@ const defaultQuestion: QueryUserQuestion<number> = {
   style: "normal",
   question: "What is your star rating?",
   options: [
-    { id: "option1", value: 1, text: "⭐️" },
-    { id: "option2", value: 2, text: "⭐️⭐️" },
-    { id: "option3", value: 3, text: "⭐️⭐️⭐️" },
+    { value: 1, text: "⭐️" },
+    { value: 2, text: "⭐️⭐️" },
+    { value: 3, text: "⭐️⭐️⭐️" },
+    { value: 4, text: "Prefer not to answer" },
   ],
 };
 
@@ -35,7 +36,7 @@ const PlayersQuestions = ({
 }: {
   playerId: string;
   allQuestions: QuestionsByPlayerId;
-  onAnswer: (playerId: string, questionId: string, optionId: string) => void;
+  onAnswer: (playerId: string, questionId: string, optionIndex: number) => void;
 }) => {
   const question = allQuestions[playerId];
 
@@ -47,11 +48,9 @@ const PlayersQuestions = ({
           <div>
             <h3>{question.question}</h3>
             <div>
-              {question.options.map((option) => (
-                <div key={option.id}>
-                  <button
-                    onClick={() => onAnswer(playerId, question.id, option.id)}
-                  >
+              {question.options.map((option, i) => (
+                <div key={option.value}>
+                  <button onClick={() => onAnswer(playerId, question.id, i)}>
                     {option.text}
                   </button>
                 </div>
@@ -77,9 +76,12 @@ const PlayerQuestionSummary = ({
       {Object.keys(questionsByPlayerId).map((playerId) => {
         const playerQuestion = questionsByPlayerId[playerId];
         if (!playerQuestion) return null;
-        const playerAnswer = playerQuestion.options.find(
-          (o) => o.id === playerQuestion.selectedOptionId
-        );
+        const playerAnswer =
+          playerQuestion.options[
+            playerQuestion.selectedOptionIndex !== undefined
+              ? playerQuestion.selectedOptionIndex
+              : -1
+          ];
 
         return (
           <div key={playerId}>
@@ -109,7 +111,7 @@ const Screen: NextPage = () => {
             id="create_question"
             type="button"
             onClick={() =>
-              playerQuery.createPlayerQuestion("alex", defaultQuestion)
+              playerQuery.createPlayerQuestion("andy", defaultQuestion)
             }
           >
             Create question
