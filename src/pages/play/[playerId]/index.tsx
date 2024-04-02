@@ -5,13 +5,12 @@ import { useEffect } from "react";
 import { Card, PrimaryLinkButton, SubHeading } from "../../../components/Atoms";
 import { PlayerPageLayout } from "../../../components/PlayerPageLayout";
 import { PlayerAutoJoinDialog } from "../../../components/player/PlayerAutoJoinGameDialog";
-import { PlayerColourSelector } from "../../../components/player/PlayerColourSelector";
+import { PlayerQuestionDialog } from "../../../components/player/PlayerQuestionDialog";
 import { PlayerGamesList } from "../../../components/rock-paper-scissors/PlayerGamesList";
+import { Player } from "../../../types/Player";
 import { setPlayerLocalStorageSettings } from "../../../utils/client-only/localStorage";
 import { getPlayer } from "../../../utils/data/aws-dynamodb";
 import { getPlayerJoinUrl } from "../../../utils/url";
-import { Player } from "../../../types/Player";
-import { PlayerQuestionDialog } from "../../../components/player/PlayerQuestionDialog";
 
 type Props = {
   player: Player;
@@ -37,7 +36,7 @@ function Page({ player }: Props) {
         </Link>
       </Card>
       <PlayerGamesList playerId={player.id} />
-      <PlayerColourSelector player={player} />
+      {/* <PlayerColourSelector player={player} /> */}
       <PlayerAutoJoinDialog
         playerId={player.id}
         groupId={query.autoJoinId as string}
