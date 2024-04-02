@@ -131,8 +131,10 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
           <PositionedZombiePlayer
             style={{
               left: `${
-                (TOTAL_TRACK_WIDTH / ZOMBIE_RUNNING_TRACK_LENGTH_METRES) *
-                (zombieGame.originalZombie.totalMetresRun - 1)
+                zombieGame.endGameStatus === ZombieRunEndGameStatus.ZOMBIE_PARTY
+                  ? 2
+                  : (TOTAL_TRACK_WIDTH / ZOMBIE_RUNNING_TRACK_LENGTH_METRES) *
+                    zombieGame.originalZombie.totalMetresRun
               }vw`,
             }}
           >
@@ -147,8 +149,14 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
                 key={zp.id}
                 style={{
                   left: `${
-                    (TOTAL_TRACK_WIDTH / ZOMBIE_RUNNING_TRACK_LENGTH_METRES) *
-                    zp.totalMetresRun
+                    zombieGame.endGameStatus ===
+                    ZombieRunEndGameStatus.ZOMBIE_PARTY
+                      ? zombieGame.survivors.findIndex((z) => z.id === zp.id) *
+                          3 +
+                        10
+                      : (TOTAL_TRACK_WIDTH /
+                          ZOMBIE_RUNNING_TRACK_LENGTH_METRES) *
+                        zp.totalMetresRun
                   }vw`,
                 }}
               >
@@ -168,8 +176,15 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
                 key={zp.id}
                 style={{
                   left: `${
-                    (TOTAL_TRACK_WIDTH / ZOMBIE_RUNNING_TRACK_LENGTH_METRES) *
-                    zp.totalMetresRun
+                    zombieGame.endGameStatus ===
+                    ZombieRunEndGameStatus.ZOMBIE_PARTY
+                      ? zombieGame.zombies.findIndex((z) => z.id === zp.id) *
+                          3 +
+                        5 +
+                        zombieGame.survivors.length * 3
+                      : (TOTAL_TRACK_WIDTH /
+                          ZOMBIE_RUNNING_TRACK_LENGTH_METRES) *
+                        zp.totalMetresRun
                   }vw`,
                 }}
               >
