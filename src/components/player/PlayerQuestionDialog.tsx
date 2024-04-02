@@ -29,9 +29,13 @@ export const PlayerQuestionDialog = ({ playerId }: Props) => {
   //   }
   // }, [showModal]);
 
+  if (!activePlayerQuestion) {
+    return null;
+  }
+
   return (
-    <DialogModal show={!activePlayerQuestion?.selectedOptionId}>
-      {activePlayerQuestion?.question}
+    <DialogModal show={!activePlayerQuestion.selectedOptionId}>
+      {activePlayerQuestion.question}
     </DialogModal>
   );
 };
