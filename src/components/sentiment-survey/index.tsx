@@ -47,7 +47,15 @@ export const SentimentSurvey = ({ playerIds }: Props) => {
   return (
     <DialogModal
       show={showModal}
-      options={[{ text: "Done", onSelected: () => setShowModal(false) }]}
+      options={[
+        {
+          text: "Done",
+          onSelected: () => {
+            setShowModal(false);
+            //TODO: delete question for all player ids
+          },
+        },
+      ]}
     >
       <>
         <SubHeading>{SENTIMENT_QUESTION.question}</SubHeading>
