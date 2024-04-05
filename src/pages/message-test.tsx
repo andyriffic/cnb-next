@@ -8,6 +8,7 @@ import {
   QueryUserQuestion,
   QuestionsByPlayerId,
 } from "../services/query-user/types";
+import { SentimentSurvey } from "../components/sentiment-survey";
 
 const UiSection = styled.div`
   padding: 3rem;
@@ -31,15 +32,13 @@ const defaultQuestion: QueryUserQuestion<number> = {
 
 const PlayersQuestions = ({
   playerId,
-  allQuestions,
+  question,
   onAnswer,
 }: {
   playerId: string;
-  allQuestions: QuestionsByPlayerId;
+  question: QueryUserQuestion<string | number>;
   onAnswer: (playerId: string, questionId: string, optionIndex: number) => void;
 }) => {
-  const question = allQuestions[playerId];
-
   return (
     <UiSection>
       <UiSectionHeading>{playerId}</UiSectionHeading>
@@ -117,19 +116,26 @@ const Screen: NextPage = () => {
             Create question
           </button>
         </form>
-        <div style={{ display: "flex" }}>
-          <PlayersQuestions
-            playerId="andy"
-            allQuestions={playerQuery.questionsByPlayerId}
-            onAnswer={playerQuery.answerPlayerQuestion}
-          />
-          <PlayersQuestions
-            playerId="alex"
-            allQuestions={playerQuery.questionsByPlayerId}
-            onAnswer={playerQuery.answerPlayerQuestion}
-          />
+        <div style={{ display: "flex", flexWrap: "wrap" }}>
+          {Object.keys(playerQuery.questionsByPlayerId).map((playerId) => {
+            const question = playerQuery.questionsByPlayerId[playerId];
+
+            if (!question) return null;
+
+            return (
+              <div key={playerId}>
+                {playerId}
+                <PlayersQuestions
+                  playerId={playerId}
+                  question={question}
+                  onAnswer={playerQuery.answerPlayerQuestion}
+                />
+              </div>
+            );
+          })}
         </div>
       </UiSection>
+      {/* <SentimentSurvey playerIds={["andy", "alex"]} /> */}
     </SpectatorPageLayout>
   );
 };

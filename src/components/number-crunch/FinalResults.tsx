@@ -17,6 +17,7 @@ import { numberCrunchGameToPoints } from "../../services/number-crunch/points";
 import { savePlayerGameMovesFetch } from "../../utils/api";
 import { LinkToMiniGame } from "../LinkToMiniGame";
 import { Positioned } from "../Positioned";
+import { SentimentSurvey } from "../sentiment-survey";
 
 const FinalGuessLine = styled.div`
   width: 100%;
@@ -184,6 +185,9 @@ export const FinalResults = ({ gameView, finalResults }: Props) => {
         <Positioned horizontalAlign={{ align: "center", bottomPercent: 20 }}>
           <LinkToMiniGame />
         </Positioned>
+      )}
+      {revealState >= RevealState.SHOW_POINTS_LEGEND && (
+        <SentimentSurvey playerIds={gameView.players.map((p) => p.id)} />
       )}
     </CenterSpaced>
   );
