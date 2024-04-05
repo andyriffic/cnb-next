@@ -773,7 +773,7 @@ function getRandomCardType(
     gameType === "crazy"
       ? [
           { weight: 9, item: "bomb" },
-          { weight: 1, item: isFinalRound ? "press" : "reverse" },
+          { weight: 2, item: isFinalRound ? "press" : "reverse" },
         ]
       : [
           { weight: 1, item: "skip" },

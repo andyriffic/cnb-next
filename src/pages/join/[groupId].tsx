@@ -406,7 +406,7 @@ function createBallonGameNormal(
       group.playerIds,
       group.id,
       team,
-      "crazy",
+      "normal",
       (gameId) => {
         resolve(getGasOutSpectatorUrl(gameId));
       }
