@@ -101,7 +101,17 @@ enum RevealState {
 export const FinalResults = ({ gameView, finalResults }: Props) => {
   const [revealState, setRevealState] = useState(RevealState.SHOW_TARGET);
   useRevealTiming(revealState, setRevealState);
+  const [revealBucketIndex, setRevealBucketIndex] = useState(0);
   const { getName } = usePlayerNames();
+
+  useEffect(() => {
+    if (revealState >= RevealState.SHOW_REST) {
+      const interval = setInterval(() => {
+        setRevealBucketIndex((prev) => prev + 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [revealState]);
 
   useDoOnce(() => {
     const gameMoves = numberCrunchGameToPoints(gameView);
@@ -138,6 +148,9 @@ export const FinalResults = ({ gameView, finalResults }: Props) => {
               <FinalGuessDotsContainer>
                 {finalResults.finalRoundSummary.map((roundView, i) => {
                   const namesOffset = roundView.guess % 5;
+                  if (roundView.bucketRangeIndex > revealBucketIndex) {
+                    return;
+                  }
                   return (
                     <GuessContainer
                       key={i}
