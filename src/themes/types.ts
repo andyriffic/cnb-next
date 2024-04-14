@@ -88,4 +88,20 @@ const CNY_THEME: ThemeTokens = {
   },
 };
 
-export default DEFAULT_THEME;
+const WEDDING_THEME: ThemeTokens = {
+  ...DEFAULT_THEME,
+  colours: {
+    ...DEFAULT_THEME.colours,
+    primaryText: "#b57170",
+    textAccent: "#ffb6c1",
+    primaryBackground: "#FFE4E1",
+    secondaryBackground: "#f5f5dc",
+    buttonPrimaryBackground: "#b57170",
+    buttonSecondaryBackground: "#FFF0D9",
+    ballonGame: {
+      ...DEFAULT_THEME.colours.ballonGame,
+    },
+  },
+};
+
+export default WEDDING_THEME;

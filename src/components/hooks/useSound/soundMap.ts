@@ -75,6 +75,11 @@ const CNY_SOUND_MAP: { [key in SoundName]: string } = {
     "/sounds/chinese-new-year/db_instrumental.mp3",
 };
 
-export const SOUND_MAP = {
+const WEDDING_SOUND_MAP: { [key in SoundName]: string } = {
   ...DEFAULT_SOUND_MAP,
+  "join-music": "/sounds/music/arcade.mp3",
+};
+
+export const SOUND_MAP = {
+  ...WEDDING_SOUND_MAP,
 };

@@ -25,7 +25,7 @@ export const NumbersRemainingIndicator = ({ gameView }: Props) => {
     <Container>
       {elementMap.map((element) => {
         const hidden = gameView.guessedNumbers.includes(element);
-        return <Indicator key={element}>{hidden ? "🧧" : "🥟"}</Indicator>;
+        return <Indicator key={element}>{hidden ? "🍷" : "🥛"}</Indicator>;
       })}
     </Container>
   );

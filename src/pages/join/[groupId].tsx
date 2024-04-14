@@ -101,7 +101,8 @@ export type GameTypes =
   | "ai"
   | "number-crunch";
 
-const availableGameTypes: GameTypes[] = ["rps", "balloon", "number-crunch"];
+// const availableGameTypes: GameTypes[] = ["rps", "balloon", "number-crunch"];
+const availableGameTypes: GameTypes[] = ["number-crunch"];
 
 const GAME_NAMES: { [key in GameTypes]: string } = {
   rps: "Betting 🎲",

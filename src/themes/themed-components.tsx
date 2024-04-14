@@ -15,4 +15,8 @@ const CNY_COMPONENTS: ThemedComponents = {
   JoinScreenDecoration: <CnyJoinScreenDecoration />,
 };
 
-export default DEFAULT_COMPONENTS;
+const BLANK_COMPONENTS: ThemedComponents = {
+  JoinScreenDecoration: <></>,
+};
+
+export default BLANK_COMPONENTS;
