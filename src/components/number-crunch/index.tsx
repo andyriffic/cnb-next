@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { NumberCrunchGameView } from "../../services/number-crunch/types";
-import { SpectatorPageLayout } from "../SpectatorPageLayout";
 import { useSocketIo } from "../../providers/SocketIoProvider";
+import { NumberCrunchGameView } from "../../services/number-crunch/types";
 import { Card, SmallHeading } from "../Atoms";
+import { SpectatorPageLayout } from "../SpectatorPageLayout";
 import { SplashContent } from "../SplashContent";
 import { DebugNumberCrunchGame } from "./DebugNumberCrunch";
 import { FinalResults } from "./FinalResults";
@@ -14,7 +14,6 @@ import {
   NUMBER_CRUNCH_GAME_STATE,
   useNumberCrunchGameTiming,
 } from "./hooks/useNumberCrunchGameTiming";
-import { NumbersRemainingIndicator } from "./NumbersRemainingIndicator";
 
 type Props = {
   game: NumberCrunchGameView;
@@ -39,7 +38,7 @@ const View = ({ game }: Props) => {
         <>
           <NumberTarget game={game} />
           <WaitingToGuessList game={game} />
-          <NumbersRemainingIndicator gameView={game} />
+          {/* <NumbersRemainingIndicator gameView={game} /> */}
           <RoundResultBuckets
             gameView={game}
             gameState={gameState.state}
