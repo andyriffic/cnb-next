@@ -52,6 +52,21 @@ const createZombieGame = (
         )
       : originalZombie.totalMetresToRun;
 
+  const maxSurvivorMetresRun = Math.max(
+    ...players
+      .filter((p) => !p.details?.zombieRun?.isZombie)
+      .map((p) => p.details?.zombieRun?.totalMetresRun || 0)
+  );
+
+  const activeObstacles: ZombieObstacle[] = [
+    { index: 15, name: "Banana", icon: "🍌" },
+    { index: 22, name: "Banana", icon: "🍌" },
+    { index: 25, name: "Banana", icon: "🍌" },
+    { index: 35, name: "Banana", icon: "🍌" },
+    { index: 44, name: "Banana", icon: "🍌" },
+    { index: 48, name: "Banana", icon: "🍌" },
+  ].filter((o) => o.index >= maxSurvivorMetresRun);
+
   return {
     gameStatus: ZombieRunGameStatus.READY_TO_START,
     survivors: players
@@ -79,14 +94,7 @@ const createZombieGame = (
       ...originalZombie,
       totalMetresToRun: medianSurvivorMoves,
     },
-    obstacles: [
-      { index: 15, name: "Banana", icon: "🍌" },
-      { index: 22, name: "Banana", icon: "🍌" },
-      { index: 25, name: "Banana", icon: "🍌" },
-      { index: 35, name: "Banana", icon: "🍌" },
-      { index: 44, name: "Banana", icon: "🍌" },
-      { index: 48, name: "Banana", icon: "🍌" },
-    ],
+    obstacles: activeObstacles,
   };
 };
 
