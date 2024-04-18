@@ -12,6 +12,7 @@ import {
   ZombieRunGameStatus,
 } from "./types";
 import bewareBananaSignImage from "./beware-banana-02.png";
+import { ZombieObstacleView } from "./ZombieObstacle";
 
 const TOTAL_TRACK_WIDTH = 94;
 const STACK_INDEX_RANGE = 2;
@@ -67,11 +68,9 @@ const DistanceMarker = styled.div`
   font-weight: bold;
 `;
 
-const Obstacle = styled.div`
+const PositionedObstacle = styled.div`
   position: absolute;
   bottom: 0;
-  font-size: 2rem;
-  transform: rotate(-45deg);
 `;
 
 const BewareSign = styled.div`
@@ -201,7 +200,7 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
           })}
           {zombieGame.obstacles.map((obstacle, i) => {
             return (
-              <Obstacle
+              <PositionedObstacle
                 key={i}
                 style={{
                   left: `${
@@ -210,8 +209,8 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
                   }vw`,
                 }}
               >
-                {obstacle.icon}
-              </Obstacle>
+                <ZombieObstacleView obstacle={obstacle} />
+              </PositionedObstacle>
             );
           })}
         </ZombieCharactersContainer>
