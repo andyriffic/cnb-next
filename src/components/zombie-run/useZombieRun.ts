@@ -65,7 +65,7 @@ const createZombieGame = (
     { index: 35, name: "Banana", icon: "🍌" },
     { index: 44, name: "Banana", icon: "🍌" },
     { index: 48, name: "Banana", icon: "🍌" },
-  ].filter((o) => o.index >= maxSurvivorMetresRun);
+  ].filter((o) => o.index > maxSurvivorMetresRun);
 
   return {
     gameStatus: ZombieRunGameStatus.READY_TO_START,
