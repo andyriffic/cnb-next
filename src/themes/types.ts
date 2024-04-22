@@ -104,4 +104,4 @@ const WEDDING_THEME: ThemeTokens = {
   },
 };
 
-export default WEDDING_THEME;
+export default DEFAULT_THEME;
