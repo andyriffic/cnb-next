@@ -199,9 +199,9 @@ export const FinalResults = ({ gameView, finalResults }: Props) => {
           <LinkToMiniGame />
         </Positioned>
       )}
-      {/* {revealState >= RevealState.SHOW_POINTS_LEGEND && (
+      {revealState >= RevealState.SHOW_POINTS_LEGEND && (
         <SentimentSurvey playerIds={gameView.players.map((p) => p.id)} />
-      )} */}
+      )}
     </CenterSpaced>
   );
 };

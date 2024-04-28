@@ -3,12 +3,13 @@ import Head from "next/head";
 import styled from "styled-components";
 import { SmallHeading } from "../components/Atoms";
 import { SpectatorPageLayout } from "../components/SpectatorPageLayout";
+import { AnswerPercentages } from "../components/sentiment-survey/AnswerPercentages";
 import { useSocketIo } from "../providers/SocketIoProvider";
 import {
   QueryUserQuestion,
   QuestionsByPlayerId,
 } from "../services/query-user/types";
-import { SentimentSurvey } from "../components/sentiment-survey";
+import { SENTIMENT_QUESTION } from "../components/sentiment-survey";
 
 const UiSection = styled.div`
   padding: 3rem;
@@ -29,6 +30,8 @@ const defaultQuestion: QueryUserQuestion<number> = {
     { value: 4, text: "Prefer not to answer" },
   ],
 };
+
+const testPlayerIds: string[] = ["andy", "alex", "albert_s"];
 
 const PlayersQuestions = ({
   playerId,
@@ -66,8 +69,10 @@ const PlayersQuestions = ({
 
 const PlayerQuestionSummary = ({
   questionsByPlayerId,
+  onDelete,
 }: {
   questionsByPlayerId: QuestionsByPlayerId;
+  onDelete: (playerId: string) => void;
 }) => {
   return (
     <UiSection>
@@ -85,7 +90,8 @@ const PlayerQuestionSummary = ({
         return (
           <div key={playerId}>
             {playerId}: {playerQuestion.question} = {playerAnswer?.text} (
-            {playerAnswer?.value})
+            {playerAnswer?.value}){" "}
+            <button onClick={() => onDelete(playerId)}>X</button>
           </div>
         );
       })}
@@ -104,14 +110,17 @@ const Screen: NextPage = () => {
       <UiSection>
         <PlayerQuestionSummary
           questionsByPlayerId={playerQuery.questionsByPlayerId}
+          onDelete={playerQuery.deletePlayerQuestion}
         />
         <form>
           <button
             id="create_question"
             type="button"
-            onClick={() =>
-              playerQuery.createPlayerQuestion("andy", defaultQuestion)
-            }
+            onClick={() => {
+              testPlayerIds.forEach((playerId) => {
+                playerQuery.createPlayerQuestion(playerId, SENTIMENT_QUESTION);
+              });
+            }}
           >
             Create question
           </button>
@@ -124,7 +133,6 @@ const Screen: NextPage = () => {
 
             return (
               <div key={playerId}>
-                {playerId}
                 <PlayersQuestions
                   playerId={playerId}
                   question={question}
@@ -134,6 +142,13 @@ const Screen: NextPage = () => {
             );
           })}
         </div>
+      </UiSection>
+      <UiSection>
+        <UiSectionHeading>Percentages</UiSectionHeading>
+        <AnswerPercentages
+          question={SENTIMENT_QUESTION}
+          questionsByPlayerId={playerQuery.questionsByPlayerId}
+        />
       </UiSection>
       {/* <SentimentSurvey playerIds={["andy", "alex"]} /> */}
     </SpectatorPageLayout>

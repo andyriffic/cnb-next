@@ -3,11 +3,12 @@ import { useSocketIo } from "../../providers/SocketIoProvider";
 import { QueryUserQuestion } from "../../services/query-user/types";
 import { Card, SubHeading } from "../Atoms";
 import { DialogModal } from "../DialogModal";
+import { AnswerPercentages } from "./AnswerPercentages";
 
-const SENTIMENT_QUESTION: QueryUserQuestion = {
+export const SENTIMENT_QUESTION: QueryUserQuestion = {
   id: "sentiment",
-  question: "How are you feeling today?",
-  style: "normal",
+  question: "How do you feel after playing this game?",
+  style: "emoji",
   options: [
     { text: "😢", value: "sad" },
     { text: "😐", value: "ok" },
@@ -51,27 +52,18 @@ export const SentimentSurvey = ({ playerIds }: Props) => {
         {
           text: "Done",
           onSelected: () => {
+            playerIds.forEach((playerId) => {
+              playerQuery.deletePlayerQuestion(playerId);
+            });
             setShowModal(false);
-            //TODO: delete question for all player ids
           },
         },
       ]}
     >
-      <>
-        <SubHeading>{SENTIMENT_QUESTION.question}</SubHeading>
-        <p>Total responses: {totalResponses}</p>
-        <div>
-          {responsePercentages.map((percentage, i) => {
-            const question = SENTIMENT_QUESTION.options[i];
-            if (!question) return null;
-            return (
-              <div key={i}>
-                {question.text}: {percentage * 100}%
-              </div>
-            );
-          })}
-        </div>
-      </>
+      <AnswerPercentages
+        question={SENTIMENT_QUESTION}
+        questionsByPlayerId={playerQuery.questionsByPlayerId}
+      />
     </DialogModal>
   );
 };

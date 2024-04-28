@@ -12,7 +12,7 @@ const QuestionOptionsContainer = styled.div`
 `;
 const QuestionOptionButton = styled.button`
   padding: 1rem;
-  font-size: 1.5rem;
+  font-size: 2rem;
 `;
 
 type Props = {
@@ -41,23 +41,25 @@ export const PlayerQuestionDialog = ({ playerId }: Props) => {
 
   return (
     <DialogModal show={activePlayerQuestion.selectedOptionIndex === undefined}>
-      <SmallHeading>{activePlayerQuestion.question}</SmallHeading>
-      <QuestionOptionsContainer>
-        {activePlayerQuestion.options.map((option, i) => (
-          <QuestionOptionButton
-            key={option.value}
-            onClick={() => {
-              playerQuery.answerPlayerQuestion(
-                playerId,
-                activePlayerQuestion.id,
-                i
-              );
-            }}
-          >
-            {option.text}
-          </QuestionOptionButton>
-        ))}
-      </QuestionOptionsContainer>
+      <div style={{ width: "90vw" }}>
+        <SmallHeading>{activePlayerQuestion.question}</SmallHeading>
+        <QuestionOptionsContainer>
+          {activePlayerQuestion.options.map((option, i) => (
+            <QuestionOptionButton
+              key={option.value}
+              onClick={() => {
+                playerQuery.answerPlayerQuestion(
+                  playerId,
+                  activePlayerQuestion.id,
+                  i
+                );
+              }}
+            >
+              {option.text}
+            </QuestionOptionButton>
+          ))}
+        </QuestionOptionsContainer>
+      </div>
     </DialogModal>
   );
 };

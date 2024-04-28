@@ -4,7 +4,7 @@ export type QuestionsByPlayerId = {
 
 export type QueryUserQuestion<T = string> = {
   id: string;
-  style: "normal";
+  style: "normal" | "emoji";
   title?: string;
   question: string;
   options: QueryUserOption<T>[];

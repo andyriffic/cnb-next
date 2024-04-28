@@ -9,6 +9,7 @@ import { QueryUserQuestion, QuestionsByPlayerId } from "./types";
 export enum PLAYER_QUESTION_ACTIONS {
   QUESTION_UPDATE = "PLAYER_QUESTION_ACTIONS_QUESTION_UPDATE",
   CREATE_QUESTION_FOR_PLAYER = "PLAYER_QUESTION_ACTIONS_CREATE_QUESTION_FOR_PLAYER",
+  DELETE_QUESTION_FOR_PLAYER = "PLAYER_QUESTION_ACTIONS_DELETE_QUESTION_FOR_PLAYER",
   ANSWER_QUESTION_FOR_PLAYER = "PLAYER_QUESTION_ACTIONS_ANSWER_QUESTION_FOR_PLAYER",
 }
 
@@ -17,6 +18,8 @@ export type CreatePlayerQuestion = (
   question: QueryUserQuestion<string | number>,
   onCreated?: (questionId: string) => void
 ) => void;
+
+export type DeletePlayerQuestion = (playerId: string) => void;
 
 export type AnswerPlayerQuestion = (
   playerId: string,
@@ -56,6 +59,18 @@ export function initialisePlayerQuestionSocket(
     );
 
     onCreated && onCreated(question.id);
+  };
+
+  const deletePlayerQuestionHandler: DeletePlayerQuestion = (playerId) => {
+    delete inMemoryQuestionsByPlayerId[playerId];
+    // socket
+    //   .to(getPlayerRoomId(playerId))
+    //   .emit(PLAYER_QUESTION_ACTIONS.QUESTION_UPDATE, question);
+
+    io.emit(
+      PLAYER_QUESTION_ACTIONS.QUESTION_UPDATE,
+      inMemoryQuestionsByPlayerId
+    );
   };
 
   const answerPlayerQuestionHandler: AnswerPlayerQuestion = (
@@ -99,6 +114,10 @@ export function initialisePlayerQuestionSocket(
   socket.on(
     PLAYER_QUESTION_ACTIONS.CREATE_QUESTION_FOR_PLAYER,
     createPlayerQuestionHandler
+  );
+  socket.on(
+    PLAYER_QUESTION_ACTIONS.DELETE_QUESTION_FOR_PLAYER,
+    deletePlayerQuestionHandler
   );
   socket.on(
     PLAYER_QUESTION_ACTIONS.ANSWER_QUESTION_FOR_PLAYER,
