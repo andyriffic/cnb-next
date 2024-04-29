@@ -15,6 +15,7 @@ import { CenterSpaced } from "../Layouts";
 import { LinkToMiniGame } from "../LinkToMiniGame";
 import { PlayerAvatar } from "../PlayerAvatar";
 import THEME from "../../themes/types";
+import { SentimentSurvey } from "../sentiment-survey";
 import { WinningConditions } from "./hooks/useGameWinningConditions";
 
 enum STORYBOARD {
@@ -152,6 +153,17 @@ export const PointsAwardCeremony = ({
             <LinkToMiniGame />
           </CenterSpaced>
         </Appear>
+      )}
+      {currentStoryboard >= STORYBOARD.SHOW_MINIGAME_CTA && (
+        <SentimentSurvey
+          playerIds={[
+            ...(gamePoints.outrightWinner
+              ? [gamePoints.outrightWinner.playerId]
+              : []),
+            ...gamePoints.middleOfThePack.map((p) => p.playerId),
+            ...gamePoints.zeroPointLosers.map((p) => p.playerId),
+          ]}
+        />
       )}
     </Container>
   );
