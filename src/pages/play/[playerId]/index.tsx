@@ -5,7 +5,6 @@ import { useEffect } from "react";
 import { Card, PrimaryLinkButton, SubHeading } from "../../../components/Atoms";
 import { PlayerPageLayout } from "../../../components/PlayerPageLayout";
 import { PlayerAutoJoinDialog } from "../../../components/player/PlayerAutoJoinGameDialog";
-import { PlayerQuestionDialog } from "../../../components/player/PlayerQuestionDialog";
 import { PlayerGamesList } from "../../../components/rock-paper-scissors/PlayerGamesList";
 import { Player } from "../../../types/Player";
 import { setPlayerLocalStorageSettings } from "../../../utils/client-only/localStorage";
@@ -41,7 +40,6 @@ function Page({ player }: Props) {
         playerId={player.id}
         groupId={query.autoJoinId as string}
       />
-      <PlayerQuestionDialog playerId={player.id} />
     </PlayerPageLayout>
   );
 }

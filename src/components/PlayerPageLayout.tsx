@@ -2,6 +2,7 @@ import Link from "next/link";
 import styled from "styled-components";
 import { getClassicCnbPlayerUrl, getPlayerHomeUrl } from "../utils/url";
 import THEME from "../themes/types";
+import { PlayerQuestionDialog } from "./player/PlayerQuestionDialog";
 
 const Container = styled.div`
   display: flex;
@@ -64,6 +65,7 @@ export function PlayerPageLayout({
           <Link href={getPlayerHomeUrl(playerId)}>Home</Link>
         </FooterContent>
       </Footer>
+      <PlayerQuestionDialog playerId={playerId} />
     </Container>
   );
 }
