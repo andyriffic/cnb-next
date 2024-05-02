@@ -59,12 +59,9 @@ const createZombieGame = (
   );
 
   const activeObstacles: ZombieObstacle[] = [
-    { index: 15, name: "Banana", icon: "🍌" },
     { index: 22, name: "Banana", icon: "🍌" },
-    { index: 25, name: "Banana", icon: "🍌" },
     { index: 35, name: "Banana", icon: "🍌" },
     { index: 44, name: "Banana", icon: "🍌" },
-    { index: 48, name: "Banana", icon: "🍌" },
   ].filter((o) => o.index > maxSurvivorMetresRun);
 
   return {
