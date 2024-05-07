@@ -39,6 +39,8 @@ const createZombieGame = (
     calculateMedian(survivorsWithMoves.map((p) => p.details?.gameMoves || 0)) ||
     0;
 
+  const zombieMoves = Math.max(medianSurvivorMoves - 1, 1);
+
   const zombiePlayersWithMoves = players
     .filter((p) => !!p.details?.zombieRun?.isZombie)
     .filter((p) => (p.details?.gameMoves || 0) > 0);
@@ -89,7 +91,7 @@ const createZombieGame = (
       })),
     originalZombie: {
       ...originalZombie,
-      totalMetresToRun: medianSurvivorMoves,
+      totalMetresToRun: zombieMoves,
     },
     obstacles: activeObstacles,
   };
