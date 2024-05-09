@@ -76,12 +76,12 @@ export function GasBallon({ gasCloud }: Props): JSX.Element {
   const visibleSize = gasCloud.exploded ? 10 : gasCloud.pressed;
   return (
     <Container size={visibleSize} exploded={gasCloud.exploded}>
-      {/* <Ballon size={visibleSize} /> */}
-      <Carol
+      <Ballon size={visibleSize} />
+      {/* <Carol
         size={visibleSize}
         src={carolFaceImage}
         alt="Wrapped christmas gift box"
-      />
+      /> */}
     </Container>
   );
 }
