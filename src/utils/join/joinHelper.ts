@@ -2,7 +2,7 @@ import { GameTypes } from "../../pages/join/[groupId]";
 import { getDayName } from "../date";
 import { selectRandomOneOf } from "../random";
 
-export function getSuggestedGame(date: Date): GameTypes {
+export function getSuggestedGame(date: Date): GameTypes | undefined {
   const dayName = getDayName(date);
 
   switch (dayName) {
@@ -12,11 +12,11 @@ export function getSuggestedGame(date: Date): GameTypes {
     case "Tuesday": {
       return "rps";
     }
-    case "Thursday": {
-      return "balloon";
-    }
-    default: {
-      return selectRandomOneOf(["balloon", "rps", "number-crunch"]);
-    }
+    // case "Thursday": {
+    //   return "balloon";
+    // }
+    // default: {
+    //   return selectRandomOneOf(["balloon", "rps", "number-crunch"]);
+    // }
   }
 }

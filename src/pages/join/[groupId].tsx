@@ -15,15 +15,17 @@ import { NumericValue } from "../../components/NumericValue";
 import { AvatarSize } from "../../components/PlayerAvatar";
 import { SpectatorPageLayout } from "../../components/SpectatorPageLayout";
 import { Appear } from "../../components/animations/Appear";
+import { Attention } from "../../components/animations/Attention";
 import { useSomethingWhenArraySizeChanges } from "../../components/hooks/useSomethingWhenArraySizeChanges";
 import { useSound } from "../../components/hooks/useSound";
+import { WaitingPlayerNamesHint } from "../../components/pages/join/WaitingPlayerNamesHint";
 import { usePlayerNames } from "../../providers/PlayerNamesProvider";
 import { SocketIoService, useSocketIo } from "../../providers/SocketIoProvider";
 import { PlayerWallet } from "../../services/betting/types";
 import { PlayerGroup } from "../../services/player-join/types";
 import THEME_COMPONENTS from "../../themes/themed-components";
 import THEME from "../../themes/types";
-import { isClientSideFeatureEnabled } from "../../utils/feature";
+import { getSuggestedGame } from "../../utils/join/joinHelper";
 import { shuffleArray } from "../../utils/random";
 import {
   getAiOverlordSpectatorUrl,
@@ -33,9 +35,7 @@ import {
   getRockPaperScissorsGameSpectatorUrl,
   urlWithTeamQueryParam,
 } from "../../utils/url";
-import { WaitingPlayerNamesHint } from "../../components/pages/join/WaitingPlayerNamesHint";
-import { getSuggestedGame } from "../../utils/join/joinHelper";
-import { Attention } from "../../components/animations/Attention";
+import { AudienceGameSelection } from "../../components/pages/join/AudienceGameSelection";
 
 const JoinedPlayerContainer = styled.div`
   display: flex;
@@ -140,7 +140,6 @@ function Page() {
   const { getName } = usePlayerNames();
   const { play, loop } = useSound();
   const [qrCodeUrl, setQrCodeUrl] = useState("");
-  const numberCrunchEnabled = isClientSideFeatureEnabled("number-crunch");
   const [showWaitingPlayersHint, setShowWaitingPlayersHint] = useState(false);
   const [suggestedGame] = useState(getSuggestedGame(new Date()));
 
@@ -249,77 +248,58 @@ function Page() {
                   )}
                 </PlayerHintContainer>
                 <GameSelectorContainer>
-                  {availableGameTypes.map((gameType) => {
-                    return (
-                      <Attention
-                        key={gameType}
-                        animation="slow-vibrate"
-                        animate={gameType === suggestedGame}
-                      >
-                        <ThemedPrimaryButton
-                          highlight={gameType === suggestedGame}
-                          disabled={group.playerIds.length < 3}
-                          onClick={() => {
-                            gameCreators[gameType](
-                              group,
-                              socketService,
-                              getName,
-                              team
-                            ).then((gameUrl) => {
-                              router.push(urlWithTeamQueryParam(gameUrl, team));
-                            });
-                          }}
-                        >
-                          {gameType === suggestedGame && (
-                            <>
-                              <SuggestedText>🌟Recommended🌟</SuggestedText>
-                              <br />
-                            </>
-                          )}
-                          {GAME_NAMES[gameType]}
-                        </ThemedPrimaryButton>
-                      </Attention>
-                    );
-                  })}
-                  {/* <ThemedPrimaryButton
-                    disabled={group.playerIds.length < 2}
-                    onClick={() => {
-                      gameCreators
-                        .rps(group, socketService, getName, team)
-                        .then((gameUrl) => {
+                  {suggestedGame ? (
+                    <>
+                      {availableGameTypes.map((gameType) => {
+                        return (
+                          <Attention
+                            key={gameType}
+                            animation="slow-vibrate"
+                            animate={gameType === suggestedGame}
+                          >
+                            <ThemedPrimaryButton
+                              highlight={gameType === suggestedGame}
+                              disabled={group.playerIds.length < 3}
+                              onClick={() => {
+                                gameCreators[gameType](
+                                  group,
+                                  socketService,
+                                  getName,
+                                  team
+                                ).then((gameUrl) => {
+                                  router.push(
+                                    urlWithTeamQueryParam(gameUrl, team)
+                                  );
+                                });
+                              }}
+                            >
+                              {gameType === suggestedGame && (
+                                <>
+                                  <SuggestedText>🌟Recommended🌟</SuggestedText>
+                                  <br />
+                                </>
+                              )}
+                              {GAME_NAMES[gameType]}
+                            </ThemedPrimaryButton>
+                          </Attention>
+                        );
+                      })}
+                    </>
+                  ) : (
+                    <AudienceGameSelection
+                      playerIds={group.playerIds}
+                      onGameSelected={(gameType) =>
+                        gameCreators[gameType](
+                          group,
+                          socketService,
+                          getName,
+                          team
+                        ).then((gameUrl) => {
                           router.push(urlWithTeamQueryParam(gameUrl, team));
-                        });
-                    }}
-                  >
-                    Betting 🎲
-                  </ThemedPrimaryButton>
-                  <ThemedPrimaryButton
-                    disabled={group.playerIds.length < 2}
-                    onClick={() => {
-                      gameCreators
-                        .balloon(group, socketService, getName, team)
-                        .then((gameUrl) => {
-                          router.push(urlWithTeamQueryParam(gameUrl, team));
-                        });
-                    }}
-                  >
-                    Balloon 🎈
-                  </ThemedPrimaryButton>
-                  <ThemedPrimaryButton
-                    disabled={group.playerIds.length < 2}
-                    onClick={() => {
-                      gameCreators["number-crunch"](
-                        group,
-                        socketService,
-                        getName,
-                        team
-                      ).then((gameUrl) => {
-                        router.push(urlWithTeamQueryParam(gameUrl, team));
-                      });
-                    }}
-                  >
-                    Number Crunch (beta) 💯
-                  </ThemedPrimaryButton> */}
+                        })
+                      }
+                    />
+                  )}
                 </GameSelectorContainer>
               </GameInfoContainer>
             </div>
