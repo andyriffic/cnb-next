@@ -71,7 +71,9 @@ export const PopularGameSelector = ({
           return (
             <AnswerListItem key={i}>
               <GameNameText>{answer.text}</GameNameText>
-              <PercentageText>{percentage}%</PercentageText>
+              <PercentageText>
+                {everyoneAnswered ? <>{percentage}%</> : <>🙈</>}{" "}
+              </PercentageText>
               <GameSelectButton
                 onClick={() => onGameSelected(answer.value as GameTypes)}
                 disabled={
