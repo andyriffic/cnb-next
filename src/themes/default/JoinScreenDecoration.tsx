@@ -1,10 +1,10 @@
 import Image from "next/image";
 import styled from "styled-components";
+import bananaImage from "../../components/zombie-run/banana-peel-01.png";
 import cactus01Image from "./cactus-01.png";
 import cactus02Image from "./catcus-02.png";
 import pixelCinbyImage from "./cinby-pixel-03.png";
 import dinosaurImage from "./dino-01.png";
-import bananaImage from "./banana-01.png";
 
 const Container = styled.div`
   border-bottom: 50px solid #9c8df5;
@@ -49,8 +49,8 @@ export function JoinScreenDecoration(): JSX.Element {
         <Image
           src={bananaImage}
           alt=""
-          width={20}
-          style={{ position: "absolute" }}
+          width={24}
+          style={{ position: "absolute", bottom: "-7px" }}
         />
         <Image src={pixelCinbyImage} alt="" width={40} />
       </CharacterContainer>
