@@ -1,6 +1,5 @@
 import { GameTypes } from "../../pages/join/[groupId]";
 import { getDayName } from "../date";
-import { selectRandomOneOf } from "../random";
 
 export function getSuggestedGame(date: Date): GameTypes | undefined {
   const dayName = getDayName(date);
@@ -12,9 +11,9 @@ export function getSuggestedGame(date: Date): GameTypes | undefined {
     case "Tuesday": {
       return "rps";
     }
-    // case "Thursday": {
-    //   return "balloon";
-    // }
+    case "Thursday": {
+      return "balloon";
+    }
     // default: {
     //   return selectRandomOneOf(["balloon", "rps", "number-crunch"]);
     // }
