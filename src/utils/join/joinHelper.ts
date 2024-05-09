@@ -1,19 +1,6 @@
 import { GameTypes } from "../../pages/join/[groupId]";
+import { getDayName } from "../date";
 import { selectRandomOneOf } from "../random";
-
-const DAYS_OF_WEEK = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
-
-const getDayName = (date: Date): string => {
-  return DAYS_OF_WEEK[date.getDay()] || "";
-};
 
 export function getSuggestedGame(date: Date): GameTypes {
   const dayName = getDayName(date);
@@ -26,9 +13,6 @@ export function getSuggestedGame(date: Date): GameTypes {
       return "rps";
     }
     case "Thursday": {
-      return "balloon";
-    }
-    case "Friday": {
       return "balloon";
     }
     default: {
