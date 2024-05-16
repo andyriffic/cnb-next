@@ -30,7 +30,7 @@ const GameSelectButton = styled.button`
 `;
 
 type Props = {
-  question: QueryUserQuestion<string | number>;
+  question: QueryUserQuestion<GameTypes>;
   questionsByPlayerId: QuestionsByPlayerId;
   onGameSelected: (gameType: GameTypes) => void;
 };
@@ -75,7 +75,7 @@ export const PopularGameSelector = ({
                 {everyoneAnswered ? <>{percentage}%</> : <>🙈</>}{" "}
               </PercentageText>
               <GameSelectButton
-                onClick={() => onGameSelected(answer.value as GameTypes)}
+                onClick={() => onGameSelected(answer.value)}
                 disabled={
                   !(everyoneAnswered && highestPercentage === percentage)
                 }

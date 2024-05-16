@@ -1,12 +1,20 @@
 import { useEffect, useRef, useState } from "react";
+import styled from "styled-components";
 import { GameTypes } from "../../../pages/join/[groupId]";
 import { useSocketIo } from "../../../providers/SocketIoProvider";
 import { QueryUserQuestion } from "../../../services/query-user/types";
 import { ThemedPrimaryButton } from "../../Atoms";
 import { DialogModal } from "../../DialogModal";
+import THEME from "../../../themes/types";
 import { PopularGameSelector } from "./PopularGameSelector";
 
-export const GAME_QUESTION: QueryUserQuestion = {
+const SuggestedText = styled.span`
+  //   color: ${THEME.colours.primaryText}};
+  text-transform: uppercase;
+  font-size: 0.8rem;
+`;
+
+export const GAME_QUESTION: QueryUserQuestion<GameTypes> = {
   id: "which-game-to-play",
   question: "What game should we play?",
   style: "normal",
@@ -55,6 +63,10 @@ export const AudienceGameSelection = ({ playerIds, onGameSelected }: Props) => {
       onClick={() => setShowModal(true)}
       disabled={playerIds.length < 3}
     >
+      <>
+        <SuggestedText>Wait until all players are ready 😅</SuggestedText>
+        <br />
+      </>
       Ask the audience 💬
     </ThemedPrimaryButton>
   );
