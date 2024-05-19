@@ -74,7 +74,7 @@ export type GasCard = {
   presses: number;
 };
 
-export type EffectType = "double";
+export type EffectType = "double" | "random-explode";
 
 export type GlobalEffect = {
   type: EffectType;

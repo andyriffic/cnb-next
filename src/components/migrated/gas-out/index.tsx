@@ -14,6 +14,7 @@ import { AnimatedText, SuperGuess } from "./SuperGuess";
 import { useGasSound } from "./hooks/useGasSound";
 import { TalkingHeadBalloon } from "./TalkingHeadBalloon";
 import { FinalShowdown } from "./FinalShowdown";
+import { BombDisposalChoice } from "./BombDisposalChoice";
 
 const Container = styled.div`
   margin: 50px auto;
@@ -68,7 +69,10 @@ const View = ({ gasGame, team }: Props) => {
   );
 
   useEffect(() => {
-    if (!!gasGame.winningPlayerId) {
+    if (
+      !!gasGame.winningPlayerId ||
+      gasGame.globalEffect?.type === "random-explode"
+    ) {
       return;
     }
 
@@ -131,6 +135,9 @@ const View = ({ gasGame, team }: Props) => {
         <GraveyardContainer>
           <Graveyard game={gasGame} />
         </GraveyardContainer>
+        {gasGame.globalEffect?.type === "random-explode" && (
+          <BombDisposalChoice game={gasGame} />
+        )}
       </Container>
     </SpectatorPageLayout>
   );

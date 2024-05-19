@@ -79,8 +79,8 @@ export function moveToNextAlivePlayerWithExtraCardRules(
     game,
     moveToNextAlivePlayer,
     applyCursesToCurrentPlayer,
-    applyBoomerangDeath,
-    applyBombDeath
+    applyBoomerangDeath
+    // applyBombDeath
   );
 }
 
@@ -511,20 +511,34 @@ export function press(game: GasGame): GasGame {
       ? false
       : selectWeightedRandomOneOf(explodedWeights);
 
-  return assignMvps(
-    assignWinner(
-      resetPlayerGuessesAndGivePoints(
-        takeOnePressFromCurrentPlayer(
-          exploded
-            ? explode(game, {
-                playerId: game.currentPlayer.id,
-                deathType: "balloon",
-              })
-            : game
-        )
-      )
-    )
+  return pipe(
+    exploded
+      ? explode(game, {
+          playerId: game.currentPlayer.id,
+          deathType: "balloon",
+        })
+      : game,
+    takeOnePressFromCurrentPlayer,
+    applyBombGlobalEffect,
+    resetPlayerGuessesAndGivePoints,
+    assignWinner,
+    assignMvps
   );
+
+  // return assignMvps(
+  //   assignWinner(
+  //     resetPlayerGuessesAndGivePoints(
+  //       takeOnePressFromCurrentPlayer(
+  //         exploded
+  //           ? explode(game, {
+  //               playerId: game.currentPlayer.id,
+  //               deathType: "balloon",
+  //             })
+  //           : game
+  //       )
+  //     )
+  //   )
+  // );
 }
 
 function explode(game: GasGame, killedBy: PlayerKilledBy | undefined): GasGame {
@@ -583,6 +597,25 @@ function takeOnePressFromCurrentPlayer(game: GasGame): GasGame {
       pressed: game.gasCloud.pressed + 1,
     },
   };
+}
+
+function applyBombGlobalEffect(game: GasGame): GasGame {
+  const currentPlayer = getPlayerOrThrow(game, game.currentPlayer.id);
+
+  if (
+    game.currentPlayer.pressesRemaining === 0 &&
+    game.currentPlayer.cardPlayed?.type === "bomb"
+  ) {
+    return {
+      ...game,
+      globalEffect: {
+        playedByPlayerId: currentPlayer.player.id,
+        type: "random-explode",
+      },
+    };
+  }
+
+  return game;
 }
 
 function resetPlayerGuessesAndGivePoints(game: GasGame): GasGame {
@@ -777,7 +810,7 @@ function getRandomCardType(
         ]
       : [
           { weight: 1, item: "skip" },
-          { weight: 1, item: "bomb" },
+          { weight: 10, item: "bomb" },
           { weight: 2, item: "risky" },
           { weight: 3, item: "reverse" },
           { weight: 14, item: "press" },
