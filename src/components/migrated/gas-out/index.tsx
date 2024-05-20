@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { useSocketIo } from "../../../providers/SocketIoProvider";
 import { GasGame } from "../../../services/migrated/gas-out/types";
@@ -60,13 +60,27 @@ type Props = {
 const View = ({ gasGame, team }: Props) => {
   useGasSound(gasGame);
   const {
-    gasGame: { nextPlayer },
+    gasGame: { nextPlayer, explodePlayer },
   } = useSocketIo();
 
   const nextPlayerForThisGame = useCallback(
     () => nextPlayer(gasGame.id),
     [gasGame, nextPlayer]
   );
+
+  const [bombVictimId, setBombVictimId] = useState<string | undefined>();
+
+  useEffect(() => {
+    if (bombVictimId) {
+      //TODO: explode current player and clear bomb victim
+      const timeout = setTimeout(() => {
+        explodePlayer(gasGame.id, bombVictimId);
+        setBombVictimId(undefined);
+      }, 2000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [bombVictimId, explodePlayer, gasGame.id]);
 
   useEffect(() => {
     if (
@@ -78,7 +92,7 @@ const View = ({ gasGame, team }: Props) => {
 
     if (
       (gasGame.currentPlayer.cardPlayed &&
-        gasGame.currentPlayer.pressesRemaining === 0) ||
+        gasGame.currentPlayer.pressesRemaining <= 0) ||
       gasGame.gasCloud.exploded
     ) {
       const timeout = gasGame.gasCloud.exploded ? 1500 : 1000;
@@ -117,6 +131,7 @@ const View = ({ gasGame, team }: Props) => {
             <PlayerCarousel
               game={gasGame}
               gameOver={!!gasGame.winningPlayerId}
+              forcePlayerId={bombVictimId}
             />
           </CarouselContainer>
         )}
@@ -136,7 +151,10 @@ const View = ({ gasGame, team }: Props) => {
           <Graveyard game={gasGame} />
         </GraveyardContainer>
         {gasGame.globalEffect?.type === "random-explode" && (
-          <BombDisposalChoice game={gasGame} />
+          <BombDisposalChoice
+            game={gasGame}
+            onPlayerSelected={(playerId) => setBombVictimId(playerId)}
+          />
         )}
       </Container>
     </SpectatorPageLayout>

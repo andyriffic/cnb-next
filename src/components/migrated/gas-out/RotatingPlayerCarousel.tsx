@@ -82,6 +82,7 @@ type Props = {
   game: GasGame;
   gameOver: boolean;
   transparent?: boolean;
+  forcePlayerId: string | undefined;
 };
 
 export const RotatingPlayerCarousel = ({
@@ -89,6 +90,7 @@ export const RotatingPlayerCarousel = ({
   displayIndex,
   gameOver,
   transparent = true,
+  forcePlayerId,
 }: Props) => {
   const theta = useMemo(
     () => (2 * Math.PI) / game.alivePlayersIds.length,
@@ -143,7 +145,7 @@ export const RotatingPlayerCarousel = ({
           transform: "translateX(-50%)",
         }}
       >
-        <ExplodingPlayer game={game} />
+        <ExplodingPlayer game={game} forcePlayerId={forcePlayerId} />
       </div>
     </Container>
   );

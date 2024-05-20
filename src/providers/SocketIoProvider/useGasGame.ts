@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import {
   CREATE_GAS_GAME,
+  EXPLODE_PLAYER,
   GAS_GAMES_UPDATE,
   GUESS_NEXT_PLAYER_OUT,
   NEXT_GAS_PAYER,
@@ -29,6 +30,7 @@ export type GasGameSocketService = {
   pressGas: (gameId: string) => void;
   nextPlayer: (gameId: string) => void;
   timeoutPlayer: (gameId: string, playerId: string) => void;
+  explodePlayer: (gameId: string, playerId: string) => void;
   playEffect: (gameId: string, effect: GlobalEffect) => void;
   guessNextOutPlayer: (
     gameId: string,
@@ -88,6 +90,13 @@ export function useGasGame(socket: Socket): GasGameSocketService {
     [socket]
   );
 
+  const explodePlayer = useCallback(
+    (gameId: string, playerId: string) => {
+      socket.emit(EXPLODE_PLAYER, gameId, playerId);
+    },
+    [socket]
+  );
+
   const playEffect = useCallback(
     (gameId: string, effect: GlobalEffect) => {
       socket.emit(PLAY_EFFECT, gameId, effect);
@@ -122,6 +131,7 @@ export function useGasGame(socket: Socket): GasGameSocketService {
     pressGas,
     nextPlayer,
     timeoutPlayer,
+    explodePlayer,
     playEffect,
     guessNextOutPlayer,
   };

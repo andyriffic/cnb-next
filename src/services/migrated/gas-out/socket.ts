@@ -7,6 +7,7 @@ import { gasGameToPoints } from "./points";
 import { GasGame, GasGameType, GlobalEffect } from "./types";
 import {
   createGame,
+  explodePlayer,
   makeNextPlayerOutGuess,
   moveToNextAlivePlayerWithExtraCardRules,
   playCard,
@@ -25,6 +26,7 @@ export const NEXT_GAS_PAYER = "NEXT_GAS_PAYER";
 export const GUESS_NEXT_PLAYER_OUT = "GUESS_NEXT_PLAYER_OUT";
 export const PLAYER_TIMED_OUT = "PLAYER_TIMED_OUT";
 export const PLAY_EFFECT = "PLAY_EFFECT";
+export const EXPLODE_PLAYER = "GAS_GAME_EXPLODE_PLAYER";
 
 function getGameOrThrow(allGames: GasGame[], gameId: string): GasGame {
   const game = allGames.find((g) => g.id === gameId);
@@ -77,6 +79,17 @@ export const initialiseGasOutSocket = (io: SocketIOServer, socket: Socket) => {
       io.emit(GAS_GAMES_UPDATE, activeGasGames);
     }
   );
+
+  socket.on(EXPLODE_PLAYER, (gameId: string, playerId: string) => {
+    console.log(EXPLODE_PLAYER, gameId, playerId);
+    const game = getGameOrThrow(activeGasGames, gameId);
+
+    const updatedGame = explodePlayer(game, playerId);
+    activeGasGames = updateGames(activeGasGames, updatedGame);
+
+    // console.log('UPDATED GAME', updatedGame);
+    io.emit(GAS_GAMES_UPDATE, activeGasGames);
+  });
 
   socket.on(PRESS_GAS, (gameId: string) => {
     console.log(PRESS_GAS, gameId);

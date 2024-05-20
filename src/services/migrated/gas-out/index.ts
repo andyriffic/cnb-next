@@ -329,7 +329,7 @@ export function playEffect(game: GasGame, effect: GlobalEffect): GasGame {
   );
 }
 
-function deactivateEffect(game: GasGame): GasGame {
+function deactivateGlobalEffect(game: GasGame): GasGame {
   return {
     ...game,
     globalEffect: undefined,
@@ -557,26 +557,47 @@ function explode(game: GasGame, killedBy: PlayerKilledBy | undefined): GasGame {
     points: game.pointsMap[deadPlayerIds.length - 1]!,
   };
 
-  return setSuperGuessBonus(
-    assignMvps(
-      assignWinner(
-        resetPlayerGuessesAndGivePoints({
-          ...game,
-          allPlayers: updatePlayerInList(game.allPlayers, updatedCurrentPlayer),
-          alivePlayersIds,
-          deadPlayerIds,
-          currentPlayer: {
-            ...game.currentPlayer,
-            pressesRemaining: game.currentPlayer.pressesRemaining - 1,
-          },
-          gasCloud: {
-            ...game.gasCloud,
-            exploded: true,
-          },
-        })
-      )
-    )
+  return pipe(
+    resetPlayerGuessesAndGivePoints({
+      ...game,
+      allPlayers: updatePlayerInList(game.allPlayers, updatedCurrentPlayer),
+      alivePlayersIds,
+      deadPlayerIds,
+      currentPlayer: {
+        ...game.currentPlayer,
+        pressesRemaining: game.currentPlayer.pressesRemaining - 1,
+      },
+      gasCloud: {
+        ...game.gasCloud,
+        exploded: true,
+      },
+    }),
+    assignWinner,
+    assignMvps,
+    setSuperGuessBonus,
+    deactivateGlobalEffect
   );
+
+  // return setSuperGuessBonus(
+  //   assignMvps(
+  //     assignWinner(
+  //       resetPlayerGuessesAndGivePoints({
+  //         ...game,
+  //         allPlayers: updatePlayerInList(game.allPlayers, updatedCurrentPlayer),
+  //         alivePlayersIds,
+  //         deadPlayerIds,
+  //         currentPlayer: {
+  //           ...game.currentPlayer,
+  //           pressesRemaining: game.currentPlayer.pressesRemaining - 1,
+  //         },
+  //         gasCloud: {
+  //           ...game.gasCloud,
+  //           exploded: true,
+  //         },
+  //       })
+  //     )
+  //   )
+  // );
 }
 
 function takeOnePressFromCurrentPlayer(game: GasGame): GasGame {
@@ -600,6 +621,10 @@ function takeOnePressFromCurrentPlayer(game: GasGame): GasGame {
 }
 
 function applyBombGlobalEffect(game: GasGame): GasGame {
+  if (game.alivePlayersIds.length <= 2) {
+    return game;
+  }
+
   const currentPlayer = getPlayerOrThrow(game, game.currentPlayer.id);
 
   if (
@@ -697,6 +722,20 @@ export function playCard(
       card.type === "reverse" ? getReverseDirection(game) : game.direction,
     moveHistory: addCardToHistory(game.moveHistory, playerId, card),
   };
+}
+
+export function explodePlayer(game: GasGame, playerId: string): GasGame {
+  const updatedGame: GasGame = {
+    ...game,
+    currentPlayer: {
+      id: playerId,
+      pressesRemaining: 0,
+    },
+  };
+  return explode(updatedGame, {
+    playerId: game.currentPlayer.id,
+    deathType: "bomb",
+  });
 }
 
 function getCursedCard(card: GasCard, curse: CurseType | undefined): GasCard {

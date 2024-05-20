@@ -36,10 +36,6 @@ const VictimItemText = styled.div`
   font-size: 2rem;
 `;
 
-const GraveyardPlayerItem = styled.div`
-  animation: ${slideInUpAnimation} 600ms linear 1000ms both;
-`;
-
 type Props = {
   game: GasGame;
   onPlayerSelected: (playerId: string) => void;
@@ -51,7 +47,7 @@ export function BombDisposalChoice({
   onPlayerSelected,
 }: Props): JSX.Element | null {
   const { playerQuery } = useSocketIo();
-  const [revealVictims, setRevealVictims] = useState(false);
+  const [showModal, setShowModal] = useState(true);
   const [victimIds] = useState(
     shuffleArray(
       game.alivePlayersIds.filter(
@@ -87,7 +83,7 @@ export function BombDisposalChoice({
 
     const selectedAnswerIndex = playersCurrentQuestion.selectedOptionIndex;
 
-    if (!selectedAnswerIndex) {
+    if (selectedAnswerIndex === undefined) {
       return;
     }
 
@@ -99,9 +95,16 @@ export function BombDisposalChoice({
   ]);
 
   useEffect(() => {
-    if (chosenVictim) {
-      // onPlayerSelected(chosenVictim);
+    if (!chosenVictim) {
+      return;
     }
+
+    const timeout = setTimeout(() => {
+      onPlayerSelected(chosenVictim);
+      setShowModal(false);
+    }, 1000);
+
+    return () => clearTimeout(timeout);
   }, [chosenVictim, onPlayerSelected]);
 
   if (game.globalEffect?.type !== "random-explode") {
@@ -109,24 +112,27 @@ export function BombDisposalChoice({
   }
 
   return (
-    <DialogModal show={true} options={[]}>
+    <DialogModal show={showModal} options={[]}>
       <SmallHeading style={{ textAlign: "center" }}>
-        Choose your victim
+        Choose your victim ({chosenVictim})
       </SmallHeading>
       <VictimList>
-        {victimIds.map((playerId, i) => (
-          <VictimItem key={playerId} title={playerId}>
-            {playerId === chosenVictim ? (
-              <PlayerAvatar playerId={playerId} size="thumbnail" />
-            ) : (
-              <>
-                {" "}
-                💣
-                <VictimItemText>{i + 1}</VictimItemText>
-              </>
-            )}
-          </VictimItem>
-        ))}
+        {victimIds.map((playerId, i) => {
+          const isChosen = playerId === chosenVictim;
+          const showBombNumbers = chosenVictim === undefined;
+          return (
+            <VictimItem key={playerId} title={playerId}>
+              {isChosen ? (
+                <PlayerAvatar playerId={playerId} size="thumbnail" />
+              ) : (
+                <>
+                  💣
+                  {showBombNumbers && <VictimItemText>{i + 1}</VictimItemText>}
+                </>
+              )}
+            </VictimItem>
+          );
+        })}
       </VictimList>
     </DialogModal>
   );

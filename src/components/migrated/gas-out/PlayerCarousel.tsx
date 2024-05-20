@@ -8,9 +8,14 @@ const PlayerListContainer = styled.div``;
 type Props = {
   game: GasGame;
   gameOver: boolean;
+  forcePlayerId: string | undefined;
 };
 
-export function PlayerCarousel({ game, gameOver }: Props): JSX.Element {
+export function PlayerCarousel({
+  game,
+  gameOver,
+  forcePlayerId,
+}: Props): JSX.Element {
   const indexRef = useRef(
     game.alivePlayersIds.findIndex((pid) => pid === game.currentPlayer.id)
   );
@@ -20,6 +25,10 @@ export function PlayerCarousel({ game, gameOver }: Props): JSX.Element {
     // if (game.currentPlayer.pressesRemaining > 0) {
     //   return indexRef.current;
     // }
+
+    if (forcePlayerId) {
+      return game.alivePlayersIds.findIndex((pid) => pid === forcePlayerId);
+    }
 
     if (lastPlayerIdRef.current === game.currentPlayer.id) {
       return indexRef.current;
@@ -36,7 +45,7 @@ export function PlayerCarousel({ game, gameOver }: Props): JSX.Element {
     lastPlayerIdRef.current = game.currentPlayer.id;
 
     return indexRef.current;
-  }, [game]);
+  }, [game, forcePlayerId]);
 
   return (
     <PlayerListContainer>
@@ -45,6 +54,7 @@ export function PlayerCarousel({ game, gameOver }: Props): JSX.Element {
         gameOver={gameOver}
         displayIndex={displayIndex}
         transparent={true}
+        forcePlayerId={forcePlayerId}
       />
     </PlayerListContainer>
   );

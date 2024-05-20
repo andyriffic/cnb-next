@@ -34,14 +34,15 @@ const Boomerang = styled.div`
 
 type Props = {
   game: GasGame;
+  forcePlayerId: string | undefined;
 };
 
-export function ExplodingPlayer({ game }: Props): JSX.Element {
+export function ExplodingPlayer({ game, forcePlayerId }: Props): JSX.Element {
   const { play } = useSound();
-  const currentPlayer = useMemo(
-    () => game.allPlayers.find((p) => p.player.id === game.currentPlayer.id)!,
-    [game]
-  );
+  const currentPlayer = useMemo(() => {
+    const lookingForPlayerId = forcePlayerId || game.currentPlayer.id;
+    return game.allPlayers.find((p) => p.player.id === lookingForPlayerId)!;
+  }, [forcePlayerId, game.allPlayers, game.currentPlayer.id]);
 
   useEffect(() => {
     if (currentPlayer.killedBy?.deathType === "boomerang") {
