@@ -849,7 +849,7 @@ function getRandomCardType(
         ]
       : [
           { weight: 1, item: "skip" },
-          { weight: 10, item: "bomb" },
+          { weight: 3, item: "bomb" },
           { weight: 2, item: "risky" },
           { weight: 3, item: "reverse" },
           { weight: 14, item: "press" },
