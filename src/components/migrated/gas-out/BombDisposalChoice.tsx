@@ -1,15 +1,13 @@
-import styled from "styled-components";
 import { useEffect, useMemo, useState } from "react";
+import styled from "styled-components";
+import { useSocketIo } from "../../../providers/SocketIoProvider";
 import { GasGame } from "../../../services/migrated/gas-out/types";
+import { QueryUserQuestion } from "../../../services/query-user/types";
+import THEME from "../../../themes/types";
+import { shuffleArray } from "../../../utils/random";
 import { SmallHeading } from "../../Atoms";
 import { DialogModal } from "../../DialogModal";
-import { slideInUpAnimation } from "../../animations/keyframes/slideInBlurredTop";
-import { QueryUserQuestion } from "../../../services/query-user/types";
-import { shuffleArray } from "../../../utils/random";
-import THEME from "../../../themes/types";
-import { useSocketIo } from "../../../providers/SocketIoProvider";
 import { useDoOnce } from "../../hooks/useDoOnce";
-import { PlayerAvatar } from "../../PlayerAvatar";
 
 const VictimList = styled.div`
   display: flex;
@@ -114,7 +112,7 @@ export function BombDisposalChoice({
   return (
     <DialogModal show={showModal} options={[]}>
       <SmallHeading style={{ textAlign: "center" }}>
-        Choose your victim ({chosenVictim})
+        Choose your victim
       </SmallHeading>
       <VictimList>
         {victimIds.map((playerId, i) => {
@@ -122,14 +120,10 @@ export function BombDisposalChoice({
           const showBombNumbers = chosenVictim === undefined;
           return (
             <VictimItem key={playerId} title={playerId}>
-              {isChosen ? (
-                <PlayerAvatar playerId={playerId} size="thumbnail" />
-              ) : (
-                <>
-                  💣
-                  {showBombNumbers && <VictimItemText>{i + 1}</VictimItemText>}
-                </>
-              )}
+              <>
+                {isChosen ? "💥" : "💣"}
+                {showBombNumbers && <VictimItemText>{i + 1}</VictimItemText>}
+              </>
             </VictimItem>
           );
         })}
