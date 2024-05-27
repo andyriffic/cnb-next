@@ -10,9 +10,12 @@ export const STARMAP_HEIGHT = 9;
 export const STARMAP_CHART: SpaceRaceStarmap = {
   entities: [
     createEntity("home-base", { x: 0, y: 4 }, <>🛰️</>),
-    createEntity("home-base", { x: 4, y: 3 }, <>🪐</>),
-    createEntity("home-base", { x: 16, y: 7 }, <>☄️</>),
-    createEntity("home-base", { x: 10, y: 4 }, <>👾</>),
+    createEntity("asteroid", { x: 4, y: 3 }, <>🪐</>),
+    createEntity("asteroid", { x: 5, y: 4 }, <>🪨</>),
+    createEntity("asteroid", { x: 5, y: 1 }, <>🪨</>),
+    createEntity("asteroid", { x: 5, y: 7 }, <>🪨</>),
+    createEntity("asteroid", { x: 5, y: 8 }, <>🪨</>),
+    createEntity("asteroid", { x: 10, y: 4 }, <>👾</>),
   ],
 };
 

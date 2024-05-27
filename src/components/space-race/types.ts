@@ -1,5 +1,9 @@
-export type SpaceRaceGame = {};
+export type SpaceRaceGame = {
+  starmap: SpaceRaceStarmap;
+  spacePlayers: SpacePlayersById;
+};
 
+export type SpacePlayersById = { [id: string]: SpaceRacePlayer };
 export type SpaceRaceEntityType =
   | "home-base"
   | "planet"
@@ -16,16 +20,18 @@ export type SpaceRaceStarmap = {
   entities: SpaceRaceEntity[];
 };
 
+export type PlannedCourse = {
+  up: number;
+  right: number;
+  lockedIn: boolean;
+};
+
 export type SpaceRacePlayer = {
   id: string;
   name: string;
   courseMovesRemaining: number;
   currentPosition: SpaceRaceCoordinates;
-  plannedCourse: {
-    up: number;
-    down: number;
-    right: number;
-  };
+  plannedCourse: PlannedCourse;
 };
 
 export type SpaceRaceCoordinates = {

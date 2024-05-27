@@ -18,7 +18,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     ? allPlayers
         // .filter((p) => !p.details?.retired)
         .filter((p) => p.id !== SETTINGS_PLAYER_ID)
-        .filter((p) => !!p.details?.zombieRun)
+        .filter((p) => ["andy", "alex", "albert"].includes(p.id)) //TODO: let other players join
     : [];
 
   const settingsPlayer =

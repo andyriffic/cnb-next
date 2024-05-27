@@ -10,10 +10,16 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 `;
 
 const PlayerShipContainer = styled.div`
   transform: rotate(45deg);
+`;
+
+const PlayerStatusIndicator = styled.div`
+  font-size: 1rem;
+  position: absolute;
 `;
 
 type Props = {
@@ -24,6 +30,15 @@ export const PlayerShip = ({ player }: Props) => {
   return (
     <Container>
       <PlayerShipContainer>🚀</PlayerShipContainer>
+      <PlayerStatusIndicator>
+        {player.plannedCourse.lockedIn ? (
+          <span
+            style={{ backgroundColor: "black" }}
+          >{`${player.plannedCourse.up},${player.plannedCourse.right}`}</span>
+        ) : (
+          "❌"
+        )}
+      </PlayerStatusIndicator>
     </Container>
   );
 };

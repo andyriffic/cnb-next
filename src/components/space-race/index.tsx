@@ -1,28 +1,36 @@
+import { useCallback } from "react";
 import { Player } from "../../types/Player";
-import { Heading } from "../Atoms";
 import { SpectatorPageLayout } from "../SpectatorPageLayout";
+import { selectRandomOneOf } from "../../utils/random";
 import { StarMap } from "./Starmap";
-import { STARMAP_CHART } from "./constants";
-import { SpaceRacePlayer } from "./types";
-
-const MOCK_PLAYERS: SpaceRacePlayer[] = [
-  {
-    id: "1",
-    name: "Player 1",
-    currentPosition: { x: 2, y: 3 },
-    courseMovesRemaining: 0,
-    plannedCourse: { up: 0, down: 0, right: 0 },
-  },
-];
+import { useSpaceRace } from "./useSpaceRace";
 
 type Props = {
   players: Player[];
 };
 
 const View = ({ players }: Props) => {
+  const spaceRace = useSpaceRace(players);
+
+  console.log("Space race state", spaceRace.spaceRaceGame);
+
   return (
     <SpectatorPageLayout scrollable={false}>
-      <StarMap starmap={STARMAP_CHART} players={MOCK_PLAYERS} />
+      <StarMap
+        starmap={spaceRace.spaceRaceGame.starmap}
+        players={spaceRace.spaceRaceGame.spacePlayers}
+      />
+      <div style={{ position: "absolute" }}>
+        <button onClick={spaceRace.randomlyPlotAllPlayerCourses}>
+          Lock in course
+        </button>
+        <button onClick={spaceRace.moveAllPlayersVertically}>
+          Move vertially
+        </button>
+        <button onClick={spaceRace.moveAllPlayersHorizontally}>
+          Move horizontally
+        </button>
+      </div>
     </SpectatorPageLayout>
   );
 };

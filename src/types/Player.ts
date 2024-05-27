@@ -16,6 +16,7 @@ export type PlayerDetails = {
   pacmanDetails?: PacmanDetails;
   zombieRun?: ZombieRunDetails;
   achievements?: PlayerAchievements;
+  spaceRace?: SpaceRaceDetails;
 };
 
 export type PacmanDetails = {
@@ -28,6 +29,12 @@ export type ZombieRunDetails = {
   totalMetresRun: number;
   isZombie: boolean;
   finishPosition?: number;
+  // playersBitten: string[];
+};
+export type SpaceRaceDetails = {
+  xCoordinate: number;
+  yCoordinate: number;
+  movesRemaining: number;
   // playersBitten: string[];
 };
 

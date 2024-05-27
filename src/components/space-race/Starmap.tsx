@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import {
+  SpacePlayersById,
   SpaceRaceCoordinates,
   SpaceRacePlayer,
   SpaceRaceStarmap,
@@ -23,11 +24,12 @@ const Space = styled.div`
 const SpaceEntityContainer = styled.span`
   display: inline-block;
   position: absolute;
+  transition: top 0.5s, left 0.5s;
 `;
 
 type Props = {
   starmap: SpaceRaceStarmap;
-  players: SpaceRacePlayer[];
+  players: SpacePlayersById;
 };
 
 export const StarMap = ({ starmap, players }: Props) => {
@@ -38,14 +40,18 @@ export const StarMap = ({ starmap, players }: Props) => {
           <SpaceEntity entity={e} />
         </SpaceEntityContainer>
       ))}
-      {players.map((p, i) => (
-        <SpaceEntityContainer
-          key={i}
-          style={getStarmapCssPosition(p.currentPosition)}
-        >
-          <PlayerShip player={p} />
-        </SpaceEntityContainer>
-      ))}
+      {Object.keys(players).map((playerId, i) => {
+        const player = players[playerId];
+        if (!player) return null;
+        return (
+          <SpaceEntityContainer
+            key={i}
+            style={getStarmapCssPosition(player.currentPosition)}
+          >
+            <PlayerShip player={player} />
+          </SpaceEntityContainer>
+        );
+      })}
     </Space>
   );
 };
