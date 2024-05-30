@@ -48,7 +48,7 @@ const BittenIndicator = styled.div`
   text-align: center;
   padding: 0.2rem;
   font-size: 1rem;
-  animation: ${fadeInBottom} 2s ease-in-out 0.5s 1 both;
+  animation: ${fadeInBottom} 2s ease-in-out 2s 1 both;
   border-radius: 0.5rem;
 `;
 
