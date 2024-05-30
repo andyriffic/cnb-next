@@ -65,14 +65,14 @@ const View = ({ playerId, gasGameId }: Props) => {
               😭
             </PlayerStatus>
           )}
-          {/* {playersTurn &&
+          {playersTurn &&
             !game.currentPlayer.cardPlayed &&
             !!gasPlayer?.curse && (
               <PlayerGasTimeoutTimer
                 timeOutMilliseconds={3000}
                 onTimedOut={timeOut}
               />
-            )} */}
+            )}
         </>
       )}
       {game.currentPlayer.cardPlayed &&
