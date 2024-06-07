@@ -6,6 +6,6 @@ const FancyLink = styled(Link)``;
 
 export function LinkToMiniGame() {
   return (
-    <FancyLink href={getWhosThatUrl("/zombie-run")}>To Minigame! 🍒</FancyLink>
+    <FancyLink href={getWhosThatUrl("/pacman")}>To Minigame! 🍒</FancyLink>
   );
 }

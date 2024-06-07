@@ -56,6 +56,18 @@ export const deletePlayerZombieDetails = (playerId: string): Promise<void> => {
       });
   });
 };
+export const deletePlayerPacmanDetails = (playerId: string): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    fetch(`/api/player/${playerId}/delete/pacman`, {
+      method: "DELETE",
+    })
+      .then(() => resolve())
+      .catch((reason) => {
+        console.log(reason);
+        reject(reason);
+      });
+  });
+};
 
 export const savePlayerGameMovesFetch = (
   gameId: string,

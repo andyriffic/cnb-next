@@ -8,6 +8,7 @@ import {
   getPlayerZombieRunDetails,
 } from "../../types/Player";
 import {
+  deletePlayerPacmanDetails,
   deletePlayerZombieDetails,
   updatePlayerDetails,
 } from "../../utils/api";
@@ -128,7 +129,20 @@ export const AdminPlayerEdit = ({ player, onClose }: Props) => {
             />
           </fieldset>
           <hr />
-          <h6 style={{ fontWeight: "bold" }}>Pacman</h6>
+          <EvenlySpaced>
+            <h6 style={{ fontWeight: "bold" }}>Pacman</h6>
+            <button
+              type="button"
+              style={{ backgroundColor: "red" }}
+              onClick={() => {
+                deletePlayerPacmanDetails(playerCopy.id).then(() => {
+                  onClose(true);
+                });
+              }}
+            >
+              Delete Pacman details
+            </button>
+          </EvenlySpaced>
           <AdminPlayerEditBooleanValue
             label="Pacman"
             id="pacman_player"

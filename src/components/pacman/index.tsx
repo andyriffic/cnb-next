@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import styled from "styled-components";
 import { useMemo, useRef, useState } from "react";
+import Image from "next/image";
 import { Player } from "../../types/Player";
 import { isClientSideFeatureEnabled } from "../../utils/feature";
 import { Card, PrimaryButton } from "../Atoms";
@@ -15,9 +16,17 @@ import { usePlayerAutoMove } from "./hooks/usePlayerMoveTick";
 import { useSyncData } from "./hooks/useSyncData";
 import { WinningPlayer } from "./WinningPlayer";
 import { PacmanMovesInfo } from "./PacmanMovesInfo";
+import doublePointsImage from "./double-points.webp";
 
 const Container = styled.div`
   margin: 0 auto;
+`;
+
+const DoublePoints = styled.div`
+  position: absolute;
+  color: red;
+  top: 50%;
+  left: 42%;
 `;
 
 type Props = {
@@ -84,6 +93,9 @@ const View = ({ players, pacmanStartingIndex }: Props) => {
           )}
         />
       )}
+      <DoublePoints>
+        <Image src={doublePointsImage} height={280} alt="Double Points!" />
+      </DoublePoints>
     </SpectatorPageLayout>
   );
 };
