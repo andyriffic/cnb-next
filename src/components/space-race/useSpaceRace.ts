@@ -1,11 +1,13 @@
 import { useCallback, useMemo, useState } from "react";
 import { Player } from "../../types/Player";
 import { selectRandomOneOf } from "../../utils/random";
+import { clamp } from "../../utils/number";
 import { STARMAP_CHART, STARMAP_HEIGHT } from "./constants";
 import {
   PlannedCourse,
   SpacePlayersById,
   SpaceRaceCoordinates,
+  SpaceRaceEntity,
   SpaceRaceGame,
   SpaceRacePlayer,
 } from "./types";
@@ -136,14 +138,13 @@ function createSpaceRaceGame(players: Player[]): SpaceRaceGame {
           [playerId]: {
             id: player.id,
             name: player.name,
-            courseMovesRemaining: 5,
+            courseMovesRemaining: 7,
             currentPosition: {
               x: 0,
-              y: selectRandomOneOf([0, 1, 2, 3, 4, 5, 6, 7, 8]),
+              y: 1, //selectRandomOneOf([0, 1, 2, 3, 4, 5, 6, 7, 8]),
             },
             plannedCourse: {
               up: 0,
-              down: 0,
               right: 0,
               lockedIn: false,
             },
@@ -166,10 +167,11 @@ function assignPlannedCourse(
 ): SpacePlayersById {
   const player = spacePlayers[playerId];
   if (!player) return spacePlayers;
+  if (player.courseMovesRemaining < 1) return spacePlayers;
 
   const plannedCourse: PlannedCourse = {
     up,
-    right: player.courseMovesRemaining - Math.abs(up),
+    right: Math.max(player.courseMovesRemaining - Math.abs(up), 0),
     lockedIn: true,
   };
 
@@ -193,22 +195,61 @@ function updatePlayerVerticalPosition(
 
   const newPosition: SpaceRaceCoordinates = {
     x: player.currentPosition.x,
-    y: Math.max(
-      Math.min(
-        player.currentPosition.y + player.plannedCourse.up,
-        STARMAP_HEIGHT - 1
-      ),
-      0
+    y: clamp(
+      player.currentPosition.y + player.plannedCourse.up,
+      0,
+      STARMAP_HEIGHT - 1
     ),
   };
+
+  const newPlannedCourse = {
+    ...player.plannedCourse,
+    up: 0,
+    lockedIn: true,
+  };
+
+  console.log(
+    "Moving player vertically",
+    player,
+    player.currentPosition,
+    newPosition
+  );
 
   return {
     ...spacePlayers,
     [playerId]: {
       ...player,
       currentPosition: newPosition,
+      plannedCourse: newPlannedCourse,
     },
   };
+}
+
+function setPlayerCoordinates(
+  player: SpaceRacePlayer,
+  coordinates: SpaceRaceCoordinates
+): SpaceRacePlayer {
+  return {
+    ...player,
+    currentPosition: coordinates,
+  };
+}
+
+function getHorizontalEntityBetween(
+  currentPosition: SpaceRaceCoordinates,
+  horizontalDistance: number
+): SpaceRaceEntity | null {
+  for (let i = currentPosition.x; i <= horizontalDistance; i++) {
+    const entity = STARMAP_CHART.entities.find(
+      (entity) =>
+        entity.position.x === i && entity.position.y === currentPosition.y
+    );
+    if (entity) {
+      return entity;
+    }
+  }
+
+  return null;
 }
 
 function updatePlayerHorizontalPosition(
@@ -219,16 +260,29 @@ function updatePlayerHorizontalPosition(
   if (!player) return spacePlayers;
   if (!player.plannedCourse.lockedIn) return spacePlayers;
 
-  const newPosition: SpaceRaceCoordinates = {
-    x: player.currentPosition.x + Math.abs(player.plannedCourse.right),
-    y: player.currentPosition.y,
+  const hitEntity = getHorizontalEntityBetween(
+    player.currentPosition,
+    player.plannedCourse.right
+  );
+
+  const newPosition: SpaceRaceCoordinates = hitEntity
+    ? { x: hitEntity.position.x - 1, y: player.currentPosition.y }
+    : {
+        x: player.currentPosition.x + Math.abs(player.plannedCourse.right),
+        y: player.currentPosition.y,
+      };
+
+  const newPlannedCourse = {
+    ...player.plannedCourse,
+    right: 0,
+    lockedIn: true,
   };
 
   return {
     ...spacePlayers,
     [playerId]: {
-      ...player,
-      currentPosition: newPosition,
+      ...setPlayerCoordinates(player, newPosition),
+      plannedCourse: newPlannedCourse,
     },
   };
 }

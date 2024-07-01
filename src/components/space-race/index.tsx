@@ -4,6 +4,7 @@ import { SpectatorPageLayout } from "../SpectatorPageLayout";
 import { selectRandomOneOf } from "../../utils/random";
 import { StarMap } from "./Starmap";
 import { useSpaceRace } from "./useSpaceRace";
+import { DebugSpaceRace } from "./DebugSpaceRace";
 
 type Props = {
   players: Player[];
@@ -20,7 +21,7 @@ const View = ({ players }: Props) => {
         starmap={spaceRace.spaceRaceGame.starmap}
         players={spaceRace.spaceRaceGame.spacePlayers}
       />
-      <div style={{ position: "absolute" }}>
+      <div style={{ position: "absolute", right: 0 }}>
         <button onClick={spaceRace.randomlyPlotAllPlayerCourses}>
           Lock in course
         </button>
@@ -30,6 +31,7 @@ const View = ({ players }: Props) => {
         <button onClick={spaceRace.moveAllPlayersHorizontally}>
           Move horizontally
         </button>
+        <DebugSpaceRace useSpaceRace={spaceRace} />
       </div>
     </SpectatorPageLayout>
   );

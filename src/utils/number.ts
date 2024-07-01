@@ -6,6 +6,10 @@ export function isNumberInRange(
   return num >= min && num <= max;
 }
 
+export function clamp(num: number, min: number, max: number): number {
+  return Math.min(Math.max(num, min), max);
+}
+
 // Median = the middle value when the array is sorted
 export function calculateMedian(numbers: number[]): number | null {
   if (numbers.length === 0) {
