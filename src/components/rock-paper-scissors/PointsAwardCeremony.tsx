@@ -5,17 +5,15 @@ import {
   RockPaperScissorsPoints,
   toGameMoves,
 } from "../../services/rock-paper-scissors/points";
+import THEME from "../../themes/types";
 import { savePlayerGameMovesFetch } from "../../utils/api";
-import { Appear } from "../animations/Appear";
 import { Heading, SubHeading } from "../Atoms";
-import { FeatureValue } from "../FeatureValue";
-import { useDoOnce } from "../hooks/useDoOnce";
-import { useSound } from "../hooks/useSound";
 import { CenterSpaced } from "../Layouts";
 import { LinkToMiniGame } from "../LinkToMiniGame";
 import { PlayerAvatar } from "../PlayerAvatar";
-import THEME from "../../themes/types";
-import { SentimentSurvey } from "../sentiment-survey";
+import { Appear } from "../animations/Appear";
+import { useDoOnce } from "../hooks/useDoOnce";
+import { useSound } from "../hooks/useSound";
 import { WinningConditions } from "./hooks/useGameWinningConditions";
 
 enum STORYBOARD {
@@ -153,17 +151,6 @@ export const PointsAwardCeremony = ({
             <LinkToMiniGame />
           </CenterSpaced>
         </Appear>
-      )}
-      {currentStoryboard >= STORYBOARD.SHOW_MINIGAME_CTA && (
-        <SentimentSurvey
-          playerIds={[
-            ...(gamePoints.outrightWinner
-              ? [gamePoints.outrightWinner.playerId]
-              : []),
-            ...gamePoints.middleOfThePack.map((p) => p.playerId),
-            ...gamePoints.zeroPointLosers.map((p) => p.playerId),
-          ]}
-        />
       )}
     </Container>
   );
