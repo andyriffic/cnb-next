@@ -2,22 +2,21 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { usePlayerNames } from "../../providers/PlayerNamesProvider";
 import { NUMBER_CRUNCH_BUCKET_RANGES } from "../../services/number-crunch";
+import { numberCrunchGameToPoints } from "../../services/number-crunch/points";
 import {
   NumberCrunchFinalResultsView,
   NumberCrunchGameView,
 } from "../../services/number-crunch/types";
 import THEME from "../../themes/types";
+import { savePlayerGameMovesFetch } from "../../utils/api";
 import { FeatureHeading, SmallHeading } from "../Atoms";
 import { CenterSpaced } from "../Layouts";
-import { PlayerAvatar } from "../PlayerAvatar";
-import { Appear } from "../animations/Appear";
-import { useSound } from "../hooks/useSound";
-import { useDoOnce } from "../hooks/useDoOnce";
-import { numberCrunchGameToPoints } from "../../services/number-crunch/points";
-import { savePlayerGameMovesFetch } from "../../utils/api";
 import { LinkToMiniGame } from "../LinkToMiniGame";
+import { PlayerAvatar } from "../PlayerAvatar";
 import { Positioned } from "../Positioned";
-import { SentimentSurvey } from "../sentiment-survey";
+import { Appear } from "../animations/Appear";
+import { useDoOnce } from "../hooks/useDoOnce";
+import { useSound } from "../hooks/useSound";
 
 const FinalGuessLine = styled.div`
   width: 100%;
@@ -198,9 +197,6 @@ export const FinalResults = ({ gameView, finalResults }: Props) => {
         <Positioned horizontalAlign={{ align: "center", bottomPercent: 20 }}>
           <LinkToMiniGame />
         </Positioned>
-      )}
-      {revealState >= RevealState.SHOW_POINTS_LEGEND && (
-        <SentimentSurvey playerIds={gameView.players.map((p) => p.id)} />
       )}
     </CenterSpaced>
   );
