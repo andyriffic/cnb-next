@@ -14,6 +14,7 @@ const REGULAR_PLAYER_NAMES = [
   "Andy",
   "Nina",
   "Cathy",
+  "Callum",
   "Kathleen",
   "Brett",
   "Chris",
