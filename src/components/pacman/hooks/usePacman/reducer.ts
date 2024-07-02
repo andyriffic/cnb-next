@@ -8,6 +8,7 @@ import {
 } from "../../types";
 
 export const MIN_PACMAN_MOVES = 25;
+const TURNS_IN_JAIL = 2;
 
 export type GameUiStatus =
   | "loading"
@@ -358,7 +359,7 @@ function sendPlayersToJail(state: PacManUiState): PacManUiState {
         playerCoords.y === pacManCoords.y
       );
     })
-    .map((p) => ({ ...p, jailTurnsCount: 3 }))
+    .map((p) => ({ ...p, jailTurnsCount: TURNS_IN_JAIL }))
     .map((p) => {
       return p.powerPill ? { ...p, jailTurnsCount: 0, powerPill: false } : p;
     });
