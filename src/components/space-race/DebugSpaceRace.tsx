@@ -33,6 +33,16 @@ export const DebugSpaceRace = ({ useSpaceRace }: Props) => {
             >
               Horizontal
             </button>
+            <button
+              onClick={() => {
+                useSpaceRace.movePlayerVertically(playerId);
+                setTimeout(() => {
+                  useSpaceRace.movePlayerHorizontally(playerId);
+                }, 1000);
+              }}
+            >
+              Make it so...
+            </button>
           </div>
         </div>
       ))}

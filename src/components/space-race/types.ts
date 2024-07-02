@@ -24,6 +24,8 @@ export type PlannedCourse = {
   up: number;
   right: number;
   lockedIn: boolean;
+  movedVertically: boolean;
+  movedHorizontally: boolean;
 };
 
 export type SpaceRacePlayer = {

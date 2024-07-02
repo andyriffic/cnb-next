@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Player } from "../../types/Player";
 import { selectRandomOneOf } from "../../utils/random";
 import { clamp } from "../../utils/number";
@@ -57,6 +57,31 @@ export const useSpaceRace = (players: Player[]): UseSpaceRace => {
     },
     [game]
   );
+
+  useEffect(() => {
+    const playersToMoveVertically = Object.values(game.spacePlayers).filter(
+      (p) => p.plannedCourse.lockedIn && !p.plannedCourse.movedVertically
+    );
+
+    if (playersToMoveVertically.length > 0) {
+      const playerToMove = playersToMoveVertically[0]!;
+      movePlayerVertically(playerToMove.id);
+    }
+  }, [game.spacePlayers, movePlayerVertically]);
+
+  useEffect(() => {
+    const playersToMoveHorizontally = Object.values(game.spacePlayers).filter(
+      (p) =>
+        p.plannedCourse.lockedIn &&
+        p.plannedCourse.movedVertically &&
+        !p.plannedCourse.movedHorizontally
+    );
+
+    if (playersToMoveHorizontally.length > 0) {
+      const playerToMove = playersToMoveHorizontally[0]!;
+      movePlayerHorizontally(playerToMove.id);
+    }
+  }, [game.spacePlayers, movePlayerHorizontally]);
 
   const randomlyPlotAllPlayerCourses = useCallback(() => {
     let gameCopy: SpaceRaceGame = {
@@ -147,6 +172,8 @@ function createSpaceRaceGame(players: Player[]): SpaceRaceGame {
               up: 0,
               right: 0,
               lockedIn: false,
+              movedVertically: false,
+              movedHorizontally: false,
             },
           },
         };
@@ -173,6 +200,8 @@ function assignPlannedCourse(
     up,
     right: Math.max(player.courseMovesRemaining - Math.abs(up), 0),
     lockedIn: true,
+    movedVertically: false,
+    movedHorizontally: false,
   };
 
   return {
@@ -206,14 +235,8 @@ function updatePlayerVerticalPosition(
     ...player.plannedCourse,
     up: 0,
     lockedIn: true,
+    movedVertically: true,
   };
-
-  console.log(
-    "Moving player vertically",
-    player,
-    player.currentPosition,
-    newPosition
-  );
 
   return {
     ...spacePlayers,
@@ -276,6 +299,7 @@ function updatePlayerHorizontalPosition(
     ...player.plannedCourse,
     right: 0,
     lockedIn: true,
+    movedHorizontally: true,
   };
 
   return {
