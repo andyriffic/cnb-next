@@ -79,7 +79,10 @@ export const useSpaceRace = (players: Player[]): UseSpaceRace => {
 
     if (playersToMoveHorizontally.length > 0) {
       const playerToMove = playersToMoveHorizontally[0]!;
-      movePlayerHorizontally(playerToMove.id);
+      const timeout = setTimeout(() => {
+        movePlayerHorizontally(playerToMove.id);
+      }, 1000);
+      return () => clearTimeout(timeout);
     }
   }, [game.spacePlayers, movePlayerHorizontally]);
 
