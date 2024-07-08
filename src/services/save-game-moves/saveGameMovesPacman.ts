@@ -37,7 +37,7 @@ const updatePlayerGameMoves = (
         updatePlayer(playerMoves.playerId, {
           ...player.details,
           pacmanPlayer: true,
-          gameMoves: currentGameMoves + playerMoves.moves * 2,
+          gameMoves: currentGameMoves + playerMoves.moves,
           pacmanDetails: {
             ...playerPacmanDetails,
             hasPowerPill: earnedPowerPill,
