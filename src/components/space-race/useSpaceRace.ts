@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Player } from "../../types/Player";
 import { selectRandomOneOf } from "../../utils/random";
 import { clamp } from "../../utils/number";
+import { useSocketIo } from "../../providers/SocketIoProvider";
 import { STARMAP_CHART, STARMAP_HEIGHT } from "./constants";
 import {
   PlannedCourse,
@@ -24,6 +25,7 @@ export type UseSpaceRace = {
 
 export const useSpaceRace = (players: Player[]): UseSpaceRace => {
   const [game, setGame] = useState(() => createSpaceRaceGame(players));
+  const { playerQuery } = useSocketIo();
 
   const plotPlayerCourse = useCallback(
     (playerId: string, up: number) => {
@@ -137,6 +139,23 @@ export const useSpaceRace = (players: Player[]): UseSpaceRace => {
     });
     setGame(gameCopy);
   }, [game]);
+
+  const sendCourseQuestionToUsers = useCallback(() => {
+    Object.values(game.spacePlayers).forEach((spacePlayer) => {
+      playerQuery.createPlayerQuestion(spacePlayer.id, {
+        id: "SPACERACE_COURSE",
+        question: "Where do you want to go?",
+        style: "emoji",
+        options: [
+          { text: "👆1", value: "up_1" },
+          { text: "👆1", value: "up_1" },
+          { text: "", value: "up_1" },
+          { text: "👆1", value: "up_1" },
+          { text: "👆1", value: "up_1" },
+        ],
+      });
+    });
+  }, [game.spacePlayers, playerQuery]);
 
   return {
     spaceRaceGame: game,
