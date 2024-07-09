@@ -13,6 +13,8 @@ import {
   SpaceRacePlayer,
 } from "./types";
 
+const SPACE_COURSE_QUESTION_ID = "SPACERACE_COURSE";
+
 export type UseSpaceRace = {
   spaceRaceGame: SpaceRaceGame;
   plotPlayerCourse: (playerId: string, up: number) => void;
@@ -21,6 +23,7 @@ export type UseSpaceRace = {
   randomlyPlotAllPlayerCourses: () => void;
   moveAllPlayersVertically: () => void;
   moveAllPlayersHorizontally: () => void;
+  sendCourseQuestionToPlayers: () => void;
 };
 
 export const useSpaceRace = (players: Player[]): UseSpaceRace => {
@@ -88,6 +91,30 @@ export const useSpaceRace = (players: Player[]): UseSpaceRace => {
     }
   }, [game.spacePlayers, movePlayerHorizontally]);
 
+  useEffect(() => {
+    Object.keys(playerQuery.questionsByPlayerId).forEach((playerId) => {
+      const question = playerQuery.questionsByPlayerId[playerId];
+      if (!question || question.id !== SPACE_COURSE_QUESTION_ID) return;
+      if (question.selectedOptionIndex === undefined) return;
+
+      const answer = question.options[question.selectedOptionIndex]!;
+      const playerCourseAlreadyLockedIn =
+        game.spacePlayers[playerId]?.plannedCourse.lockedIn;
+
+      if (playerCourseAlreadyLockedIn) return;
+
+      console.log("Answering course question", playerId, answer);
+
+      plotPlayerCourse(playerId, parseInt(answer.value.toString()));
+      playerQuery.deletePlayerQuestion(playerId);
+    });
+  }, [
+    game.spacePlayers,
+    playerQuery,
+    playerQuery.questionsByPlayerId,
+    plotPlayerCourse,
+  ]);
+
   const randomlyPlotAllPlayerCourses = useCallback(() => {
     let gameCopy: SpaceRaceGame = {
       ...game,
@@ -140,18 +167,18 @@ export const useSpaceRace = (players: Player[]): UseSpaceRace => {
     setGame(gameCopy);
   }, [game]);
 
-  const sendCourseQuestionToUsers = useCallback(() => {
+  const sendCourseQuestionToPlayers = useCallback(() => {
     Object.values(game.spacePlayers).forEach((spacePlayer) => {
       playerQuery.createPlayerQuestion(spacePlayer.id, {
-        id: "SPACERACE_COURSE",
-        question: "Where do you want to go?",
-        style: "emoji",
+        id: SPACE_COURSE_QUESTION_ID,
+        question: "Plot your course 規劃你的路線",
+        style: "emoji-stack",
         options: [
-          { text: "👆1", value: "up_1" },
-          { text: "👆1", value: "up_1" },
-          { text: "", value: "up_1" },
-          { text: "👆1", value: "up_1" },
-          { text: "👆1", value: "up_1" },
+          { text: "⬆️⬆️", value: -2 },
+          { text: "⬆️", value: -1 },
+          { text: "➡️", value: 0 },
+          { text: "⬇️", value: 1 },
+          { text: "⬇️⬇️", value: 2 },
         ],
       });
     });
@@ -165,6 +192,7 @@ export const useSpaceRace = (players: Player[]): UseSpaceRace => {
     randomlyPlotAllPlayerCourses,
     moveAllPlayersVertically,
     moveAllPlayersHorizontally,
+    sendCourseQuestionToPlayers,
   };
 };
 

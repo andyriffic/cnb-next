@@ -31,6 +31,9 @@ const View = ({ players }: Props) => {
         <button onClick={spaceRace.moveAllPlayersHorizontally}>
           Move horizontally
         </button>
+        <button onClick={spaceRace.sendCourseQuestionToPlayers}>
+          send course
+        </button>
         <DebugSpaceRace useSpaceRace={spaceRace} />
       </div>
     </SpectatorPageLayout>
