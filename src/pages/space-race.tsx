@@ -3,6 +3,7 @@ import SpaceRaceScreen from "../components/space-race";
 import { SETTINGS_PLAYER_ID } from "../constants";
 import { Player } from "../types/Player";
 import { getAllPlayers } from "../utils/data/aws-dynamodb";
+import { selectRandomOneOf } from "../utils/random";
 import { sortByPlayerName } from "../utils/sort";
 
 type Props = { players: Player[] };
@@ -18,11 +19,19 @@ export const getServerSideProps: GetServerSideProps = async () => {
     ? allPlayers
         // .filter((p) => !p.details?.retired)
         .filter((p) => p.id !== SETTINGS_PLAYER_ID)
-        .filter((p) => ["andy", "alex"].includes(p.id)) //TODO: let other players join
+        .filter((p) => ["andy", "alex", "albert_s"].includes(p.id))
+        .map<Player>((p) => ({
+          ...p,
+          details: {
+            ...p.details,
+            spaceRace: {
+              xCoordinate: 0,
+              yCoordinate: selectRandomOneOf([1, 2, 3, 4, 5]),
+              movesRemaining: selectRandomOneOf([4, 5, 6, 7]),
+            },
+          },
+        })) //TODO: let other players join
     : [];
-
-  const settingsPlayer =
-    allPlayers && allPlayers.find((p) => p.id === SETTINGS_PLAYER_ID);
 
   return {
     props: {

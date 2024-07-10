@@ -10,8 +10,11 @@ export type SpaceRaceEntityType =
   | "asteroid"
   | "wormhole";
 
+export type SpaceRaceEntityBehaviour = "block";
+
 export type SpaceRaceEntity = {
   type: SpaceRaceEntityType;
+  behaviour: SpaceRaceEntityBehaviour;
   position: SpaceRaceCoordinates;
   display: JSX.Element;
 };
@@ -34,6 +37,8 @@ export type SpaceRacePlayer = {
   courseMovesRemaining: number;
   currentPosition: SpaceRaceCoordinates;
   plannedCourse: PlannedCourse;
+  collidedWith?: SpaceRaceEntity;
+  color: string;
 };
 
 export type SpaceRaceCoordinates = {

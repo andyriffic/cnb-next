@@ -84,3 +84,22 @@ export const fadeInOutBottomToTop = keyframes`
     opacity: 0;
   }
 `;
+
+export const fadeInOutRight = keyframes`
+  0% {
+    transform: translateX(20px);
+    opacity: 0;
+  }
+  30% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  70% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-10px);
+    opacity: 0;
+  }
+`;

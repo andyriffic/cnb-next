@@ -63,6 +63,12 @@ const DEFAULT_ZOMBIE_RUN_DETAILS: ZombieRunDetails = {
   // playersBitten: [],
 };
 
+const DEFAULT_SPACE_RACE_DETAILS: SpaceRaceDetails = {
+  movesRemaining: 6,
+  xCoordinate: 0,
+  yCoordinate: 5,
+};
+
 export const getPlayerAchievements = (player: Player): PlayerAchievements => {
   return {
     blah: "blah",
@@ -88,5 +94,12 @@ export const getPlayerZombieRunDetails = (player: Player): ZombieRunDetails => {
   return {
     ...DEFAULT_ZOMBIE_RUN_DETAILS,
     ...player.details?.zombieRun,
+  };
+};
+
+export const getPlayerSpaceRaceDetails = (player: Player): SpaceRaceDetails => {
+  return {
+    ...DEFAULT_SPACE_RACE_DETAILS,
+    ...player.details?.spaceRace,
   };
 };

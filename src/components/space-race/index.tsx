@@ -22,7 +22,7 @@ const View = ({ players }: Props) => {
         players={spaceRace.spaceRaceGame.spacePlayers}
       />
       <div style={{ position: "absolute", right: 0 }}>
-        <button onClick={spaceRace.randomlyPlotAllPlayerCourses}>
+        {/* <button onClick={spaceRace.randomlyPlotAllPlayerCourses}>
           Lock in course
         </button>
         <button onClick={spaceRace.moveAllPlayersVertically}>
@@ -30,7 +30,7 @@ const View = ({ players }: Props) => {
         </button>
         <button onClick={spaceRace.moveAllPlayersHorizontally}>
           Move horizontally
-        </button>
+        </button> */}
         <button onClick={spaceRace.sendCourseQuestionToPlayers}>
           send course
         </button>

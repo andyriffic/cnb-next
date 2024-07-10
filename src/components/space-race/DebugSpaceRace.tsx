@@ -17,6 +17,10 @@ export const DebugSpaceRace = ({ useSpaceRace }: Props) => {
               Up 1
             </button>
             <br />
+            <button onClick={() => useSpaceRace.plotPlayerCourse(playerId, 0)}>
+              Forward
+            </button>
+            <br />
             <button onClick={() => useSpaceRace.plotPlayerCourse(playerId, 1)}>
               Down 1
             </button>
@@ -24,7 +28,7 @@ export const DebugSpaceRace = ({ useSpaceRace }: Props) => {
               Down 2
             </button>
             <br />
-
+            {/* 
             <button onClick={() => useSpaceRace.movePlayerVertically(playerId)}>
               Vertical
             </button>
@@ -32,17 +36,7 @@ export const DebugSpaceRace = ({ useSpaceRace }: Props) => {
               onClick={() => useSpaceRace.movePlayerHorizontally(playerId)}
             >
               Horizontal
-            </button>
-            <button
-              onClick={() => {
-                useSpaceRace.movePlayerVertically(playerId);
-                setTimeout(() => {
-                  useSpaceRace.movePlayerHorizontally(playerId);
-                }, 1000);
-              }}
-            >
-              Make it so...
-            </button>
+            </button> */}
           </div>
         </div>
       ))}

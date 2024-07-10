@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Player } from "../../types/Player";
+import { getPlayerSpaceRaceDetails, Player } from "../../types/Player";
 import { selectRandomOneOf } from "../../utils/random";
 import { clamp } from "../../utils/number";
 import { useSocketIo } from "../../providers/SocketIoProvider";
@@ -208,15 +208,19 @@ function createSpaceRaceGame(players: Player[]): SpaceRaceGame {
         if (!player) {
           return acc;
         }
+
+        const spaceRaceDetails = getPlayerSpaceRaceDetails(player);
+
         return {
           ...acc,
           [playerId]: {
             id: player.id,
             name: player.name,
-            courseMovesRemaining: 7,
+            color: player.details?.colourHex || "#770000",
+            courseMovesRemaining: spaceRaceDetails.movesRemaining,
             currentPosition: {
-              x: 0,
-              y: 1, //selectRandomOneOf([0, 1, 2, 3, 4, 5, 6, 7, 8]),
+              x: spaceRaceDetails.xCoordinate,
+              y: spaceRaceDetails.yCoordinate,
             },
             plannedCourse: {
               up: 0,
@@ -311,7 +315,7 @@ function setPlayerCoordinates(
 function getHorizontalEntityBetween(
   currentPosition: SpaceRaceCoordinates,
   horizontalDistance: number
-): SpaceRaceEntity | null {
+): SpaceRaceEntity | undefined {
   for (let i = currentPosition.x; i <= horizontalDistance; i++) {
     const entity = STARMAP_CHART.entities.find(
       (entity) =>
@@ -321,8 +325,6 @@ function getHorizontalEntityBetween(
       return entity;
     }
   }
-
-  return null;
 }
 
 function updatePlayerHorizontalPosition(
@@ -357,6 +359,7 @@ function updatePlayerHorizontalPosition(
     [playerId]: {
       ...setPlayerCoordinates(player, newPosition),
       plannedCourse: newPlannedCourse,
+      collidedWith: hitEntity,
     },
   };
 }
