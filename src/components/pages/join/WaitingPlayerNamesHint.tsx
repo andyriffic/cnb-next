@@ -29,6 +29,7 @@ const REGULAR_PLAYER_NAMES = [
   "Xueming",
   "Yishen",
   "Sixiao",
+  "Shihao",
   "Pingsheng",
 ];
 
