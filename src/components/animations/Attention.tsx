@@ -27,7 +27,7 @@ const Animation_Vibrate = keyframes` {
   }
 }`;
 
-const Animation_ShakeBottom = keyframes` {
+export const Animation_ShakeBottom = keyframes` {
   0%,
   100% {
             transform: rotate(0deg);
