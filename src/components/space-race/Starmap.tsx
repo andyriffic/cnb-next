@@ -24,6 +24,12 @@ const Space = styled.div`
 const SpaceEntityContainer = styled.span`
   display: inline-block;
   position: absolute;
+  border: 1px solid #ccc;
+`;
+
+const SpacePlayerContainer = styled.span`
+  display: inline-block;
+  position: absolute;
   transition: top 0.5s, left 0.5s;
 `;
 
@@ -44,12 +50,12 @@ export const StarMap = ({ starmap, players }: Props) => {
         const player = players[playerId];
         if (!player) return null;
         return (
-          <SpaceEntityContainer
+          <SpacePlayerContainer
             key={i}
             style={getStarmapCssPosition(player.currentPosition)}
           >
             <PlayerShip player={player} />
-          </SpaceEntityContainer>
+          </SpacePlayerContainer>
         );
       })}
     </Space>
