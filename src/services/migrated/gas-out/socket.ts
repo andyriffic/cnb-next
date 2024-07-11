@@ -1,7 +1,7 @@
 import { Socket, Server as SocketIOServer } from "socket.io";
 
 import { getAllPlayers } from "../../../utils/data/aws-dynamodb";
-import { savePlayersGameMoves } from "../../save-game-moves/saveGameMovesPacman";
+import { savePlayersGameMoves } from "../../save-game-moves/saveGameMovesZombieRun";
 import { sendClientMessage } from "../../socket";
 import { gasGameToPoints } from "./points";
 import { GasGame, GasGameType, GlobalEffect } from "./types";
