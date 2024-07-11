@@ -1,6 +1,7 @@
 import styled, { css } from "styled-components";
 import { Player, getPlayerZombieRunDetails } from "../types/Player";
 import { selectRandomOneOf } from "../utils/random";
+import { replaceFirstLetterWithZ } from "../utils/string";
 import { AvatarSize, PlayerAvatar } from "./PlayerAvatar";
 import { Appear } from "./animations/Appear";
 import { useDoOnce } from "./hooks/useDoOnce";
@@ -25,6 +26,7 @@ const Label = styled.div`
 const ZombieLabel = styled(Label)`
   background-color: #165b33;
   border-color: darkgreen;
+  color: #ccc;
   /* font-size: 2rem; */
   text-align: center;
 `;
@@ -71,7 +73,7 @@ export function JoinedPlayer({ player, team, avatarSize }: Props) {
       )}
       {player && isZombie && (
         <Appear animation="text-focus-in">
-          <ZombieLabel>Zombie</ZombieLabel>
+          <ZombieLabel>{replaceFirstLetterWithZ(player.name)}</ZombieLabel>
         </Appear>
       )}
     </div>
