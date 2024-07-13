@@ -24,13 +24,14 @@ const CollisionIndicator = styled.div`
   animation: ${fadeInOutRight} 1000ms ease-in 0ms 1 both;
 `;
 
-const PlayerName = styled.div<{ colorHex: string }>`
+const PlayerName = styled.div`
   position: absolute;
   top: 30%;
   font-size: 0.8rem;
   line-height: 1;
-  color: ${({ colorHex }) => colorHex};
   text-transform: uppercase;
+  padding: 0.2rem 0.7rem 0.2rem 0.2rem;
+  border-radius: 0 1rem 0 0;
 `;
 
 const PlayerShipContainer = styled.div<{ colorHex: string }>`
@@ -57,15 +58,14 @@ export const PlayerShip = ({ player }: Props) => {
     }
   }, [play, player.collidedWith]);
 
-  const playerNameBackgroundColour = tinycolor
+  const playerNameFontColour = tinycolor
     .mostReadable(player.color, ["#fff", "#000"])
     .toHexString();
 
   return (
     <Container>
       <PlayerName
-        colorHex={player.color}
-        style={{ backgroundColor: playerNameBackgroundColour }}
+        style={{ color: playerNameFontColour, backgroundColor: player.color }}
       >
         {player.name}
       </PlayerName>
