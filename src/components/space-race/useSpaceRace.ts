@@ -3,6 +3,7 @@ import { getPlayerSpaceRaceDetails, Player } from "../../types/Player";
 import { selectRandomOneOf } from "../../utils/random";
 import { clamp } from "../../utils/number";
 import { useSocketIo } from "../../providers/SocketIoProvider";
+import { useSound } from "../hooks/useSound";
 import { STARMAP_CHART, STARMAP_HEIGHT } from "./constants";
 import {
   PlannedCourse,
@@ -29,6 +30,7 @@ export type UseSpaceRace = {
 export const useSpaceRace = (players: Player[]): UseSpaceRace => {
   const [game, setGame] = useState(() => createSpaceRaceGame(players));
   const { playerQuery } = useSocketIo();
+  const { play } = useSound();
 
   const plotPlayerCourse = useCallback(
     (playerId: string, up: number) => {
@@ -70,9 +72,10 @@ export const useSpaceRace = (players: Player[]): UseSpaceRace => {
 
     if (playersToMoveVertically.length > 0) {
       const playerToMove = playersToMoveVertically[0]!;
+      play("space-race-rocket-move");
       movePlayerVertically(playerToMove.id);
     }
-  }, [game.spacePlayers, movePlayerVertically]);
+  }, [game.spacePlayers, movePlayerVertically, play]);
 
   useEffect(() => {
     const playersToMoveHorizontally = Object.values(game.spacePlayers).filter(

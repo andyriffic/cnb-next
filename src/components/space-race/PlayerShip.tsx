@@ -1,5 +1,8 @@
 import styled from "styled-components";
+import tinycolor from "tinycolor2";
+import { useEffect } from "react";
 import { fadeInOutRight } from "../animations/keyframes/fade";
+import { useSound } from "../hooks/useSound";
 import { STARMAP_HEIGHT, STARMAP_WIDTH } from "./constants";
 import { SpaceRacePlayer } from "./types";
 
@@ -27,7 +30,6 @@ const PlayerName = styled.div<{ colorHex: string }>`
   font-size: 0.8rem;
   line-height: 1;
   color: ${({ colorHex }) => colorHex};
-  // background-color: ${({ colorHex }) => colorHex};
   text-transform: uppercase;
 `;
 
@@ -47,9 +49,26 @@ type Props = {
 };
 
 export const PlayerShip = ({ player }: Props) => {
+  const { play } = useSound();
+
+  useEffect(() => {
+    if (player.collidedWith) {
+      play("space-race-rocket-collision");
+    }
+  }, [play, player.collidedWith]);
+
+  const playerNameBackgroundColour = tinycolor
+    .mostReadable(player.color, ["#fff", "#000"])
+    .toHexString();
+
   return (
     <Container>
-      <PlayerName colorHex={player.color}>{player.name}</PlayerName>
+      <PlayerName
+        colorHex={player.color}
+        style={{ backgroundColor: playerNameBackgroundColour }}
+      >
+        {player.name}
+      </PlayerName>
       <PlayerShipContainer colorHex={player.color}>🚀</PlayerShipContainer>
       <PlayerStatusIndicator>
         {player.plannedCourse.lockedIn ? (

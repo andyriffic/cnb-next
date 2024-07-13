@@ -50,4 +50,6 @@ export type SoundName =
   | "number-crunch-player-guessed-close"
   | "number-crunch-player-guessed-far"
   | "number-crunch-final-show-winner"
-  | "number-crunch-final-show-rest";
+  | "number-crunch-final-show-rest"
+  | "space-race-rocket-move"
+  | "space-race-rocket-collision";

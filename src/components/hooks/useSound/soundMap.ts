@@ -53,6 +53,8 @@ const DEFAULT_SOUND_MAP: { [key in SoundName]: string } = {
   "number-crunch-player-guessed-far": "/sounds/default/price_is_right_fail.mp3",
   "number-crunch-final-show-winner": "/sounds/nfl.mp3",
   "number-crunch-final-show-rest": "/sounds/meh.mp3",
+  "space-race-rocket-move": "/sounds/default/spaceship.mp3",
+  "space-race-rocket-collision": "/sounds/default/blast_off_sms.mp3",
 };
 
 const XMAS_SOUND_MAP: { [key in SoundName]: string } = {

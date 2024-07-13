@@ -26,7 +26,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
             ...p.details,
             spaceRace: {
               xCoordinate: 0,
-              yCoordinate: selectRandomOneOf([1, 2, 3, 4, 5]),
+              yCoordinate: selectRandomOneOf([0, 1, 2, 3, 4, 5, 6, 7, 8]),
               movesRemaining: selectRandomOneOf([4, 5, 6, 7]),
             },
           },
