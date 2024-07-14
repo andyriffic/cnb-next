@@ -4,6 +4,7 @@ import { selectRandomOneOf } from "../../utils/random";
 import { clamp } from "../../utils/number";
 import { useSocketIo } from "../../providers/SocketIoProvider";
 import { useSound } from "../hooks/useSound";
+import { QueryUserOption } from "../../services/query-user/types";
 import { STARMAP_CHART, STARMAP_HEIGHT } from "./constants";
 import {
   PlannedCourse,
@@ -171,18 +172,46 @@ export const useSpaceRace = (players: Player[]): UseSpaceRace => {
   }, [game]);
 
   const sendCourseQuestionToPlayers = useCallback(() => {
+    const MAX_COURSE_X_OFFSET = 2;
+
     Object.values(game.spacePlayers).forEach((spacePlayer) => {
+      const maxUpAdjustedForTopOfScreen = Math.max(
+        spacePlayer.currentPosition.y - MAX_COURSE_X_OFFSET,
+        2
+      );
+
+      const upObstacle = getVerticalEntityBetween(
+        spacePlayer.currentPosition,
+        -MAX_COURSE_X_OFFSET
+      );
+      const downObstacle = getVerticalEntityBetween(
+        spacePlayer.currentPosition,
+        MAX_COURSE_X_OFFSET
+      );
+
+      const maxUp = upObstacle
+        ? upObstacle.position.y - spacePlayer.currentPosition.y + 1
+        : -MAX_COURSE_X_OFFSET;
+
+      const maxDown = downObstacle
+        ? downObstacle.position.y - spacePlayer.currentPosition.y - 1
+        : MAX_COURSE_X_OFFSET;
+
+      const allCourseOptions: QueryUserOption<number>[] = [
+        { text: "⬆️⬆️", value: -2 },
+        { text: "⬆️", value: -1 },
+        { text: "➡️", value: 0 },
+        { text: "⬇️", value: 1 },
+        { text: "⬇️⬇️", value: 2 },
+      ].filter((option) => option.value >= maxUp && option.value <= maxDown);
+
+      console.log("Player course", spacePlayer.id, upObstacle, downObstacle);
+
       playerQuery.createPlayerQuestion(spacePlayer.id, {
         id: SPACE_COURSE_QUESTION_ID,
         question: "Plot your course 規劃你的路線",
         style: "emoji-stack",
-        options: [
-          { text: "⬆️⬆️", value: -2 },
-          { text: "⬆️", value: -1 },
-          { text: "➡️", value: 0 },
-          { text: "⬇️", value: 1 },
-          { text: "⬇️⬇️", value: 2 },
-        ],
+        options: allCourseOptions,
       });
     });
   }, [game.spacePlayers, playerQuery]);
@@ -326,6 +355,39 @@ function getHorizontalEntityBetween(
     );
     if (entity) {
       return entity;
+    }
+  }
+}
+
+function getVerticalEntityBetween(
+  currentPosition: SpaceRaceCoordinates,
+  verticalDistance: number
+): SpaceRaceEntity | undefined {
+  if (verticalDistance === 0) return;
+
+  const direction = verticalDistance < 0 ? "up" : "down";
+
+  if (direction === "up") {
+    for (let i = currentPosition.y; i >= verticalDistance; i--) {
+      const entity = STARMAP_CHART.entities.find(
+        (entity) =>
+          entity.position.x === currentPosition.x && entity.position.y === i
+      );
+      if (entity) {
+        return entity;
+      }
+    }
+  }
+
+  if (direction === "down") {
+    for (let i = currentPosition.y; i <= verticalDistance; i++) {
+      const entity = STARMAP_CHART.entities.find(
+        (entity) =>
+          entity.position.x === currentPosition.x && entity.position.y === i
+      );
+      if (entity) {
+        return entity;
+      }
     }
   }
 }
