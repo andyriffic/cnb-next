@@ -20,17 +20,6 @@ export const getServerSideProps: GetServerSideProps = async () => {
         // .filter((p) => !p.details?.retired)
         .filter((p) => p.id !== SETTINGS_PLAYER_ID)
         .filter((p) => ["andy", "alex", "albert_s"].includes(p.id))
-        .map<Player>((p) => ({
-          ...p,
-          details: {
-            ...p.details,
-            spaceRace: {
-              xCoordinate: 0,
-              yCoordinate: selectRandomOneOf([0, 1, 2, 3, 4, 5, 6, 7, 8]),
-              movesRemaining: selectRandomOneOf([4, 5, 6, 7]),
-            },
-          },
-        })) //TODO: let other players join
     : [];
 
   return {

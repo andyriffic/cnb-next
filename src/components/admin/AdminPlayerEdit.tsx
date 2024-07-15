@@ -5,6 +5,7 @@ import {
   PlayerDetails,
   getPlayerAchievements,
   getPlayerPacManDetails,
+  getPlayerSpaceRaceDetails,
   getPlayerZombieRunDetails,
 } from "../../types/Player";
 import {
@@ -33,6 +34,24 @@ const DEFAULT_PLAYER_DETAILS: PlayerDetails = {
   whosThatCount: 0,
   team: "",
 };
+
+type EditPlayerField<T> = {
+  label: string;
+  value: T;
+  onChange: (value: T) => void;
+};
+
+type EditPlayerConfig = {
+  sectionHeading: string;
+  editiableFields: EditPlayerField<string | boolean | number>[];
+};
+
+const EDIT_PLAYER_CONFIG: EditPlayerConfig[] = [
+  {
+    sectionHeading: "Space Race",
+    editiableFields: [{ label: "X", value: 0, onChange: (value) => {} }],
+  },
+];
 
 export const AdminPlayerEdit = ({ player, onClose }: Props) => {
   const [playerCopy, setPlayerCopy] = useState(deepClone(player));
@@ -286,6 +305,54 @@ export const AdminPlayerEdit = ({ player, onClose }: Props) => {
               })
             }
           />
+          <hr />
+          <EvenlySpaced>
+            <h6 style={{ fontWeight: "bold" }}>Space Race</h6>
+            <button
+              type="button"
+              style={{ backgroundColor: "red" }}
+              onClick={() => {
+                alert("not implemented yet");
+              }}
+            >
+              Delete Space Race details
+            </button>
+          </EvenlySpaced>
+          <AdminPlayerEditNumberValue
+            label="X"
+            id="space_race_x"
+            value={playerCopy.details?.spaceRace?.xCoordinate || 0}
+            onChange={(value) =>
+              setPlayerCopy({
+                ...playerCopy,
+                details: {
+                  ...playerCopy.details,
+                  spaceRace: {
+                    ...getPlayerSpaceRaceDetails(playerCopy),
+                    xCoordinate: value,
+                  },
+                },
+              })
+            }
+          />
+          <AdminPlayerEditNumberValue
+            label="Y"
+            id="space_race_y"
+            value={playerCopy.details?.spaceRace?.yCoordinate || 0}
+            onChange={(value) =>
+              setPlayerCopy({
+                ...playerCopy,
+                details: {
+                  ...playerCopy.details,
+                  spaceRace: {
+                    ...getPlayerSpaceRaceDetails(playerCopy),
+                    yCoordinate: value,
+                  },
+                },
+              })
+            }
+          />
+
           <hr />
           <fieldset>
             <legend>Achievements</legend>

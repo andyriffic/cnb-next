@@ -231,6 +231,8 @@ export const useSpaceRace = (players: Player[]): UseSpaceRace => {
 function createSpaceRaceGame(players: Player[]): SpaceRaceGame {
   const allPlayerIds = players.map((player) => player.id);
 
+  let nextAssignedYCoordinate = 0;
+
   const game: SpaceRaceGame = {
     starmap: STARMAP_CHART,
     spacePlayers: allPlayerIds.reduce<{ [id: string]: SpaceRacePlayer }>(
@@ -241,7 +243,22 @@ function createSpaceRaceGame(players: Player[]): SpaceRaceGame {
           return acc;
         }
 
+        const isNewPlayer = !player.details?.spaceRace;
         const spaceRaceDetails = getPlayerSpaceRaceDetails(player);
+
+        const startingYCoordinate = isNewPlayer
+          ? nextAssignedYCoordinate
+          : spaceRaceDetails.yCoordinate;
+        const startingXCoordinate = isNewPlayer
+          ? 0
+          : spaceRaceDetails.xCoordinate;
+
+        if (isNewPlayer) {
+          nextAssignedYCoordinate += 1;
+          if (nextAssignedYCoordinate >= STARMAP_HEIGHT) {
+            nextAssignedYCoordinate = 0;
+          }
+        }
 
         return {
           ...acc,
@@ -249,10 +266,10 @@ function createSpaceRaceGame(players: Player[]): SpaceRaceGame {
             id: player.id,
             name: player.name,
             color: player.details?.colourHex || "#770000",
-            courseMovesRemaining: spaceRaceDetails.movesRemaining,
+            courseMovesRemaining: player.details?.gameMoves || 0,
             currentPosition: {
-              x: spaceRaceDetails.xCoordinate,
-              y: spaceRaceDetails.yCoordinate,
+              x: startingXCoordinate,
+              y: startingYCoordinate,
             },
             plannedCourse: {
               up: 0,

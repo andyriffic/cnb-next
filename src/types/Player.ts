@@ -34,8 +34,6 @@ export type ZombieRunDetails = {
 export type SpaceRaceDetails = {
   xCoordinate: number;
   yCoordinate: number;
-  movesRemaining: number;
-  // playersBitten: string[];
 };
 
 export type PlayerAchievements = {
@@ -64,9 +62,8 @@ const DEFAULT_ZOMBIE_RUN_DETAILS: ZombieRunDetails = {
 };
 
 const DEFAULT_SPACE_RACE_DETAILS: SpaceRaceDetails = {
-  movesRemaining: 6,
   xCoordinate: 0,
-  yCoordinate: 5,
+  yCoordinate: 0,
 };
 
 export const getPlayerAchievements = (player: Player): PlayerAchievements => {
