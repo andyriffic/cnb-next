@@ -34,7 +34,7 @@ const View = ({ players }: Props) => {
         <button onClick={spaceRace.sendCourseQuestionToPlayers}>
           send course
         </button>
-        <DebugSpaceRace useSpaceRace={spaceRace} />
+        {/* <DebugSpaceRace useSpaceRace={spaceRace} /> */}
       </div>
     </SpectatorPageLayout>
   );

@@ -35,7 +35,7 @@ const DEFAULT_PLAYER_DETAILS: PlayerDetails = {
   team: "",
 };
 
-type EditPlayerField<T> = {
+type EditPlayerField<T = string | number | boolean> = {
   label: string;
   value: T;
   onChange: (value: T) => void;
@@ -43,7 +43,7 @@ type EditPlayerField<T> = {
 
 type EditPlayerConfig = {
   sectionHeading: string;
-  editiableFields: EditPlayerField<string | boolean | number>[];
+  editiableFields: EditPlayerField<string | number | boolean>[];
 };
 
 const EDIT_PLAYER_CONFIG: EditPlayerConfig[] = [

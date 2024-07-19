@@ -172,30 +172,39 @@ export const useSpaceRace = (players: Player[]): UseSpaceRace => {
   }, [game]);
 
   const sendCourseQuestionToPlayers = useCallback(() => {
-    const MAX_COURSE_X_OFFSET = 2;
+    const MAX_COURSE_Y_OFFSET = 2;
 
     Object.values(game.spacePlayers).forEach((spacePlayer) => {
-      const maxUpAdjustedForTopOfScreen = Math.max(
-        spacePlayer.currentPosition.y - MAX_COURSE_X_OFFSET,
-        2
-      );
+      const maxUpAdjustedForTopOfScreen =
+        spacePlayer.currentPosition.y - MAX_COURSE_Y_OFFSET < 0
+          ? MAX_COURSE_Y_OFFSET -
+            Math.abs(spacePlayer.currentPosition.y - MAX_COURSE_Y_OFFSET)
+          : MAX_COURSE_Y_OFFSET;
+
+      const maxDownAdjustedForBottomOfScreen =
+        spacePlayer.currentPosition.y + MAX_COURSE_Y_OFFSET > STARMAP_HEIGHT - 1
+          ? spacePlayer.currentPosition.y +
+            MAX_COURSE_Y_OFFSET -
+            STARMAP_HEIGHT -
+            1
+          : MAX_COURSE_Y_OFFSET;
 
       const upObstacle = getVerticalEntityBetween(
         spacePlayer.currentPosition,
-        -MAX_COURSE_X_OFFSET
+        -maxUpAdjustedForTopOfScreen
       );
       const downObstacle = getVerticalEntityBetween(
         spacePlayer.currentPosition,
-        MAX_COURSE_X_OFFSET
+        maxDownAdjustedForBottomOfScreen
       );
 
       const maxUp = upObstacle
         ? upObstacle.position.y - spacePlayer.currentPosition.y + 1
-        : -MAX_COURSE_X_OFFSET;
+        : -maxUpAdjustedForTopOfScreen;
 
       const maxDown = downObstacle
         ? downObstacle.position.y - spacePlayer.currentPosition.y - 1
-        : MAX_COURSE_X_OFFSET;
+        : maxDownAdjustedForBottomOfScreen;
 
       const allCourseOptions: QueryUserOption<number>[] = [
         { text: "⬆️⬆️", value: -2 },
