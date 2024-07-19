@@ -374,7 +374,17 @@ function getHorizontalEntityBetween(
   currentPosition: SpaceRaceCoordinates,
   horizontalDistance: number
 ): SpaceRaceEntity | undefined {
-  for (let i = currentPosition.x; i <= horizontalDistance; i++) {
+  console.log(
+    "finding horizontal entity between",
+    currentPosition,
+    horizontalDistance
+  );
+
+  for (
+    let i = currentPosition.x;
+    i <= horizontalDistance + currentPosition.x;
+    i++
+  ) {
     const entity = STARMAP_CHART.entities.find(
       (entity) =>
         entity.position.x === i && entity.position.y === currentPosition.y
@@ -444,6 +454,14 @@ function updatePlayerHorizontalPosition(
     lockedIn: true,
     movedHorizontally: true,
   };
+
+  console.log(
+    "horizontal update current position",
+    playerId,
+    player.currentPosition
+  );
+
+  console.log("horizontal update hit entity", playerId, hitEntity);
 
   return {
     ...spacePlayers,
