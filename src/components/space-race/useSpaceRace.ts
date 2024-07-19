@@ -181,13 +181,13 @@ export const useSpaceRace = (players: Player[]): UseSpaceRace => {
             Math.abs(spacePlayer.currentPosition.y - MAX_COURSE_Y_OFFSET)
           : MAX_COURSE_Y_OFFSET;
 
-      const maxDownAdjustedForBottomOfScreen =
-        spacePlayer.currentPosition.y + MAX_COURSE_Y_OFFSET > STARMAP_HEIGHT - 1
-          ? spacePlayer.currentPosition.y +
-            MAX_COURSE_Y_OFFSET -
-            STARMAP_HEIGHT -
-            1
-          : MAX_COURSE_Y_OFFSET;
+      // const maxDownAdjustedForBottomOfScreen =
+      //   spacePlayer.currentPosition.y + MAX_COURSE_Y_OFFSET > STARMAP_HEIGHT - 1
+      //     ? spacePlayer.currentPosition.y +
+      //       MAX_COURSE_Y_OFFSET -
+      //       STARMAP_HEIGHT -
+      //       1
+      //     : MAX_COURSE_Y_OFFSET;
 
       const upObstacle = getVerticalEntityBetween(
         spacePlayer.currentPosition,
@@ -195,7 +195,7 @@ export const useSpaceRace = (players: Player[]): UseSpaceRace => {
       );
       const downObstacle = getVerticalEntityBetween(
         spacePlayer.currentPosition,
-        maxDownAdjustedForBottomOfScreen
+        MAX_COURSE_Y_OFFSET
       );
 
       const maxUp = upObstacle
@@ -204,7 +204,7 @@ export const useSpaceRace = (players: Player[]): UseSpaceRace => {
 
       const maxDown = downObstacle
         ? downObstacle.position.y - spacePlayer.currentPosition.y - 1
-        : maxDownAdjustedForBottomOfScreen;
+        : MAX_COURSE_Y_OFFSET;
 
       const allCourseOptions: QueryUserOption<number>[] = [
         { text: "⬆️⬆️", value: -2 },
