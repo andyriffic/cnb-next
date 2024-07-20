@@ -8,7 +8,8 @@ export type SpaceRaceEntityType =
   | "home-base"
   | "planet"
   | "asteroid"
-  | "wormhole";
+  | "wormhole"
+  | "out-of-bounds";
 
 export type SpaceRaceEntityBehaviour = "block";
 

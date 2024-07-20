@@ -26,7 +26,7 @@ export const STARMAP_CHART: SpaceRaceStarmap = {
   ],
 };
 
-function createEntity(
+export function createEntity(
   type: SpaceRaceEntityType,
   position: SpaceRaceCoordinates,
   behaviour: SpaceRaceEntityBehaviour = "block"
@@ -44,5 +44,7 @@ function getDisplayElement(entityType: SpaceRaceEntityType): JSX.Element {
       return <>🪨</>;
     case "wormhole":
       return <>🌀</>;
+    default:
+      return <></>;
   }
 }

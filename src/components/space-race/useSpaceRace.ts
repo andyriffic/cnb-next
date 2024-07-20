@@ -5,7 +5,7 @@ import { clamp } from "../../utils/number";
 import { useSocketIo } from "../../providers/SocketIoProvider";
 import { useSound } from "../hooks/useSound";
 import { QueryUserOption } from "../../services/query-user/types";
-import { STARMAP_CHART, STARMAP_HEIGHT } from "./constants";
+import { createEntity, STARMAP_CHART, STARMAP_HEIGHT } from "./constants";
 import {
   PlannedCourse,
   SpacePlayersById,
@@ -175,11 +175,11 @@ export const useSpaceRace = (players: Player[]): UseSpaceRace => {
     const MAX_COURSE_Y_OFFSET = 2;
 
     Object.values(game.spacePlayers).forEach((spacePlayer) => {
-      const maxUpAdjustedForTopOfScreen =
-        spacePlayer.currentPosition.y - MAX_COURSE_Y_OFFSET < 0
-          ? MAX_COURSE_Y_OFFSET -
-            Math.abs(spacePlayer.currentPosition.y - MAX_COURSE_Y_OFFSET)
-          : MAX_COURSE_Y_OFFSET;
+      // const maxUpAdjustedForTopOfScreen =
+      //   spacePlayer.currentPosition.y - MAX_COURSE_Y_OFFSET < 0
+      //     ? MAX_COURSE_Y_OFFSET -
+      //       Math.abs(spacePlayer.currentPosition.y - MAX_COURSE_Y_OFFSET)
+      //     : MAX_COURSE_Y_OFFSET;
 
       // const maxDownAdjustedForBottomOfScreen =
       //   spacePlayer.currentPosition.y + MAX_COURSE_Y_OFFSET > STARMAP_HEIGHT - 1
@@ -191,7 +191,7 @@ export const useSpaceRace = (players: Player[]): UseSpaceRace => {
 
       const upObstacle = getVerticalEntityBetween(
         spacePlayer.currentPosition,
-        -maxUpAdjustedForTopOfScreen
+        -MAX_COURSE_Y_OFFSET
       );
       const downObstacle = getVerticalEntityBetween(
         spacePlayer.currentPosition,
@@ -200,11 +200,14 @@ export const useSpaceRace = (players: Player[]): UseSpaceRace => {
 
       const maxUp = upObstacle
         ? upObstacle.position.y - spacePlayer.currentPosition.y + 1
-        : -maxUpAdjustedForTopOfScreen;
+        : -MAX_COURSE_Y_OFFSET;
 
       const maxDown = downObstacle
         ? downObstacle.position.y - spacePlayer.currentPosition.y - 1
         : MAX_COURSE_Y_OFFSET;
+
+      console.log("Up obstacle", spacePlayer.id, upObstacle);
+      console.log("Down obstacle", spacePlayer.id, downObstacle);
 
       const allCourseOptions: QueryUserOption<number>[] = [
         { text: "⬆️⬆️", value: -2 },
@@ -412,17 +415,32 @@ function getVerticalEntityBetween(
       if (entity) {
         return entity;
       }
+
+      if (i < 0) {
+        return createEntity("out-of-bounds", { x: currentPosition.x, y: -1 });
+      }
     }
   }
 
   if (direction === "down") {
-    for (let i = currentPosition.y; i <= verticalDistance; i++) {
+    for (
+      let i = currentPosition.y;
+      i <= verticalDistance + currentPosition.y;
+      i++
+    ) {
       const entity = STARMAP_CHART.entities.find(
         (entity) =>
           entity.position.x === currentPosition.x && entity.position.y === i
       );
       if (entity) {
         return entity;
+      }
+
+      if (i >= STARMAP_HEIGHT) {
+        return createEntity("out-of-bounds", {
+          x: currentPosition.x,
+          y: STARMAP_HEIGHT,
+        });
       }
     }
   }
