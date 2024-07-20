@@ -23,6 +23,8 @@ export const STARMAP_CHART: SpaceRaceStarmap = {
     createEntity("asteroid", { x: 5, y: 8 }),
     createEntity("asteroid", { x: 6, y: 5 }),
     createEntity("asteroid", { x: 6, y: 8 }),
+    createEntity("asteroid", { x: 7, y: 0 }),
+    createEntity("asteroid", { x: 7, y: 3 }),
   ],
 };
 
@@ -36,7 +38,7 @@ export function createEntity(
 
 function getDisplayElement(entityType: SpaceRaceEntityType): JSX.Element {
   switch (entityType) {
-    case "home-base":
+    case "satellite":
       return <>🛰️</>;
     case "planet":
       return <span style={{ transform: "scale(1.5)" }}>🪐</span>;

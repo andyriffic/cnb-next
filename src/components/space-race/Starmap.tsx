@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import { useEffect, useMemo, useState } from "react";
+import { isClientSideFeatureEnabled } from "../../utils/feature";
 import {
   SpacePlayersById,
   SpaceRaceCoordinates,
@@ -51,12 +53,21 @@ const VerticalGridLine = styled(GridLine)`
   height: 100vh;
 `;
 
+const DebugCoordinates = styled.span`
+  font-size: 0.9rem;
+  text-align: center;
+  opacity: 0.3;
+`;
+
 type Props = {
   starmap: SpaceRaceStarmap;
   players: SpacePlayersById;
 };
 
 export const StarMap = ({ starmap, players }: Props) => {
+  const [showDebug, setShowDebug] = useState(false);
+  useEffect(() => setShowDebug(isClientSideFeatureEnabled("debug")), []);
+
   return (
     <Space>
       {Array(STARMAP_HEIGHT)
@@ -96,9 +107,25 @@ export const StarMap = ({ starmap, players }: Props) => {
           </SpacePlayerContainer>
         );
       })}
+      {showDebug &&
+        starmapDebugCoordinates().map((position, i) => (
+          <SpaceEntityContainer key={i} style={getStarmapCssPosition(position)}>
+            <DebugCoordinates>{`(${position.x}, ${position.y})`}</DebugCoordinates>
+          </SpaceEntityContainer>
+        ))}
     </Space>
   );
 };
+
+function starmapDebugCoordinates() {
+  const coordinates: SpaceRaceCoordinates[] = [];
+  for (let y = 0; y < STARMAP_HEIGHT; y++) {
+    for (let x = 0; x < STARMAP_WIDTH; x++) {
+      coordinates.push({ x, y });
+    }
+  }
+  return coordinates;
+}
 
 function getStarmapCssPosition(position: SpaceRaceCoordinates) {
   return {

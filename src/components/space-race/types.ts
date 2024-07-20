@@ -5,7 +5,7 @@ export type SpaceRaceGame = {
 
 export type SpacePlayersById = { [id: string]: SpaceRacePlayer };
 export type SpaceRaceEntityType =
-  | "home-base"
+  | "satellite"
   | "planet"
   | "asteroid"
   | "wormhole"
