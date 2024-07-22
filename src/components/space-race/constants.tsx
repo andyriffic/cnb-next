@@ -18,13 +18,17 @@ export const STARMAP_CHART: SpaceRaceStarmap = {
     createEntity("asteroid", { x: 3, y: 2 }),
     createEntity("planet", { x: 4, y: 3 }),
     createEntity("asteroid", { x: 5, y: 1 }),
-    createEntity("asteroid", { x: 5, y: 4 }),
+    // createEntity("asteroid", { x: 5, y: 4 }),
     createEntity("asteroid", { x: 5, y: 7 }),
     createEntity("asteroid", { x: 5, y: 8 }),
     createEntity("asteroid", { x: 6, y: 5 }),
     createEntity("asteroid", { x: 6, y: 8 }),
     createEntity("asteroid", { x: 7, y: 0 }),
+    createEntity("satellite", { x: 7, y: 2 }),
     createEntity("asteroid", { x: 7, y: 3 }),
+    createEntity("asteroid", { x: 7, y: 6 }),
+    createEntity("asteroid", { x: 8, y: 4 }),
+    createEntity("asteroid", { x: 8, y: 7 }),
   ],
 };
 
