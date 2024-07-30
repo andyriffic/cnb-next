@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { savePlayersGameMoves } from "../../services/save-game-moves/saveGameMovesZombieRun";
+import savePlayersGameMoves from "../../services/save-game-moves";
 import { PlayerGameMoves } from "../../services/save-game-moves/types";
 
 export default async function userHandler(
