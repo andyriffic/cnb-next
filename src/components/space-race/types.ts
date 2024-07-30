@@ -1,4 +1,5 @@
 export type SpaceRaceGame = {
+  gameOver: boolean;
   starmap: SpaceRaceStarmap;
   spacePlayers: SpacePlayersById;
 };

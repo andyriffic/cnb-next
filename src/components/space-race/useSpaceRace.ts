@@ -247,6 +247,7 @@ function createSpaceRaceGame(players: Player[]): SpaceRaceGame {
 
   const game: SpaceRaceGame = {
     starmap: STARMAP_CHART,
+    gameOver: false,
     spacePlayers: allPlayerIds.reduce<{ [id: string]: SpaceRacePlayer }>(
       (acc, playerId) => {
         const player = players.find((p) => p.id === playerId);
