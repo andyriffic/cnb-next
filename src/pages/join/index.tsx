@@ -12,7 +12,7 @@ import { CenterSpaced } from "../../components/Layouts";
 import { SpectatorPageLayout } from "../../components/SpectatorPageLayout";
 import { Appear } from "../../components/animations/Appear";
 import { useSocketIo } from "../../providers/SocketIoProvider";
-import cinbyWave from "./cinby-wave.png";
+import cinbyWave from "../../assets/finx-mascot-finby.png";
 
 const Container = styled.div`
   display: flex;

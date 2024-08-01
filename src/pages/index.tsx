@@ -3,7 +3,7 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import styled from "styled-components";
-import finxMascotImage from "../assets/finx-mascot.png";
+import finxMascotImage from "../assets/finx-mascot-finby.png";
 import { Appear } from "../components/animations/Appear";
 
 const Container = styled.div`
