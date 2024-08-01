@@ -175,20 +175,9 @@ export const useSpaceRace = (players: Player[]): UseSpaceRace => {
     const MAX_COURSE_Y_OFFSET = 2;
 
     Object.values(game.spacePlayers).forEach((spacePlayer) => {
-      // const maxUpAdjustedForTopOfScreen =
-      //   spacePlayer.currentPosition.y - MAX_COURSE_Y_OFFSET < 0
-      //     ? MAX_COURSE_Y_OFFSET -
-      //       Math.abs(spacePlayer.currentPosition.y - MAX_COURSE_Y_OFFSET)
-      //     : MAX_COURSE_Y_OFFSET;
-
-      // const maxDownAdjustedForBottomOfScreen =
-      //   spacePlayer.currentPosition.y + MAX_COURSE_Y_OFFSET > STARMAP_HEIGHT - 1
-      //     ? spacePlayer.currentPosition.y +
-      //       MAX_COURSE_Y_OFFSET -
-      //       STARMAP_HEIGHT -
-      //       1
-      //     : MAX_COURSE_Y_OFFSET;
-
+      if (spacePlayer.courseMovesRemaining === 0) {
+        return;
+      }
       const upObstacle = getVerticalEntityBetween(
         spacePlayer.currentPosition,
         -MAX_COURSE_Y_OFFSET
@@ -273,13 +262,15 @@ function createSpaceRaceGame(players: Player[]): SpaceRaceGame {
           }
         }
 
+        const gameMoves = player.details?.gameMoves || 0;
+
         return {
           ...acc,
           [playerId]: {
             id: player.id,
             name: player.name,
             color: player.details?.colourHex || "#770000",
-            courseMovesRemaining: player.details?.gameMoves || 0,
+            courseMovesRemaining: gameMoves,
             currentPosition: {
               x: startingXCoordinate,
               y: startingYCoordinate,
@@ -287,9 +278,9 @@ function createSpaceRaceGame(players: Player[]): SpaceRaceGame {
             plannedCourse: {
               up: 0,
               right: 0,
-              lockedIn: false,
-              movedVertically: false,
-              movedHorizontally: false,
+              lockedIn: gameMoves === 0 ? true : false,
+              movedVertically: gameMoves === 0 ? true : false,
+              movedHorizontally: gameMoves === 0 ? true : false,
             },
           },
         };
