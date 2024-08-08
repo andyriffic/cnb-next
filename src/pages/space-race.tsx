@@ -4,12 +4,11 @@ import { SETTINGS_PLAYER_ID } from "../constants";
 import { Player } from "../types/Player";
 import { getAllPlayers } from "../utils/data/aws-dynamodb";
 import { sortByPlayerName } from "../utils/sort";
-import { ComingSoon } from "../components/space-race/ComingSoon";
 
 type Props = { players: Player[] };
 
 function Page({ players }: Props) {
-  return <ComingSoon />;
+  return <SpaceRaceScreen players={players} />;
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
