@@ -1,21 +1,16 @@
-import { useCallback } from "react";
 import { Player } from "../../types/Player";
-import { SpectatorPageLayout } from "../SpectatorPageLayout";
-import { selectRandomOneOf } from "../../utils/random";
 import { isClientSideFeatureEnabled } from "../../utils/feature";
+import { SpectatorPageLayout } from "../SpectatorPageLayout";
 import { StarMap } from "./Starmap";
 import { useSpaceRace } from "./useSpaceRace";
-import { DebugSpaceRace } from "./DebugSpaceRace";
-import { useSpaceRaceSaveState } from "./useSpaceRaceSaveState";
 
 type Props = {
   players: Player[];
 };
 
 const View = ({ players }: Props) => {
-  const spaceRace = useSpaceRace(players);
-  useSpaceRaceSaveState(
-    spaceRace.spaceRaceGame,
+  const spaceRace = useSpaceRace(
+    players,
     isClientSideFeatureEnabled("no-save")
   );
 

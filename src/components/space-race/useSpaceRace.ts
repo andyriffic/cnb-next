@@ -5,6 +5,7 @@ import { clamp } from "../../utils/number";
 import { useSocketIo } from "../../providers/SocketIoProvider";
 import { useSound } from "../hooks/useSound";
 import { QueryUserOption } from "../../services/query-user/types";
+import { updatePlayerDetails } from "../../utils/api";
 import { createEntity, STARMAP_CHART, STARMAP_HEIGHT } from "./constants";
 import {
   PlannedCourse,
@@ -28,7 +29,10 @@ export type UseSpaceRace = {
   sendCourseQuestionToPlayers: () => void;
 };
 
-export const useSpaceRace = (players: Player[]): UseSpaceRace => {
+export const useSpaceRace = (
+  players: Player[],
+  disableSave: boolean
+): UseSpaceRace => {
   const [game, setGame] = useState(() => createSpaceRaceGame(players));
   const { playerQuery } = useSocketIo();
   const { play } = useSound();
@@ -55,13 +59,16 @@ export const useSpaceRace = (players: Player[]): UseSpaceRace => {
 
   const movePlayerHorizontally = useCallback(
     (playerId: string) => {
-      return setGame({
+      const updatedGame: SpaceRaceGame = {
         ...game,
         spacePlayers: updatePlayerHorizontalPosition(
           game.spacePlayers,
           playerId
         ),
-      });
+      };
+      const updatedPlayer = updatedGame.spacePlayers[playerId];
+      setGame(updatedGame);
+      return updatedPlayer;
     },
     [game]
   );
@@ -89,11 +96,20 @@ export const useSpaceRace = (players: Player[]): UseSpaceRace => {
     if (playersToMoveHorizontally.length > 0) {
       const playerToMove = playersToMoveHorizontally[0]!;
       const timeout = setTimeout(() => {
-        movePlayerHorizontally(playerToMove.id);
+        const updatedPlayer = movePlayerHorizontally(playerToMove.id);
+        if (updatedPlayer && !disableSave) {
+          updatePlayerDetails(updatedPlayer.id, {
+            gameMoves: updatedPlayer.courseMovesRemaining,
+            spaceRace: {
+              xCoordinate: updatedPlayer.currentPosition.x,
+              yCoordinate: updatedPlayer.currentPosition.y,
+            },
+          });
+        }
       }, 1000);
       return () => clearTimeout(timeout);
     }
-  }, [game.spacePlayers, movePlayerHorizontally]);
+  }, [game.spacePlayers, movePlayerHorizontally, disableSave]);
 
   useEffect(() => {
     Object.keys(playerQuery.questionsByPlayerId).forEach((playerId) => {
@@ -106,8 +122,6 @@ export const useSpaceRace = (players: Player[]): UseSpaceRace => {
         game.spacePlayers[playerId]?.plannedCourse.lockedIn;
 
       if (playerCourseAlreadyLockedIn) return;
-
-      console.log("Answering course question", playerId, answer);
 
       plotPlayerCourse(playerId, parseInt(answer.value.toString()));
       playerQuery.deletePlayerQuestion(playerId);
