@@ -251,7 +251,7 @@ export const AdminPlayerEdit = ({ player, onClose }: Props) => {
                 });
               }}
             >
-              Delete Zombie details
+              Delete Zombie details 🧟
             </button>
           </EvenlySpaced>
           <AdminPlayerEditNumberValue
@@ -310,12 +310,12 @@ export const AdminPlayerEdit = ({ player, onClose }: Props) => {
             <h6 style={{ fontWeight: "bold" }}>Space Race</h6>
             <button
               type="button"
-              style={{ backgroundColor: "red" }}
+              style={{ backgroundColor: "darkred", color: "white" }}
               onClick={() => {
                 alert("not implemented yet");
               }}
             >
-              Delete Space Race details
+              Delete Space Race details 🚀
             </button>
           </EvenlySpaced>
           <AdminPlayerEditNumberValue
