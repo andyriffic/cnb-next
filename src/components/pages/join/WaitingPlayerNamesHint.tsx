@@ -26,7 +26,6 @@ const REGULAR_PLAYER_NAMES = [
   "Shuming",
   "Albert",
   "Ben",
-  "Xueming",
   "Yishen",
   "Sixiao",
   "Shihao",
