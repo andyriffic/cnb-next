@@ -16,6 +16,11 @@ const Container = styled.div`
   align-items: center;
   position: relative;
   flex-direction: column;
+  cursor: pointer;
+
+  &:hover {
+    z-index: 1;
+  }
 `;
 
 const CollisionIndicator = styled.div`

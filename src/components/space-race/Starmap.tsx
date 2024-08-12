@@ -59,6 +59,16 @@ const DebugCoordinates = styled.span`
   opacity: 0.3;
 `;
 
+const OFFSETS = [
+  { x: 0, y: 0 },
+  { x: 0, y: 2 },
+  { x: 0, y: -3 },
+  { x: 0, y: 5 },
+  { x: -1, y: 1 },
+  { x: -1, y: -2 },
+  { x: -1, y: 4 },
+];
+
 type Props = {
   starmap: SpaceRaceStarmap;
   players: SpacePlayersById;
@@ -98,10 +108,11 @@ export const StarMap = ({ starmap, players }: Props) => {
       {Object.keys(players).map((playerId, i) => {
         const player = players[playerId];
         if (!player) return null;
+        const offset = OFFSETS[player.positionOffset || 0];
         return (
           <SpacePlayerContainer
             key={i}
-            style={getStarmapCssPosition(player.currentPosition)}
+            style={getStarmapCssPosition(player.currentPosition, offset)}
           >
             <PlayerShip player={player} />
           </SpacePlayerContainer>
@@ -127,9 +138,12 @@ function starmapDebugCoordinates() {
   return coordinates;
 }
 
-function getStarmapCssPosition(position: SpaceRaceCoordinates) {
+function getStarmapCssPosition(
+  position: SpaceRaceCoordinates,
+  offset: { x: number; y: number } = { x: 0, y: 0 }
+) {
   return {
-    top: `${(100 / STARMAP_HEIGHT) * position.y}vh`,
-    left: `${(100 / STARMAP_WIDTH) * position.x}vw`,
+    top: `${(100 / STARMAP_HEIGHT) * position.y + offset.y}vh`,
+    left: `${(100 / STARMAP_WIDTH) * position.x + offset.x}vw`,
   };
 }

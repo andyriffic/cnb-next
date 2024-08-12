@@ -38,6 +38,7 @@ export type SpaceRacePlayer = {
   name: string;
   courseMovesRemaining: number;
   currentPosition: SpaceRaceCoordinates;
+  positionOffset?: number;
   plannedCourse: PlannedCourse;
   collidedWith?: SpaceRaceEntity;
   color: string;

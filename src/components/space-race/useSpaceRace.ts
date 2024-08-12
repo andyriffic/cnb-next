@@ -59,13 +59,16 @@ export const useSpaceRace = (
 
   const movePlayerHorizontally = useCallback(
     (playerId: string) => {
-      const updatedGame: SpaceRaceGame = {
-        ...game,
-        spacePlayers: updatePlayerHorizontalPosition(
-          game.spacePlayers,
-          playerId
-        ),
-      };
+      const updatedGame: SpaceRaceGame = updatePlayerDuplicateSquarePositions(
+        playerId,
+        {
+          ...game,
+          spacePlayers: updatePlayerHorizontalPosition(
+            game.spacePlayers,
+            playerId
+          ),
+        }
+      );
       const updatedPlayer = updatedGame.spacePlayers[playerId];
       setGame(updatedGame);
       return updatedPlayer;
@@ -246,66 +249,54 @@ export const useSpaceRace = (
 function createSpaceRaceGame(players: Player[]): SpaceRaceGame {
   const allPlayerIds = players.map((player) => player.id);
 
-  let nextAssignedYCoordinate = 0;
+  const spacePlayersById = allPlayerIds.reduce<{
+    [id: string]: SpaceRacePlayer;
+  }>((acc, playerId) => {
+    const player = players.find((p) => p.id === playerId);
 
-  const game: SpaceRaceGame = {
+    if (!player) {
+      return acc;
+    }
+
+    const spaceRaceDetails = getPlayerSpaceRaceDetails(player);
+
+    const gameMoves = player.details?.gameMoves || 0;
+
+    return {
+      ...acc,
+      [playerId]: {
+        id: player.id,
+        name: player.name,
+        color: player.details?.colourHex || "#770000",
+        courseMovesRemaining: gameMoves,
+        currentPosition: {
+          x: spaceRaceDetails.xCoordinate,
+          y: spaceRaceDetails.yCoordinate,
+        },
+        plannedCourse: {
+          up: 0,
+          right: 0,
+          lockedIn: gameMoves === 0 ? true : false,
+          movedVertically: gameMoves === 0 ? true : false,
+          movedHorizontally: gameMoves === 0 ? true : false,
+        },
+      },
+    };
+  }, {});
+
+  const defaultGame: SpaceRaceGame = {
     starmap: STARMAP_CHART,
     gameOver: false,
-    spacePlayers: allPlayerIds.reduce<{ [id: string]: SpaceRacePlayer }>(
-      (acc, playerId) => {
-        const player = players.find((p) => p.id === playerId);
-
-        if (!player) {
-          return acc;
-        }
-
-        const isNewPlayer = !player.details?.spaceRace;
-        const spaceRaceDetails = getPlayerSpaceRaceDetails(player);
-
-        const startingYCoordinate = isNewPlayer
-          ? nextAssignedYCoordinate
-          : spaceRaceDetails.yCoordinate;
-        const startingXCoordinate = isNewPlayer
-          ? 0
-          : spaceRaceDetails.xCoordinate;
-
-        if (isNewPlayer) {
-          nextAssignedYCoordinate += 1;
-          if (nextAssignedYCoordinate >= STARMAP_HEIGHT) {
-            nextAssignedYCoordinate = 0;
-          }
-        }
-
-        const gameMoves = player.details?.gameMoves || 0;
-
-        return {
-          ...acc,
-          [playerId]: {
-            id: player.id,
-            name: player.name,
-            color: player.details?.colourHex || "#770000",
-            courseMovesRemaining: gameMoves,
-            currentPosition: {
-              x: startingXCoordinate,
-              y: startingYCoordinate,
-            },
-            plannedCourse: {
-              up: 0,
-              right: 0,
-              lockedIn: gameMoves === 0 ? true : false,
-              movedVertically: gameMoves === 0 ? true : false,
-              movedHorizontally: gameMoves === 0 ? true : false,
-            },
-          },
-        };
-      },
-      {}
-    ),
+    spacePlayers: spacePlayersById,
   };
 
-  console.log("Space Race game created", game);
+  const updatedGameWithPlayerPositionOffsets = Object.values(
+    defaultGame.spacePlayers
+  ).reduce<SpaceRaceGame>((acc, player) => {
+    return updatePlayerDuplicateSquarePositions(player.id, acc);
+  }, defaultGame);
 
-  return game;
+  return updatedGameWithPlayerPositionOffsets;
 }
 
 function assignPlannedCourse(
@@ -479,14 +470,6 @@ function updatePlayerHorizontalPosition(
     movedHorizontally: true,
   };
 
-  console.log(
-    "horizontal update current position",
-    playerId,
-    player.currentPosition
-  );
-
-  console.log("horizontal update hit entity", playerId, hitEntity);
-
   return {
     ...spacePlayers,
     [playerId]: {
@@ -495,4 +478,30 @@ function updatePlayerHorizontalPosition(
       collidedWith: hitEntity,
     },
   };
+}
+
+function updatePlayerDuplicateSquarePositions(
+  playerId: string,
+  spaceRaceGame: SpaceRaceGame
+): SpaceRaceGame {
+  const player = spaceRaceGame.spacePlayers[playerId];
+  if (!player) return spaceRaceGame;
+
+  const playerCoordinates = player.currentPosition;
+
+  const otherPlayersInSameCoordinatesWithPositionOffset = Object.values(
+    spaceRaceGame.spacePlayers
+  )
+    .filter(
+      (p) =>
+        p.currentPosition.x === playerCoordinates.x &&
+        p.currentPosition.y === playerCoordinates.y
+    )
+    .map<SpaceRacePlayer>((p, i) => ({ ...p, positionOffset: i }));
+
+  otherPlayersInSameCoordinatesWithPositionOffset.forEach((p) => {
+    spaceRaceGame.spacePlayers[p.id] = p;
+  });
+
+  return spaceRaceGame;
 }
