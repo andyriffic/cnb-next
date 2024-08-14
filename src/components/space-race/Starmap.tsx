@@ -38,7 +38,7 @@ const SpacePlayerContainer = styled.span`
 const GridLine = styled.div`
   position: absolute;
   background-color: #333;
-  opacity: 0.6;
+  opacity: 0.4;
 `;
 
 const HorizontalGridLine = styled(GridLine)`
