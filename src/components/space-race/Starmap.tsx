@@ -35,10 +35,11 @@ const SpacePlayerContainer = styled.span`
   transition: top 0.5s, left 0.5s;
 `;
 
-const GridLine = styled.div`
+const GridLine = styled.div<{ visible: boolean }>`
   position: absolute;
   background-color: #333;
-  opacity: 0.4;
+  opacity: ${({ visible }) => (visible ? 0.5 : 0)};
+  transition: opacity 0.5s;
 `;
 
 const HorizontalGridLine = styled(GridLine)`
@@ -72,9 +73,10 @@ const OFFSETS = [
 type Props = {
   starmap: SpaceRaceStarmap;
   players: SpacePlayersById;
+  showGridlines: boolean;
 };
 
-export const StarMap = ({ starmap, players }: Props) => {
+export const StarMap = ({ starmap, players, showGridlines }: Props) => {
   const [showDebug, setShowDebug] = useState(false);
   useEffect(() => setShowDebug(isClientSideFeatureEnabled("debug")), []);
 
@@ -84,6 +86,7 @@ export const StarMap = ({ starmap, players }: Props) => {
         .fill(0)
         .map((_, i) => (
           <HorizontalGridLine
+            visible={showGridlines}
             key={i}
             style={{
               top: `${(100 / STARMAP_HEIGHT) * i}vh`,
@@ -94,6 +97,7 @@ export const StarMap = ({ starmap, players }: Props) => {
         .fill(0)
         .map((_, i) => (
           <VerticalGridLine
+            visible={showGridlines}
             key={i}
             style={{
               left: `${(100 / STARMAP_WIDTH) * i}vw`,

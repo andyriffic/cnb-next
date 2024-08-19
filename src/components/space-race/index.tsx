@@ -21,6 +21,7 @@ const View = ({ players }: Props) => {
       <StarMap
         starmap={spaceRace.spaceRaceGame.starmap}
         players={spaceRace.spaceRaceGame.spacePlayers}
+        showGridlines={spaceRace.spaceRaceGame.uiState.showGridlines}
       />
       <div style={{ position: "absolute", right: 0 }}>
         {/* <button onClick={spaceRace.randomlyPlotAllPlayerCourses}>

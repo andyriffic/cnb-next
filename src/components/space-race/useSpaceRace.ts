@@ -232,7 +232,9 @@ export const useSpaceRace = (
         options: allCourseOptions,
       });
     });
-  }, [game.spacePlayers, playerQuery]);
+
+    setGame({ ...game, uiState: { ...game.uiState, showGridlines: true } });
+  }, [game, playerQuery]);
 
   return {
     spaceRaceGame: game,
@@ -288,6 +290,9 @@ function createSpaceRaceGame(players: Player[]): SpaceRaceGame {
     starmap: STARMAP_CHART,
     gameOver: false,
     spacePlayers: spacePlayersById,
+    uiState: {
+      showGridlines: false,
+    },
   };
 
   const updatedGameWithPlayerPositionOffsets = Object.values(

@@ -1,7 +1,17 @@
+export enum SpaceRaceGameState {
+  WAITING = 0,
+  PLAYERS_MOVING = 1,
+}
+
 export type SpaceRaceGame = {
   gameOver: boolean;
   starmap: SpaceRaceStarmap;
   spacePlayers: SpacePlayersById;
+  uiState: SpaceRaceUiState;
+};
+
+export type SpaceRaceUiState = {
+  showGridlines: boolean;
 };
 
 export type SpacePlayersById = { [id: string]: SpaceRacePlayer };
