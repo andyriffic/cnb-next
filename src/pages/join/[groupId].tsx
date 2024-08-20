@@ -190,7 +190,7 @@ function Page() {
             </SmallHeading>
             {qrCodeUrl && (
               <div style={{ textAlign: "right", marginBottom: "2rem" }}>
-                <Image src={qrCodeUrl} alt="" width={200} height={200} />
+                <Image src={qrCodeUrl} alt="" width={250} height={250} />
               </div>
             )}
 
