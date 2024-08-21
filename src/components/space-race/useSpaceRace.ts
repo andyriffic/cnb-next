@@ -291,7 +291,7 @@ function createSpaceRaceGame(players: Player[]): SpaceRaceGame {
     gameOver: false,
     spacePlayers: spacePlayersById,
     uiState: {
-      showGridlines: false,
+      showGridlines: true,
     },
   };
 
