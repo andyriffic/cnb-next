@@ -9,7 +9,7 @@ export const playersBettingGameUrl = (
 ): string => `/play/${playerId}/bet?gameId=${gameId}`;
 
 export const getPlayerAvatarUrl = (playerId: string): string => {
-  return `/images/players/ben.png`;
+  return `/images/players/${playerId}.png`;
 };
 
 export const getPlayerHomeUrl = (
