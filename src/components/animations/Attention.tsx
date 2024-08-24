@@ -4,7 +4,7 @@ import styled, {
   keyframes,
 } from "styled-components";
 
-type AttentionAnimation = "vibrate" | "slow-vibrate" | "shake";
+type AttentionAnimation = "vibrate" | "slow-vibrate" | "shake" | "pulse";
 
 const Animation_Vibrate = keyframes` {
   0% {
@@ -54,6 +54,18 @@ export const Animation_ShakeBottom = keyframes` {
   }
 }`;
 
+export const Animation_Pulse = keyframes` {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}`;
+
 const ANIMATION_CSS: {
   [key in AttentionAnimation]: FlattenSimpleInterpolation;
 } = {
@@ -66,6 +78,9 @@ const ANIMATION_CSS: {
   shake: css`
     animation: ${Animation_ShakeBottom} 2.5s
       cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite both;
+  `,
+  pulse: css`
+    animation: ${Animation_Pulse} 3s ease-in-out infinite both;
   `,
 };
 

@@ -19,10 +19,12 @@ export type SpaceRaceEntityType =
   | "satellite"
   | "planet"
   | "asteroid"
+  | "asteroid"
   | "wormhole"
+  | "earth"
   | "out-of-bounds";
 
-export type SpaceRaceEntityBehaviour = "block";
+export type SpaceRaceEntityBehaviour = "block" | "finish";
 
 export type SpaceRaceEntity = {
   type: SpaceRaceEntityType;
