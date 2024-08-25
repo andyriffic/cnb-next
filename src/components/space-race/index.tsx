@@ -1,6 +1,10 @@
+import Image from "next/image";
 import { Player } from "../../types/Player";
 import { isClientSideFeatureEnabled } from "../../utils/feature";
 import { SpectatorPageLayout } from "../SpectatorPageLayout";
+import { SplashContent } from "../SplashContent";
+import { useSound } from "../hooks/useSound";
+import { useDoOnce } from "../hooks/useDoOnce";
 import { StarMap } from "./Starmap";
 import { useSpaceRace } from "./useSpaceRace";
 
@@ -9,10 +13,15 @@ type Props = {
 };
 
 const View = ({ players }: Props) => {
+  const { play } = useSound();
   const spaceRace = useSpaceRace(
     players,
     isClientSideFeatureEnabled("no-save")
   );
+
+  useDoOnce(() => {
+    play("space-race-intro");
+  });
 
   console.log("Space race state", spaceRace.spaceRaceGame);
 
@@ -33,11 +42,24 @@ const View = ({ players }: Props) => {
         <button onClick={spaceRace.moveAllPlayersHorizontally}>
           Move horizontally
         </button> */}
-        <button onClick={spaceRace.sendCourseQuestionToPlayers}>
+        <button
+          onClick={() => {
+            play("space-race-plot-course");
+            spaceRace.sendCourseQuestionToPlayers;
+          }}
+        >
           send course
         </button>
         {/* <DebugSpaceRace useSpaceRace={spaceRace} /> */}
       </div>
+      <SplashContent>
+        <Image
+          src="/images/space-race-text.png"
+          alt="Space Race"
+          width={480}
+          height={48}
+        />
+      </SplashContent>
     </SpectatorPageLayout>
   );
 };
