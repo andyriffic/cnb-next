@@ -147,12 +147,28 @@ export const AdminPlayerEdit = ({ player, onClose }: Props) => {
               }
             />
           </fieldset>
+          <AdminPlayerEditNumberValue
+            label="Who's that count"
+            id="whos_that_count"
+            value={playerCopy.details?.whosThatCount || 0}
+            min={0}
+            onChange={(value) =>
+              setPlayerCopy({
+                ...playerCopy,
+                details: {
+                  ...playerCopy.details,
+                  whosThatCount: value,
+                },
+              })
+            }
+          />
+
           <hr />
           <EvenlySpaced>
             <h6 style={{ fontWeight: "bold" }}>Pacman</h6>
             <button
               type="button"
-              style={{ backgroundColor: "red" }}
+              style={{ backgroundColor: "goldenrod" }}
               onClick={() => {
                 deletePlayerPacmanDetails(playerCopy.id).then(() => {
                   onClose(true);
