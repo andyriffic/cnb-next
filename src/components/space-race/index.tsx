@@ -45,7 +45,7 @@ const View = ({ players }: Props) => {
         <button
           onClick={() => {
             play("space-race-plot-course");
-            spaceRace.sendCourseQuestionToPlayers;
+            spaceRace.sendCourseQuestionToPlayers();
           }}
         >
           send course

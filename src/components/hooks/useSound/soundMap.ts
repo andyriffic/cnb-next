@@ -57,6 +57,7 @@ const DEFAULT_SOUND_MAP: { [key in SoundName]: string } = {
   "space-race-plot-course": "/sounds/default/galaga_start.mp3",
   "space-race-rocket-move": "/sounds/default/spaceship.mp3",
   "space-race-rocket-collision": "/sounds/default/blast_off_sms.mp3",
+  "space-race-player-finish": "/sounds/power_mode.mp3",
 };
 
 const XMAS_SOUND_MAP: { [key in SoundName]: string } = {

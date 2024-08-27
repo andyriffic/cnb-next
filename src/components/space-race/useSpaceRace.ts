@@ -448,6 +448,37 @@ function getVerticalEntityBetween(
   }
 }
 
+function getEndingCooridinates(player: SpaceRacePlayer): {
+  entity?: SpaceRaceEntity;
+  coordinates: SpaceRaceCoordinates;
+} {
+  const entity = getHorizontalEntityBetween(
+    player.currentPosition,
+    player.plannedCourse.right
+  );
+
+  if (!entity) {
+    return {
+      coordinates: {
+        x: player.currentPosition.x + Math.abs(player.plannedCourse.right),
+        y: player.currentPosition.y,
+      },
+    };
+  }
+
+  if (entity.behaviour === "block") {
+    return {
+      entity,
+      coordinates: { x: entity.position.x - 1, y: player.currentPosition.y },
+    };
+  }
+
+  return {
+    entity,
+    coordinates: { ...entity.position },
+  };
+}
+
 function updatePlayerHorizontalPosition(
   spacePlayers: SpacePlayersById,
   playerId: string
@@ -456,17 +487,7 @@ function updatePlayerHorizontalPosition(
   if (!player) return spacePlayers;
   if (!player.plannedCourse.lockedIn) return spacePlayers;
 
-  const hitEntity = getHorizontalEntityBetween(
-    player.currentPosition,
-    player.plannedCourse.right
-  );
-
-  const newPosition: SpaceRaceCoordinates = hitEntity
-    ? { x: hitEntity.position.x - 1, y: player.currentPosition.y }
-    : {
-        x: player.currentPosition.x + Math.abs(player.plannedCourse.right),
-        y: player.currentPosition.y,
-      };
+  const moveResult = getEndingCooridinates(player);
 
   const newPlannedCourse = {
     ...player.plannedCourse,
@@ -478,9 +499,9 @@ function updatePlayerHorizontalPosition(
   return {
     ...spacePlayers,
     [playerId]: {
-      ...setPlayerCoordinates(player, newPosition),
+      ...setPlayerCoordinates(player, moveResult.coordinates),
       plannedCourse: newPlannedCourse,
-      collidedWith: hitEntity,
+      collidedWith: moveResult.entity,
     },
   };
 }
