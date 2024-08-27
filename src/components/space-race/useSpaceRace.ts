@@ -448,7 +448,10 @@ function getVerticalEntityBetween(
   }
 }
 
-function getEndingCooridinates(player: SpaceRacePlayer): {
+function getEndingCooridinates(
+  player: SpaceRacePlayer,
+  spacePlayers: SpacePlayersById
+): {
   entity?: SpaceRaceEntity;
   coordinates: SpaceRaceCoordinates;
 } {
@@ -464,6 +467,20 @@ function getEndingCooridinates(player: SpaceRacePlayer): {
         y: player.currentPosition.y,
       },
     };
+  }
+
+  if (entity.behaviour === "finish") {
+    console.log("Checking other player finished...", spacePlayers);
+    const otherPlayerFinished = Object.values(spacePlayers).find(
+      (p) =>
+        p.id !== player.id &&
+        p.currentPosition.x === entity.position.x &&
+        p.currentPosition.y === entity.position.y
+    );
+    console.log("Other player finished", otherPlayerFinished);
+    if (otherPlayerFinished) {
+      entity.behaviour = "block"; //Not really happy about this mutation but hey whaddayagonnado
+    }
   }
 
   if (entity.behaviour === "block") {
@@ -487,7 +504,7 @@ function updatePlayerHorizontalPosition(
   if (!player) return spacePlayers;
   if (!player.plannedCourse.lockedIn) return spacePlayers;
 
-  const moveResult = getEndingCooridinates(player);
+  const moveResult = getEndingCooridinates(player, spacePlayers);
 
   const newPlannedCourse = {
     ...player.plannedCourse,

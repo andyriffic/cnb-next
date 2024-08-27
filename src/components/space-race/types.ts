@@ -24,7 +24,7 @@ export type SpaceRaceEntityType =
   | "earth"
   | "out-of-bounds";
 
-export type SpaceRaceEntityBehaviour = "block" | "stick";
+export type SpaceRaceEntityBehaviour = "block" | "finish";
 
 export type SpaceRaceEntity = {
   type: SpaceRaceEntityType;

@@ -58,8 +58,13 @@ export const PlayerShip = ({ player }: Props) => {
   const { play } = useSound();
 
   useEffect(() => {
-    if (player.collidedWith && player.collidedWith.behaviour === "block") {
-      play("space-race-rocket-collision");
+    if (player.collidedWith) {
+      if (player.collidedWith.behaviour === "block") {
+        play("space-race-rocket-collision");
+      }
+      if (player.collidedWith.type === "earth") {
+        play("space-race-player-finish");
+      }
     }
   }, [play, player.collidedWith]);
 
