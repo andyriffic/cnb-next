@@ -18,6 +18,15 @@ export const fadeInBottom = keyframes`
   }
 `;
 
+export const fadeOut = keyframes`
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+`;
+
 export const fadeOutTop = keyframes`
   0% {
     -webkit-transform: translateY(0);

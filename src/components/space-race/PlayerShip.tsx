@@ -1,12 +1,12 @@
-import styled from "styled-components";
+import { useEffect, useMemo, useRef } from "react";
+import styled, { css } from "styled-components";
 import tinycolor from "tinycolor2";
-import { useEffect } from "react";
-import { fadeInOutRight } from "../animations/keyframes/fade";
+import { fadeInOutRight, fadeOut } from "../animations/keyframes/fade";
 import { useSound } from "../hooks/useSound";
-import { STARMAP_HEIGHT, STARMAP_WIDTH } from "./constants";
+import { STARMAP_CHART, STARMAP_HEIGHT, STARMAP_WIDTH } from "./constants";
 import { SpaceRacePlayer } from "./types";
 
-const Container = styled.div`
+const Container = styled.div<{ hide: boolean }>`
   font-size: 3rem;
   width: ${100 / STARMAP_WIDTH}vw;
   height: ${100 / STARMAP_HEIGHT}vh;
@@ -17,6 +17,11 @@ const Container = styled.div`
   position: relative;
   flex-direction: column;
   cursor: pointer;
+  ${({ hide }) =>
+    hide &&
+    css`
+      animation: ${fadeOut} 1000ms ease-in 0ms 1 both;
+    `}
 
   &:hover {
     z-index: 1;
@@ -57,6 +62,15 @@ type Props = {
 export const PlayerShip = ({ player }: Props) => {
   const { play } = useSound();
 
+  const landed = useMemo(() => {
+    return STARMAP_CHART.entities.some(
+      (e) =>
+        e.behaviour === "finish" &&
+        e.position.x === player.currentPosition.x &&
+        e.position.y === player.currentPosition.y
+    );
+  }, [player.currentPosition.x, player.currentPosition.y]);
+
   useEffect(() => {
     if (player.collidedWith) {
       if (player.collidedWith.behaviour === "block") {
@@ -68,14 +82,17 @@ export const PlayerShip = ({ player }: Props) => {
     }
   }, [play, player.collidedWith]);
 
-  const playerNameFontColour = tinycolor
-    .mostReadable(player.color, ["#fff", "#000"])
-    .toHexString();
+  const playerNameFontColour = useRef(
+    tinycolor.mostReadable(player.color, ["#fff", "#000"]).toHexString()
+  );
 
   return (
-    <Container>
+    <Container hide={landed}>
       <PlayerName
-        style={{ color: playerNameFontColour, backgroundColor: player.color }}
+        style={{
+          color: playerNameFontColour.current,
+          backgroundColor: player.color,
+        }}
       >
         {player.name}
       </PlayerName>

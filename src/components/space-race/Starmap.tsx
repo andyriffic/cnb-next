@@ -106,7 +106,7 @@ export const StarMap = ({ starmap, players, showGridlines }: Props) => {
         ))}
       {starmap.entities.map((e, i) => (
         <SpaceEntityContainer key={i} style={getStarmapCssPosition(e.position)}>
-          <SpaceEntity entity={e} />
+          <SpaceEntity entity={e} players={players} />
         </SpaceEntityContainer>
       ))}
       {Object.keys(players).map((playerId, i) => {
