@@ -55,6 +55,7 @@ type NumberCrunchPlayerView = NumberCrunchPlayer & {
 export type NumberCrunchPlayerGuessView = {
   playerId: string;
   bucketRangeIndex: number;
+  guess: number;
 };
 
 export type NumberCrunchRoundView = {

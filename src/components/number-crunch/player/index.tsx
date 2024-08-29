@@ -21,7 +21,6 @@ const View = ({ game, playerId, makePlayerGuess }: Props) => {
   return (
     <PlayerPageLayout playerId={playerId}>
       {/* <SmallHeading>{playerId}</SmallHeading> */}
-      {/* <PlayerRoundHistory game={game} playerId={playerId} /> */}
       {currentGuess ? (
         <SmallHeading>Waiting to Guess</SmallHeading>
       ) : (
@@ -31,6 +30,7 @@ const View = ({ game, playerId, makePlayerGuess }: Props) => {
           onSelected={(val) => makePlayerGuess(val)}
         />
       )}
+      {/* <PlayerRoundHistory game={game} playerId={playerId} /> */}
     </PlayerPageLayout>
   );
 };

@@ -137,7 +137,7 @@ function createRoundView(
     playerGuesses: round.playerGuesses.map((pg) => ({
       playerId: pg.id,
       bucketRangeIndex: getNumberCrunchRangeBucketIndex(pg.offBy),
-      // offBy: pg.offBy, // TODO: add range bucket here instead of offby
+      guess: pg.guess,
     })),
   };
 }
