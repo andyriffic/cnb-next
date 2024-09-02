@@ -8,6 +8,7 @@ export type NumberCrunchGame = {
 type NumberCrunchPlayer = {
   id: string;
   name: string;
+  advantage: boolean;
 };
 
 type NumberCrunchRoundRange = {
@@ -50,6 +51,7 @@ export type NumberCrunchGameView = {
 
 type NumberCrunchPlayerView = NumberCrunchPlayer & {
   guessedThisRound: boolean;
+  advantage: boolean;
 };
 
 export type NumberCrunchPlayerGuessView = {

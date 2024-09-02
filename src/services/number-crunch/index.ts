@@ -63,7 +63,11 @@ const createGame =
     return {
       id: gameId,
       target: getTarget(),
-      players: players.map((p) => ({ id: p.id, name: p.name })),
+      players: players.map((p) => ({
+        id: p.id,
+        name: p.name,
+        advantage: !!p.details?.hasGameAdvantage,
+      })),
       rounds: [createEmptyRound()],
     };
   };

@@ -9,6 +9,7 @@ export type PlayerDetails = {
   gameMoves?: number;
   colourHex?: string;
   retired?: boolean;
+  hasGameAdvantage?: boolean;
   role?: string;
   whosThatCount?: number;
   pacmanPlayer?: boolean;

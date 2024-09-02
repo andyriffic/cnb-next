@@ -129,6 +129,21 @@ export const AdminPlayerEdit = ({ player, onClose }: Props) => {
               }
             />
           </fieldset>
+          <AdminPlayerEditBooleanValue
+            label="Advantage"
+            id="game_advantage"
+            value={!!playerCopy.details?.hasGameAdvantage}
+            onChange={(checked) =>
+              setPlayerCopy({
+                ...playerCopy,
+                details: {
+                  ...playerCopy.details,
+                  hasGameAdvantage: checked,
+                },
+              })
+            }
+          />
+
           <fieldset>
             <label htmlFor="team_name">Team</label>
             <input

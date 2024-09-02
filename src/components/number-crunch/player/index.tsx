@@ -12,11 +12,24 @@ type Props = {
 };
 
 const View = ({ game, playerId, makePlayerGuess }: Props) => {
+  const player = useMemo(() => {
+    return game.players.find((player) => player.id === playerId);
+  }, [game.players, playerId]);
+
   const currentGuess = useMemo(() => {
     return game.currentRound.playerGuesses.find(
       (guess) => guess.playerId === playerId
     );
   }, [game.currentRound.playerGuesses, playerId]);
+
+  if (!player) {
+    return (
+      <div>
+        Sorry, there is no player with id {playerId} in this game of Number
+        Crunch
+      </div>
+    );
+  }
 
   return (
     <PlayerPageLayout playerId={playerId}>
@@ -30,7 +43,9 @@ const View = ({ game, playerId, makePlayerGuess }: Props) => {
           onSelected={(val) => makePlayerGuess(val)}
         />
       )}
-      {/* <PlayerRoundHistory game={game} playerId={playerId} /> */}
+      {player?.advantage && (
+        <PlayerRoundHistory game={game} playerId={playerId} />
+      )}
     </PlayerPageLayout>
   );
 };
