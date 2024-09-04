@@ -53,6 +53,7 @@ export type GasPlayer = {
   points: number;
   totalPresses: number;
   killedBy?: PlayerKilledBy;
+  advantage: boolean;
   guesses: {
     nextPlayerOutGuess?: string;
     nominatedCount: number;

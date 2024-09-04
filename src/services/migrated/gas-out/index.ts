@@ -702,7 +702,11 @@ export function playCard(
     curse: undefined, // Curse automatically removed after card is played
     cards: [
       ...updatedCards,
-      createRandomCard(game.gameType, game.alivePlayersIds.length === 2),
+      createRandomCard(
+        game.gameType,
+        player.advantage,
+        game.alivePlayersIds.length === 2
+      ),
     ],
   };
 
@@ -814,13 +818,15 @@ function getPlayerAndCardOrThrow(
 }
 
 function createGasPlayer(player: Player, gameType: GasGameType): GasPlayer {
+  const advantage = !!player.details?.hasGameAdvantage;
   return {
     player,
     status: "alive",
+    advantage,
     cards: [
-      createRandomCard(gameType),
-      createRandomCard(gameType),
-      createRandomCard(gameType),
+      createRandomCard(gameType, advantage),
+      createRandomCard(gameType, advantage),
+      createRandomCard(gameType, advantage),
     ],
     totalPresses: 0,
     points: 0,
@@ -878,12 +884,13 @@ function createCard(cardType: CardType, presses: number): GasCard {
 
 function createRandomCard(
   gameType: GasGameType,
+  advantage: boolean,
   isFinalRound: boolean = false
 ): GasCard {
   const nextCardType = getRandomCardType(gameType, isFinalRound);
   const card = createCard(
     nextCardType,
-    gameType === "crazy" ? 1 : selectRandomOneOf([1, 2, 3, 4, 5])
+    gameType === "crazy" || advantage ? 1 : selectRandomOneOf([1, 2, 3, 4, 5])
   );
 
   return card;
