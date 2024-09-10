@@ -10,6 +10,7 @@ import {
 } from "../../types/Player";
 import {
   deletePlayerPacmanDetails,
+  deletePlayerSpaceRaceDetails,
   deletePlayerZombieDetails,
   updatePlayerDetails,
 } from "../../utils/api";
@@ -343,7 +344,9 @@ export const AdminPlayerEdit = ({ player, onClose }: Props) => {
               type="button"
               style={{ backgroundColor: "darkred", color: "white" }}
               onClick={() => {
-                alert("not implemented yet");
+                deletePlayerSpaceRaceDetails(playerCopy.id).then(() => {
+                  onClose(true);
+                });
               }}
             >
               Delete Space Race details 🚀
