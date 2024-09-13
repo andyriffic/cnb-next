@@ -31,6 +31,7 @@ export type SpaceRaceEntity = {
   behaviour: SpaceRaceEntityBehaviour;
   position: SpaceRaceCoordinates;
   display: JSX.Element;
+  removable: boolean;
 };
 
 export type SpaceRaceStarmap = {

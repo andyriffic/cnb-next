@@ -23,6 +23,12 @@ const Space = styled.div`
   background-size: 100% 100%;
 `;
 
+const TheVoid = styled.div`
+  height: 100%;
+  background-color: #333;
+  opacity: 0.5;
+`;
+
 const SpaceEntityContainer = styled.span`
   display: inline-block;
   position: absolute;
@@ -74,14 +80,21 @@ type Props = {
   starmap: SpaceRaceStarmap;
   players: SpacePlayersById;
   showGridlines: boolean;
+  voidDistance: number;
 };
 
-export const StarMap = ({ starmap, players, showGridlines }: Props) => {
+export const StarMap = ({
+  starmap,
+  players,
+  showGridlines,
+  voidDistance,
+}: Props) => {
   const [showDebug, setShowDebug] = useState(false);
   useEffect(() => setShowDebug(isClientSideFeatureEnabled("debug")), []);
 
   return (
     <Space>
+      <TheVoid style={{ width: `${(100 / STARMAP_WIDTH) * voidDistance}vw` }} />
       {Array(STARMAP_HEIGHT)
         .fill(0)
         .map((_, i) => (

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { pipe } from "fp-ts/lib/function";
 import { getPlayerSpaceRaceDetails, Player } from "../../types/Player";
 import { selectRandomOneOf } from "../../utils/random";
 import { clamp } from "../../utils/number";
@@ -17,6 +18,7 @@ import {
 } from "./types";
 
 const SPACE_COURSE_QUESTION_ID = "SPACERACE_COURSE";
+const REMOVE_OBSTACLE_DISTANCE = 3;
 
 export type UseSpaceRace = {
   spaceRaceGame: SpaceRaceGame;
@@ -301,7 +303,35 @@ function createSpaceRaceGame(players: Player[]): SpaceRaceGame {
     return updatePlayerDuplicateSquarePositions(player.id, acc);
   }, defaultGame);
 
-  return updatedGameWithPlayerPositionOffsets;
+  return pipe(updatedGameWithPlayerPositionOffsets, removeTrailingObstacles);
+}
+
+export function getVoidXPosition(game: SpaceRaceGame): number {
+  const leadingPlayerXPosition = getLeadingPlayerIndex(game);
+  return Math.max(leadingPlayerXPosition - REMOVE_OBSTACLE_DISTANCE, 0);
+}
+
+function getLeadingPlayerIndex(game: SpaceRaceGame): number {
+  const allPlayerXPositions = Object.values(game.spacePlayers).map(
+    (p) => p.currentPosition.x
+  );
+  const maxXPosition = Math.max(...allPlayerXPositions);
+  return maxXPosition;
+}
+
+function removeTrailingObstacles(game: SpaceRaceGame): SpaceRaceGame {
+  const xPositionToRemoveObstaclesBefore = getVoidXPosition(game);
+
+  const removedObstacles = game.starmap.entities.filter(
+    (e) => e.position.x >= xPositionToRemoveObstaclesBefore || !e.removable
+  );
+  return {
+    ...game,
+    starmap: {
+      ...game.starmap,
+      entities: removedObstacles,
+    },
+  };
 }
 
 function assignPlannedCourse(

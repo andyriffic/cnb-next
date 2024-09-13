@@ -17,7 +17,7 @@ export const STARMAP_CHART: SpaceRaceStarmap = {
     createEntity("asteroid", { x: 2, y: 8 }),
     createEntity("asteroid", { x: 3, y: 0 }),
     createEntity("asteroid", { x: 3, y: 2 }),
-    createEntity("planet", { x: 4, y: 3 }),
+    createEntity("planet", { x: 4, y: 3 }, "block", false),
     createEntity("asteroid", { x: 5, y: 1 }),
     // createEntity("asteroid", { x: 5, y: 4 }),
     createEntity("asteroid", { x: 5, y: 7 }),
@@ -29,7 +29,7 @@ export const STARMAP_CHART: SpaceRaceStarmap = {
     createEntity("asteroid", { x: 7, y: 3 }),
     createEntity("asteroid", { x: 7, y: 6 }),
     // createEntity("asteroid", { x: 8, y: 4 }),
-    createEntity("satellite", { x: 8, y: 7 }),
+    createEntity("satellite", { x: 8, y: 7 }, "block", false),
     createEntity("asteroid", { x: 10, y: 1 }),
     createEntity("asteroid", { x: 10, y: 1 }),
     createEntity("asteroid", { x: 10, y: 4 }),
@@ -37,7 +37,7 @@ export const STARMAP_CHART: SpaceRaceStarmap = {
     createEntity("asteroid", { x: 10, y: 6 }),
     createEntity("asteroid", { x: 10, y: 8 }),
     createEntity("asteroid", { x: 11, y: 1 }),
-    createEntity("planet", { x: 11, y: 2 }),
+    createEntity("planet", { x: 11, y: 2 }, "block", false),
     createEntity("asteroid", { x: 12, y: 4 }),
     createEntity("asteroid", { x: 12, y: 5 }),
     createEntity("asteroid", { x: 12, y: 8 }),
@@ -45,17 +45,17 @@ export const STARMAP_CHART: SpaceRaceStarmap = {
     createEntity("asteroid", { x: 14, y: 1 }),
     createEntity("asteroid", { x: 14, y: 3 }),
     createEntity("asteroid", { x: 14, y: 4 }),
-    createEntity("planet", { x: 14, y: 6 }),
+    createEntity("planet", { x: 14, y: 6 }, "block", false),
     createEntity("asteroid", { x: 14, y: 7 }),
     createEntity("asteroid", { x: 15, y: 1 }),
     createEntity("asteroid", { x: 16, y: 7 }),
     createEntity("asteroid", { x: 16, y: 8 }),
-    createEntity("satellite", { x: 17, y: 1 }),
+    createEntity("satellite", { x: 17, y: 1 }, "block", false),
     createEntity("asteroid", { x: 17, y: 2 }),
     createEntity("asteroid", { x: 17, y: 3 }),
     createEntity("asteroid", { x: 17, y: 5 }),
     createEntity("asteroid", { x: 19, y: 0 }),
-    createEntity("satellite", { x: 19, y: 3 }),
+    createEntity("satellite", { x: 19, y: 3 }, "block", false),
     createEntity("asteroid", { x: 19, y: 4 }),
     createEntity("asteroid", { x: 19, y: 6 }),
     createEntity("asteroid", { x: 19, y: 7 }),
@@ -92,9 +92,16 @@ export const STARMAP_CHART: SpaceRaceStarmap = {
 export function createEntity(
   type: SpaceRaceEntityType,
   position: SpaceRaceCoordinates,
-  behaviour: SpaceRaceEntityBehaviour = "block"
+  behaviour: SpaceRaceEntityBehaviour = "block",
+  removable = true
 ) {
-  return { type, position, display: getDisplayElement(type), behaviour };
+  return {
+    type,
+    position,
+    display: getDisplayElement(type),
+    behaviour,
+    removable,
+  };
 }
 
 function getDisplayElement(entityType: SpaceRaceEntityType): JSX.Element {

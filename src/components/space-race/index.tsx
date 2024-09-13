@@ -4,10 +4,10 @@ import { Player } from "../../types/Player";
 import { isClientSideFeatureEnabled } from "../../utils/feature";
 import { SpectatorPageLayout } from "../SpectatorPageLayout";
 import { SplashContent } from "../SplashContent";
-import { useSound } from "../hooks/useSound";
 import { useDoOnce } from "../hooks/useDoOnce";
+import { useSound } from "../hooks/useSound";
 import { StarMap } from "./Starmap";
-import { useSpaceRace } from "./useSpaceRace";
+import { getVoidXPosition, useSpaceRace } from "./useSpaceRace";
 
 type Props = {
   players: Player[];
@@ -30,6 +30,7 @@ const View = ({ players }: Props) => {
   return (
     <SpectatorPageLayout scrollable={false}>
       <StarMap
+        voidDistance={getVoidXPosition(spaceRace.spaceRaceGame)}
         starmap={spaceRace.spaceRaceGame.starmap}
         players={spaceRace.spaceRaceGame.spacePlayers}
         showGridlines={spaceRace.spaceRaceGame.uiState.showGridlines}
