@@ -7,7 +7,7 @@ import { SplashContent } from "../SplashContent";
 import { useDoOnce } from "../hooks/useDoOnce";
 import { useSound } from "../hooks/useSound";
 import { StarMap } from "./Starmap";
-import { getVoidXPosition, useSpaceRace } from "./useSpaceRace";
+import { useSpaceRace } from "./useSpaceRace";
 
 type Props = {
   players: Player[];
@@ -30,7 +30,7 @@ const View = ({ players }: Props) => {
   return (
     <SpectatorPageLayout scrollable={false}>
       <StarMap
-        voidDistance={getVoidXPosition(spaceRace.spaceRaceGame)}
+        voidDistance={spaceRace.spaceRaceGame.voidXDistance}
         starmap={spaceRace.spaceRaceGame.starmap}
         players={spaceRace.spaceRaceGame.spacePlayers}
         showGridlines={spaceRace.spaceRaceGame.uiState.showGridlines}

@@ -295,6 +295,7 @@ function createSpaceRaceGame(players: Player[]): SpaceRaceGame {
     uiState: {
       showGridlines: false,
     },
+    voidXDistance: 0,
   };
 
   const updatedGameWithPlayerPositionOffsets = Object.values(
@@ -306,7 +307,7 @@ function createSpaceRaceGame(players: Player[]): SpaceRaceGame {
   return pipe(updatedGameWithPlayerPositionOffsets, removeTrailingObstacles);
 }
 
-export function getVoidXPosition(game: SpaceRaceGame): number {
+function getVoidXPosition(game: SpaceRaceGame): number {
   const leadingPlayerXPosition = getLeadingPlayerIndex(game);
   return Math.max(leadingPlayerXPosition - REMOVE_OBSTACLE_DISTANCE, 0);
 }
@@ -331,6 +332,7 @@ function removeTrailingObstacles(game: SpaceRaceGame): SpaceRaceGame {
       ...game.starmap,
       entities: removedObstacles,
     },
+    voidXDistance: xPositionToRemoveObstaclesBefore,
   };
 }
 

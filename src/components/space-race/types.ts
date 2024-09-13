@@ -8,6 +8,7 @@ export type SpaceRaceGame = {
   starmap: SpaceRaceStarmap;
   spacePlayers: SpacePlayersById;
   uiState: SpaceRaceUiState;
+  voidXDistance: number;
 };
 
 export type SpaceRaceUiState = {
