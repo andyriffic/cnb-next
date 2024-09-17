@@ -15,6 +15,7 @@ import {
   SpaceRaceEntity,
   SpaceRaceGame,
   SpaceRacePlayer,
+  SpaceRaceStarmap,
 } from "./types";
 
 const SPACE_COURSE_QUESTION_ID = "SPACERACE_COURSE";
@@ -67,7 +68,8 @@ export const useSpaceRace = (
           ...game,
           spacePlayers: updatePlayerHorizontalPosition(
             game.spacePlayers,
-            playerId
+            playerId,
+            game.starmap
           ),
         }
       );
@@ -183,7 +185,8 @@ export const useSpaceRace = (
         ...gameCopy,
         spacePlayers: updatePlayerHorizontalPosition(
           gameCopy.spacePlayers,
-          playerId
+          playerId,
+          game.starmap
         ),
       };
     });
@@ -199,11 +202,13 @@ export const useSpaceRace = (
       }
       const upObstacle = getVerticalEntityBetween(
         spacePlayer.currentPosition,
-        -MAX_COURSE_Y_OFFSET
+        -MAX_COURSE_Y_OFFSET,
+        game.starmap
       );
       const downObstacle = getVerticalEntityBetween(
         spacePlayer.currentPosition,
-        MAX_COURSE_Y_OFFSET
+        MAX_COURSE_Y_OFFSET,
+        game.starmap
       );
 
       const maxUp = upObstacle
@@ -409,7 +414,8 @@ function setPlayerCoordinates(
 
 function getHorizontalEntityBetween(
   currentPosition: SpaceRaceCoordinates,
-  horizontalDistance: number
+  horizontalDistance: number,
+  starmap: SpaceRaceStarmap
 ): SpaceRaceEntity | undefined {
   console.log(
     "finding horizontal entity between",
@@ -422,7 +428,7 @@ function getHorizontalEntityBetween(
     i <= horizontalDistance + currentPosition.x;
     i++
   ) {
-    const entity = STARMAP_CHART.entities.find(
+    const entity = starmap.entities.find(
       (entity) =>
         entity.position.x === i && entity.position.y === currentPosition.y
     );
@@ -434,7 +440,8 @@ function getHorizontalEntityBetween(
 
 function getVerticalEntityBetween(
   currentPosition: SpaceRaceCoordinates,
-  verticalDistance: number
+  verticalDistance: number,
+  starmap: SpaceRaceStarmap
 ): SpaceRaceEntity | undefined {
   if (verticalDistance === 0) return;
 
@@ -442,7 +449,7 @@ function getVerticalEntityBetween(
 
   if (direction === "up") {
     for (let i = currentPosition.y; i >= verticalDistance; i--) {
-      const entity = STARMAP_CHART.entities.find(
+      const entity = starmap.entities.find(
         (entity) =>
           entity.position.x === currentPosition.x && entity.position.y === i
       );
@@ -462,7 +469,7 @@ function getVerticalEntityBetween(
       i <= verticalDistance + currentPosition.y;
       i++
     ) {
-      const entity = STARMAP_CHART.entities.find(
+      const entity = starmap.entities.find(
         (entity) =>
           entity.position.x === currentPosition.x && entity.position.y === i
       );
@@ -482,14 +489,16 @@ function getVerticalEntityBetween(
 
 function getEndingCooridinates(
   player: SpaceRacePlayer,
-  spacePlayers: SpacePlayersById
+  spacePlayers: SpacePlayersById,
+  starmap: SpaceRaceStarmap
 ): {
   entity?: SpaceRaceEntity;
   coordinates: SpaceRaceCoordinates;
 } {
   const entity = getHorizontalEntityBetween(
     player.currentPosition,
-    player.plannedCourse.right
+    player.plannedCourse.right,
+    starmap
   );
 
   if (!entity) {
@@ -530,13 +539,14 @@ function getEndingCooridinates(
 
 function updatePlayerHorizontalPosition(
   spacePlayers: SpacePlayersById,
-  playerId: string
+  playerId: string,
+  starmap: SpaceRaceStarmap
 ): SpacePlayersById {
   const player = spacePlayers[playerId];
   if (!player) return spacePlayers;
   if (!player.plannedCourse.lockedIn) return spacePlayers;
 
-  const moveResult = getEndingCooridinates(player, spacePlayers);
+  const moveResult = getEndingCooridinates(player, spacePlayers, starmap);
 
   const newPlannedCourse = {
     ...player.plannedCourse,
