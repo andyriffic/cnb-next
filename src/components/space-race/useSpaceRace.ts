@@ -15,6 +15,7 @@ import {
   SpaceRaceEntity,
   SpaceRaceGame,
   SpaceRacePlayer,
+  SpaceRaceRocketTrail,
   SpaceRaceStarmap,
 } from "./types";
 
@@ -27,8 +28,6 @@ export type UseSpaceRace = {
   movePlayerVertically: (playerId: string) => void;
   movePlayerHorizontally: (playerId: string) => void;
   randomlyPlotAllPlayerCourses: () => void;
-  moveAllPlayersVertically: () => void;
-  moveAllPlayersHorizontally: () => void;
   sendCourseQuestionToPlayers: () => void;
 };
 
@@ -53,8 +52,7 @@ export const useSpaceRace = (
   const movePlayerVertically = useCallback(
     (playerId: string) => {
       return setGame({
-        ...game,
-        spacePlayers: updatePlayerVerticalPosition(game.spacePlayers, playerId),
+        ...updatePlayerVerticalPosition(game, playerId),
       });
     },
     [game]
@@ -64,14 +62,7 @@ export const useSpaceRace = (
     (playerId: string) => {
       const updatedGame: SpaceRaceGame = updatePlayerDuplicateSquarePositions(
         playerId,
-        {
-          ...game,
-          spacePlayers: updatePlayerHorizontalPosition(
-            game.spacePlayers,
-            playerId,
-            game.starmap
-          ),
-        }
+        updatePlayerHorizontalPosition(game, playerId, game.starmap)
       );
       const updatedPlayer = updatedGame.spacePlayers[playerId];
       setGame(updatedGame);
@@ -158,41 +149,6 @@ export const useSpaceRace = (
     setGame(gameCopy);
   }, [game]);
 
-  const moveAllPlayersVertically = useCallback(() => {
-    let gameCopy: SpaceRaceGame = {
-      ...game,
-    };
-
-    Object.keys(game.spacePlayers).forEach((playerId) => {
-      gameCopy = {
-        ...gameCopy,
-        spacePlayers: updatePlayerVerticalPosition(
-          gameCopy.spacePlayers,
-          playerId
-        ),
-      };
-    });
-    setGame(gameCopy);
-  }, [game]);
-
-  const moveAllPlayersHorizontally = useCallback(() => {
-    let gameCopy: SpaceRaceGame = {
-      ...game,
-    };
-
-    Object.keys(game.spacePlayers).forEach((playerId) => {
-      gameCopy = {
-        ...gameCopy,
-        spacePlayers: updatePlayerHorizontalPosition(
-          gameCopy.spacePlayers,
-          playerId,
-          game.starmap
-        ),
-      };
-    });
-    setGame(gameCopy);
-  }, [game]);
-
   const sendCourseQuestionToPlayers = useCallback(() => {
     const MAX_COURSE_Y_OFFSET = 2;
 
@@ -249,8 +205,6 @@ export const useSpaceRace = (
     movePlayerVertically,
     movePlayerHorizontally,
     randomlyPlotAllPlayerCourses,
-    moveAllPlayersVertically,
-    moveAllPlayersHorizontally,
     sendCourseQuestionToPlayers,
   };
 };
@@ -301,6 +255,7 @@ function createSpaceRaceGame(players: Player[]): SpaceRaceGame {
       showGridlines: false,
     },
     voidXDistance: 0,
+    rocketTrails: [],
   };
 
   const updatedGameWithPlayerPositionOffsets = Object.values(
@@ -369,12 +324,12 @@ function assignPlannedCourse(
 }
 
 function updatePlayerVerticalPosition(
-  spacePlayers: SpacePlayersById,
+  spaceRaceGame: SpaceRaceGame,
   playerId: string
-): SpacePlayersById {
-  const player = spacePlayers[playerId];
-  if (!player) return spacePlayers;
-  if (!player.plannedCourse.lockedIn) return spacePlayers;
+): SpaceRaceGame {
+  const player = spaceRaceGame.spacePlayers[playerId];
+  if (!player) return spaceRaceGame;
+  if (!player.plannedCourse.lockedIn) return spaceRaceGame;
 
   const newPosition: SpaceRaceCoordinates = {
     x: player.currentPosition.x,
@@ -392,12 +347,23 @@ function updatePlayerVerticalPosition(
     movedVertically: true,
   };
 
+  const newTrail: SpaceRaceRocketTrail = {
+    start: player.plannedCourse.up > 0 ? player.currentPosition : newPosition,
+    size: Math.abs(player.plannedCourse.up),
+    direction: "vertical",
+    color: player.color,
+  };
+
   return {
-    ...spacePlayers,
-    [playerId]: {
-      ...player,
-      currentPosition: newPosition,
-      plannedCourse: newPlannedCourse,
+    ...spaceRaceGame,
+    rocketTrails: [...spaceRaceGame.rocketTrails, newTrail],
+    spacePlayers: {
+      ...spaceRaceGame.spacePlayers,
+      [playerId]: {
+        ...player,
+        currentPosition: newPosition,
+        plannedCourse: newPlannedCourse,
+      },
     },
   };
 }
@@ -538,15 +504,19 @@ function getEndingCooridinates(
 }
 
 function updatePlayerHorizontalPosition(
-  spacePlayers: SpacePlayersById,
+  spaceRaceGame: SpaceRaceGame,
   playerId: string,
   starmap: SpaceRaceStarmap
-): SpacePlayersById {
-  const player = spacePlayers[playerId];
-  if (!player) return spacePlayers;
-  if (!player.plannedCourse.lockedIn) return spacePlayers;
+): SpaceRaceGame {
+  const player = spaceRaceGame.spacePlayers[playerId];
+  if (!player) return spaceRaceGame;
+  if (!player.plannedCourse.lockedIn) return spaceRaceGame;
 
-  const moveResult = getEndingCooridinates(player, spacePlayers, starmap);
+  const moveResult = getEndingCooridinates(
+    player,
+    spaceRaceGame.spacePlayers,
+    starmap
+  );
 
   const newPlannedCourse = {
     ...player.plannedCourse,
@@ -555,12 +525,23 @@ function updatePlayerHorizontalPosition(
     movedHorizontally: true,
   };
 
+  const newTrail: SpaceRaceRocketTrail = {
+    start: player.currentPosition,
+    size: moveResult.coordinates.x - player.currentPosition.x,
+    direction: "horizontal",
+    color: player.color,
+  };
+
   return {
-    ...spacePlayers,
-    [playerId]: {
-      ...setPlayerCoordinates(player, moveResult.coordinates),
-      plannedCourse: newPlannedCourse,
-      collidedWith: moveResult.entity,
+    ...spaceRaceGame,
+    rocketTrails: [...spaceRaceGame.rocketTrails, newTrail],
+    spacePlayers: {
+      ...spaceRaceGame.spacePlayers,
+      [playerId]: {
+        ...setPlayerCoordinates(player, moveResult.coordinates),
+        plannedCourse: newPlannedCourse,
+        collidedWith: moveResult.entity,
+      },
     },
   };
 }

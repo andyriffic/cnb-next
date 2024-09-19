@@ -1,10 +1,12 @@
 import styled from "styled-components";
 import { useEffect, useMemo, useState } from "react";
 import { isClientSideFeatureEnabled } from "../../utils/feature";
+import { fadeInAnimation } from "../animations/keyframes/fade";
 import {
   SpacePlayersById,
   SpaceRaceCoordinates,
   SpaceRacePlayer,
+  SpaceRaceRocketTrail,
   SpaceRaceStarmap,
 } from "./types";
 import { STARMAP_HEIGHT, STARMAP_WIDTH } from "./constants";
@@ -76,11 +78,17 @@ const OFFSETS = [
   { x: -1, y: 4 },
 ];
 
+const RocketTrailLine = styled.div`
+  position: absolute;
+  animation: ${fadeInAnimation} 1s linear;
+`;
+
 type Props = {
   starmap: SpaceRaceStarmap;
   players: SpacePlayersById;
   showGridlines: boolean;
   voidDistance: number;
+  rocketTrails: SpaceRaceRocketTrail[];
 };
 
 export const StarMap = ({
@@ -88,6 +96,7 @@ export const StarMap = ({
   players,
   showGridlines,
   voidDistance,
+  rocketTrails,
 }: Props) => {
   const [showDebug, setShowDebug] = useState(false);
   useEffect(() => setShowDebug(isClientSideFeatureEnabled("debug")), []);
@@ -122,6 +131,30 @@ export const StarMap = ({
           <SpaceEntity entity={e} players={players} />
         </SpaceEntityContainer>
       ))}
+      {rocketTrails.map((trail, i) => {
+        const start = getStarmapCssPosition(trail.start);
+
+        const trailStyle =
+          trail.direction === "horizontal"
+            ? {
+                ...start,
+                background: trail.color,
+                width: `${(100 / STARMAP_WIDTH) * trail.size}vw`,
+                height: "2px",
+                transform: `translate3d(${halfWidth}vw, ${halfHeight}vh, 0)`,
+              }
+            : {
+                ...start,
+                background: trail.color,
+
+                height: `${(100 / STARMAP_HEIGHT) * trail.size}vh`,
+                width: "2px",
+                transform: `translate3d(${halfWidth}vw, ${halfHeight}vh, 0)`,
+              };
+
+        return <RocketTrailLine style={trailStyle} key={i} />;
+      })}
+
       {Object.keys(players).map((playerId, i) => {
         const player = players[playerId];
         if (!player) return null;
@@ -154,6 +187,9 @@ function starmapDebugCoordinates() {
   }
   return coordinates;
 }
+
+const halfHeight = 100 / STARMAP_HEIGHT / 2;
+const halfWidth = 100 / STARMAP_WIDTH / 2;
 
 function getStarmapCssPosition(
   position: SpaceRaceCoordinates,

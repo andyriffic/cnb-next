@@ -34,6 +34,7 @@ const View = ({ players }: Props) => {
         starmap={spaceRace.spaceRaceGame.starmap}
         players={spaceRace.spaceRaceGame.spacePlayers}
         showGridlines={spaceRace.spaceRaceGame.uiState.showGridlines}
+        rocketTrails={spaceRace.spaceRaceGame.rocketTrails}
       />
       {!showPlotCourse && (
         <div style={{ position: "absolute", right: 0 }}>

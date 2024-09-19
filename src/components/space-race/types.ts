@@ -9,6 +9,7 @@ export type SpaceRaceGame = {
   spacePlayers: SpacePlayersById;
   uiState: SpaceRaceUiState;
   voidXDistance: number;
+  rocketTrails: SpaceRaceRocketTrail[];
 };
 
 export type SpaceRaceUiState = {
@@ -61,4 +62,11 @@ export type SpaceRacePlayer = {
 export type SpaceRaceCoordinates = {
   x: number;
   y: number;
+};
+
+export type SpaceRaceRocketTrail = {
+  start: SpaceRaceCoordinates;
+  size: number;
+  direction: "horizontal" | "vertical";
+  color: string;
 };
