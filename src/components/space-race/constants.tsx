@@ -111,7 +111,7 @@ function getDisplayElement(entityType: SpaceRaceEntityType): JSX.Element {
     case "planet":
       return <span style={{ transform: "scale(1.5)" }}>🪐</span>;
     case "asteroid":
-      return <>🥮</>;
+      return <span style={{ opacity: "0.7" }}>🥮</span>;
     case "wormhole":
       return <>🌀</>;
     case "earth":
