@@ -6,7 +6,7 @@ import { AvatarSize, PlayerAvatar } from "./PlayerAvatar";
 import { Appear } from "./animations/Appear";
 import { useDoOnce } from "./hooks/useDoOnce";
 import { useSound } from "./hooks/useSound";
-import { Animation_ShakeBottom } from "./animations/Attention";
+import { Animation_ShakeBottom, Attention } from "./animations/Attention";
 
 const Label = styled.div`
   background-color: goldenrod;
@@ -31,9 +31,16 @@ const ZombieLabel = styled(Label)`
   text-align: center;
 `;
 
+const SpecialIndicator = styled.div`
+  font-size: 3rem;
+  position: absolute;
+  top: 0;
+  left: 50%;
+`;
+
 export const ZombieTransform = styled.div<{ isZombie: boolean }>`
   transition: filter 1s ease-in-out;
-  animation: ${Animation_ShakeBottom} 2.5s linear infinite both;
+  // animation: ${Animation_ShakeBottom} 2.5s linear infinite both;
   ${({ isZombie }) =>
     isZombie &&
     css`
@@ -62,11 +69,11 @@ export function JoinedPlayer({ player, team, avatarSize }: Props) {
   }, isZombie);
 
   return (
-    <div>
+    <div style={{ position: "relative" }}>
       <ZombieTransform isZombie={isZombie}>
         <PlayerAvatar playerId={player.id} size={avatarSize} />
       </ZombieTransform>
-      {player && (
+      {player && !isZombie && (
         <Appear animation="text-focus-in">
           <Label>{player.name}</Label>
         </Appear>
@@ -75,6 +82,11 @@ export function JoinedPlayer({ player, team, avatarSize }: Props) {
         <Appear animation="text-focus-in">
           <ZombieLabel>{replaceFirstLetterWithZ(player.name)}</ZombieLabel>
         </Appear>
+      )}
+      {player && !!player.details?.hasGameAdvantage && (
+        <SpecialIndicator>
+          <Attention animation="pulse">✨</Attention>
+        </SpecialIndicator>
       )}
     </div>
   );
