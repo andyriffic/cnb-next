@@ -49,7 +49,8 @@ const BalloonContainer = styled.div`
 const GraveyardContainer = styled.div`
   position: absolute;
   bottom: 0;
-  right: 25%;
+  left: 50%;
+  transform: translateX(-50%);
 `;
 
 type Props = {

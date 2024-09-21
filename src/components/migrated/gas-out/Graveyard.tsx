@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Image from "next/image";
 import { slideInUpAnimation } from "../../animations/keyframes/slideInBlurredTop";
 import { GasGame, GasPlayer } from "../../../services/migrated/gas-out/types";
 import { GraveyardPlayer } from "./GraveyardPlayer";
@@ -30,7 +31,12 @@ export function Graveyard({ game }: Props): JSX.Element {
   return (
     <Container>
       <div style={{ position: "relative" }}>
-        <img src="/images/gas-out/tombstone.png" alt="tombstone" />
+        <Image
+          src="/images/gas-out/tombstone.png"
+          alt="tombstone"
+          width={100}
+          height={100}
+        />
       </div>
       <GraveyardPlayerContainer>
         {game.allPlayers
