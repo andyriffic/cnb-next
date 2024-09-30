@@ -23,7 +23,9 @@ export type SpaceRaceEntityType =
   | "asteroid"
   | "asteroid"
   | "wormhole"
-  | "earth"
+  | "earth1"
+  | "earth2"
+  | "earth3"
   | "out-of-bounds";
 
 export type SpaceRaceEntityBehaviour = "block" | "finish";

@@ -92,7 +92,7 @@ export const PlayerShip = ({ player }: Props) => {
       if (player.collidedWith.behaviour === "block") {
         play("space-race-rocket-collision");
       }
-      if (player.collidedWith.type === "earth") {
+      if (player.collidedWith.type === "earth1") {
         play("space-race-player-finish");
       }
     }

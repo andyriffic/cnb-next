@@ -78,13 +78,13 @@ export const STARMAP_CHART: SpaceRaceStarmap = {
     createEntity("asteroid", { x: 27, y: 6 }),
     createEntity("asteroid", { x: 27, y: 8 }),
     createEntity("satellite", { x: 29, y: 0 }),
-    createEntity("earth", { x: 29, y: 1 }, "finish"),
+    createEntity("earth1", { x: 29, y: 1 }, "finish"),
     createEntity("satellite", { x: 29, y: 2 }),
     createEntity("satellite", { x: 29, y: 3 }),
-    createEntity("earth", { x: 29, y: 4 }, "finish"),
+    createEntity("earth2", { x: 29, y: 4 }, "finish"),
     createEntity("satellite", { x: 29, y: 5 }),
     createEntity("satellite", { x: 29, y: 6 }),
-    createEntity("earth", { x: 29, y: 7 }, "finish"),
+    createEntity("earth3", { x: 29, y: 7 }, "finish"),
     createEntity("satellite", { x: 29, y: 8 }),
   ],
 };
@@ -114,10 +114,22 @@ function getDisplayElement(entityType: SpaceRaceEntityType): JSX.Element {
       return <span style={{ opacity: "0.7" }}>🥮</span>;
     case "wormhole":
       return <>🌀</>;
-    case "earth":
+    case "earth1":
       return (
         <Attention animation="pulse">
           <div style={{ transform: "scale(1.3)" }}>🌏</div>
+        </Attention>
+      );
+    case "earth2":
+      return (
+        <Attention animation="pulse">
+          <div style={{ transform: "scale(1.3)" }}>🌍</div>
+        </Attention>
+      );
+    case "earth3":
+      return (
+        <Attention animation="pulse">
+          <div style={{ transform: "scale(1.3)" }}>🌎</div>
         </Attention>
       );
     default:
