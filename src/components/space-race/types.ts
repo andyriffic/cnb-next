@@ -57,6 +57,7 @@ export type SpaceRacePlayer = {
   plannedCourse: PlannedCourse;
   collidedWith?: SpaceRaceEntity;
   color: string;
+  highlight: boolean;
 };
 
 export type SpaceRaceCoordinates = {

@@ -29,6 +29,7 @@ export type UseSpaceRace = {
   movePlayerHorizontally: (playerId: string) => void;
   randomlyPlotAllPlayerCourses: () => void;
   sendCourseQuestionToPlayers: () => void;
+  highlightPlayer: (playerId: string) => void;
 };
 
 export const useSpaceRace = (
@@ -53,6 +54,15 @@ export const useSpaceRace = (
     (playerId: string) => {
       return setGame({
         ...updatePlayerVerticalPosition(game, playerId),
+      });
+    },
+    [game]
+  );
+
+  const highlightPlayer = useCallback(
+    (playerId: string) => {
+      return setGame({
+        ...setPlayerHighlight(game, playerId),
       });
     },
     [game]
@@ -206,44 +216,48 @@ export const useSpaceRace = (
     movePlayerHorizontally,
     randomlyPlotAllPlayerCourses,
     sendCourseQuestionToPlayers,
+    highlightPlayer,
   };
 };
+
+function createPlayer(player: Player): SpaceRacePlayer {
+  const spaceRaceDetails = getPlayerSpaceRaceDetails(player);
+
+  const gameMoves = player.details?.gameMoves || 0;
+
+  return {
+    id: player.id,
+    name: player.name,
+    color: player.details?.colourHex || "#770000",
+    courseMovesRemaining: gameMoves,
+    highlight: false,
+    currentPosition: {
+      x: spaceRaceDetails.xCoordinate,
+      y: spaceRaceDetails.yCoordinate,
+    },
+    plannedCourse: {
+      up: 0,
+      right: 0,
+      lockedIn: gameMoves === 0 ? true : false,
+      movedVertically: gameMoves === 0 ? true : false,
+      movedHorizontally: gameMoves === 0 ? true : false,
+    },
+  };
+}
 
 function createSpaceRaceGame(players: Player[]): SpaceRaceGame {
   const allPlayerIds = players.map((player) => player.id);
 
-  const spacePlayersById = allPlayerIds.reduce<{
-    [id: string]: SpaceRacePlayer;
-  }>((acc, playerId) => {
+  const spacePlayersById = allPlayerIds.reduce((acc, playerId) => {
     const player = players.find((p) => p.id === playerId);
 
     if (!player) {
       return acc;
     }
 
-    const spaceRaceDetails = getPlayerSpaceRaceDetails(player);
-
-    const gameMoves = player.details?.gameMoves || 0;
-
     return {
       ...acc,
-      [playerId]: {
-        id: player.id,
-        name: player.name,
-        color: player.details?.colourHex || "#770000",
-        courseMovesRemaining: gameMoves,
-        currentPosition: {
-          x: spaceRaceDetails.xCoordinate,
-          y: spaceRaceDetails.yCoordinate,
-        },
-        plannedCourse: {
-          up: 0,
-          right: 0,
-          lockedIn: gameMoves === 0 ? true : false,
-          movedVertically: gameMoves === 0 ? true : false,
-          movedHorizontally: gameMoves === 0 ? true : false,
-        },
-      },
+      [playerId]: createPlayer(player),
     };
   }, {});
 
@@ -323,6 +337,28 @@ function assignPlannedCourse(
   };
 }
 
+function setPlayerHighlight(
+  spaceRaceGame: SpaceRaceGame,
+  playerId: string
+): SpaceRaceGame {
+  console.log("finding player", playerId);
+
+  const player = spaceRaceGame.spacePlayers[playerId];
+  if (!player) return spaceRaceGame;
+
+  console.log("Highlighting player", playerId);
+
+  return {
+    ...spaceRaceGame,
+    spacePlayers: {
+      ...spaceRaceGame.spacePlayers,
+      [playerId]: {
+        ...player,
+        highlight: true,
+      },
+    },
+  };
+}
 function updatePlayerVerticalPosition(
   spaceRaceGame: SpaceRaceGame,
   playerId: string

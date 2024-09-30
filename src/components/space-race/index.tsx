@@ -77,6 +77,22 @@ const View = ({ players }: Props) => {
           />
         </SplashContent>
       )}
+      <div style={{ position: "absolute", bottom: 0 }}>
+        <div>Find me</div>
+        {Object.values(spaceRace.spaceRaceGame.spacePlayers)
+          .filter((p) => !p.highlight)
+          .map((player) => (
+            <button
+              onClick={() => {
+                console.log("Highlighting player 1", player.id);
+                spaceRace.highlightPlayer(player.id);
+              }}
+              key={player.id}
+            >
+              {player.name}
+            </button>
+          ))}
+      </div>
     </SpectatorPageLayout>
   );
 };

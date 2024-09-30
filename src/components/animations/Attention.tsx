@@ -66,6 +66,18 @@ export const Animation_Pulse = keyframes` {
   }
 }`;
 
+export const Animation_Pulse_Plus = keyframes` {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(2) rotate(360deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}`;
+
 const ANIMATION_CSS: {
   [key in AttentionAnimation]: FlattenSimpleInterpolation;
 } = {
