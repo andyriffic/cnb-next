@@ -28,7 +28,7 @@ const Space = styled.div`
 const TheVoid = styled.div`
   height: 100%;
   background-color: #333;
-  opacity: 0.2;
+  opacity: 0.4;
 `;
 
 const SpaceEntityContainer = styled.span`
