@@ -51,10 +51,10 @@ const View = ({ players }: Props) => {
             onClick={() => {
               play("space-race-plot-course");
               setShowPlotCourse(true);
-              spaceRace.sendCourseQuestionToPlayers();
+              spaceRace.sendLocationQuestionToPlayers();
             }}
           >
-            send course
+            Start
           </button>
           {/* <DebugSpaceRace useSpaceRace={spaceRace} /> */}
         </div>

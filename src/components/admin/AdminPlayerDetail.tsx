@@ -45,6 +45,10 @@ function sortByNodeType(a: Attribute, b: Attribute) {
 }
 
 function buildAttributes(obj: { [key: string]: any }): Attribute[] {
+  if (!obj) {
+    //Dont think this is possible, but it happened, I think it's when data is corrupted for a player
+    return [];
+  }
   return Object.keys(obj).map((attributeName) => {
     const value = obj[attributeName];
     return {

@@ -5,7 +5,10 @@ import { selectRandomOneOf } from "../../utils/random";
 import { clamp } from "../../utils/number";
 import { useSocketIo } from "../../providers/SocketIoProvider";
 import { useSound } from "../hooks/useSound";
-import { QueryUserOption } from "../../services/query-user/types";
+import {
+  QueryUserOption,
+  QueryUserQuestion,
+} from "../../services/query-user/types";
 import { updatePlayerDetails } from "../../utils/api";
 import { createEntity, STARMAP_CHART, STARMAP_HEIGHT } from "./constants";
 import {
@@ -22,6 +25,12 @@ import {
 const SPACE_COURSE_QUESTION_ID = "SPACERACE_COURSE";
 const REMOVE_OBSTACLE_DISTANCE = 3;
 
+const MAX_COURSE_Y_OFFSET = 2;
+
+const FIND_ME_QUESTION_ID = "space-race-find-me";
+const FIND_ME_OPTION = "find-me";
+const DONT_FIND_ME_OPTION = "dont-find-me";
+
 export type UseSpaceRace = {
   spaceRaceGame: SpaceRaceGame;
   plotPlayerCourse: (playerId: string, up: number) => void;
@@ -29,6 +38,7 @@ export type UseSpaceRace = {
   movePlayerHorizontally: (playerId: string) => void;
   randomlyPlotAllPlayerCourses: () => void;
   sendCourseQuestionToPlayers: () => void;
+  sendLocationQuestionToPlayers: () => void;
   highlightPlayer: (playerId: string) => void;
 };
 
@@ -119,6 +129,7 @@ export const useSpaceRace = (
     }
   }, [game.spacePlayers, movePlayerHorizontally, disableSave]);
 
+  //Check answers of course question
   useEffect(() => {
     Object.keys(playerQuery.questionsByPlayerId).forEach((playerId) => {
       const question = playerQuery.questionsByPlayerId[playerId];
@@ -134,12 +145,32 @@ export const useSpaceRace = (
       plotPlayerCourse(playerId, parseInt(answer.value.toString()));
       playerQuery.deletePlayerQuestion(playerId);
     });
-  }, [
-    game.spacePlayers,
-    playerQuery,
-    playerQuery.questionsByPlayerId,
-    plotPlayerCourse,
-  ]);
+  }, [game.spacePlayers, playerQuery, plotPlayerCourse]);
+
+  //Check answers of location question
+  useEffect(() => {
+    Object.keys(playerQuery.questionsByPlayerId).forEach((playerId) => {
+      const question = playerQuery.questionsByPlayerId[playerId];
+      if (!question || question.id !== FIND_ME_QUESTION_ID) return;
+      if (question.selectedOptionIndex === undefined) return;
+
+      const answer = question.options[question.selectedOptionIndex]!;
+      const alreadyHighlighted = !!game.spacePlayers[playerId]?.highlight;
+      const dontWantToBeFound = answer.value === DONT_FIND_ME_OPTION;
+
+      if (!alreadyHighlighted && !dontWantToBeFound) {
+        setGame(setPlayerHighlight(game, playerId));
+      }
+
+      const courseQuestion = createCourseQuestionForPlayer(
+        game.spacePlayers[playerId]!,
+        game
+      );
+      if (courseQuestion) {
+        playerQuery.createPlayerQuestion(playerId, courseQuestion);
+      }
+    });
+  }, [game, playerQuery]);
 
   const randomlyPlotAllPlayerCourses = useCallback(() => {
     let gameCopy: SpaceRaceGame = {
@@ -160,49 +191,35 @@ export const useSpaceRace = (
   }, [game]);
 
   const sendCourseQuestionToPlayers = useCallback(() => {
-    const MAX_COURSE_Y_OFFSET = 2;
+    Object.values(game.spacePlayers).forEach((spacePlayer) => {
+      const courseQuestion = createCourseQuestionForPlayer(spacePlayer, game);
+      if (!courseQuestion) return;
+
+      playerQuery.createPlayerQuestion(spacePlayer.id, courseQuestion);
+    });
+
+    setGame({ ...game, uiState: { ...game.uiState, showGridlines: true } });
+  }, [game, playerQuery]);
+
+  const sendLocationQuestionToPlayers = useCallback(() => {
+    const FIND_ME_OPTION = "find-me";
+    const DONT_FIND_ME_OPTION = "dont-find-me";
 
     Object.values(game.spacePlayers).forEach((spacePlayer) => {
       if (spacePlayer.courseMovesRemaining === 0) {
         return;
       }
-      const upObstacle = getVerticalEntityBetween(
-        spacePlayer.currentPosition,
-        -MAX_COURSE_Y_OFFSET,
-        game.starmap
-      );
-      const downObstacle = getVerticalEntityBetween(
-        spacePlayer.currentPosition,
-        MAX_COURSE_Y_OFFSET,
-        game.starmap
-      );
 
-      const maxUp = upObstacle
-        ? upObstacle.position.y - spacePlayer.currentPosition.y + 1
-        : -MAX_COURSE_Y_OFFSET;
-
-      const maxDown = downObstacle
-        ? downObstacle.position.y - spacePlayer.currentPosition.y - 1
-        : MAX_COURSE_Y_OFFSET;
-
-      console.log("Up obstacle", spacePlayer.id, upObstacle);
-      console.log("Down obstacle", spacePlayer.id, downObstacle);
-
-      const allCourseOptions: QueryUserOption<number>[] = [
-        { text: "⬆️⬆️", value: -2 },
-        { text: "⬆️", value: -1 },
-        { text: "➡️", value: 0 },
-        { text: "⬇️", value: 1 },
-        { text: "⬇️⬇️", value: 2 },
-      ].filter((option) => option.value >= maxUp && option.value <= maxDown);
-
-      console.log("Player course", spacePlayer.id, upObstacle, downObstacle);
+      const allOptions: QueryUserOption<string>[] = [
+        { text: "Find me", value: FIND_ME_OPTION },
+        { text: "Dont find me", value: DONT_FIND_ME_OPTION },
+      ];
 
       playerQuery.createPlayerQuestion(spacePlayer.id, {
-        id: SPACE_COURSE_QUESTION_ID,
-        question: "Plot your course 規劃你的路線",
+        id: FIND_ME_QUESTION_ID,
+        question: "Do you know where you are?",
         style: "emoji-stack",
-        options: allCourseOptions,
+        options: allOptions,
       });
     });
 
@@ -217,6 +234,7 @@ export const useSpaceRace = (
     randomlyPlotAllPlayerCourses,
     sendCourseQuestionToPlayers,
     highlightPlayer,
+    sendLocationQuestionToPlayers,
   };
 };
 
@@ -242,6 +260,53 @@ function createPlayer(player: Player): SpaceRacePlayer {
       movedVertically: gameMoves === 0 ? true : false,
       movedHorizontally: gameMoves === 0 ? true : false,
     },
+  };
+}
+
+function createCourseQuestionForPlayer(
+  spacePlayer: SpaceRacePlayer,
+  game: SpaceRaceGame
+): QueryUserQuestion<number> | undefined {
+  if (spacePlayer.courseMovesRemaining === 0) {
+    return;
+  }
+  const upObstacle = getVerticalEntityBetween(
+    spacePlayer.currentPosition,
+    -MAX_COURSE_Y_OFFSET,
+    game.starmap
+  );
+  const downObstacle = getVerticalEntityBetween(
+    spacePlayer.currentPosition,
+    MAX_COURSE_Y_OFFSET,
+    game.starmap
+  );
+
+  const maxUp = upObstacle
+    ? upObstacle.position.y - spacePlayer.currentPosition.y + 1
+    : -MAX_COURSE_Y_OFFSET;
+
+  const maxDown = downObstacle
+    ? downObstacle.position.y - spacePlayer.currentPosition.y - 1
+    : MAX_COURSE_Y_OFFSET;
+
+  console.log("Up obstacle", spacePlayer.id, upObstacle);
+  console.log("Down obstacle", spacePlayer.id, downObstacle);
+
+  const allCourseOptions: QueryUserOption<number>[] = [
+    { text: "⬆️⬆️", value: -2 },
+    { text: "⬆️", value: -1 },
+    { text: "➡️", value: 0 },
+    { text: "⬇️", value: 1 },
+    { text: "⬇️⬇️", value: 2 },
+  ].filter((option) => option.value >= maxUp && option.value <= maxDown);
+
+  console.log("Player course", spacePlayer.id, upObstacle, downObstacle);
+
+  return {
+    id: SPACE_COURSE_QUESTION_ID,
+    question: "Plot your course 規劃你的路線",
+    style: "emoji-stack",
+    options: allCourseOptions,
   };
 }
 
