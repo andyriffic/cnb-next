@@ -218,7 +218,7 @@ export const useSpaceRace = (
       playerQuery.createPlayerQuestion(spacePlayer.id, {
         id: FIND_ME_QUESTION_ID,
         question: "Do you know where you are?",
-        style: "emoji-stack",
+        style: "normal",
         options: allOptions,
       });
     });
