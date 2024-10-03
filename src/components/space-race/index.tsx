@@ -77,7 +77,7 @@ const View = ({ players }: Props) => {
           />
         </SplashContent>
       )}
-      <div style={{ position: "absolute", bottom: 0 }}>
+      {/* <div style={{ position: "absolute", bottom: 0 }}>
         <div>Find me</div>
         {Object.values(spaceRace.spaceRaceGame.spacePlayers)
           .filter((p) => !p.highlight)
@@ -92,7 +92,7 @@ const View = ({ players }: Props) => {
               {player.name}
             </button>
           ))}
-      </div>
+      </div> */}
     </SpectatorPageLayout>
   );
 };
