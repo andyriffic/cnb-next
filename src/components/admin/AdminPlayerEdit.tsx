@@ -130,6 +130,21 @@ export const AdminPlayerEdit = ({ player, onClose }: Props) => {
               }
             />
           </fieldset>
+          <AdminPlayerEditNumberValue
+            label="Coins"
+            id="player_coins"
+            value={playerCopy.details?.coins || 0}
+            onChange={(value) =>
+              setPlayerCopy({
+                ...playerCopy,
+                details: {
+                  ...playerCopy.details,
+                  coins: value,
+                },
+              })
+            }
+          />
+
           <AdminPlayerEditBooleanValue
             label="Advantage"
             id="game_advantage"
