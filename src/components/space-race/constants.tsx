@@ -107,11 +107,19 @@ export function createEntity(
 function getDisplayElement(entityType: SpaceRaceEntityType): JSX.Element {
   switch (entityType) {
     case "satellite":
-      return <span style={{ transform: "scale(0.8)" }}>🛰️</span>;
+      return (
+        <Attention animation="slow-vibrate">
+          <span style={{ transform: "scale(1)" }}>🧹</span>
+        </Attention>
+      );
     case "planet":
-      return <span style={{ transform: "scale(1.5)" }}>🪐</span>;
+      return (
+        <Attention animation="shake">
+          <span style={{ transform: "scale(1.1)" }}>👻</span>
+        </Attention>
+      );
     case "asteroid":
-      return <>🪨</>;
+      return <span style={{ opacity: "0.8" }}>🎃</span>;
     case "wormhole":
       return <>🌀</>;
     case "earth1":
