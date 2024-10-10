@@ -3,9 +3,10 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import styled from "styled-components";
-import finxMascotImage from "../assets/finx-mascot-space.png";
+import finxMascotImage from "../assets/cinby-witch.png";
 import { Appear } from "../components/animations/Appear";
 import { spinAnimation } from "../components/animations/keyframes/spinAnimations";
+import { Attention } from "../components/animations/Attention";
 
 const Container = styled.div`
   display: flex;
@@ -23,7 +24,7 @@ const Space = styled.div`
   width: 100vw;
   height: 100vh;
   background-color: black;
-  background-image: url("/images/space-background-01.jpg");
+  background-image: url("/images/halloween-collage-background-illustration.jpg");
   background-size: 100% 100%;
 `;
 
@@ -34,7 +35,7 @@ const StyledLink = styled(Link)`
 const PositionContainer = styled.div`
   position: absolute;
   top: 50%;
-  left: 50%;
+  left: 40%;
   transform: translate(-50%, -50%);
 `;
 
@@ -51,13 +52,13 @@ const Home: NextPage = () => {
       </Head>
       <Space>
         <PositionContainer>
-          <SpinContainer>
+          <Attention animation="slow-vibrate">
             <Image
               src={finxMascotImage}
               alt="Finx Rocks mascot of a rock smiling and using a laptop"
               width={300}
             />
-          </SpinContainer>
+          </Attention>
           <StyledLink href="/join">Play a game</StyledLink>
         </PositionContainer>
       </Space>
