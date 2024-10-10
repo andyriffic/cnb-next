@@ -10,7 +10,8 @@ export type PlayerDetails = {
   colourHex?: string;
   retired?: boolean;
   hasGameAdvantage?: boolean;
-  coins?: number;
+  totalCoins?: number;
+  availableCoins?: number;
   role?: string;
   whosThatCount?: number;
   pacmanPlayer?: boolean;
