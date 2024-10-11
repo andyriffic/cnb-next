@@ -41,10 +41,17 @@ const updatePlayerGameMoves = (
             }
           : player.details.zombieRun;
 
+        const totalCoinsWon = !!playerMoves.winner ? 1 : 0;
+        const availableCoins =
+          (player.details?.availableCoins || 0) + totalCoinsWon;
+        const totalCoins = (player.details?.totalCoins || 0) + totalCoinsWon;
+
         updatePlayer(playerMoves.playerId, {
           ...player.details,
           gameMoves: currentGameMoves + playerMoves.moves,
           zombieRun: zombieRunDetails,
+          totalCoins,
+          availableCoins,
         })
           .then(resolve)
           .catch((err) => reject(err));

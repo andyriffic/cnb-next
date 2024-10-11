@@ -34,17 +34,24 @@ const updatePlayerGameMoves = (
 
         const playerPacmanDetails = getPlayerPacManDetails(player);
 
+        const totalCoinsWon = !!playerMoves.winner ? 1 : 0;
+        const availableCoins =
+          (player.details?.availableCoins || 0) + totalCoinsWon;
+        const totalCoins = (player.details?.totalCoins || 0) + totalCoinsWon;
+
         updatePlayer(playerMoves.playerId, {
           ...player.details,
           pacmanPlayer: true,
           gameMoves: currentGameMoves + playerMoves.moves,
           pacmanDetails: {
             ...playerPacmanDetails,
-            hasPowerPill: earnedPowerPill,
+            hasPowerPill: earnedPowerPill || playerPacmanDetails.hasPowerPill,
             jailTurnsRemaining: earnedPowerPill
               ? 0
               : playerPacmanDetails.jailTurnsRemaining,
           },
+          totalCoins,
+          availableCoins,
         }).then(() => resolve());
       })
       .catch((err) => reject(err));

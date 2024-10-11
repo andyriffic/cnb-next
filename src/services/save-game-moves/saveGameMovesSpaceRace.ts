@@ -41,10 +41,17 @@ const updatePlayerGameMoves = (
               yCoordinate: generateRandomInt(0, STARMAP_HEIGHT - 1),
             };
 
+        const totalCoinsWon = !!playerMoves.winner ? 1 : 0;
+        const availableCoins =
+          (player.details?.availableCoins || 0) + totalCoinsWon;
+        const totalCoins = (player.details?.totalCoins || 0) + totalCoinsWon;
+
         updatePlayer(playerMoves.playerId, {
           ...player.details,
           gameMoves: currentGameMoves + playerMoves.moves,
           spaceRace: spaceRaceDetails,
+          totalCoins,
+          availableCoins,
         }).then(() => resolve());
       })
       .catch((err) => reject(err));
