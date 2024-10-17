@@ -76,7 +76,8 @@ export function GasBallon({ gasCloud }: Props): JSX.Element {
   const visibleSize = gasCloud.exploded ? 10 : gasCloud.pressed;
   return (
     <Container size={visibleSize} exploded={gasCloud.exploded}>
-      <Ballon size={visibleSize} />
+      {/* <Ballon size={visibleSize} /> */}
+      <span style={{ fontSize: `${visibleSize * 0.1 + 3}rem` }}>🎃</span>
       {/* <Carol
         size={visibleSize}
         src={carolFaceImage}
