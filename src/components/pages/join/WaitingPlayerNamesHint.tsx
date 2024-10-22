@@ -12,16 +12,16 @@ const NameListContainer = styled.div`
 
 const REGULAR_PLAYER_NAMES = [
   "Andy",
-  "Nina",
+  // "Nina",
   "Cathy",
   "Callum",
-  "Kathleen",
+  // "Kathleen",
   "Brett",
   "Chris",
-  "Byron",
+  // "Byron",
   "Stacey",
   "Ashlee",
-  "Michelle",
+  // "Michelle",
   "Michelle L",
   "Shuming",
   "Albert",
@@ -29,6 +29,7 @@ const REGULAR_PLAYER_NAMES = [
   "Sixiao",
   "Shihao",
   "Pingsheng",
+  "Meng Jie",
 ];
 
 type Props = {
