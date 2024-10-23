@@ -1,6 +1,6 @@
 import * as E from "fp-ts/Either";
 import { pipe } from "fp-ts/lib/function";
-import { Player } from "../../types/Player";
+import { getPlayerAvailableCoins, Player } from "../../types/Player";
 import { ErrorMessage } from "../../types/common";
 import { selectRandomOneOf } from "../../utils/random";
 import {
@@ -66,7 +66,7 @@ const createGame =
       players: players.map((p) => ({
         id: p.id,
         name: p.name,
-        advantage: !!p.details?.hasGameAdvantage,
+        advantage: getPlayerAvailableCoins(p) > 0,
       })),
       rounds: [createEmptyRound()],
     };

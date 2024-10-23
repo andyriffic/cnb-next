@@ -36,6 +36,8 @@ import {
   urlWithTeamQueryParam,
 } from "../../utils/url";
 import { AudienceGameSelection } from "../../components/pages/join/AudienceGameSelection";
+import { deductAvailableCoinFromPlayer } from "../../utils/api";
+import { Coins } from "../../components/Coins";
 
 const JoinedPlayerContainer = styled.div`
   display: flex;
@@ -93,6 +95,11 @@ const GameSelectorContainer = styled.div`
   flex-shrink: 0;
 `;
 
+const CoinContainer = styled.div`
+  font-size: 1.5rem;
+  text-align: center;
+`;
+
 export type GameTypes =
   | "rps"
   | "rps-quick"
@@ -103,13 +110,15 @@ export type GameTypes =
 
 const availableGameTypes: GameTypes[] = ["rps", "balloon", "number-crunch"];
 
-const GAME_NAMES: { [key in GameTypes]: string } = {
-  rps: "Betting 🎲",
-  "rps-quick": "Betting (quick)",
-  balloon: "Balloon 🎈",
-  "balloon-quick": "Balloon (quick)",
-  ai: "AI Overlord",
-  "number-crunch": "Number Crunch 💯",
+const GAME_CONFIG: {
+  [key in GameTypes]: { displayName: string; canTakeCoins: boolean };
+} = {
+  rps: { displayName: "Betting 🎲", canTakeCoins: false },
+  "rps-quick": { displayName: "Betting (quick)", canTakeCoins: false },
+  balloon: { displayName: "Balloon 🎈", canTakeCoins: false },
+  "balloon-quick": { displayName: "Balloon (quick)", canTakeCoins: false },
+  ai: { displayName: "AI Overlord", canTakeCoins: false },
+  "number-crunch": { displayName: "Number Crunch 💯", canTakeCoins: true },
 };
 
 const gameCreators: {
@@ -257,30 +266,39 @@ function Page() {
                             animation="slow-vibrate"
                             animate={gameType === suggestedGame}
                           >
-                            <ThemedPrimaryButton
-                              highlight={gameType === suggestedGame}
-                              disabled={group.playerIds.length < 3}
-                              onClick={() => {
-                                gameCreators[gameType](
-                                  group,
-                                  socketService,
-                                  getName,
-                                  team
-                                ).then((gameUrl) => {
-                                  router.push(
-                                    urlWithTeamQueryParam(gameUrl, team)
-                                  );
-                                });
-                              }}
-                            >
-                              {gameType === suggestedGame && (
-                                <>
-                                  <SuggestedText>🌟Recommended🌟</SuggestedText>
-                                  <br />
-                                </>
+                            <div>
+                              <ThemedPrimaryButton
+                                highlight={gameType === suggestedGame}
+                                disabled={group.playerIds.length < 3}
+                                onClick={() => {
+                                  gameCreators[gameType](
+                                    group,
+                                    socketService,
+                                    getName,
+                                    team
+                                  ).then((gameUrl) => {
+                                    router.push(
+                                      urlWithTeamQueryParam(gameUrl, team)
+                                    );
+                                  });
+                                }}
+                              >
+                                {gameType === suggestedGame && (
+                                  <>
+                                    <SuggestedText>
+                                      🌟Recommended🌟
+                                    </SuggestedText>
+                                    <br />
+                                  </>
+                                )}
+                                {GAME_CONFIG[gameType].displayName}
+                              </ThemedPrimaryButton>
+                              {GAME_CONFIG[gameType].canTakeCoins && (
+                                <CoinContainer>
+                                  <Coins totalCoins={1} />
+                                </CoinContainer>
                               )}
-                              {GAME_NAMES[gameType]}
-                            </ThemedPrimaryButton>
+                            </div>
                           </Attention>
                         );
                       })}
@@ -434,6 +452,10 @@ function createNumberCrunchGame(
 ): Promise<GameUrl> {
   return new Promise((resolve) => {
     socketIoService.numberCrunch.createGame(group.id, group.players, (game) => {
+      game.players
+        .filter((p) => p.advantage)
+        .map((p) => p.id)
+        .forEach(deductAvailableCoinFromPlayer);
       resolve(getNumberCrunchSpectatorUrl(game.id));
     });
   });

@@ -110,6 +110,17 @@ export const incrementPlayersWhosThatCountFetch = (
   });
 };
 
+export const deductAvailableCoinFromPlayer = (
+  playerId: string
+): Promise<Response> => {
+  return fetch(`/api/player/${playerId}/deduct-available-coin`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
+
 export const fetchCreateAiOverlordGame = (
   request: ApiGameCreationRequest
 ): Promise<AiOverlordGame> => {

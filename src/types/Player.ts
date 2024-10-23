@@ -83,6 +83,9 @@ export const getPlayerAchievements = (player: Player): PlayerAchievements => {
   };
 };
 
+export const getPlayerAvailableCoins = (player: Player): number =>
+  player.details?.availableCoins || 0;
+
 export const getPlayerPacManDetails = (player: Player): PacmanDetails => {
   return {
     ...DEFAULT_PACMAN_DETAILS,

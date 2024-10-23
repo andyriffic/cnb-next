@@ -26,7 +26,11 @@ export const WaitingToGuessList = ({ game }: Props) => {
           }}
         >
           <Attention animate={!p.guessedThisRound} animation="shake">
-            <PlayerAvatar playerId={p.id} size="thumbnail" />
+            <PlayerAvatar
+              playerId={p.id}
+              size="thumbnail"
+              hasAdvantage={p.advantage}
+            />
           </Attention>
           <Pill>{p.name}</Pill>
           {/* <p>{p.guessedThisRound ? "✅" : " "}</p> */}
