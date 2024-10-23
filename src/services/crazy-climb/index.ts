@@ -39,10 +39,7 @@ const playerSelectPlatformOnLevel = (
     E.fromOption(() => "No active level found"),
     E.chain(validatePlayerHasNotSelectedPlatform(playerId)),
     E.fold((d) => O.none, getPlatformOnLevel(platformIndex)),
-    O.fold(
-      () => E.left("No active platform found"),
-      addPlayerToPlatform(playerId, platformIndex)
-    )
+    O.map(addPlayerToPlatform(playerId, platformIndex))
   );
 };
 
@@ -91,7 +88,7 @@ const getPlatformOnLevel = (
   return (level) => O.fromNullable(level.platforms[platformIndex]);
 };
 
-const addPlayerToPlatform = (playerId: string) => {
+const addPlayerToPlatform = (playerId: string, platformIndex: number) => {
   return (platform: CrazyClimbGameLevelPlatform) => {
     return {
       ...platform,
