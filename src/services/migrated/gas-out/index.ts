@@ -1,5 +1,5 @@
 import { pipe } from "fp-ts/lib/function";
-import { Player } from "../../../types/Player";
+import { getPlayerAvailableCoins, Player } from "../../../types/Player";
 import {
   WeightedItem,
   selectRandomOneOf,
@@ -818,7 +818,7 @@ function getPlayerAndCardOrThrow(
 }
 
 function createGasPlayer(player: Player, gameType: GasGameType): GasPlayer {
-  const advantage = !!player.details?.hasGameAdvantage;
+  const advantage = getPlayerAvailableCoins(player) > 0;
   return {
     player,
     status: "alive",

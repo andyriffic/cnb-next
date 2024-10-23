@@ -51,7 +51,7 @@ export const initialiseGasOutSocket = (io: SocketIOServer, socket: Socket) => {
       gameId: string,
       team: string | undefined,
       gameType: GasGameType,
-      onCreated: (id: string) => void
+      onCreated: (game: GasGame) => void
     ) => {
       getAllPlayers().then((playersFromDb) => {
         if (!playersFromDb) return;
@@ -61,7 +61,7 @@ export const initialiseGasOutSocket = (io: SocketIOServer, socket: Socket) => {
         console.log("Created GasGame", gasGame);
         activeGasGames = [gasGame]; //Only allow one mobGame at a time for now
         io.emit(GAS_GAMES_UPDATE, activeGasGames);
-        onCreated(gasGame.id);
+        onCreated(gasGame);
       });
     }
   );

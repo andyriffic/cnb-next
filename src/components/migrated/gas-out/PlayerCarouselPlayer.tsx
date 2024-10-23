@@ -153,7 +153,11 @@ export function PlayerCarouselPlayer({
         <ZombieTransform
           isZombie={getPlayerZombieRunDetails(player.player).isZombie}
         >
-          <PlayerAvatar playerId={player.player.id} size={size} />
+          <PlayerAvatar
+            playerId={player.player.id}
+            size={size}
+            hasAdvantage={player.advantage}
+          />
         </ZombieTransform>
         {/* {player.curse === "double-press" && <Curse>Double Press ‼️</Curse>} */}
       </PlayerAvatarContainer>

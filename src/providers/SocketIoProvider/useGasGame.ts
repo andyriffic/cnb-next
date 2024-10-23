@@ -24,7 +24,7 @@ export type GasGameSocketService = {
     gameId: string,
     team: string | undefined,
     gameType: GasGameType,
-    onCreated: (id: string) => void
+    onCreated: (game: GasGame) => void
   ) => void;
   playCard: (gameId: string, playerId: string, cardIndex: number) => void;
   pressGas: (gameId: string) => void;
@@ -48,7 +48,7 @@ export function useGasGame(socket: Socket): GasGameSocketService {
       gameId: string,
       team: string | undefined,
       gameType: GasGameType,
-      onCreated: (id: string) => void
+      onCreated: (game: GasGame) => void
     ) => {
       socket.emit(
         CREATE_GAS_GAME,

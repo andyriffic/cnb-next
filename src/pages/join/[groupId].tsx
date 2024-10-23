@@ -115,7 +115,7 @@ const GAME_CONFIG: {
 } = {
   rps: { displayName: "Betting 🎲", canTakeCoins: false },
   "rps-quick": { displayName: "Betting (quick)", canTakeCoins: false },
-  balloon: { displayName: "Balloon 🎈", canTakeCoins: false },
+  balloon: { displayName: "Balloon 🎈", canTakeCoins: true },
   "balloon-quick": { displayName: "Balloon (quick)", canTakeCoins: false },
   ai: { displayName: "AI Overlord", canTakeCoins: false },
   "number-crunch": { displayName: "Number Crunch 💯", canTakeCoins: true },
@@ -405,8 +405,12 @@ function createBallonGameNormal(
       group.id,
       team,
       "normal",
-      (gameId) => {
-        resolve(getGasOutSpectatorUrl(gameId));
+      (game) => {
+        game.allPlayers
+          .filter((p) => p.advantage)
+          .map((p) => p.player.id)
+          .forEach(deductAvailableCoinFromPlayer);
+        resolve(getGasOutSpectatorUrl(game.id));
       }
     );
   });
@@ -424,8 +428,8 @@ function createBallonGameQuick(
       group.id,
       team,
       "quick",
-      (gameId) => {
-        resolve(getGasOutSpectatorUrl(gameId));
+      (game) => {
+        resolve(getGasOutSpectatorUrl(game.id));
       }
     );
   });

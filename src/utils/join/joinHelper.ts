@@ -11,7 +11,7 @@ export function getSuggestedGame(date: Date): GameTypes | undefined {
     case "Tuesday": {
       return "rps";
     }
-    case "Wednesday":
+    // case "Wednesday":
     case "Thursday": {
       return "balloon";
     }
