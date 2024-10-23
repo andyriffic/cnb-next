@@ -1,5 +1,9 @@
 import styled, { css } from "styled-components";
-import { Player, getPlayerZombieRunDetails } from "../types/Player";
+import {
+  Player,
+  getPlayerAvailableCoins,
+  getPlayerZombieRunDetails,
+} from "../types/Player";
 import { selectRandomOneOf } from "../utils/random";
 import { replaceFirstLetterWithZ } from "../utils/string";
 import { AvatarSize, PlayerAvatar } from "./PlayerAvatar";
@@ -7,6 +11,7 @@ import { Appear } from "./animations/Appear";
 import { useDoOnce } from "./hooks/useDoOnce";
 import { useSound } from "./hooks/useSound";
 import { Animation_ShakeBottom, Attention } from "./animations/Attention";
+import { Coins } from "./Coins";
 
 const Label = styled.div`
   background-color: goldenrod;
@@ -31,11 +36,8 @@ const ZombieLabel = styled(Label)`
   text-align: center;
 `;
 
-const SpecialIndicator = styled.div`
-  font-size: 3rem;
-  position: absolute;
-  top: 0;
-  left: 50%;
+const CoinContainer = styled.div`
+  text-align: center;
 `;
 
 export const ZombieTransform = styled.div<{ isZombie: boolean }>`
@@ -83,10 +85,10 @@ export function JoinedPlayer({ player, team, avatarSize }: Props) {
           <ZombieLabel>{replaceFirstLetterWithZ(player.name)}</ZombieLabel>
         </Appear>
       )}
-      {player && !!player.details?.hasGameAdvantage && (
-        <SpecialIndicator>
-          <Attention animation="pulse">✨</Attention>
-        </SpecialIndicator>
+      {player && getPlayerAvailableCoins(player) > 0 && (
+        <CoinContainer>
+          <Coins totalCoins={getPlayerAvailableCoins(player)} />
+        </CoinContainer>
       )}
     </div>
   );
