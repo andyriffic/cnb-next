@@ -63,10 +63,6 @@ export const PlayerRoundHistory = ({ game, playerId }: Props) => {
 
   return (
     <Container>
-      <p style={{ marginBottom: "1rem" }}>
-        Because you rule a planet, only you can see this section below
-      </p>
-      <p style={{ marginBottom: "1rem" }}>Dont tell anyone else yet 🤫</p>
       <SmallHeading>Previous Guesses</SmallHeading>
       <PreviousGuessContainer>
         {playerHistory.map((guess, i) => {
