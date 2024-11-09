@@ -1,11 +1,12 @@
 import styled from "styled-components";
+import { GameTypes } from "../../../pages/join/[groupId]";
+import { usePlayerNames } from "../../../providers/PlayerNamesProvider";
 import {
   QueryUserQuestion,
   QuestionsByPlayerId,
 } from "../../../services/query-user/types";
-import { SmallHeading } from "../../Atoms";
-import { GameTypes } from "../../../pages/join/[groupId]";
-import { PressableButton } from "../../migrated/gas-out/play/PressableButton";
+import { Pill, SmallHeading } from "../../Atoms";
+import { CenterSpaced } from "../../Layouts";
 
 const AnswerList = styled.div`
   display: flex;
@@ -21,6 +22,12 @@ const AnswerListItem = styled.div`
 const GameNameText = styled.div`
   font-size: 1rem;
   padding: 1rem;
+`;
+
+const PlayerNameList = styled.div``;
+
+const PlayerName = styled(Pill)`
+  font-size: 1rem;
 `;
 
 const PercentageText = styled.div``;
@@ -40,6 +47,7 @@ export const PopularGameSelector = ({
   questionsByPlayerId,
   onGameSelected,
 }: Props) => {
+  const { getName } = usePlayerNames();
   const totalRespondants = Object.values(questionsByPlayerId).length;
 
   const totalResponses = Object.values(questionsByPlayerId).filter(
@@ -61,9 +69,23 @@ export const PopularGameSelector = ({
   return (
     <>
       <SmallHeading>{question.question}</SmallHeading>
-      <p style={{ fontSize: "0.8rem" }}>
+      <p style={{ fontSize: "0.8rem", margin: "1rem 0" }}>
         Total responses: {totalResponses}/{totalRespondants}
       </p>
+      <CenterSpaced style={{ flexWrap: "wrap" }}>
+        {Object.keys(questionsByPlayerId).map((playerId) => {
+          const hasVoted =
+            questionsByPlayerId[playerId]?.selectedOptionIndex !== undefined;
+          return (
+            <PlayerName
+              key={playerId}
+              style={{ backgroundColor: hasVoted ? "green" : "crimson" }}
+            >
+              {getName(playerId)}
+            </PlayerName>
+          );
+        })}
+      </CenterSpaced>
       <AnswerList>
         {responsePercentages.map((percentage, i) => {
           const answer = question.options[i];
