@@ -1,9 +1,8 @@
-import styled from "styled-components";
 import Image from "next/image";
+import styled from "styled-components";
 import { isNumberInRange } from "../../utils/number";
 import { Attention } from "../animations/Attention";
-import { Zombie } from "./Zombie";
-import { ZombieRunPlayer } from "./ZombieRunPlayer";
+import bewareBananaSignImage from "./beware-banana-02.png";
 import {
   ZOMBIE_RUNNING_TRACK_LENGTH_METRES,
   ZombiePlayer,
@@ -11,8 +10,9 @@ import {
   ZombieRunGame,
   ZombieRunGameStatus,
 } from "./types";
-import bewareBananaSignImage from "./beware-banana-02.png";
+import { Zombie } from "./Zombie";
 import { ZombieObstacleView } from "./ZombieObstacle";
+import { ZombieRunPlayer } from "./ZombieRunPlayer";
 
 const TOTAL_TRACK_WIDTH = 94;
 const STACK_INDEX_RANGE = 2;
@@ -24,8 +24,10 @@ const ZombieBackground = styled.div`
   width: 100vw;
   margin: 0 auto;
   box-sizing: border-box;
-  background: url("/images/zombie-background-dusk.png") no-repeat bottom center;
-  background-size: 100% 100%;
+  background: url("/images/zombie-background-dusk.png") no-repeat bottom right;
+  // background-size: 150% 100%;
+  // background-position: 100% 100%;
+  transition: background 3s ease-in-out;
 `;
 
 const PositionedZombiePlayer = styled.div`
@@ -116,9 +118,19 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
     zombieGame.gameStatus === ZombieRunGameStatus.GAME_OVER &&
     zombieGame.endGameStatus === ZombieRunEndGameStatus.ZOMBIE_PARTY;
 
+  const minDistance = Math.max(zombieGame.originalZombie.totalMetresRun - 5, 0);
+  const totalTrackVisibleMetres =
+    ZOMBIE_RUNNING_TRACK_LENGTH_METRES - minDistance;
+
   return (
     <div>
-      <ZombieBackground>
+      <ZombieBackground
+        style={{
+          backgroundSize: `${
+            (ZOMBIE_RUNNING_TRACK_LENGTH_METRES / totalTrackVisibleMetres) * 100
+          }% 100%`,
+        }}
+      >
         <BewareSign>
           <Image
             src={bewareBananaSignImage}
@@ -132,8 +144,8 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
               left: `${
                 zombieGame.endGameStatus === ZombieRunEndGameStatus.ZOMBIE_PARTY
                   ? 2
-                  : (TOTAL_TRACK_WIDTH / ZOMBIE_RUNNING_TRACK_LENGTH_METRES) *
-                    zombieGame.originalZombie.totalMetresRun
+                  : (TOTAL_TRACK_WIDTH / totalTrackVisibleMetres) *
+                    (zombieGame.originalZombie.totalMetresRun - minDistance)
               }vw`,
             }}
           >
@@ -153,9 +165,8 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
                       ? zombieGame.survivors.findIndex((z) => z.id === zp.id) *
                           3 +
                         10
-                      : (TOTAL_TRACK_WIDTH /
-                          ZOMBIE_RUNNING_TRACK_LENGTH_METRES) *
-                        zp.totalMetresRun
+                      : (TOTAL_TRACK_WIDTH / totalTrackVisibleMetres) *
+                        (zp.totalMetresRun - minDistance)
                   }vw`,
                 }}
               >
@@ -181,9 +192,8 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
                           3 +
                         5 +
                         zombieGame.survivors.length * 3
-                      : (TOTAL_TRACK_WIDTH /
-                          ZOMBIE_RUNNING_TRACK_LENGTH_METRES) *
-                        zp.totalMetresRun
+                      : (TOTAL_TRACK_WIDTH / totalTrackVisibleMetres) *
+                        (zp.totalMetresRun - minDistance)
                   }vw`,
                 }}
               >
@@ -203,8 +213,8 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
                 key={i}
                 style={{
                   left: `${
-                    (TOTAL_TRACK_WIDTH / ZOMBIE_RUNNING_TRACK_LENGTH_METRES) *
-                    obstacle.index
+                    (TOTAL_TRACK_WIDTH / totalTrackVisibleMetres) *
+                    (obstacle.index - minDistance)
                   }vw`,
                 }}
               >
