@@ -6,7 +6,7 @@ import {
   explodeAnimation,
   shakeExtremeAnimation,
 } from "../../animations/keyframes/extreme";
-import carolFaceImage from "./carol-face.png";
+import sixiaoFaceImage from "./sixiao-face.png";
 
 function getCloudAnimationSpeedMilliSeconds(intensity: number): number {
   return Math.max(8000 - intensity * 500, 100);
@@ -77,19 +77,15 @@ export function GasBallon({ gasCloud }: Props): JSX.Element {
   return (
     <Container size={visibleSize} exploded={gasCloud.exploded}>
       {/* <Ballon size={visibleSize} /> */}
-      <span
+      {/* <span
         style={{
           fontSize: `${visibleSize * 0.3 + 3}rem`,
           transition: "all 500ms linear",
         }}
       >
         🎃
-      </span>
-      {/* <Carol
-        size={visibleSize}
-        src={carolFaceImage}
-        alt="Wrapped christmas gift box"
-      /> */}
+      </span> */}
+      <Carol size={visibleSize} src={sixiaoFaceImage} alt="Sixiao's face" />
     </Container>
   );
 }
