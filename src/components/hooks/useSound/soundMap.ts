@@ -86,5 +86,5 @@ const WEDDING_SOUND_MAP: { [key in SoundName]: string } = {
 };
 
 export const SOUND_MAP = {
-  ...DEFAULT_SOUND_MAP,
+  ...XMAS_SOUND_MAP,
 };

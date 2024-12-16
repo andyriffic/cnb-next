@@ -19,4 +19,4 @@ const BLANK_COMPONENTS: ThemedComponents = {
   JoinScreenDecoration: <></>,
 };
 
-export default DEFAULT_COMPONENTS;
+export default XMAS_COMPONENTS;
