@@ -9,7 +9,7 @@ import {
 import sixiaoFaceImage from "./sixiao-face.png";
 
 function getCloudAnimationSpeedMilliSeconds(intensity: number): number {
-  return Math.max(8000 - intensity * 500, 100);
+  return Math.max(6000 - intensity * 500, 100);
 }
 
 const Container = styled.div<{ size: number; exploded: boolean }>`
@@ -77,15 +77,15 @@ export function GasBallon({ gasCloud }: Props): JSX.Element {
   return (
     <Container size={visibleSize} exploded={gasCloud.exploded}>
       {/* <Ballon size={visibleSize} /> */}
-      {/* <span
+      <span
         style={{
-          fontSize: `${visibleSize * 0.3 + 3}rem`,
+          fontSize: `${visibleSize * 0.6 + 5}rem`,
           transition: "all 500ms linear",
         }}
       >
-        🎃
-      </span> */}
-      <Carol size={visibleSize} src={sixiaoFaceImage} alt="Sixiao's face" />
+        🤰
+      </span>
+      {/* <Carol size={visibleSize} src={sixiaoFaceImage} alt="Sixiao's face" /> */}
     </Container>
   );
 }
