@@ -2,7 +2,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 import { GasCloud } from "../../../services/migrated/gas-out/types";
-import THEME from "../../../themes/types";
+import THEME from "../../../themes";
 import { selectRandomOneOf } from "../../../utils/random";
 import { Appear } from "../../animations/Appear";
 import {
@@ -91,7 +91,7 @@ const SpeechBubble = styled.div`
   display: inline-block;
   margin: 20px;
   text-align: center;
-  font-family: ${THEME.fonts.feature};
+  font-family: ${THEME.tokens.fonts.feature};
   font-size: 1.5rem;
   line-height: 1;
   // letter-spacing: -0.04em;

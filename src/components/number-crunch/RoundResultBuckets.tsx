@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import { NumberCrunchGameView } from "../../services/number-crunch/types";
 import { Pill, SmallHeading } from "../Atoms";
 import { PlayerAvatar } from "../PlayerAvatar";
-import THEME from "../../themes/types";
+import THEME from "../../themes";
 import { NUMBER_CRUNCH_BUCKET_RANGES } from "../../services/number-crunch";
 import { usePlayerNames } from "../../providers/PlayerNamesProvider";
 import { RevealLatestRoundResultsBucket } from "./RevealLatestRoundResultsBucket";
@@ -16,7 +16,7 @@ const BucketContainer = styled.div`
 
 const RoundContainer = styled.div`
   border-radius: 1rem;
-  background: ${THEME.colours.secondaryBackground};
+  background: ${THEME.tokens.colours.secondaryBackground};
   padding: 1rem;
 `;
 

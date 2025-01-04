@@ -1,7 +1,7 @@
 import Link from "next/link";
 import styled from "styled-components";
 import { getClassicCnbPlayerUrl, getPlayerHomeUrl } from "../utils/url";
-import THEME from "../themes/types";
+import THEME from "../themes";
 import { PlayerQuestionDialog } from "./player/PlayerQuestionDialog";
 
 const Container = styled.div`
@@ -11,8 +11,8 @@ const Container = styled.div`
   /* width: 100vw; */
   justify-content: center;
   align-items: center;
-  background-color: ${THEME.colours.primaryBackground};
-  color: ${THEME.colours.primaryText};
+  background-color: ${THEME.tokens.colours.primaryBackground};
+  color: ${THEME.tokens.colours.primaryText};
   /* overflow-y: scroll; */
 `;
 
@@ -28,7 +28,7 @@ const Header = styled.div`
   min-height: 20px;
   width: 100vw;
   padding: 1rem;
-  background-color: ${THEME.colours.secondaryBackground};
+  background-color: ${THEME.tokens.colours.secondaryBackground};
 `;
 
 const Footer = styled.div`
@@ -37,7 +37,7 @@ const Footer = styled.div`
   min-height: 20px;
   width: 100vw;
   padding: 1rem;
-  background-color: ${THEME.colours.secondaryBackground};
+  background-color: ${THEME.tokens.colours.secondaryBackground};
 `;
 
 const FooterContent = styled.div`

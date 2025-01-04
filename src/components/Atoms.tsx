@@ -1,31 +1,31 @@
 import styled, { css } from "styled-components";
 import Link from "next/link";
 
-import THEME from "../themes/types";
+import THEME from "../themes";
 
 export const FeatureHeading = styled.h1`
   font-size: 15rem;
   margin: 0;
   text-transform: uppercase;
-  font-family: ${THEME.fonts.feature};
-  color: ${THEME.colours.primaryText};
-  text-shadow: 4px 4px ${THEME.colours.textAccent};
+  font-family: ${THEME.tokens.fonts.feature};
+  color: ${THEME.tokens.colours.primaryText};
+  text-shadow: 4px 4px ${THEME.tokens.colours.textAccent};
   line-height: 80%;
 `;
 
 export const FeatureSubHeading = styled.h2`
   font-size: 2rem;
   margin: 0;
-  font-family: ${THEME.fonts.body};
-  color: ${THEME.colours.primaryText};
+  font-family: ${THEME.tokens.fonts.body};
+  color: ${THEME.tokens.colours.primaryText};
   letter-spacing: 0.2rem;
 `;
 
 export const SmallHeading = styled.h3<{ centered?: boolean }>`
   font-size: 2rem;
   margin: 0;
-  font-family: ${THEME.fonts.feature};
-  color: ${THEME.colours.primaryText};
+  font-family: ${THEME.tokens.fonts.feature};
+  color: ${THEME.tokens.colours.primaryText};
   text-transform: uppercase;
   letter-spacing: 0.2rem;
   text-align: ${({ centered }) => (centered ? "center" : "left")};
@@ -34,8 +34,8 @@ export const SmallHeading = styled.h3<{ centered?: boolean }>`
 export const NormalText = styled.p`
   font-size: 1rem;
   margin: 0;
-  font-family: ${THEME.fonts.body};
-  color: ${THEME.colours.primaryText};
+  font-family: ${THEME.tokens.fonts.body};
+  color: ${THEME.tokens.colours.primaryText};
 `;
 
 export const ThemedPrimaryLinkButton = styled(Link)`
@@ -45,12 +45,12 @@ export const ThemedPrimaryLinkButton = styled(Link)`
   font-size: 1.4rem;
   text-decoration: none;
   background: linear-gradient(
-    ${THEME.colours.buttonPrimaryBackground},
-    ${THEME.colours.buttonSecondaryBackground}
+    ${THEME.tokens.colours.buttonPrimaryBackground},
+    ${THEME.tokens.colours.buttonSecondaryBackground}
   );
-  color: ${THEME.colours.buttonPrimaryText};
+  color: ${THEME.tokens.colours.buttonPrimaryText};
   border: 0;
-  box-shadow: 0 4px ${THEME.colours.buttonAccent};
+  box-shadow: 0 4px ${THEME.tokens.colours.buttonAccent};
   border-radius: 2rem;
 
   &:disabled {
@@ -76,14 +76,14 @@ export const ThemedPrimaryButton = styled.button<{ highlight?: boolean }>`
         `
       : css`
           background: linear-gradient(
-            ${THEME.colours.buttonPrimaryBackground},
-            ${THEME.colours.buttonSecondaryBackground}
+            ${THEME.tokens.colours.buttonPrimaryBackground},
+            ${THEME.tokens.colours.buttonSecondaryBackground}
           );
         `}
 
-  color: ${THEME.colours.buttonPrimaryText};
+  color: ${THEME.tokens.colours.buttonPrimaryText};
   border: 0;
-  box-shadow: 0 4px ${THEME.colours.buttonAccent};
+  box-shadow: 0 4px ${THEME.tokens.colours.buttonAccent};
   border-radius: 2rem;
   cursor: pointer;
 
@@ -98,7 +98,7 @@ export const ThemedPrimaryButton = styled.button<{ highlight?: boolean }>`
 `;
 
 export const Pill = styled.div`
-  background-color: ${THEME.colours.primaryBackground};
+  background-color: ${THEME.tokens.colours.primaryBackground};
   padding: 0.5rem 1rem;
   border-radius: 1rem;
   display: inline-block;
@@ -164,8 +164,8 @@ export const Label = styled.label`
 `;
 
 export const Card = styled.div`
-  background: ${THEME.colours.secondaryBackground};
-  color: ${THEME.colours.primaryText};
+  background: ${THEME.tokens.colours.secondaryBackground};
+  color: ${THEME.tokens.colours.primaryText};
   border-radius: 1rem;
   padding: 1rem;
   margin-bottom: 2rem;

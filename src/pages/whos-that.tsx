@@ -9,7 +9,7 @@ import { Player } from "../types/Player";
 import { incrementPlayersWhosThatCountFetch } from "../utils/api";
 import { getAllPlayers, getPlayer } from "../utils/data/aws-dynamodb";
 import { selectRandomOneOf } from "../utils/random";
-import THEME from "../themes/types";
+import THEME from "../themes";
 
 const Background = styled.div`
   position: fixed;
@@ -40,7 +40,7 @@ const TextContainer = styled.div`
 const PlayerName = styled.div`
   margin: 0;
   padding: 0;
-  font-family: ${THEME.fonts.feature};
+  font-family: ${THEME.tokens.fonts.feature};
   font-size: 15rem;
   text-transform: uppercase;
   font-weight: bold;
@@ -55,7 +55,7 @@ const PlayerRole = styled.div`
   color: #fecb03;
   margin: 0;
   padding: 0;
-  font-family: ${THEME.fonts.feature};
+  font-family: ${THEME.tokens.fonts.feature};
 `;
 
 type Props = {

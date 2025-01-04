@@ -1,13 +1,13 @@
 import styled from "styled-components";
 import { COLORS } from "../colors";
-import THEME from "../themes/types";
+import THEME from "../themes";
 import { NumericValue } from "./NumericValue";
 
 const Container = styled.div`
   width: 5vw;
   height: 5vw;
-  background: ${THEME.colours.secondaryBackground};
-  color: ${THEME.colours.primaryText};
+  background: ${THEME.tokens.colours.secondaryBackground};
+  color: ${THEME.tokens.colours.primaryText};
   border-radius: 50%;
   border: 0.4rem solid ${COLORS.borderPrimary};
   display: flex;

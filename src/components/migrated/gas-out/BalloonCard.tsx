@@ -2,7 +2,7 @@ import Image from "next/image";
 import styled from "styled-components";
 import { COLORS } from "../../../colors";
 import { GasCard } from "../../../services/migrated/gas-out/types";
-import THEME from "../../../themes/types";
+import THEME from "../../../themes";
 import bombImage from "./cnb-card-bomb.png";
 import curseImage from "./cnb-card-curse.png";
 import reverseImage from "./cnb-card-reverse.png";
@@ -18,35 +18,35 @@ const BaseCard = styled.div`
   border-radius: 10px;
   width: 100px;
   height: 160px;
-  color: ${THEME.colours.ballonGame.cardText};
+  color: ${THEME.tokens.colours.ballonGame.cardText};
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
   position: relative;
 `;
 
 const NumberCard = styled(BaseCard)`
-  background-color: ${THEME.colours.ballonGame.numberCardBackground};
+  background-color: ${THEME.tokens.colours.ballonGame.numberCardBackground};
 `;
 
 const CurseCard = styled(BaseCard)`
-  background-color: ${THEME.colours.ballonGame.cursedCardBackground};
+  background-color: ${THEME.tokens.colours.ballonGame.cursedCardBackground};
 `;
 
 const ReverseCard = styled(BaseCard)`
-  background-color: ${THEME.colours.ballonGame.reverseCardBackground};
+  background-color: ${THEME.tokens.colours.ballonGame.reverseCardBackground};
 `;
 
 const BombCard = styled(BaseCard)`
-  background-color: ${THEME.colours.ballonGame.bombCardBackground};
+  background-color: ${THEME.tokens.colours.ballonGame.bombCardBackground};
 `;
 
 const SkipCard = styled(BaseCard)`
-  background-color: ${THEME.colours.ballonGame.skipCardBackground};
-  color: ${THEME.colours.ballonGame.cardAltText};
+  background-color: ${THEME.tokens.colours.ballonGame.skipCardBackground};
+  color: ${THEME.tokens.colours.ballonGame.cardAltText};
 `;
 
 const PressesRemainingText = styled.div`
   font-size: 3rem;
-  font-family: ${THEME.fonts.feature};
+  font-family: ${THEME.tokens.fonts.feature};
   margin: 0;
   padding: 0;
   line-height: 100%;
@@ -60,7 +60,7 @@ const CardImage = styled(Image)`
 const CardText = styled.div`
   font-size: 1.4rem;
   text-transform: uppercase;
-  font-family: ${THEME.fonts.feature};
+  font-family: ${THEME.tokens.fonts.feature};
   letter-spacing: 0.1rem;
   line-height: 100%;
 `;

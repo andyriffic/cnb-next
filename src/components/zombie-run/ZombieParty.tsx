@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import styled from "styled-components";
-import THEME from "../../themes/types";
+import THEME from "../../themes";
 import { Heading } from "../Atoms";
 import { Appear } from "../animations/Appear";
 import { useSound } from "../hooks/useSound";
@@ -16,7 +16,7 @@ const Text = styled(Heading)`
   font-size: 8rem;
   text-transform: uppercase;
   font-weight: bold;
-  font-family: ${THEME.fonts.feature};
+  font-family: ${THEME.tokens.fonts.feature};
   color: #69b362;
   -webkit-text-stroke-width: 4px;
   -webkit-text-stroke-color: darkgreen;

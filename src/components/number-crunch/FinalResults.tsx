@@ -7,7 +7,7 @@ import {
   NumberCrunchFinalResultsView,
   NumberCrunchGameView,
 } from "../../services/number-crunch/types";
-import THEME from "../../themes/types";
+import THEME from "../../themes";
 import { savePlayerGameMovesFetch } from "../../utils/api";
 import { FeatureHeading, SmallHeading } from "../Atoms";
 import { CenterSpaced } from "../Layouts";
@@ -21,7 +21,7 @@ import { useSound } from "../hooks/useSound";
 const FinalGuessLine = styled.div`
   width: 100%;
   height: 1vh;
-  background-color: ${THEME.colours.textAccent};
+  background-color: ${THEME.tokens.colours.textAccent};
   border-radius: 1rem;
   display: flex;
   justify-content: center;
@@ -40,7 +40,7 @@ const DotPlayerNameContainer = styled.div`
   padding: 0.3rem;
   border: 1px solid white;
   border-radius: 0.5rem;
-  background-color: ${THEME.colours.secondaryBackground};
+  background-color: ${THEME.tokens.colours.secondaryBackground};
 `;
 
 const GuessContainer = styled.div`
@@ -51,7 +51,7 @@ const GuessContainer = styled.div`
     z-index: 1;
 
     ${DotPlayerNameContainer} {
-      background-color: ${THEME.colours.textAccent};
+      background-color: ${THEME.tokens.colours.textAccent};
     }
   }
 `;

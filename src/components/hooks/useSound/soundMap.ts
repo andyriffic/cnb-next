@@ -1,6 +1,6 @@
 import { SoundName } from "./types";
 
-const DEFAULT_SOUND_MAP: { [key in SoundName]: string } = {
+export const defaultSounds: { [key in SoundName]: string } = {
   "join-music": "/sounds/music/tmnt3_stage_8.mp3",
   "join-player-joined": "/sounds/dbz_instant_trans.mp3",
   "rps-show-move": "/sounds/spinning_heart.mp3",
@@ -60,8 +60,8 @@ const DEFAULT_SOUND_MAP: { [key in SoundName]: string } = {
   "space-race-player-finish": "/sounds/power_mode.mp3",
 };
 
-const XMAS_SOUND_MAP: { [key in SoundName]: string } = {
-  ...DEFAULT_SOUND_MAP,
+export const xmasSounds: { [key in SoundName]: string } = {
+  ...defaultSounds,
   "join-music": "/sounds/xmas/jingle_bells.mp3",
   "join-player-joined": "/sounds/xmas/santa_ho_ho_ho_ho_ho.mp3",
   "gas-background-music": "/sounds/xmas/jingle_bells_2.mp3",
@@ -71,8 +71,8 @@ const XMAS_SOUND_MAP: { [key in SoundName]: string } = {
   "rps-spectator-choice-reveal": "/sounds/xmas/sleigh_bell.mp3",
 };
 
-const CNY_SOUND_MAP: { [key in SoundName]: string } = {
-  ...DEFAULT_SOUND_MAP,
+export const chineseNewYearSounds: { [key in SoundName]: string } = {
+  ...defaultSounds,
   "join-music": "/sounds/chinese-new-year/cny_138.mp3",
   "join-player-joined": "/sounds/chinese-new-year/guzheng.mp3",
   "gas-background-music": "/sounds/chinese-new-year/god_of_wealth.mp3",
@@ -80,11 +80,7 @@ const CNY_SOUND_MAP: { [key in SoundName]: string } = {
     "/sounds/chinese-new-year/db_instrumental.mp3",
 };
 
-const WEDDING_SOUND_MAP: { [key in SoundName]: string } = {
-  ...DEFAULT_SOUND_MAP,
+export const weddingSounds: { [key in SoundName]: string } = {
+  ...defaultSounds,
   "join-music": "/sounds/music/arcade.mp3",
-};
-
-export const SOUND_MAP = {
-  ...XMAS_SOUND_MAP,
 };

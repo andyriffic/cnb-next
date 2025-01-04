@@ -23,8 +23,7 @@ import { usePlayerNames } from "../../providers/PlayerNamesProvider";
 import { SocketIoService, useSocketIo } from "../../providers/SocketIoProvider";
 import { PlayerWallet } from "../../services/betting/types";
 import { PlayerGroup } from "../../services/player-join/types";
-import THEME_COMPONENTS from "../../themes/themed-components";
-import THEME from "../../themes/types";
+import THEME from "../../themes";
 import { getSuggestedGame } from "../../utils/join/joinHelper";
 import { shuffleArray } from "../../utils/random";
 import {
@@ -54,7 +53,7 @@ const SplitScreenContainer = styled.div`
 
 const JoinDetailsContainer = styled.div`
   width: 30%;
-  background-color: ${THEME.colours.primaryBackground};
+  background-color: ${THEME.tokens.colours.primaryBackground};
   display: flex;
   flex-direction: column;
 `;
@@ -68,7 +67,7 @@ const JoinDetailsDecorationContainer = styled.div``;
 
 const WaitingRoomContainer = styled.div`
   flex: 1;
-  background-color: ${THEME.colours.secondaryBackground};
+  background-color: ${THEME.tokens.colours.secondaryBackground};
   padding: 4rem;
   overflow-y: scroll;
 `;
@@ -81,7 +80,7 @@ const GameInfoContainer = styled.div`
 `;
 
 const SuggestedText = styled.span`
-  color: ${THEME.colours.primaryText}};
+  color: ${THEME.tokens.colours.primaryText}};
   text-transform: uppercase;
   font-size: 0.8rem;
 `;
@@ -216,9 +215,9 @@ function Page() {
               cnb.finx-rocks.com/play
             </SubHeading>
           </JoinDetailsInfoContainer>
-          {THEME_COMPONENTS.JoinScreenDecoration && (
+          {THEME.components.JoinScreenDecoration && (
             <JoinDetailsDecorationContainer>
-              {THEME_COMPONENTS.JoinScreenDecoration}
+              {THEME.components.JoinScreenDecoration}
             </JoinDetailsDecorationContainer>
           )}
         </JoinDetailsContainer>

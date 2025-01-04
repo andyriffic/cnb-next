@@ -5,7 +5,7 @@ import {
   RockPaperScissorsPoints,
   toGameMoves,
 } from "../../services/rock-paper-scissors/points";
-import THEME from "../../themes/types";
+import THEME from "../../themes";
 import { savePlayerGameMovesFetch } from "../../utils/api";
 import { Heading, SubHeading } from "../Atoms";
 import { CenterSpaced } from "../Layouts";
@@ -42,8 +42,8 @@ const Points = styled.div`
   transform: translateX(-50%);
   width: 2vw;
   height: 2vw;
-  background: ${THEME.colours.secondaryBackground};
-  color: ${THEME.colours.primaryText};
+  background: ${THEME.tokens.colours.secondaryBackground};
+  color: ${THEME.tokens.colours.primaryText};
   border-radius: 50%;
   border: 0.2rem solid ${COLORS.borderPrimary};
   display: flex;

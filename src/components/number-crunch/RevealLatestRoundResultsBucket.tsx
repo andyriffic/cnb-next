@@ -4,7 +4,7 @@ import {
   NumberCrunchGameView,
   NumberCrunchPlayerGuessView,
 } from "../../services/number-crunch/types";
-import THEME from "../../themes/types";
+import THEME from "../../themes";
 import { PlayerAvatar } from "../PlayerAvatar";
 import { NUMBER_CRUNCH_BUCKET_RANGES } from "../../services/number-crunch";
 import { Appear } from "../animations/Appear";
@@ -17,7 +17,7 @@ const BucketContainer = styled.div`
 
 const RoundContainer = styled.div`
   border-radius: 1rem;
-  background: ${THEME.colours.secondaryBackground};
+  background: ${THEME.tokens.colours.secondaryBackground};
   padding: 1rem;
 `;
 

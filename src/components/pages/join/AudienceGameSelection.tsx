@@ -5,11 +5,11 @@ import { useSocketIo } from "../../../providers/SocketIoProvider";
 import { QueryUserQuestion } from "../../../services/query-user/types";
 import { ThemedPrimaryButton } from "../../Atoms";
 import { DialogModal } from "../../DialogModal";
-import THEME from "../../../themes/types";
+import THEME from "../../../themes";
 import { PopularGameSelector } from "./PopularGameSelector";
 
 const SuggestedText = styled.span`
-  //   color: ${THEME.colours.primaryText}};
+  //   color: ${THEME.tokens.colours.primaryText}};
   text-transform: uppercase;
   font-size: 0.8rem;
 `;

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useState } from "react";
 import { Card, SmallHeading } from "../Atoms";
-import THEME from "../../themes/types";
+import THEME from "../../themes";
 import {
   MIN_PACMAN_MOVES,
   PacManUiState,
@@ -23,7 +23,7 @@ const Moves = styled.div`
   border-radius: 50%;
   border: 2px solid black;
   color: yellow;
-  font-family: ${THEME.fonts.numbers};
+  font-family: ${THEME.tokens.fonts.numbers};
   font-size: 1.2rem;
   display: inline-block;
 `;

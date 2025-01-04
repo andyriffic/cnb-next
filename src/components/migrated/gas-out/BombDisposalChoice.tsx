@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useSocketIo } from "../../../providers/SocketIoProvider";
 import { GasGame } from "../../../services/migrated/gas-out/types";
 import { QueryUserQuestion } from "../../../services/query-user/types";
-import THEME from "../../../themes/types";
+import THEME from "../../../themes";
 import { shuffleArray } from "../../../utils/random";
 import { SmallHeading } from "../../Atoms";
 import { DialogModal } from "../../DialogModal";
@@ -30,7 +30,7 @@ const VictimItemText = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-family: ${THEME.fonts.numbers};
+  font-family: ${THEME.tokens.fonts.numbers};
   font-size: 2rem;
 `;
 

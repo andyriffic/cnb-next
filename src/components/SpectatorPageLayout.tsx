@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import THEME from "../themes/types";
+import THEME from "../themes";
 
 const Container = styled.div<{ scrollable: boolean }>`
   display: flex;
@@ -10,8 +10,8 @@ const Container = styled.div<{ scrollable: boolean }>`
   overflow: ${({ scrollable }) => (scrollable ? "visible" : "hidden")};
   justify-content: center;
   align-items: center;
-  background-color: ${THEME.colours.primaryBackground};
-  color: ${THEME.colours.primaryText};
+  background-color: ${THEME.tokens.colours.primaryBackground};
+  color: ${THEME.tokens.colours.primaryText};
 `;
 
 const Main = styled.div<{ scrollable: boolean }>`
@@ -29,7 +29,7 @@ const DebugContainer = styled.div`
   min-height: 20px;
   width: 100vw;
   padding: 1rem;
-  background-color: ${THEME.colours.primaryBackground};
+  background-color: ${THEME.tokens.colours.primaryBackground};
   overflow: hidden;
 `;
 

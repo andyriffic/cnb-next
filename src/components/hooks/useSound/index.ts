@@ -1,6 +1,6 @@
 import { Howl } from "howler";
+import THEME from "../../../themes";
 import { SoundName } from "./types";
-import { SOUND_MAP } from "./soundMap";
 
 type UseSound = {
   play: (soundName: SoundName) => Howl;
@@ -8,14 +8,14 @@ type UseSound = {
 };
 
 const play = (soundName: SoundName): Howl => {
-  const sound = new Howl({ src: SOUND_MAP[soundName], volume: 0.2 });
+  const sound = new Howl({ src: THEME.sounds[soundName], volume: 0.2 });
   sound.play();
   return sound;
 };
 
 const loop = (soundName: SoundName): Howl => {
   const sound = new Howl({
-    src: SOUND_MAP[soundName],
+    src: THEME.sounds[soundName],
     loop: true,
     volume: 0.1,
   });
