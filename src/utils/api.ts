@@ -44,6 +44,19 @@ export const updatePlayerDetails = (
   });
 };
 
+export const resetAllPlayerZombieDetails = (): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    fetch(`/api/players/reset-zombie-run`, {
+      method: "PUT",
+    })
+      .then(() => resolve())
+      .catch((reason) => {
+        console.log(reason);
+        reject(reason);
+      });
+  });
+};
+
 export const deletePlayerZombieDetails = (playerId: string): Promise<void> => {
   return new Promise((resolve, reject) => {
     fetch(`/api/player/${playerId}/delete/zombie`, {
@@ -56,6 +69,7 @@ export const deletePlayerZombieDetails = (playerId: string): Promise<void> => {
       });
   });
 };
+
 export const deletePlayerPacmanDetails = (playerId: string): Promise<void> => {
   return new Promise((resolve, reject) => {
     fetch(`/api/player/${playerId}/delete/pacman`, {
@@ -68,6 +82,7 @@ export const deletePlayerPacmanDetails = (playerId: string): Promise<void> => {
       });
   });
 };
+
 export const deletePlayerSpaceRaceDetails = (
   playerId: string
 ): Promise<void> => {
@@ -82,6 +97,7 @@ export const deletePlayerSpaceRaceDetails = (
       });
   });
 };
+
 export const savePlayerGameMovesFetch = (
   gameId: string,
   gameMoves: PlayerGameMoves[],

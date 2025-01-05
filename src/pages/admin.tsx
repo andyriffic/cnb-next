@@ -11,7 +11,7 @@ import { sortByPlayerName } from "../utils/sort";
 import { AdminPlayerEdit } from "../components/admin/AdminPlayerEdit";
 import { CenterSpaced } from "../components/Layouts";
 import { AdminPlayerAdd } from "../components/admin/AdminPlayerAdd";
-import { fetchGetPlayer } from "../utils/api";
+import { fetchGetPlayer, resetAllPlayerZombieDetails } from "../utils/api";
 
 const PlayerContainer = styled.div`
   display: flex;
@@ -120,6 +120,19 @@ export default function Page({ activePlayers, retiredPlayers }: Props) {
           <PrimaryButton onClick={() => setAddingPlayer(true)}>
             Add Player
           </PrimaryButton>
+          <button
+            type="button"
+            style={{ backgroundColor: "red" }}
+            onClick={() => {
+              resetAllPlayerZombieDetails().then(() => {
+                alert(
+                  "All player zombie details reset. Remember to check Setting Player settings!"
+                );
+              });
+            }}
+          >
+            Reset ALL Zombie Run details
+          </button>
         </CenterSpaced>
       </SpectatorPageLayout>
     </>
