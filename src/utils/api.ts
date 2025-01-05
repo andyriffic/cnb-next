@@ -57,6 +57,19 @@ export const resetAllPlayerZombieDetails = (): Promise<void> => {
   });
 };
 
+export const resetAllPlayerPacmanDetails = (): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    fetch(`/api/players/reset-pacman`, {
+      method: "PUT",
+    })
+      .then(() => resolve())
+      .catch((reason) => {
+        console.log(reason);
+        reject(reason);
+      });
+  });
+};
+
 export const deletePlayerZombieDetails = (playerId: string): Promise<void> => {
   return new Promise((resolve, reject) => {
     fetch(`/api/player/${playerId}/delete/zombie`, {

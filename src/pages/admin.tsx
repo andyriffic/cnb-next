@@ -11,7 +11,11 @@ import { sortByPlayerName } from "../utils/sort";
 import { AdminPlayerEdit } from "../components/admin/AdminPlayerEdit";
 import { CenterSpaced } from "../components/Layouts";
 import { AdminPlayerAdd } from "../components/admin/AdminPlayerAdd";
-import { fetchGetPlayer, resetAllPlayerZombieDetails } from "../utils/api";
+import {
+  fetchGetPlayer,
+  resetAllPlayerPacmanDetails,
+  resetAllPlayerZombieDetails,
+} from "../utils/api";
 
 const PlayerContainer = styled.div`
   display: flex;
@@ -132,6 +136,19 @@ export default function Page({ activePlayers, retiredPlayers }: Props) {
             }}
           >
             Reset ALL Zombie Run details
+          </button>
+          <button
+            type="button"
+            style={{ backgroundColor: "goldenrod" }}
+            onClick={() => {
+              resetAllPlayerPacmanDetails().then(() => {
+                alert(
+                  "All player pacman details reset. Remember to check Setting Player settings!"
+                );
+              });
+            }}
+          >
+            Reset ALL Pacman details
           </button>
         </CenterSpaced>
       </SpectatorPageLayout>
