@@ -2,10 +2,22 @@ import { PlayerGameMoves } from "../save-game-moves/types";
 import { NumberCrunchGameView } from "./types";
 import {
   NUMBER_CRUNCH_BUCKET_RANGES,
+  NumberCrunchBucketRange,
   getNumberCrunchRangeBucketIndex,
 } from ".";
 
-const MOST_PRESSES_BONUS_POINTS = 2;
+export const FIRST_GUESS_BONUS_POINTS = 5;
+
+export const getPointsTotalForRange = (
+  ranges: NumberCrunchBucketRange[],
+  rangeIndex: number,
+  firstGuess: boolean
+): number => {
+  return (
+    ranges[rangeIndex]!.points +
+    (rangeIndex === 0 && firstGuess ? FIRST_GUESS_BONUS_POINTS : 0)
+  );
+};
 
 export const numberCrunchGameToPoints = (
   gameView: NumberCrunchGameView
@@ -18,8 +30,11 @@ export const numberCrunchGameToPoints = (
     (playerGuess) => {
       return {
         playerId: playerGuess.playerId,
-        moves:
-          NUMBER_CRUNCH_BUCKET_RANGES[playerGuess.bucketRangeIndex]!.points,
+        moves: getPointsTotalForRange(
+          NUMBER_CRUNCH_BUCKET_RANGES,
+          playerGuess.bucketRangeIndex,
+          gameView.guessedInFirstRound
+        ),
         winner: playerGuess.bucketRangeIndex === 0,
       };
     }

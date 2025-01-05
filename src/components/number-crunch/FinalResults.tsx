@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { usePlayerNames } from "../../providers/PlayerNamesProvider";
 import { NUMBER_CRUNCH_BUCKET_RANGES } from "../../services/number-crunch";
-import { numberCrunchGameToPoints } from "../../services/number-crunch/points";
+import {
+  FIRST_GUESS_BONUS_POINTS,
+  getPointsTotalForRange,
+  numberCrunchGameToPoints,
+} from "../../services/number-crunch/points";
 import {
   NumberCrunchFinalResultsView,
   NumberCrunchGameView,
@@ -17,6 +21,7 @@ import { Positioned } from "../Positioned";
 import { Appear } from "../animations/Appear";
 import { useDoOnce } from "../hooks/useDoOnce";
 import { useSound } from "../hooks/useSound";
+import { Attention } from "../animations/Attention";
 
 const FinalGuessLine = styled.div`
   width: 100%;
@@ -99,7 +104,7 @@ enum RevealState {
 
 export const FinalResults = ({ gameView, finalResults }: Props) => {
   const [revealState, setRevealState] = useState(RevealState.SHOW_TARGET);
-  useRevealTiming(revealState, setRevealState);
+  useRevealTiming(revealState, gameView, setRevealState);
   const [revealBucketIndex, setRevealBucketIndex] = useState(0);
   const { getName } = usePlayerNames();
 
@@ -128,9 +133,14 @@ export const FinalResults = ({ gameView, finalResults }: Props) => {
       )}
       {revealState >= RevealState.SHOW_WINNERS && (
         <Appear>
-          <SmallHeading centered={true}>
-            Winner{finalResults.winningPlayerIds.length > 1 ? "s" : ""}
-          </SmallHeading>
+          <Attention animate={gameView.guessedInFirstRound} animation="vibrate">
+            <SmallHeading centered={true}>
+              {gameView.guessedInFirstRound && "🎉 "}Winner
+              {finalResults.winningPlayerIds.length > 1 ? "s" : ""}
+              {gameView.guessedInFirstRound &&
+                ` on first guess! (+${FIRST_GUESS_BONUS_POINTS}) 🎉`}
+            </SmallHeading>
+          </Attention>
           <CenterSpaced>
             {finalResults.winningPlayerIds.map((playerId) => (
               <PlayerAvatar key={playerId} playerId={playerId} size="small" />
@@ -180,8 +190,13 @@ export const FinalResults = ({ gameView, finalResults }: Props) => {
                       >
                         {roundView.playerIds.map((playerId) => (
                           <PlayerName key={playerId}>
-                            {getName(playerId)}
-                            {roundView.bucketRangeIndex === 0 && "🎉"}
+                            {getName(playerId)} (
+                            {getPointsTotalForRange(
+                              NUMBER_CRUNCH_BUCKET_RANGES,
+                              roundView.bucketRangeIndex,
+                              gameView.guessedInFirstRound
+                            )}
+                            )
                           </PlayerName>
                         ))}
                       </DotPlayerNameContainer>
@@ -204,6 +219,7 @@ export const FinalResults = ({ gameView, finalResults }: Props) => {
 
 function useRevealTiming(
   revealState: RevealState,
+  gameView: NumberCrunchGameView,
   setRevealState: (revealState: RevealState) => void
 ) {
   const { play } = useSound();
@@ -217,9 +233,11 @@ function useRevealTiming(
 
   useEffect(() => {
     if (revealState === RevealState.SHOW_WINNERS) {
+      gameView.guessedInFirstRound &&
+        play("number-crunch-final-guessed-in-first-round");
       setTimeout(() => setRevealState(RevealState.SHOW_REST), 2000);
     }
-  }, [revealState, setRevealState]);
+  }, [gameView.guessedInFirstRound, play, revealState, setRevealState]);
 
   useEffect(() => {
     if (revealState === RevealState.SHOW_REST) {

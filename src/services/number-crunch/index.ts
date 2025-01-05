@@ -29,7 +29,15 @@ type RandomPlayerSelection = {
   otherPlayerIds: string[];
 };
 
-export const NUMBER_CRUNCH_BUCKET_RANGES = [
+export type NumberCrunchBucketRange = {
+  from: number;
+  to: number;
+  title: string;
+  color: string;
+  points: number;
+};
+
+export const NUMBER_CRUNCH_BUCKET_RANGES: NumberCrunchBucketRange[] = [
   { from: 0, to: 0, title: "Spot on!", color: "#00FF00", points: 6 },
   { from: 1, to: 5, title: "Within 5", color: "#009900", points: 4 },
   { from: 6, to: 10, title: "Within 10", color: "#FFFF00", points: 3 },
@@ -172,9 +180,14 @@ export function createGameView(
         currentRound: createRoundView(game, round, game.rounds.length),
         finalResults: createFinalResultsView(game, round),
         guessedNumbers: allGuessedNumbers,
+        guessedInFirstRound: game.rounds.length === 1 && hasCorrectGuess(round),
       };
     })
   );
+}
+
+function hasCorrectGuess(round: NumberCrunchRound): boolean {
+  return round.playerGuesses.some((pg) => pg.offBy === 0);
 }
 
 function createFinalResultsView(

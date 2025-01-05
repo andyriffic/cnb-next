@@ -78,6 +78,7 @@ export function initialiseNumberCrunchSocket(
           console.error(e), sendClientMessage(socket, e);
         },
         (game) => {
+          console.info("number crunch game created", "target", game.target);
           updateInMemoryGame(game);
           onCreated(game);
           emitUpdatedGamesToAllClients(io);

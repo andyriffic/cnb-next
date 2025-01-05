@@ -53,6 +53,7 @@ export const defaultSounds: { [key in SoundName]: string } = {
   "number-crunch-player-guessed-far": "/sounds/default/price_is_right_fail.mp3",
   "number-crunch-final-show-winner": "/sounds/nfl.mp3",
   "number-crunch-final-show-rest": "/sounds/meh.mp3",
+  "number-crunch-final-guessed-in-first-round": "/sounds/wow.mp3",
   "space-race-intro": "/sounds/default/galaga_redux_coin.mp3",
   "space-race-plot-course": "/sounds/default/galaga_start.mp3",
   "space-race-rocket-move": "/sounds/default/spaceship.mp3",

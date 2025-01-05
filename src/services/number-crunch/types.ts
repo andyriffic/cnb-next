@@ -47,6 +47,7 @@ export type NumberCrunchGameView = {
   currentRound: NumberCrunchRoundView;
   guessedNumbers: number[];
   finalResults?: NumberCrunchFinalResultsView;
+  guessedInFirstRound: boolean;
 };
 
 type NumberCrunchPlayerView = NumberCrunchPlayer & {
