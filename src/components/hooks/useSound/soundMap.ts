@@ -30,7 +30,7 @@ export const defaultSounds: { [key in SoundName]: string } = {
   "gas-boomerang": "/sounds/smack_aaa_oh.mp3",
   "gas-inflate": "/sounds/air_inflate.mp3",
   "gas-explode": "/sounds/balloon_pop_sound_loud.mp3",
-  "gas-player-die": "/sounds/default/baby.mp3",
+  "gas-player-die": "/sounds/wilhelm_scream.mp3",
   "gas-winner": "/sounds/fanfare.mp3",
   "gas-head-to-head-round": "/sounds/power_mode.mp3",
   "gas-background-music": "/sounds/music/brawl_arcade.mp3",

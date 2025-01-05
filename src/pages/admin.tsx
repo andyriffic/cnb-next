@@ -14,6 +14,7 @@ import { AdminPlayerAdd } from "../components/admin/AdminPlayerAdd";
 import {
   fetchGetPlayer,
   resetAllPlayerPacmanDetails,
+  resetAllPlayerSpaceRaceDetails,
   resetAllPlayerZombieDetails,
 } from "../utils/api";
 
@@ -149,6 +150,19 @@ export default function Page({ activePlayers, retiredPlayers }: Props) {
             }}
           >
             Reset ALL Pacman details
+          </button>
+          <button
+            type="button"
+            style={{ backgroundColor: "darkred", color: "white" }}
+            onClick={() => {
+              resetAllPlayerSpaceRaceDetails().then(() => {
+                alert(
+                  "All player Space Race details reset. Remember to check Setting Player settings!"
+                );
+              });
+            }}
+          >
+            Reset ALL Space Race details 🚀
           </button>
         </CenterSpaced>
       </SpectatorPageLayout>
