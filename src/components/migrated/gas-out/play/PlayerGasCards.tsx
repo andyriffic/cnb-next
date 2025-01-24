@@ -31,20 +31,6 @@ const CardText = styled.div`
   font-size: 2rem;
 `;
 
-const applyCurse = (card: GasCard, curse: CurseType | undefined): number => {
-  //TODO: presses should be applied at the server
-
-  if (!curse || card.type !== "press") {
-    return card.presses;
-  }
-
-  if (curse === "double-press") {
-    return card.presses * 2;
-  }
-
-  return card.presses;
-};
-
 const isCardDisabled = (
   card: GasCard,
   curse: CurseType | undefined
@@ -80,10 +66,7 @@ export const PlayerGasCards = ({
           disabled={!enabled || isCardDisabled(c, player.curse)}
           onClick={() => playCard(i)}
         >
-          <BalloonCard
-            card={c}
-            pressesRemaining={applyCurse(c, player.curse)}
-          ></BalloonCard>
+          <BalloonCard card={c} pressesRemaining={c.presses}></BalloonCard>
         </CardButtonContainer>
       ))}
     </Container>

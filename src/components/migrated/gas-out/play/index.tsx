@@ -61,18 +61,22 @@ const View = ({ playerId, gasGameId }: Props) => {
           />
           {gasPlayer.curse === "double-press" && (
             <PlayerStatus>
-              Presses are doubled for your turn, and you must pick a number card
-              😭
+              Presses are doubled for all your current normal cards 😭
             </PlayerStatus>
           )}
-          {playersTurn &&
+          {gasPlayer.curse === "all-fives" && (
+            <PlayerStatus>
+              All your cards are reset to 5 presses 😭
+            </PlayerStatus>
+          )}
+          {/* {playersTurn &&
             !game.currentPlayer.cardPlayed &&
             !!gasPlayer?.curse && (
               <PlayerGasTimeoutTimer
                 timeOutMilliseconds={3000}
                 onTimedOut={timeOut}
               />
-            )}
+            )} */}
         </>
       )}
       {game.currentPlayer.cardPlayed &&
