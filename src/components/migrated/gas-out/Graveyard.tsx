@@ -2,12 +2,16 @@ import styled from "styled-components";
 import Image from "next/image";
 import { slideInUpAnimation } from "../../animations/keyframes/slideInBlurredTop";
 import { GasGame, GasPlayer } from "../../../services/migrated/gas-out/types";
+import { Pill } from "../../Atoms";
+import { Appear } from "../../animations/Appear";
 import { GraveyardPlayer } from "./GraveyardPlayer";
+import { SuperguessPrompt } from "./SuperguessPrompt";
 
 const Container = styled.div`
   display: flex;
   flex-direction: row-reverse;
   gap: 20px;
+  position: relative;
 `;
 
 const GraveyardPlayerContainer = styled.div`
@@ -30,6 +34,13 @@ const sortByFinishPositionDesc = (a: GasPlayer, b: GasPlayer) =>
 export function Graveyard({ game }: Props): JSX.Element {
   return (
     <Container>
+      {game.potentialSuperGuessStillAvailable && (
+        <div style={{ position: "absolute", top: "-100%", right: "0" }}>
+          <Appear animation="flip-in">
+            <SuperguessPrompt />
+          </Appear>
+        </div>
+      )}
       <div style={{ position: "relative" }}>
         <Image
           src="/images/gas-out/tombstone.png"

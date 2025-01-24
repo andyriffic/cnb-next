@@ -53,6 +53,7 @@ export function createGame({
     turnCount: 0,
     team,
     superGuessInEffect: false,
+    potentialSuperGuessStillAvailable: false,
   };
 }
 
@@ -485,7 +486,34 @@ function setSuperGuessBonus(game: GasGame): GasGame {
       allDeadPlayers.every(
         (p) => p.guesses.nextPlayerOutGuess === firstDeadPlayerGuess
       ),
+    potentialSuperGuessStillAvailable: canYouStillSuperGuess(game),
   };
+}
+
+function canYouStillSuperGuess(game: GasGame): boolean {
+  // const noPlayersDead = game.allPlayers.every((p) => p.status !== "dead");
+
+  if (game.deadPlayerIds.length < 2) {
+    return false;
+  }
+
+  // const somePlayersNotGuessed = game.allPlayers
+  //   .filter((p) => p.status === "dead")
+  //   .some((p) => p.guesses.nextPlayerOutGuess === undefined);
+
+  const guessedPlayerGuesses = game.allPlayers
+    .filter((p) => p.status === "dead")
+    .filter((p) => !!p.guesses.nextPlayerOutGuess)
+    .map((p) => p.guesses.nextPlayerOutGuess);
+
+  const allGuessPlayersGuessedSamePlayer = guessedPlayerGuesses.every(
+    (p) => p === guessedPlayerGuesses[0]
+  );
+
+  const allPlayersGuessed =
+    guessedPlayerGuesses.length === game.deadPlayerIds.length;
+
+  return !allPlayersGuessed && allGuessPlayersGuessedSamePlayer;
 }
 
 function totalOutNominationsCount(
