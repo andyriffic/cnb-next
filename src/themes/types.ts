@@ -16,6 +16,7 @@ export type ThemeTokens = {
       numberCardBackground: string;
       skipCardBackground: string;
       cursedCardBackground: string;
+      cursedCardVariantBackground: string;
       bombCardBackground: string;
       reverseCardBackground: string;
     };

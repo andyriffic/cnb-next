@@ -173,7 +173,7 @@ export function PlayerCarouselPlayer({
           </CardContainer>
         )}
       {markedForDeath(player, active)}
-      {player.curse === "double-press" && <Curse>Cursed ‼️</Curse>}
+      {!!player.curse && <Curse>Cursed ‼️</Curse>}
     </PlayerListItem>
   ) : null;
 }

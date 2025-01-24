@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { COLORS } from "../../../colors";
 import { GasCard } from "../../../services/migrated/gas-out/types";
 import THEME from "../../../themes";
+import { FlipX } from "../../FlipX";
 import bombImage from "./cnb-card-bomb.png";
 import curseImage from "./cnb-card-curse.png";
 import reverseImage from "./cnb-card-reverse.png";
@@ -29,6 +30,11 @@ const NumberCard = styled(BaseCard)`
 
 const CurseCard = styled(BaseCard)`
   background-color: ${THEME.tokens.colours.ballonGame.cursedCardBackground};
+`;
+
+const CurseCardVariant = styled(BaseCard)`
+  background-color: ${THEME.tokens.colours.ballonGame
+    .cursedCardVariantBackground};
 `;
 
 const ReverseCard = styled(BaseCard)`
@@ -93,6 +99,16 @@ function renderCard(
           <PressesRemainingText>{pressesRemaining}</PressesRemainingText>
           <CardImage src={curseImage} width={40} alt="" />
         </CurseCard>
+      );
+    case "curse-all-fives":
+      return (
+        <CurseCardVariant>
+          <CardText>Curse</CardText>
+          <PressesRemainingText>{pressesRemaining}</PressesRemainingText>
+          <FlipX>
+            <CardImage src={curseImage} width={40} alt="" />
+          </FlipX>
+        </CurseCardVariant>
       );
     case "bomb":
       return (

@@ -226,22 +226,55 @@ function applyCursesToCurrentPlayer(game: GasGame): GasGame {
   const lastCardMove = game.moveHistory[0]!;
 
   if (
-    lastCardMove.cardPlayed.type === "risky" &&
+    (lastCardMove.cardPlayed.type === "risky" ||
+      lastCardMove.cardPlayed.type === "curse-all-fives") &&
     game.alivePlayersIds.includes(lastCardMove.playerId)
   ) {
     const currentPlayer = getPlayerOrThrow(game, game.currentPlayer.id);
     const cursedPlayer: GasPlayer = {
       ...currentPlayer,
-      curse: "double-press",
+      curse:
+        lastCardMove.cardPlayed.type === "risky" ? "double-press" : "all-fives",
     };
 
     return {
       ...game,
-      allPlayers: updatePlayerInList(game.allPlayers, cursedPlayer),
+      allPlayers: updatePlayerInList(
+        game.allPlayers,
+        applyCurseEffectsToPlayer(cursedPlayer)
+      ),
     };
   }
 
   return game;
+}
+
+function applyCurseEffectsToPlayer(player: GasPlayer): GasPlayer {
+  if (!player.curse) {
+    return player;
+  }
+
+  switch (player.curse) {
+    case "double-press":
+      return {
+        ...player,
+        cards: player.cards.map((c) => {
+          if (c.type === "press") {
+            return { ...c, presses: c.presses * 2 };
+          }
+          return c;
+        }),
+      };
+    case "all-fives":
+      return {
+        ...player,
+        cards: [
+          createCard("press", 5),
+          createCard("press", 5),
+          createCard("press", 5),
+        ],
+      };
+  }
 }
 
 export function moveToNextPlayer(game: GasGame): GasGame {
@@ -722,8 +755,6 @@ export function playCard(
 
   const { player, card } = getPlayerAndCardOrThrow(game, playerId, cardIndex);
 
-  const cursedCard = getCursedCard(card, player.curse);
-
   const updatedCards = player.cards.filter((c, i) => i !== cardIndex);
   const updatedPlayer: GasPlayer = {
     ...player,
@@ -745,7 +776,7 @@ export function playCard(
       ...game.currentPlayer,
       cardPlayed: card,
       pressesRemaining: applyEffectToCardPresses(
-        cursedCard,
+        card,
         game.globalEffect,
         playerId
       ),
@@ -768,19 +799,6 @@ export function explodePlayer(game: GasGame, playerId: string): GasGame {
     playerId: game.currentPlayer.id,
     deathType: "bomb",
   });
-}
-
-function getCursedCard(card: GasCard, curse: CurseType | undefined): GasCard {
-  if (card.type !== "press") {
-    return card;
-  }
-
-  switch (curse) {
-    case "double-press":
-      return { ...card, presses: card.presses * 2 };
-    default:
-      return card;
-  }
 }
 
 function applyEffectToCardPresses(
@@ -884,7 +902,8 @@ function getRandomCardType(
       : [
           { weight: 1, item: "skip" },
           { weight: 2, item: "bomb" },
-          { weight: 2, item: "risky" },
+          { weight: 4, item: "risky" },
+          { weight: 8, item: "curse-all-fives" },
           { weight: 3, item: "reverse" },
           { weight: 14, item: "press" },
         ];
@@ -902,7 +921,9 @@ function createCard(cardType: CardType, presses: number): GasCard {
     case "reverse":
       return { type: cardType, presses: 0 };
     case "risky":
-      return { type: "risky", presses: 5 };
+      return { type: "risky", presses: 4 };
+    case "curse-all-fives":
+      return { type: "curse-all-fives", presses: 6 };
     case "press":
       return { type: "press", presses };
     case "bomb":

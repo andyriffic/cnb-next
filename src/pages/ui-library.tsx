@@ -51,8 +51,12 @@ const Home: NextPage = () => {
             pressesRemaining={0}
           />
           <BalloonCard
-            card={{ presses: 5, type: "risky" }}
-            pressesRemaining={5}
+            card={{ presses: 4, type: "risky" }}
+            pressesRemaining={4}
+          />
+          <BalloonCard
+            card={{ presses: 6, type: "curse-all-fives" }}
+            pressesRemaining={6}
           />
           <BalloonCard
             card={{ presses: 8, type: "bomb" }}

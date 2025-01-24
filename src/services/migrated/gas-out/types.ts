@@ -39,7 +39,7 @@ export type GasCloud = {
 };
 
 export type DeathType = "balloon" | "timeout" | "boomerang" | "bomb";
-export type CurseType = "double-press";
+export type CurseType = "double-press" | "all-fives";
 export type PlayerKilledBy = {
   playerId: string;
   deathType: DeathType;
@@ -69,7 +69,13 @@ export type GasPlayer = {
   curse?: CurseType;
 };
 
-export type CardType = "press" | "skip" | "reverse" | "risky" | "bomb";
+export type CardType =
+  | "press"
+  | "skip"
+  | "reverse"
+  | "risky"
+  | "bomb"
+  | "curse-all-fives";
 
 export type GasCard = {
   type: CardType;
