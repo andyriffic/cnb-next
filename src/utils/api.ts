@@ -69,6 +69,20 @@ export const resetAllPlayerPacmanDetails = (): Promise<void> => {
       });
   });
 };
+
+export const resetAllPlayerTotalCoins = (): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    fetch(`/api/players/reset-total-coins`, {
+      method: "PUT",
+    })
+      .then(() => resolve())
+      .catch((reason) => {
+        console.log(reason);
+        reject(reason);
+      });
+  });
+};
+
 export const resetAllPlayerSpaceRaceDetails = (): Promise<void> => {
   return new Promise((resolve, reject) => {
     fetch(`/api/players/reset-space-race`, {

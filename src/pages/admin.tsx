@@ -15,6 +15,7 @@ import {
   fetchGetPlayer,
   resetAllPlayerPacmanDetails,
   resetAllPlayerSpaceRaceDetails,
+  resetAllPlayerTotalCoins,
   resetAllPlayerZombieDetails,
 } from "../utils/api";
 
@@ -163,6 +164,17 @@ export default function Page({ activePlayers, retiredPlayers }: Props) {
             }}
           >
             Reset ALL Space Race details 🚀
+          </button>
+          <button
+            type="button"
+            style={{ backgroundColor: "yellow", color: "black" }}
+            onClick={() => {
+              resetAllPlayerTotalCoins().then(() => {
+                alert("All player Total Coins details reset.");
+              });
+            }}
+          >
+            Reset ALL total coins 🪙
           </button>
         </CenterSpaced>
       </SpectatorPageLayout>
