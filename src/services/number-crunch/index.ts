@@ -9,6 +9,7 @@ import {
   NumberCrunchGame,
   NumberCrunchGameView,
   NumberCrunchGuessResultRangeIndicator,
+  NumberCrunchPlayerView,
   NumberCrunchRound,
   NumberCrunchRoundView,
 } from "./types";
@@ -115,6 +116,13 @@ const setPlayerGuessOnRound =
     };
   };
 
+function getPlayerHintText(advantage: boolean, target: number) {
+  if (!advantage) {
+    return;
+  }
+  return target < 50 ? "It's < 50 🤫" : "It's >= 50 🤫";
+}
+
 function replaceLatestRound(game: NumberCrunchGame) {
   return (round: NumberCrunchRound) => {
     return {
@@ -165,9 +173,10 @@ export function createGameView(
   return pipe(
     getLatestRound(game),
     E.map((round) => {
-      const playerViews = game.players.map((p) => ({
+      const playerViews = game.players.map<NumberCrunchPlayerView>((p) => ({
         ...p,
         guessedThisRound: round.playerGuesses.some((pg) => pg.id === p.id),
+        extraHint: getPlayerHintText(p.advantage, game.target),
       }));
 
       return {

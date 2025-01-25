@@ -50,9 +50,10 @@ export type NumberCrunchGameView = {
   guessedInFirstRound: boolean;
 };
 
-type NumberCrunchPlayerView = NumberCrunchPlayer & {
+export type NumberCrunchPlayerView = NumberCrunchPlayer & {
   guessedThisRound: boolean;
   advantage: boolean;
+  extraHint?: string;
 };
 
 export type NumberCrunchPlayerGuessView = {

@@ -8,6 +8,8 @@ import {
   ThemedPrimaryButton,
 } from "../../Atoms";
 
+import THEME from "../../../themes";
+
 const Container = styled.div`
   margin-bottom: 3rem;
 `;
@@ -103,12 +105,12 @@ const SliderInput = styled.input`
 
 type Props = {
   game: NumberCrunchGameView;
-  playerId: string;
   startingNumber?: number;
+  hint?: string;
   onSelected: (val: number) => void;
 };
 
-export const PlayerSelectNumber = ({ game, playerId, onSelected }: Props) => {
+export const PlayerSelectNumber = ({ game, hint, onSelected }: Props) => {
   const [val, setVal] = useState(game.currentRound.range.low);
 
   return (
@@ -121,10 +123,20 @@ export const PlayerSelectNumber = ({ game, playerId, onSelected }: Props) => {
         value={val}
       />
  */}
-      <SmallHeading style={{ textAlign: "center" }}>
+      <SmallHeading style={{ textAlign: "center", marginBottom: "1rem" }}>
         Guess the number between {game.currentRound.range.low} &{" "}
         {game.currentRound.range.high}
       </SmallHeading>
+      {hint && (
+        <SmallHeading
+          style={{
+            textAlign: "center",
+            color: THEME.tokens.colours.buttonPrimaryText,
+          }}
+        >
+          Hint: {hint}
+        </SmallHeading>
+      )}
       <FeatureHeading style={{ textAlign: "center" }}>{val}</FeatureHeading>
       <form
         onSubmit={(e) => {

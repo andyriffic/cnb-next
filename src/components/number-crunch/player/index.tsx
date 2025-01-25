@@ -39,7 +39,7 @@ const View = ({ game, playerId, makePlayerGuess }: Props) => {
       ) : (
         <PlayerSelectNumber
           game={game}
-          playerId={playerId}
+          hint={player.extraHint}
           onSelected={(val) => makePlayerGuess(val)}
         />
       )}
