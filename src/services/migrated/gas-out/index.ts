@@ -903,7 +903,7 @@ function getRandomCardType(
           { weight: 1, item: "skip" },
           { weight: 2, item: "bomb" },
           { weight: 4, item: "risky" },
-          { weight: 8, item: "curse-all-fives" },
+          { weight: 4, item: "curse-all-fives" },
           { weight: 3, item: "reverse" },
           { weight: 14, item: "press" },
         ];
