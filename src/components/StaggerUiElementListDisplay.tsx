@@ -1,5 +1,4 @@
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -18,13 +17,17 @@ export function StaggerUiElementListDisplay({
   onAllItemsDisplayed,
 }: Props) {
   const [revealIndex, setRevealIndex] = useState(-1);
+  const callbackFired = useRef(false);
 
   useEffect(() => {
     if (revealIndex >= uiElements.length) {
-      onAllItemsDisplayed && onAllItemsDisplayed();
+      if (!callbackFired.current) {
+        callbackFired.current = true;
+        onAllItemsDisplayed && onAllItemsDisplayed();
+      }
       return;
     }
-    console.log("initialise interval");
+
     const interval = setInterval(() => {
       console.log("interval", revealIndex);
       setRevealIndex((revealIndex) => revealIndex + 1);

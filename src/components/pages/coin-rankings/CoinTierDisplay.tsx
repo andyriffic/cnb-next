@@ -38,7 +38,7 @@ export const CoinTierDisplay = ({ coinTier, onFinishedDisplaying }: Props) => {
       <PlayerList>
         <StaggerUiElementListDisplay
           onAllItemsDisplayed={onFinishedDisplaying}
-          displayMilliseconds={300}
+          displayMilliseconds={800}
           uiElements={coinTier.playerIds.map((playerId) => {
             return (
               <PlayerListItem key={playerId}>
