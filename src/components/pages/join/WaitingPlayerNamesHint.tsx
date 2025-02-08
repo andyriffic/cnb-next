@@ -22,7 +22,9 @@ export const WaitingPlayerNamesHint = ({
 }: Props) => {
   const regularPlayersNotJoined = useMemo(
     () =>
-      regularPlayers.filter((n) => !joinedPlayers.find((p) => p.id === n.id)),
+      regularPlayers
+        .filter((n) => !joinedPlayers.find((p) => p.id === n.id))
+        .sort((a, b) => a.name.localeCompare(b.name)),
     [joinedPlayers, regularPlayers]
   );
 
