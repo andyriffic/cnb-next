@@ -1,8 +1,8 @@
-import { GetStaticProps } from "next";
+import { GetServerSideProps } from "next";
+import ScreenView from "../components/pages/coin-rankings";
 import { SpectatorPageLayout } from "../components/SpectatorPageLayout";
 import { getAllPlayers } from "../utils/data/aws-dynamodb";
 import { PlayerCoinRankings, groupPlayersByTotalCoins } from "../utils/player";
-import ScreenView from "../components/pages/coin-rankings";
 
 type Props = {
   coinRankings?: PlayerCoinRankings;
@@ -20,7 +20,7 @@ function Page({ coinRankings }: Props) {
   return <ScreenView coinRankings={coinRankings} />;
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
   const players = await getAllPlayers();
 
   if (!players) {
