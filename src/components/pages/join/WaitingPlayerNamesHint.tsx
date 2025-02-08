@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Player } from "../../../types/Player";
 import { Pill, SmallHeading } from "../../Atoms";
 import { Appear } from "../../animations/Appear";
+import { PlayerNameDetails } from "../../../pages/join/[groupId]";
 
 const NameListContainer = styled.div`
   display: flex;
@@ -10,52 +11,31 @@ const NameListContainer = styled.div`
   gap: 0.2rem;
 `;
 
-const REGULAR_PLAYER_NAMES = [
-  "Andy",
-  "Ashlee",
-  "Albert",
-  "Brett",
-  "Byron",
-  "Chris",
-  "Cathy",
-  "Callum",
-  "Chen Fan",
-  "Kathleen",
-  // "Stacey",
-  // "Michelle",
-  // "Michelle L",
-  "Nina",
-  "Shuming",
-  "Yishen",
-  "Shihao",
-  // "Pingsheng",
-  "Meng Jie",
-  "Nian",
-];
-
 type Props = {
   joinedPlayers: Player[];
+  regularPlayers: PlayerNameDetails[];
 };
 
-export const WaitingPlayerNamesHint = ({ joinedPlayers }: Props) => {
+export const WaitingPlayerNamesHint = ({
+  joinedPlayers,
+  regularPlayers,
+}: Props) => {
   const regularPlayersNotJoined = useMemo(
     () =>
-      REGULAR_PLAYER_NAMES.filter(
-        (n) => !joinedPlayers.find((p) => p.name === n)
-      ),
-    [joinedPlayers]
+      regularPlayers.filter((n) => !joinedPlayers.find((p) => p.id === n.id)),
+    [joinedPlayers, regularPlayers]
   );
 
-  const show = useMemo(() => joinedPlayers.length > 6, [joinedPlayers.length]);
+  // const show = useMemo(() => joinedPlayers.length > 6, [joinedPlayers.length]);
 
-  return show ? (
+  return (
     <Appear animation="text-focus-in">
       <SmallHeading>Still waiting on?</SmallHeading>
       <NameListContainer>
         {regularPlayersNotJoined.map((pn) => (
-          <Pill key={pn}>{pn}</Pill>
+          <Pill key={pn.id}>{pn.name}</Pill>
         ))}
       </NameListContainer>
     </Appear>
-  ) : null;
+  );
 };

@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import qrcode from "qrcode";
 import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
+import { GetServerSideProps } from "next";
 import {
   Heading,
   SmallHeading,
@@ -37,6 +38,8 @@ import {
 import { AudienceGameSelection } from "../../components/pages/join/AudienceGameSelection";
 import { deductAvailableCoinFromPlayer } from "../../utils/api";
 import { Coins } from "../../components/Coins";
+import { getAllPlayers } from "../../utils/data/aws-dynamodb";
+import { isRegularPlayer } from "../../types/Player";
 
 const JoinedPlayerContainer = styled.div`
   display: flex;
@@ -138,9 +141,18 @@ const gameCreators: {
 
 const JoinedPlayerItem = styled.div``;
 
+export type PlayerNameDetails = {
+  id: string;
+  name: string;
+};
+
+type Props = {
+  regularPlayers: PlayerNameDetails[];
+};
+
 // const gasGameEnabled = isClientSideFeatureEnabled("balloon");
 
-function Page() {
+function Page({ regularPlayers }: Props) {
   const router = useRouter();
   const groupId = router.query.groupId as string;
   const team = router.query.team as string;
@@ -186,7 +198,7 @@ function Page() {
   );
 
   const playerAvatarSize: AvatarSize =
-    (group && group.players.length > 20 ? "thumbnail" : "small") || "small";
+    group && group.players.length > 20 ? "thumbnail" : "small";
 
   return (
     <SpectatorPageLayout debug={group && <DebugPlayerJoin group={group} />}>
@@ -252,7 +264,10 @@ function Page() {
               <GameInfoContainer>
                 <PlayerHintContainer>
                   {showWaitingPlayersHint && (
-                    <WaitingPlayerNamesHint joinedPlayers={group.players} />
+                    <WaitingPlayerNamesHint
+                      joinedPlayers={group.players}
+                      regularPlayers={regularPlayers}
+                    />
                   )}
                 </PlayerHintContainer>
                 <GameSelectorContainer>
@@ -327,6 +342,28 @@ function Page() {
     </SpectatorPageLayout>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const players = await getAllPlayers();
+
+  if (!players) {
+    return {
+      props: {
+        regularPlayers: [],
+      },
+    };
+  }
+
+  const regularPlayers = players
+    .filter(isRegularPlayer)
+    .map<PlayerNameDetails>((p) => ({ id: p.id, name: p.name }));
+
+  return {
+    props: {
+      regularPlayers,
+    },
+  };
+};
 
 export default Page;
 
