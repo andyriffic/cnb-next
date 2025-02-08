@@ -16,8 +16,8 @@ export function getSuggestedGame(date: Date): GameTypes | undefined {
     case "Thursday": {
       return "balloon";
     }
-    default: {
-      return selectRandomOneOf(["balloon", "rps", "number-crunch"]);
-    }
+    // default: {
+    //   return selectRandomOneOf(["balloon", "rps", "number-crunch"]);
+    // }
   }
 }
