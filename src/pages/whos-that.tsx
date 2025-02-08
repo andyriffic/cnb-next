@@ -38,14 +38,15 @@ const TextContainer = styled.div`
 `;
 
 const PlayerName = styled.div`
-  margin: 0;
+  margin: 0 0 2rem 0;
   padding: 0;
-  font-family: ${THEME.tokens.fonts.feature};
-  font-size: 15rem;
+  font-family: ${THEME.tokens.fonts.body};
+  font-size: 10rem;
+  line-height: 1;
   text-transform: uppercase;
   font-weight: bold;
   color: #fecb03;
-  -webkit-text-stroke-width: 4px;
+  -webkit-text-stroke-width: 7px;
   -webkit-text-stroke-color: #38649d;
 `;
 
