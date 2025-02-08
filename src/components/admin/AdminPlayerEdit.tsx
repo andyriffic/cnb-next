@@ -97,6 +97,21 @@ export const AdminPlayerEdit = ({ player, onClose }: Props) => {
               })
             }
           />
+          <AdminPlayerEditBooleanValue
+            label="Regular Player"
+            id="regular_player"
+            value={!!playerCopy.details?.regularPlayer}
+            onChange={(checked) =>
+              setPlayerCopy({
+                ...playerCopy,
+                details: {
+                  ...playerCopy.details,
+                  regularPlayer: checked,
+                },
+              })
+            }
+          />
+
           <AdminPlayerEditStringValue
             label="Role"
             id="role"

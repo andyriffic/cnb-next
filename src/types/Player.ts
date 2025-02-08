@@ -9,6 +9,7 @@ export type PlayerDetails = {
   gameMoves?: number;
   colourHex?: string;
   retired?: boolean;
+  regularPlayer?: boolean;
   hasGameAdvantage?: boolean;
   totalCoins?: number;
   availableCoins?: number;
@@ -106,3 +107,15 @@ export const getPlayerSpaceRaceDetails = (player: Player): SpaceRaceDetails => {
     ...player.details?.spaceRace,
   };
 };
+
+export function isRegularPlayer(player: Player): boolean {
+  return !!player.details?.regularPlayer;
+}
+
+export function hasTotalCoins(player: Player): boolean {
+  return (player.details?.totalCoins || 0) > 0;
+}
+
+export function isRetired(player: Player): boolean {
+  return !!player.details?.retired;
+}

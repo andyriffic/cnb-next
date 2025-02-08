@@ -3,6 +3,7 @@ import ScreenView from "../components/pages/coin-rankings";
 import { SpectatorPageLayout } from "../components/SpectatorPageLayout";
 import { getAllPlayers } from "../utils/data/aws-dynamodb";
 import { PlayerCoinRankings, groupPlayersByTotalCoins } from "../utils/player";
+import { hasTotalCoins, isRegularPlayer } from "../types/Player";
 
 type Props = {
   coinRankings?: PlayerCoinRankings;
@@ -31,7 +32,9 @@ export const getServerSideProps: GetServerSideProps = async () => {
     };
   }
 
-  const activePlayers = players.filter((p) => !p.details?.retired);
+  const activePlayers = players.filter(
+    (p) => isRegularPlayer(p) || hasTotalCoins(p)
+  );
 
   return {
     props: {
