@@ -45,7 +45,7 @@ export const RoundResultBuckets = ({
   onRoundRevealed,
 }: Props) => {
   const onRevealPlayer = useCallback(
-    (revealedPlayerIds) => {
+    (revealedPlayerIds: string[]) => {
       if (revealedPlayerIds.length === gameView.players.length) {
         onRoundRevealed();
       }

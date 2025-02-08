@@ -82,14 +82,14 @@ export function useAiOverlord(socket: Socket): AiOverlordSocketService {
   );
 
   const startThinking = useCallback(
-    (gameId) => {
+    (gameId: string) => {
       setThinkingAis([...thinkingAis.filter((id) => id !== gameId), gameId]);
     },
     [thinkingAis]
   );
 
   const stopThinking = useCallback(
-    (gameId) => {
+    (gameId: string) => {
       setThinkingAis(thinkingAis.filter((id) => id !== gameId));
     },
     [thinkingAis]
