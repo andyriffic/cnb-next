@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import styled from "styled-components";
 import { PlayerAvatar } from "../../PlayerAvatar";
 import { StaggerUiElementListDisplay } from "../../StaggerUiElementListDisplay";
+import { SubHeading } from "../../Atoms";
+import { getOrdinal } from "../../../utils/string";
 import { CoinDisplay } from "./CoinDisplay";
 import { PlayerCoinRankTierWithUi } from "./useCoinRankDisplayTiming";
 
@@ -34,11 +36,17 @@ export const CoinTierDisplay = ({ coinTier, onFinishedDisplaying }: Props) => {
 
   return (
     <TierContainer>
-      <CoinDisplay totalCoins={coinTier.totalCoins} />
+      <div>
+        <CoinDisplay totalCoins={coinTier.totalCoins} />
+        {!!coinTier.rank && coinTier.rank <= 3 && (
+          <SubHeading>{getOrdinal(coinTier.rank)}</SubHeading>
+        )}
+      </div>
       <PlayerList>
         <StaggerUiElementListDisplay
           onAllItemsDisplayed={onFinishedDisplaying}
           displayMilliseconds={800}
+          soundKey="coin-rankings-show-player"
           uiElements={coinTier.playerIds.map((playerId) => {
             return (
               <PlayerListItem key={playerId}>

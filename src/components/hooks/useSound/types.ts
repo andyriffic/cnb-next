@@ -56,4 +56,6 @@ export type SoundName =
   | "space-race-plot-course"
   | "space-race-rocket-move"
   | "space-race-rocket-collision"
-  | "space-race-player-finish";
+  | "space-race-player-finish"
+  | "coin-rankings-show-player"
+  | "coin-rankings-end";

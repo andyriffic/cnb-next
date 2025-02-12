@@ -6,6 +6,7 @@ export type PlayerCoinRankTier = {
   title: string;
   totalCoins: number;
   playerIds: string[];
+  rank?: number;
 };
 
 export function groupPlayersByTotalCoins(
@@ -31,5 +32,5 @@ export function groupPlayersByTotalCoins(
   }, []);
 
   rankTiers.sort((a, b) => b.totalCoins - a.totalCoins);
-  return rankTiers;
+  return rankTiers.map((tier, index) => ({ ...tier, rank: index + 1 }));
 }

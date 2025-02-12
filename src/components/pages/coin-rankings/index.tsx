@@ -1,8 +1,10 @@
 import styled from "styled-components";
+import { useEffect } from "react";
 import { PlayerCoinRankings } from "../../../utils/player";
 import { SmallHeading } from "../../Atoms";
 import { SpectatorPageLayout } from "../../SpectatorPageLayout";
 import { Appear } from "../../animations/Appear";
+import { useSound } from "../../hooks/useSound";
 import { CoinTierDisplay } from "./CoinTierDisplay";
 import { useCoinRankDisplayTiming } from "./useCoinRankDisplayTiming";
 
@@ -20,6 +22,17 @@ type Props = {
 
 const View = ({ coinRankings }: Props) => {
   const coinUiState = useCoinRankDisplayTiming(coinRankings);
+  const { play } = useSound();
+
+  const tierFinished = () => {
+    if (!coinUiState.allTiersShown) {
+      coinUiState.showNextTier();
+      return;
+    }
+
+    play("coin-rankings-end");
+  };
+
   return (
     <SpectatorPageLayout scrollable={true}>
       {/* <button
@@ -38,7 +51,7 @@ const View = ({ coinRankings }: Props) => {
             <Appear key={tierUi.totalCoins} animation="text-focus-in">
               <CoinTierDisplay
                 coinTier={tierUi}
-                onFinishedDisplaying={coinUiState.showNextTier}
+                onFinishedDisplaying={tierFinished}
               />
             </Appear>
           ) : null;

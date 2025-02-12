@@ -59,6 +59,8 @@ export const defaultSounds: { [key in SoundName]: string } = {
   "space-race-rocket-move": "/sounds/default/spaceship.mp3",
   "space-race-rocket-collision": "/sounds/default/blast_off_sms.mp3",
   "space-race-player-finish": "/sounds/power_mode.mp3",
+  "coin-rankings-show-player": "/sounds/default/blip_win.mp3",
+  "coin-rankings-end": "/sounds/default/wms_win6.mp3",
 };
 
 export const xmasSounds: { [key in SoundName]: string } = {

@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { PlayerCoinRankings } from "../../../utils/player";
+import { PlayerCoinRankings, PlayerCoinRankTier } from "../../../utils/player";
 
 export type CoinRankUiState = {
   tiers: PlayerCoinRankTierWithUi[];
@@ -7,9 +7,7 @@ export type CoinRankUiState = {
   showNextTier: () => void;
 };
 
-export type PlayerCoinRankTierWithUi = {
-  totalCoins: number;
-  playerIds: string[];
+export type PlayerCoinRankTierWithUi = PlayerCoinRankTier & {
   show: boolean;
 };
 
