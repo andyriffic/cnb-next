@@ -1,10 +1,12 @@
 import { useRouter } from "next/router";
 import styled from "styled-components";
+import Link from "next/link";
 import { Player } from "../../types/Player";
 import { isClientSideFeatureEnabled } from "../../utils/feature";
 import { Card, PrimaryButton } from "../Atoms";
 import { SpectatorPageLayout } from "../SpectatorPageLayout";
 import { SplashContent } from "../SplashContent";
+import { Coins } from "../Coins";
 import { Board } from "./Board";
 import { PacmanMovesInfo } from "./PacmanMovesInfo";
 import { WinningPlayer } from "./WinningPlayer";
@@ -81,6 +83,13 @@ const View = ({ players, pacmanStartingIndex }: Props) => {
             (p) => p.finishPosition === 1
           )}
         />
+      )}
+      {pacManService.uiState.status === "game-over" && (
+        <Link href="/coin-rankings">
+          <div style={{ position: "absolute", top: 0, left: 0 }}>
+            <Coins totalCoins={3} />
+          </div>
+        </Link>
       )}
     </SpectatorPageLayout>
   );
