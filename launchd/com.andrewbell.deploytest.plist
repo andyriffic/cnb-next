@@ -7,8 +7,8 @@
 
     <key>ProgramArguments</key>
     <array>
-        <string>/bin/bash</string>
-        <string>/src/cnb-next/auto/auto/test-schedule.sh</string>
+        <string>/bin/sh</string>
+        <string>~/src/andyriffic/cnb-next/auto/test-schedule.sh</string>
     </array>
 
     <key>StartCalendarInterval</key>
@@ -23,5 +23,18 @@
 
     <key>RunAtLoad</key>
     <true/>
+
+    <key>StandardOutPath</key>
+    <string>/tmp/deploy-test.stdout</string>
+
+    <key>StandardErrorPath</key>
+    <string>/tmp/deploy-test.err</string>
+
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/bin:/usr/bin:/usr/local/bin</string>
+    </dict>
 </dict>
 </plist>

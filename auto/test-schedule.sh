@@ -11,7 +11,7 @@ LOG_FILE="schedule-run.log"
 
 # Define the line to append
 # Get the current date and time in the desired format
-CURRENT_DATE_TIME=$(date +"%Y-%d-%m %H:%M")
+CURRENT_DATE_TIME=$(date +"%Y-%m-%d %H:%M")
 
 # Append the formatted date and time to the log file
 echo "$CURRENT_DATE_TIME" >> "$LOG_FILE"
