@@ -1,4 +1,4 @@
-import { savePlayersGameMoves } from "./saveGameMovesPacman";
+import { savePlayersGameMoves } from "./saveGameMovesSpaceRace";
 
 //Update this to the current mini-game so users get the correct points allocation and game behaviour
 export default savePlayersGameMoves;
