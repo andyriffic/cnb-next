@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CNB - deploy Monday mornings</key>
+    <string>com.andrewbell.deploy-monday-morning</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/src/cnb-next/auto/auto/deploy-test.sh</string>
+    </array>
+
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Weekday</key>
+        <integer>2</integer> <!-- 2 for Monday, 3 for Tuesday, etc. -->
+        <key>Hour</key>
+        <integer>8</integer>  <!-- 8 for morning at 8 AM, 14 for afternoon at 2 PM -->
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+
+    <key>RunAtLoad</key>
+    <true/>
+</dict>
+</plist>

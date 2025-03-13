@@ -1,3 +1,10 @@
+#!/bin/bash -eu
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Change to the script's directory
+cd "$SCRIPT_DIR" || exit
+cd ..
 
 # exit when any command fails
 set -e
