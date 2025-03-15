@@ -18,7 +18,7 @@ type createGameProps = {
   players: Player[];
 };
 
-export const createGame = ({
+export const createMysteryBoxGame = ({
   id,
   players,
 }: createGameProps): E.Either<ErrorMessage, MysteryBoxGame> => {

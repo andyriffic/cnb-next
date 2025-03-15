@@ -1,7 +1,7 @@
 import * as E from "fp-ts/Either";
 import { pipe } from "fp-ts/function";
 import { Player } from "../../types/Player";
-import { createGame, getLatestRoundIndex, playerSelectBox } from ".";
+import { createMysteryBoxGame, getLatestRoundIndex, playerSelectBox } from ".";
 
 const testPlayer1: Player = {
   id: "p1",
@@ -15,13 +15,16 @@ const testPlayer2: Player = {
 };
 
 test("Can create game successfully", () => {
-  const game = createGame({ id: "test", players: [testPlayer1, testPlayer2] });
+  const game = createMysteryBoxGame({
+    id: "test",
+    players: [testPlayer1, testPlayer2],
+  });
   expect(game).toBeRight();
 });
 
 test("Player can select box on a round", () => {
   const result = pipe(
-    createGame({ id: "test", players: [testPlayer1, testPlayer2] }),
+    createMysteryBoxGame({ id: "test", players: [testPlayer1, testPlayer2] }),
     E.chain(playerSelectBox("p1", 0, 0))
   );
 
@@ -30,7 +33,7 @@ test("Player can select box on a round", () => {
 
 test("Player can not select box on invalid round", () => {
   const result = pipe(
-    createGame({ id: "test", players: [testPlayer1, testPlayer2] }),
+    createMysteryBoxGame({ id: "test", players: [testPlayer1, testPlayer2] }),
     E.chain(playerSelectBox("p1", -1, 0))
   );
 
@@ -39,7 +42,7 @@ test("Player can not select box on invalid round", () => {
 
 test("Player can not select invalid box on valid round", () => {
   const result = pipe(
-    createGame({ id: "test", players: [testPlayer1, testPlayer2] }),
+    createMysteryBoxGame({ id: "test", players: [testPlayer1, testPlayer2] }),
     E.chain(playerSelectBox("p1", 0, -1))
   );
 
