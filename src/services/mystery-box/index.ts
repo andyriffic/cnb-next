@@ -22,12 +22,13 @@ export const createGame = ({
   id,
   players,
 }: createGameProps): E.Either<ErrorMessage, MysteryBoxGame> => {
-  return E.right({
+  const game = {
     id,
     currentRoundId: 0,
     players: players.map(createPlayer),
     rounds: [createNewGameRound(0)],
-  });
+  };
+  return E.right(game);
 };
 
 export const playerSelectBox = (
