@@ -8,6 +8,7 @@ import { initialiseAiOverlordSocket } from "../../services/ai-overlord/socket.io
 import { initialiseGasOutSocket } from "../../services/migrated/gas-out/socket";
 import { initialiseNumberCrunchSocket } from "../../services/number-crunch/socket.io";
 import { initialisePlayerQuestionSocket } from "../../services/query-user/socket.io";
+import { initialiseMysteryBoxSocket } from "../../services/mystery-box/socket.io";
 
 type NextApiResponseServerIO = NextApiResponse & {
   socket: Socket & {
@@ -38,6 +39,7 @@ export default function SocketHandler(
       initialiseAiOverlordSocket(io, socket);
       initialiseGasOutSocket(io, socket);
       initialiseNumberCrunchSocket(io, socket);
+      initialiseMysteryBoxSocket(io, socket);
       initialisePlayerQuestionSocket(io, socket);
 
       socket.on("hello", (message: string) => {

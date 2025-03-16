@@ -59,6 +59,10 @@ export const getNumberCrunchSpectatorUrl = (gameId: string): string => {
   return `/watch/number-crunch/${gameId}`;
 };
 
+export const getMysteryBoxSpectatorUrl = (gameId: string): string => {
+  return `/watch/mystery-box/${gameId}`;
+};
+
 export const getClassicCnbPlayerUrl = (playerId: string): string => {
   return `http://cnb.finx-rocks.com/play/${playerId}`;
 };

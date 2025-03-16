@@ -30,6 +30,7 @@ import { shuffleArray } from "../../utils/random";
 import {
   getAiOverlordSpectatorUrl,
   getGasOutSpectatorUrl,
+  getMysteryBoxSpectatorUrl,
   getNumberCrunchSpectatorUrl,
   getPlayRootUrl,
   getRockPaperScissorsGameSpectatorUrl,
@@ -40,6 +41,7 @@ import { deductAvailableCoinFromPlayer } from "../../utils/api";
 import { Coins } from "../../components/Coins";
 import { getAllPlayers } from "../../utils/data/aws-dynamodb";
 import { isRegularPlayer } from "../../types/Player";
+import { isClientSideFeatureEnabled } from "../../utils/feature";
 
 const JoinedPlayerContainer = styled.div`
   display: flex;
@@ -108,9 +110,12 @@ export type GameTypes =
   | "balloon"
   | "balloon-quick"
   | "ai"
-  | "number-crunch";
+  | "number-crunch"
+  | "mystery-box";
 
-const availableGameTypes: GameTypes[] = ["rps", "balloon", "number-crunch"];
+const availableGameTypes: GameTypes[] = isClientSideFeatureEnabled("mb")
+  ? ["rps", "balloon", "number-crunch", "mystery-box"]
+  : ["rps", "balloon", "number-crunch"];
 
 const GAME_CONFIG: {
   [key in GameTypes]: { displayName: string; canTakeCoins: boolean };
@@ -121,6 +126,7 @@ const GAME_CONFIG: {
   "balloon-quick": { displayName: "Balloon (quick)", canTakeCoins: false },
   ai: { displayName: "AI Overlord", canTakeCoins: false },
   "number-crunch": { displayName: "Number Crunch 💯", canTakeCoins: true },
+  "mystery-box": { displayName: "Mystery Box 🎁", canTakeCoins: true },
 };
 
 const gameCreators: {
@@ -137,6 +143,7 @@ const gameCreators: {
   balloon: createBallonGameNormal,
   ai: createAiGame,
   ["number-crunch"]: createNumberCrunchGame,
+  ["mystery-box"]: createMysteryBoxGame,
 };
 
 const JoinedPlayerItem = styled.div``;
@@ -497,6 +504,21 @@ function createNumberCrunchGame(
         .map((p) => p.id)
         .forEach(deductAvailableCoinFromPlayer);
       resolve(getNumberCrunchSpectatorUrl(game.id));
+    });
+  });
+}
+
+function createMysteryBoxGame(
+  group: PlayerGroup,
+  socketIoService: SocketIoService
+): Promise<GameUrl> {
+  return new Promise((resolve) => {
+    socketIoService.mysteryBox.createGame(group.id, group.players, (game) => {
+      game.players
+        .filter((p) => p.advantage)
+        .map((p) => p.id)
+        .forEach(deductAvailableCoinFromPlayer);
+      resolve(getMysteryBoxSpectatorUrl(game.id));
     });
   });
 }

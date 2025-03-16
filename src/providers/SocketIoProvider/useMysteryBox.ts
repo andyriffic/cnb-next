@@ -39,7 +39,7 @@ export function useMysteryBox(socket: Socket): MysteryBoxSocketService {
   // );
 
   useEffect(() => {
-    console.log("Setting up Number Crunch socket connection");
+    console.log("Setting up Mystery Box socket connection");
     socket.on(MYSTERY_BOX_ACTIONS.GAME_UPDATE, (games: MysteryBoxGame[]) => {
       console.log("Mystery Box Games", games);
       setGames(games);

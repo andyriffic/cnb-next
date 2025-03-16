@@ -1,7 +1,7 @@
 import * as E from "fp-ts/lib/Either";
 import * as O from "fp-ts/lib/Option";
 import { pipe } from "fp-ts/lib/function";
-import { Player } from "../../types/Player";
+import { getPlayerAvailableCoins, Player } from "../../types/Player";
 import { ErrorMessage } from "../../types/common";
 import { shuffleArrayJestSafe } from "../../utils/array";
 import {
@@ -102,6 +102,7 @@ const createPlayer = (player: Player): MysteryBoxPlayer => {
   return {
     id: player.id,
     name: player.name,
+    advantage: getPlayerAvailableCoins(player) > 0,
   };
 };
 

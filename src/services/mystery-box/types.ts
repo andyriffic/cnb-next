@@ -26,6 +26,7 @@ export type MysteryBoxContents = {
 export type MysteryBoxPlayer = {
   id: string;
   name: string;
+  advantage: boolean;
 };
 
 //Helper tyoes?

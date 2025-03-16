@@ -30,7 +30,7 @@ export type PlayerSelectMysteryBoxHandler = (
 let inMemoryGames: MysteryBoxGame[] = [];
 
 const updateInMemoryGame = (game: MysteryBoxGame): MysteryBoxGame[] => {
-  inMemoryGames = inMemoryGames.map((g) => (g.id === game.id ? game : g));
+  inMemoryGames = [...inMemoryGames.filter((g) => g.id !== game.id), game];
   return inMemoryGames;
 };
 
@@ -47,7 +47,7 @@ const getGame = (
   return game ? E.right(game) : E.left("Game not found");
 };
 
-export function initialiseNumberCrunchSocket(
+export function initialiseMysteryBoxSocket(
   io: SocketIOServer,
   socket: Socket
 ): void {
@@ -56,7 +56,7 @@ export function initialiseNumberCrunchSocket(
     players,
     onCreated
   ) => {
-    console.log("Got to creating game socket");
+    console.log("Got to creating mystery box game socket");
     pipe(
       createMysteryBoxGame({
         id,
@@ -115,8 +115,6 @@ export function initialiseNumberCrunchSocket(
   console.log("Registering Mystery Box SocketIo 🔌");
 
   socket.on(MYSTERY_BOX_ACTIONS.CREATE_GAME, createGameHandler);
-  // socket.on(NUMBER_CRUNCH_ACTIONS.MAKE_PLAYER_GUESS, makePlayerGuessHandler);
-  // socket.on(NUMBER_CRUNCH_ACTIONS.NEW_ROUND, newNumberCrunchRoundHandler);
   socket.emit(MYSTERY_BOX_ACTIONS.GAME_UPDATE, inMemoryGames);
   sendClientMessage(socket, "Welcome to Mystery Box ❓🎁");
 }
