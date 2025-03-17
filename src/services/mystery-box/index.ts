@@ -93,6 +93,7 @@ const createNewGameRound = (id: number): MysteryBoxGameRound => {
 const createMysteryBox = (id: number, type: MysteryBoxType): MysteryBox => {
   return {
     id,
+    isOpen: false,
     contents: { type, value: 0 },
     playerIds: [],
   };

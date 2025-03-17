@@ -12,6 +12,7 @@ export type MysteryBoxGameRound = {
 
 export type MysteryBox = {
   id: number;
+  isOpen: boolean;
   contents: MysteryBoxContents;
   playerIds: string[];
 };

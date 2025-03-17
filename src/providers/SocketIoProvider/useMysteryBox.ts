@@ -4,12 +4,13 @@ import { MysteryBoxGame } from "../../services/mystery-box/types";
 import {
   CreateMysteryBoxGameHandler,
   MYSTERY_BOX_ACTIONS,
+  PlayerSelectMysteryBoxHandler,
 } from "../../services/mystery-box/socket.io";
 
 export type MysteryBoxSocketService = {
   games: MysteryBoxGame[];
   createGame: CreateMysteryBoxGameHandler;
-  // makePlayerGuess: MakeNumberCrunchPlayerGuessGameHandler;
+  playerSelectBox: PlayerSelectMysteryBoxHandler;
   // newRound: NewNumberCrunchRoundHandler;
 };
 
@@ -22,16 +23,17 @@ export function useMysteryBox(socket: Socket): MysteryBoxSocketService {
     [socket]
   );
 
-  // const makePlayerGuess = useCallback<MakeNumberCrunchPlayerGuessGameHandler>(
-  //   (gameId, playerId, guess) =>
-  //     socket.emit(
-  //       NUMBER_CRUNCH_ACTIONS.MAKE_PLAYER_GUESS,
-  //       gameId,
-  //       playerId,
-  //       guess
-  //     ),
-  //   [socket]
-  // );
+  const playerSelectBox = useCallback<PlayerSelectMysteryBoxHandler>(
+    (gameId, playerId, roundId, boxId) =>
+      socket.emit(
+        MYSTERY_BOX_ACTIONS.MAKE_PLAYER_GUESS,
+        gameId,
+        playerId,
+        roundId,
+        boxId
+      ),
+    [socket]
+  );
 
   // const newRound = useCallback<NewNumberCrunchRoundHandler>(
   //   (gameId) => socket.emit(NUMBER_CRUNCH_ACTIONS.NEW_ROUND, gameId),
@@ -54,6 +56,7 @@ export function useMysteryBox(socket: Socket): MysteryBoxSocketService {
   return {
     games,
     createGame,
+    playerSelectBox,
     // makePlayerGuess,
     // newRound,
   };
