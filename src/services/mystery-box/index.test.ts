@@ -1,7 +1,12 @@
 import * as E from "fp-ts/Either";
 import { pipe } from "fp-ts/function";
 import { Player } from "../../types/Player";
-import { createMysteryBoxGame, newRound, playerSelectBox } from ".";
+import {
+  createMysteryBox,
+  createMysteryBoxGame,
+  newRound,
+  playerSelectBox,
+} from ".";
 
 const testPlayer1: Player = {
   id: "p1",
@@ -60,7 +65,7 @@ test("Can create new round when all players have moved and alive players", () =>
   expect(result).toBeRight();
 });
 
-test("Can not create new round when no players have selected a box", () => {
+test("Cannot create new round when no players have selected a box", () => {
   const result = pipe(
     createMysteryBoxGame({ id: "test", players: [testPlayer1, testPlayer2] }),
     E.chain(newRound)
@@ -69,7 +74,7 @@ test("Can not create new round when no players have selected a box", () => {
   expect(result).toEqualLeft("Not all players have selected a box");
 });
 
-test("Can not create new round when not all players have selected a box", () => {
+test("Cannot create new round when not all players have selected a box", () => {
   const result = pipe(
     createMysteryBoxGame({ id: "test", players: [testPlayer1, testPlayer2] }),
     E.chain(playerSelectBox("p1", 0, 1)),
@@ -77,4 +82,23 @@ test("Can not create new round when not all players have selected a box", () => 
   );
 
   expect(result).toEqualLeft("Not all players have selected a box");
+});
+
+test("Cannot create new round when all players are out", () => {
+  const createBombOnlyBoxes = () => {
+    return [createMysteryBox(0, "bomb")];
+  };
+
+  const result = pipe(
+    createMysteryBoxGame({
+      id: "test",
+      players: [testPlayer1, testPlayer2],
+      mysteryBoxCreator: createBombOnlyBoxes,
+    }),
+    E.chain(playerSelectBox("p1", 0, 0)),
+    E.chain(playerSelectBox("p2", 0, 0)),
+    E.chain(newRound)
+  );
+
+  expect(result).toEqualLeft("All players have been eliminated");
 });

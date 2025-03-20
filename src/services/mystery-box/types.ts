@@ -30,6 +30,8 @@ export type MysteryBoxPlayer = {
   advantage: boolean;
 };
 
+export type MysteryBoxCreator = (id: number) => MysteryBox[];
+
 //Helper tyoes?
 
 export type MysteryBoxGameWithRound = {

@@ -6,6 +6,7 @@ import { ErrorMessage } from "../../types/common";
 import { shuffleArrayJestSafe } from "../../utils/array";
 import {
   MysteryBox,
+  MysteryBoxCreator,
   MysteryBoxGame,
   MysteryBoxGameRound,
   MysteryBoxGameWithRound,
@@ -16,17 +17,19 @@ import {
 type createGameProps = {
   id: string;
   players: Player[];
+  mysteryBoxCreator?: (id: number) => MysteryBox[];
 };
 
 export const createMysteryBoxGame = ({
   id,
   players,
+  mysteryBoxCreator = randomBoxCreator,
 }: createGameProps): E.Either<ErrorMessage, MysteryBoxGame> => {
   const game = {
     id,
     currentRoundId: 0,
     players: players.map(createPlayer),
-    rounds: [createNewGameRound(0)],
+    rounds: [createNewGameRound(0, mysteryBoxCreator)],
   };
   return E.right(game);
 };
@@ -59,9 +62,10 @@ export const newRound = (
 };
 
 function addNewRoundToGame(
-  game: MysteryBoxGame
+  game: MysteryBoxGame,
+  mysteryBoxCreator: MysteryBoxCreator = randomBoxCreator
 ): E.Either<ErrorMessage, MysteryBoxGame> {
-  const newRound = createNewGameRound(game.rounds.length);
+  const newRound = createNewGameRound(game.rounds.length, mysteryBoxCreator);
   const updatedGame = {
     ...game,
     rounds: [...game.rounds, newRound],
@@ -98,21 +102,29 @@ const getAllPlayerIdsSelectedOnLevel = (
   return level.boxes.flatMap((slot) => slot.playerIds);
 };
 
-const createNewGameRound = (id: number): MysteryBoxGameRound => {
-  const randomOrderBoxes = shuffleArrayJestSafe([
+const randomBoxCreator = (roundId: number): MysteryBox[] => {
+  return shuffleArrayJestSafe([
     createMysteryBox(0, "coin"),
     createMysteryBox(1, "empty"),
     createMysteryBox(2, "bomb"),
     createMysteryBox(3, "points"),
   ]);
+};
 
+const createNewGameRound = (
+  id: number,
+  mysteryBoxCreator: MysteryBoxCreator
+): MysteryBoxGameRound => {
   return {
     id,
-    boxes: randomOrderBoxes,
+    boxes: mysteryBoxCreator(id),
   };
 };
 
-const createMysteryBox = (id: number, type: MysteryBoxType): MysteryBox => {
+export const createMysteryBox = (
+  id: number,
+  type: MysteryBoxType
+): MysteryBox => {
   return {
     id,
     isOpen: false,
