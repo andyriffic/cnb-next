@@ -47,6 +47,28 @@ export const playerSelectBox = (
   };
 };
 
+export const newRound = (
+  game: MysteryBoxGame
+): E.Either<ErrorMessage, MysteryBoxGame> => {
+  return pipe(
+    game,
+    validatePlayersRemainingInGame,
+    E.chain(validateAllPlayersHaveSelectedBoxOnCurrentRound),
+    E.chain(addNewRoundToGame)
+  );
+};
+
+function addNewRoundToGame(
+  game: MysteryBoxGame
+): E.Either<ErrorMessage, MysteryBoxGame> {
+  const newRound = createNewGameRound(game.rounds.length);
+  const updatedGame = {
+    ...game,
+    rounds: [...game.rounds, newRound],
+  };
+  return E.right(updatedGame);
+}
+
 export const getLatestRound = (
   game: MysteryBoxGame
 ): O.Option<MysteryBoxGameRound> => {
@@ -176,3 +198,38 @@ const validatePlayerHasNotSelectedThisRound =
       ? E.left(`Player '${playerId}' has already selected a box for this round`)
       : E.right({ game, round });
   };
+
+const validatePlayersRemainingInGame = (
+  game: MysteryBoxGame
+): E.Either<ErrorMessage, MysteryBoxGame> => {
+  const allExplodedBoxes = game.rounds.flatMap((round) =>
+    round.boxes.filter((box) => box.contents.type === "bomb")
+  );
+
+  const eliminatedPlayers = allExplodedBoxes.flatMap((box) => box.playerIds);
+
+  if (eliminatedPlayers.length === game.players.length) {
+    return E.left("All players have been eliminated");
+  }
+
+  return E.right(game);
+};
+
+const validateAllPlayersHaveSelectedBoxOnCurrentRound = (
+  game: MysteryBoxGame
+): E.Either<ErrorMessage, MysteryBoxGame> => {
+  return pipe(
+    getLatestRound(game),
+    O.fold(
+      () => E.left("No active round found"),
+      (round) => {
+        const allPlayersOnRound = round.boxes.flatMap((box) => box.playerIds);
+        const allPlayers = game.players.map((p) => p.id);
+
+        return allPlayers.length === allPlayersOnRound.length
+          ? E.right(game)
+          : E.left("Not all players have selected a box");
+      }
+    )
+  );
+};

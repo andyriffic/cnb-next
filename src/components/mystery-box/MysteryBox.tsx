@@ -11,10 +11,15 @@ type Props = {
 
 export const MysteryBoxUi = ({ box }: Props) => {
   return (
-    <>
+    <div style={{ display: "flex", gap: "0.5rem" }}>
       <SmallHeading style={{ textAlign: "center" }}>
         {box.id} : {box.contents.type} - {box.contents.value}
       </SmallHeading>
-    </>
+      <div style={{ display: "flex", gap: "0.5rem" }}>
+        {box.playerIds.map((pid) => (
+          <p key={pid}>{pid}</p>
+        ))}
+      </div>
+    </div>
   );
 };
