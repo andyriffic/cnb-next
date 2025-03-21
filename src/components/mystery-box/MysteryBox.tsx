@@ -10,7 +10,8 @@ type Props = {
 };
 
 export const MysteryBoxUi = ({ box }: Props) => {
-  return (
+  //codepen.io/RoyLee0702/pen/RwNgVya
+  https: return (
     <div style={{ display: "flex", gap: "0.5rem" }}>
       <SmallHeading style={{ textAlign: "center" }}>
         {box.id} : {box.contents.type} - {box.contents.value}

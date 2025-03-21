@@ -102,3 +102,29 @@ test("Cannot create new round when all players are out", () => {
 
   expect(result).toEqualLeft("All players have been eliminated");
 });
+
+test("Player cannot select a box if they have been elimindated", () => {
+  const GOOD_BOX = 1;
+  const BOMB_BOX = 0;
+
+  const boxCreator = () => {
+    return [
+      createMysteryBox(BOMB_BOX, "bomb"),
+      createMysteryBox(GOOD_BOX, "empty"),
+    ];
+  };
+
+  const result = pipe(
+    createMysteryBoxGame({
+      id: "test",
+      players: [testPlayer1, testPlayer2],
+      mysteryBoxCreator: boxCreator,
+    }),
+    E.chain(playerSelectBox("p1", 0, GOOD_BOX)),
+    E.chain(playerSelectBox("p2", 0, BOMB_BOX)),
+    E.chain(newRound),
+    E.chain(playerSelectBox("p2", 1, GOOD_BOX))
+  );
+
+  expect(result).toEqualLeft("Player 'p2' is already eliminated");
+});

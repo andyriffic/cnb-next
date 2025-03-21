@@ -41,11 +41,11 @@ export const playerSelectBox = (
 ) => {
   return (game: MysteryBoxGame): E.Either<ErrorMessage, MysteryBoxGame> => {
     return pipe(
-      getRound(game, roundIndex),
-      E.fromOption(() => `Round with id ${roundIndex} not found`),
+      game,
+      validatePlayerIsNotEliminated(playerId),
+      E.chain(getRound(roundIndex)),
       E.chain(validatePlayerHasNotSelectedThisRound(playerId)),
       E.chain(addPlayerToBox(playerId, boxIndex))
-      //E.fold(() => )
     );
   };
 };
@@ -66,8 +66,9 @@ function addNewRoundToGame(
   mysteryBoxCreator: MysteryBoxCreator = randomBoxCreator
 ): E.Either<ErrorMessage, MysteryBoxGame> {
   const newRound = createNewGameRound(game.rounds.length, mysteryBoxCreator);
-  const updatedGame = {
+  const updatedGame: MysteryBoxGame = {
     ...game,
+    currentRoundId: newRound.id,
     rounds: [...game.rounds, newRound],
   };
   return E.right(updatedGame);
@@ -86,14 +87,17 @@ export const getLatestRoundIndex = (
 };
 
 const getRound = (
-  game: MysteryBoxGame,
   levelIndex: number
-): O.Option<MysteryBoxGameWithRound> => {
-  const round = game.rounds[levelIndex];
-  if (!round) {
-    return O.none;
-  }
-  return O.some({ game, round });
+): ((
+  game: MysteryBoxGame
+) => E.Either<ErrorMessage, MysteryBoxGameWithRound>) => {
+  return (game) => {
+    const round = game.rounds[levelIndex];
+    if (!round) {
+      return E.left(`Round with id ${levelIndex} not found`);
+    }
+    return E.right({ game, round });
+  };
 };
 
 const getAllPlayerIdsSelectedOnLevel = (
@@ -190,7 +194,25 @@ function updateBoxOnRound(
   };
 }
 
+function getAllEliminatedPlayerIds(game: MysteryBoxGame): string[] {
+  const allExplodedBoxes = game.rounds.flatMap((round) =>
+    round.boxes.filter((box) => box.contents.type === "bomb")
+  );
+
+  const eliminatedPlayers = allExplodedBoxes.flatMap((box) => box.playerIds);
+  return eliminatedPlayers;
+}
+
 // Validations
+
+const validatePlayerIsNotEliminated = (
+  playerId: string
+): ((game: MysteryBoxGame) => E.Either<ErrorMessage, MysteryBoxGame>) => {
+  return (game) =>
+    getAllEliminatedPlayerIds(game).includes(playerId)
+      ? E.left(`Player '${playerId}' is already eliminated`)
+      : E.right(game);
+};
 
 const validatePlayerHasNotSelectedThisRound =
   (playerId: string) =>
@@ -214,13 +236,7 @@ const validatePlayerHasNotSelectedThisRound =
 const validatePlayersRemainingInGame = (
   game: MysteryBoxGame
 ): E.Either<ErrorMessage, MysteryBoxGame> => {
-  const allExplodedBoxes = game.rounds.flatMap((round) =>
-    round.boxes.filter((box) => box.contents.type === "bomb")
-  );
-
-  const eliminatedPlayers = allExplodedBoxes.flatMap((box) => box.playerIds);
-
-  if (eliminatedPlayers.length === game.players.length) {
+  if (getAllEliminatedPlayerIds(game).length === game.players.length) {
     return E.left("All players have been eliminated");
   }
 

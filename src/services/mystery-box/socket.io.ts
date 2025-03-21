@@ -7,12 +7,13 @@ import { ErrorMessage } from "../../types/common";
 import { generateRandomInt } from "../../utils/random";
 import { Player } from "../../types/Player";
 import { MysteryBoxGame } from "./types";
-import { createMysteryBoxGame, playerSelectBox } from ".";
+import { createMysteryBoxGame, newRound, playerSelectBox } from ".";
 
 export enum MYSTERY_BOX_ACTIONS {
   GAME_UPDATE = "MYSTERY_BOX_GAME_UPDATE",
   CREATE_GAME = "MYSTERY_BOX_CREATE_GAME",
   MAKE_PLAYER_GUESS = "MYSTERY_BOX_PLAYER_SELECT_BOX",
+  NEW_ROUND = "MYSTERY_BOX_NEW_ROUND",
 }
 
 export type CreateMysteryBoxGameHandler = (
@@ -27,6 +28,8 @@ export type PlayerSelectMysteryBoxHandler = (
   roundId: number,
   boxId: number
 ) => void;
+
+export type NewRoundMysteryBoxHandler = (gameId: string) => void;
 
 let inMemoryGames: MysteryBoxGame[] = [];
 
@@ -98,21 +101,21 @@ export function initialiseMysteryBoxSocket(
     );
   };
 
-  // const newNumberCrunchRoundHandler: NewNumberCrunchRoundHandler = (gameId) => {
-  //   pipe(
-  //     getGame(gameId, inMemoryGames),
-  //     E.chain(newRound),
-  //     E.match(
-  //       (e) => {
-  //         console.error(e), sendClientMessage(socket, e);
-  //       },
-  //       (updatedGame) => {
-  //         updateInMemoryGame(updatedGame);
-  //         emitUpdatedGamesToAllClients(io);
-  //       }
-  //     )
-  //   );
-  // };
+  const newRoundMysteryBoxHandler: NewRoundMysteryBoxHandler = (gameId) => {
+    pipe(
+      getGame(gameId, inMemoryGames),
+      E.chain(newRound),
+      E.match(
+        (e) => {
+          console.error(e), sendClientMessage(socket, e);
+        },
+        (updatedGame) => {
+          updateInMemoryGame(updatedGame);
+          emitUpdatedGamesToAllClients(io);
+        }
+      )
+    );
+  };
 
   console.log("Registering Mystery Box SocketIo 🔌");
 
@@ -121,6 +124,7 @@ export function initialiseMysteryBoxSocket(
     MYSTERY_BOX_ACTIONS.MAKE_PLAYER_GUESS,
     playerSelectMysteryBoxHandler
   );
+  socket.on(MYSTERY_BOX_ACTIONS.NEW_ROUND, newRoundMysteryBoxHandler);
   socket.emit(MYSTERY_BOX_ACTIONS.GAME_UPDATE, inMemoryGames);
   sendClientMessage(socket, "Welcome to Mystery Box ❓🎁");
 }

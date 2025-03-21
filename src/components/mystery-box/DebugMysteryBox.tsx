@@ -27,6 +27,11 @@ export const DebugMysteryBoxGame = ({ game }: Props) => {
   return (
     <div>
       <p>❓🎁</p>
+      <div>
+        <button type="button" onClick={() => mysteryBox.newRound(game.id)}>
+          New Round
+        </button>
+      </div>
       <h3>Current Round</h3>
 
       <div style={{ display: "flex", gap: "2rem" }}>

@@ -1,17 +1,18 @@
 import { useCallback, useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
-import { MysteryBoxGame } from "../../services/mystery-box/types";
 import {
   CreateMysteryBoxGameHandler,
   MYSTERY_BOX_ACTIONS,
+  NewRoundMysteryBoxHandler,
   PlayerSelectMysteryBoxHandler,
 } from "../../services/mystery-box/socket.io";
+import { MysteryBoxGame } from "../../services/mystery-box/types";
 
 export type MysteryBoxSocketService = {
   games: MysteryBoxGame[];
   createGame: CreateMysteryBoxGameHandler;
   playerSelectBox: PlayerSelectMysteryBoxHandler;
-  // newRound: NewNumberCrunchRoundHandler;
+  newRound: NewRoundMysteryBoxHandler;
 };
 
 export function useMysteryBox(socket: Socket): MysteryBoxSocketService {
@@ -35,10 +36,10 @@ export function useMysteryBox(socket: Socket): MysteryBoxSocketService {
     [socket]
   );
 
-  // const newRound = useCallback<NewNumberCrunchRoundHandler>(
-  //   (gameId) => socket.emit(NUMBER_CRUNCH_ACTIONS.NEW_ROUND, gameId),
-  //   [socket]
-  // );
+  const newRound = useCallback<NewRoundMysteryBoxHandler>(
+    (gameId) => socket.emit(MYSTERY_BOX_ACTIONS.NEW_ROUND, gameId),
+    [socket]
+  );
 
   useEffect(() => {
     console.log("Setting up Mystery Box socket connection");
@@ -57,8 +58,7 @@ export function useMysteryBox(socket: Socket): MysteryBoxSocketService {
     games,
     createGame,
     playerSelectBox,
-    // makePlayerGuess,
-    // newRound,
+    newRound,
   };
 }
 
