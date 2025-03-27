@@ -38,3 +38,24 @@ export type MysteryBoxGameWithRound = {
   game: MysteryBoxGame;
   round: MysteryBoxGameRound;
 };
+
+// Views
+export type MysteryBoxGameView = {
+  id: string;
+  winningPlayerId?: string;
+  players: MysteryBoxPlayerView[];
+  currentRound: MysteryBoxGameRoundView;
+  previousRounds: MysteryBoxGameRoundView[];
+};
+
+type MysteryBoxPlayerView = {
+  status: "active" | "eliminated";
+  eliminatedRoundId?: number;
+  lootTotals: {
+    [key in MysteryBoxType]: {
+      title: string;
+      total: number;
+    };
+  }[];
+};
+type MysteryBoxGameRoundView = {};

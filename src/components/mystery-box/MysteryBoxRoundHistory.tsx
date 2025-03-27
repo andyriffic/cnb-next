@@ -11,7 +11,7 @@ export const MysteryBoxRoundHistory = ({ game }: Props) => {
     <>
       {game.rounds.map((round) => {
         return (
-          <div style={{ display: "flex", gap: "0.5rem" }}>
+          <div key={round.id} style={{ display: "flex", gap: "0.5rem" }}>
             <SmallHeading style={{ textAlign: "center" }}>
               {round.id}
             </SmallHeading>
