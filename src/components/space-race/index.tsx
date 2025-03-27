@@ -1,7 +1,9 @@
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import { Player } from "../../types/Player";
 import { isClientSideFeatureEnabled } from "../../utils/feature";
+import { Coins } from "../Coins";
 import { SpectatorPageLayout } from "../SpectatorPageLayout";
 import { SplashContent } from "../SplashContent";
 import { useDoOnce } from "../hooks/useDoOnce";
@@ -93,6 +95,11 @@ const View = ({ players }: Props) => {
             </button>
           ))}
       </div> */}
+      <Link href="/coin-rankings">
+        <div style={{ position: "absolute", top: 0, left: 0 }}>
+          <Coins totalCoins={3} />
+        </div>
+      </Link>
     </SpectatorPageLayout>
   );
 };
