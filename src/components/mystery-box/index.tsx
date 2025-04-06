@@ -20,7 +20,7 @@ const View = ({ game }: Props) => {
       <p>{game.id}</p>
       <div>
         <MysteryBoxCurrentRoundUi round={round} />
-        <MysteryBoxRoundHistory game={game} />
+        {/* <MysteryBoxRoundHistory game={game} /> */}
       </div>
     </SpectatorPageLayout>
   );

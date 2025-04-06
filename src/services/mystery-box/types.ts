@@ -49,7 +49,7 @@ export type MysteryBoxGameView = {
 };
 
 type MysteryBoxPlayerView = {
-  status: "active" | "eliminated";
+  status: "waiting" | "selected" | "eliminated";
   eliminatedRoundId?: number;
   lootTotals: {
     [key in MysteryBoxType]: {
@@ -58,4 +58,5 @@ type MysteryBoxPlayerView = {
     };
   }[];
 };
+
 type MysteryBoxGameRoundView = {};
