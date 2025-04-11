@@ -42,7 +42,7 @@ const View = ({ coinRankings }: Props) => {
         Next Tier
       </button> */}
       <SmallHeading style={{ marginBottom: "2rem" }}>
-        March Coin Winners
+        This months Coin Winners
       </SmallHeading>
 
       <Container>
