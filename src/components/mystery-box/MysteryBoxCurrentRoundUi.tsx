@@ -26,7 +26,7 @@ export const MysteryBoxCurrentRoundUi = ({ round }: Props) => {
       <BoxOptionContainer>
         {round.boxes.map((box) => {
           return (
-            <BoxOptionContainerItem>
+            <BoxOptionContainerItem key={box.id}>
               <MysteryBoxUi key={box.id} box={box} />
             </BoxOptionContainerItem>
           );

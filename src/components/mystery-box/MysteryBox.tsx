@@ -1,7 +1,6 @@
+import { useEffect, useState } from "react";
 import styled, { css, keyframes } from "styled-components";
 import { MysteryBox } from "../../services/mystery-box/types";
-import { SmallHeading } from "../Atoms";
-import { useState } from "react";
 
 const BoxLidAnimation = keyframes`
 0%,
@@ -99,12 +98,22 @@ const BoxLid = styled.div<{ isOpen: boolean }>`
 
 type Props = {
   box: MysteryBox;
+  onReveal?: () => void;
 };
 
 type BoxState = "open" | "closed";
 
-export const MysteryBoxUi = ({ box }: Props) => {
+export const MysteryBoxUi = ({ box, onReveal }: Props) => {
   const [boxState, setBoxState] = useState<BoxState>("closed");
+
+  useEffect(() => {
+    if (onReveal) {
+      setTimeout(() => {
+        onReveal();
+      }, 3000);
+    }
+  }, [onReveal]);
+
   //codepen.io/RoyLee0702/pen/RwNgVya
   return (
     <Box onClick={() => setBoxState("open")}>
