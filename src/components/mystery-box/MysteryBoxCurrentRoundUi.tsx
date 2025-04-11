@@ -7,8 +7,10 @@ const BoxOptionContainer = styled.div`
   display: grid;
   grid-template-columns: 50% 50%;
   grid-row: auto auto;
-  grid-column-gap: 0.2rem;
-  grid-row-gap: 3rem;
+  grid-column-gap: 1rem;
+  grid-row-gap: 1rem;
+  height: 80vh;
+  width: 100vw;
 `;
 const BoxOptionContainerItem = styled.div`
   display: flex;

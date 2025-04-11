@@ -23,6 +23,7 @@ const BoxLidAnimation = keyframes`
 
 const Box = styled.div`
   position: relative;
+  height: 100px;
 `;
 
 const BoxBody = styled.div<{ primaryColor: string }>`
@@ -77,9 +78,9 @@ const BoxContents = styled.div<{ isOpen: boolean }>`
 const BoxLid = styled.div<{ isOpen: boolean; primaryColor: string }>`
   position: absolute;
   z-index: 1;
-  left: 50%;
+  left: 50px;
+  bottom: 15px;
   transform: translateX(-50%);
-  bottom: 50%;
   height: 40px;
   background-color: ${({ primaryColor }) => primaryColor};
   height: 20px;
