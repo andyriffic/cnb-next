@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import styled, { css, keyframes } from "styled-components";
-import { MysteryBox } from "../../services/mystery-box/types";
+import tinycolor from "tinycolor2";
+import {
+  MysteryBox,
+  MysteryBoxContents,
+  MysteryBoxContentsType,
+} from "../../services/mystery-box/types";
+import { Coins } from "../Coins";
 
 const BoxLidAnimation = keyframes`
 0%,
@@ -19,16 +25,19 @@ const Box = styled.div`
   position: relative;
 `;
 
-const BoxBody = styled.div`
+const BoxBody = styled.div<{ primaryColor: string }>`
   position: relative;
   height: 100px;
   width: 100px;
   margin-top: 80px;
-  background-color: #cc231e;
+  background-color: ${({ primaryColor }) => primaryColor};
   border-bottom-left-radius: 5%;
   border-bottom-right-radius: 5%;
   box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.3);
-  background: linear-gradient(#762c2c, #ff0303);
+  background: linear-gradient(
+    ${({ primaryColor }) => tinycolor(primaryColor).darken(20).toHexString()},
+    ${({ primaryColor }) => primaryColor}
+  );
 
   &::after {
     content: "";
@@ -65,14 +74,14 @@ const BoxContents = styled.div<{ isOpen: boolean }>`
     `}
 `;
 
-const BoxLid = styled.div<{ isOpen: boolean }>`
+const BoxLid = styled.div<{ isOpen: boolean; primaryColor: string }>`
   position: absolute;
   z-index: 1;
   left: 50%;
   transform: translateX(-50%);
   bottom: 50%;
   height: 40px;
-  background-color: #cc231e;
+  background-color: ${({ primaryColor }) => primaryColor};
   height: 20px;
   width: 110px;
   border-radius: 5%;
@@ -98,12 +107,35 @@ const BoxLid = styled.div<{ isOpen: boolean }>`
 
 type Props = {
   box: MysteryBox;
+  boxColorHex: string;
   onReveal?: () => void;
 };
 
 type BoxState = "open" | "closed";
 
-export const MysteryBoxUi = ({ box, onReveal }: Props) => {
+const BOX_CONTENTS: Record<MysteryBoxContentsType, JSX.Element> = {
+  coin: <Coins totalCoins={1} />,
+  points: <></>,
+  empty: <>🙈</>,
+  bomb: <>💣</>,
+};
+
+const getBoxContents = (boxContents: MysteryBoxContents): JSX.Element => {
+  switch (boxContents.type) {
+    case "coin":
+      return <Coins totalCoins={boxContents.value} />;
+    case "points":
+      return <>+{boxContents.value}</>;
+    case "empty":
+      return <>💨</>;
+    case "bomb":
+      return <>💣</>;
+    default:
+      return <></>;
+  }
+};
+
+export const MysteryBoxUi = ({ box, onReveal, boxColorHex }: Props) => {
   const [boxState, setBoxState] = useState<BoxState>("closed");
 
   useEffect(() => {
@@ -117,9 +149,11 @@ export const MysteryBoxUi = ({ box, onReveal }: Props) => {
   //codepen.io/RoyLee0702/pen/RwNgVya
   return (
     <Box onClick={() => setBoxState("open")}>
-      <BoxBody />
-      <BoxLid isOpen={boxState === "open"} />
-      <BoxContents isOpen={boxState === "open"}>⭐️</BoxContents>
+      <BoxBody primaryColor={boxColorHex} />
+      <BoxLid isOpen={boxState === "open"} primaryColor={boxColorHex} />
+      <BoxContents isOpen={boxState === "open"}>
+        {getBoxContents(box.contents)}
+      </BoxContents>
     </Box>
     // <div style={{ display: "flex", gap: "0.5rem" }}>
     //   <SmallHeading style={{ textAlign: "center" }}>

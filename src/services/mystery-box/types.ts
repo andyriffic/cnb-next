@@ -17,10 +17,10 @@ export type MysteryBox = {
   playerIds: string[];
 };
 
-export type MysteryBoxType = "coin" | "bomb" | "empty" | "points";
+export type MysteryBoxContentsType = "coin" | "bomb" | "empty" | "points";
 
 export type MysteryBoxContents = {
-  type: MysteryBoxType;
+  type: MysteryBoxContentsType;
   value: number;
 };
 
@@ -52,7 +52,7 @@ type MysteryBoxPlayerView = {
   status: "waiting" | "selected" | "eliminated";
   eliminatedRoundId?: number;
   lootTotals: {
-    [key in MysteryBoxType]: {
+    [key in MysteryBoxContentsType]: {
       title: string;
       total: number;
     };

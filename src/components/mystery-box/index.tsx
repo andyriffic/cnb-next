@@ -1,6 +1,7 @@
 import { MysteryBoxGame } from "../../services/mystery-box/types";
 import { SpectatorPageLayout } from "../SpectatorPageLayout";
 import { DebugMysteryBoxGame } from "./DebugMysteryBox";
+import { MysteryBoxActivePlayers } from "./MysteryBoxActivePlayers";
 import { MysteryBoxCurrentRoundUi } from "./MysteryBoxCurrentRoundUi";
 import { MysteryBoxRoundHistory } from "./MysteryBoxRoundHistory";
 
@@ -18,9 +19,10 @@ const View = ({ game }: Props) => {
   return (
     <SpectatorPageLayout debug={<DebugMysteryBoxGame game={game} />}>
       <p>{game.id}</p>
-      <div>
+      <div style={{ position: "relative" }}>
         <MysteryBoxCurrentRoundUi round={round} />
         {/* <MysteryBoxRoundHistory game={game} /> */}
+        <MysteryBoxActivePlayers game={game} />
       </div>
     </SpectatorPageLayout>
   );
