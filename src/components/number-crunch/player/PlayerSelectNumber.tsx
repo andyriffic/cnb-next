@@ -4,6 +4,7 @@ import { NumberCrunchGameView } from "../../../services/number-crunch/types";
 import {
   BigInput,
   FeatureHeading,
+  PrimaryButton,
   SmallHeading,
   ThemedPrimaryButton,
 } from "../../Atoms";
@@ -144,6 +145,16 @@ export const PlayerSelectNumber = ({ game, hint, onSelected }: Props) => {
           onSelected(val);
         }}
       >
+        <div style={{ textAlign: "right" }}>
+          <PrimaryButton
+            type="button"
+            onClick={() =>
+              setVal(Math.min(val + 1, game.currentRound.range.high))
+            }
+          >
+            +1
+          </PrimaryButton>
+        </div>
         <div style={{ margin: "4rem 0" }}>
           <SliderInput
             type="range"
@@ -154,7 +165,23 @@ export const PlayerSelectNumber = ({ game, hint, onSelected }: Props) => {
             onChange={(e) => setVal(e.target.valueAsNumber)}
           />
         </div>
-        <ThemedPrimaryButton type="submit">Submit</ThemedPrimaryButton>
+        <div style={{ textAlign: "right", marginBottom: "2rem" }}>
+          <PrimaryButton
+            type="button"
+            onClick={() =>
+              setVal(Math.max(val - 1, game.currentRound.range.low))
+            }
+          >
+            -1
+          </PrimaryButton>
+        </div>
+
+        <ThemedPrimaryButton
+          type="submit"
+          style={{ display: "block", width: "100%" }}
+        >
+          Submit
+        </ThemedPrimaryButton>
       </form>
     </Container>
   );
