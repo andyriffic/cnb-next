@@ -11,7 +11,7 @@ import {
   MysteryBoxGameRound,
   MysteryBoxGameWithRound,
   MysteryBoxPlayer,
-  MysteryBoxType,
+  MysteryBoxContentsType,
 } from "./types";
 
 type createGameProps = {
@@ -127,12 +127,12 @@ const createNewGameRound = (
 
 export const createMysteryBox = (
   id: number,
-  type: MysteryBoxType
+  type: MysteryBoxContentsType
 ): MysteryBox => {
   return {
     id,
     isOpen: false,
-    contents: { type, value: 0 },
+    contents: { type, value: 2 },
     playerIds: [],
   };
 };
