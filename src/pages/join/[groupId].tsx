@@ -323,9 +323,6 @@ function Page({ regularPlayers }: Props) {
                           </Attention>
                         );
                       })}
-                      <ThemedPrimaryButton>
-                        Coming soon! 🎁{" "}
-                      </ThemedPrimaryButton>
                     </>
                   ) : (
                     <AudienceGameSelection
