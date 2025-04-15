@@ -1,12 +1,9 @@
 import styled from "styled-components";
 import {
-  MysteryBoxGame,
   MysteryBoxGameView,
-  MysteryBoxPlayer,
   MysteryBoxPlayerView,
 } from "../../services/mystery-box/types";
 import { MysteryBoxPlayerUi } from "./MysteryBoxPlayer";
-import { selectRandomOneOf } from "../../utils/random";
 
 const PositionedPlayer = styled.div<{ position: Position }>`
   position: absolute;
