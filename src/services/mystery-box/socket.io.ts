@@ -7,7 +7,12 @@ import { ErrorMessage } from "../../types/common";
 import { generateRandomInt } from "../../utils/random";
 import { Player } from "../../types/Player";
 import { MysteryBoxGame } from "./types";
-import { createMysteryBoxGame, newRound, playerSelectBox } from ".";
+import {
+  createMysteryBoxGame,
+  createMysteryBoxGameView,
+  newRound,
+  playerSelectBox,
+} from ".";
 
 export enum MYSTERY_BOX_ACTIONS {
   GAME_UPDATE = "MYSTERY_BOX_GAME_UPDATE",
@@ -38,9 +43,12 @@ const updateInMemoryGame = (game: MysteryBoxGame): MysteryBoxGame[] => {
   return inMemoryGames;
 };
 
-const emitUpdatedGamesToAllClients = (io: SocketIOServer) => {
+const emitUpdatedGameViewsToAllClients = (io: SocketIOServer) => {
   // console.info("Emitting updated games to all clients", getGameViews());
-  io.emit(MYSTERY_BOX_ACTIONS.GAME_UPDATE, inMemoryGames);
+  io.emit(
+    MYSTERY_BOX_ACTIONS.GAME_UPDATE,
+    inMemoryGames.map(createMysteryBoxGameView)
+  );
 };
 
 const getGame = (
@@ -74,7 +82,7 @@ export function initialiseMysteryBoxSocket(
           console.info("mystery box game created", game);
           updateInMemoryGame(game);
           onCreated(game);
-          emitUpdatedGamesToAllClients(io);
+          emitUpdatedGameViewsToAllClients(io);
         }
       )
     );
@@ -95,7 +103,7 @@ export function initialiseMysteryBoxSocket(
         },
         (updatedGame) => {
           updateInMemoryGame(updatedGame);
-          emitUpdatedGamesToAllClients(io);
+          emitUpdatedGameViewsToAllClients(io);
         }
       )
     );
@@ -111,7 +119,7 @@ export function initialiseMysteryBoxSocket(
         },
         (updatedGame) => {
           updateInMemoryGame(updatedGame);
-          emitUpdatedGamesToAllClients(io);
+          emitUpdatedGameViewsToAllClients(io);
         }
       )
     );
@@ -125,6 +133,9 @@ export function initialiseMysteryBoxSocket(
     playerSelectMysteryBoxHandler
   );
   socket.on(MYSTERY_BOX_ACTIONS.NEW_ROUND, newRoundMysteryBoxHandler);
-  socket.emit(MYSTERY_BOX_ACTIONS.GAME_UPDATE, inMemoryGames);
+  socket.emit(
+    MYSTERY_BOX_ACTIONS.GAME_UPDATE,
+    inMemoryGames.map(createMysteryBoxGameView)
+  );
   sendClientMessage(socket, "Welcome to Mystery Box ❓🎁");
 }

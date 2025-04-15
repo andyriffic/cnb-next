@@ -6,17 +6,17 @@ import {
   NewRoundMysteryBoxHandler,
   PlayerSelectMysteryBoxHandler,
 } from "../../services/mystery-box/socket.io";
-import { MysteryBoxGame } from "../../services/mystery-box/types";
+import { MysteryBoxGameView } from "../../services/mystery-box/types";
 
 export type MysteryBoxSocketService = {
-  games: MysteryBoxGame[];
+  games: MysteryBoxGameView[];
   createGame: CreateMysteryBoxGameHandler;
   playerSelectBox: PlayerSelectMysteryBoxHandler;
   newRound: NewRoundMysteryBoxHandler;
 };
 
 export function useMysteryBox(socket: Socket): MysteryBoxSocketService {
-  const [games, setGames] = useState<MysteryBoxGame[]>([]);
+  const [games, setGames] = useState<MysteryBoxGameView[]>([]);
 
   const createGame = useCallback<CreateMysteryBoxGameHandler>(
     (gameId, players, onCreated) =>
@@ -43,10 +43,13 @@ export function useMysteryBox(socket: Socket): MysteryBoxSocketService {
 
   useEffect(() => {
     console.log("Setting up Mystery Box socket connection");
-    socket.on(MYSTERY_BOX_ACTIONS.GAME_UPDATE, (games: MysteryBoxGame[]) => {
-      console.log("Mystery Box Games", games);
-      setGames(games);
-    });
+    socket.on(
+      MYSTERY_BOX_ACTIONS.GAME_UPDATE,
+      (games: MysteryBoxGameView[]) => {
+        console.log("Mystery Box Games", games);
+        setGames(games);
+      }
+    );
 
     return () => {
       console.log("Disconnecting Number Crunch Socket");

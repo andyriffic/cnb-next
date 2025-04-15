@@ -12,6 +12,8 @@ import {
   MysteryBoxGameWithRound,
   MysteryBoxPlayer,
   MysteryBoxContentsType,
+  MysteryBoxGameView,
+  MysteryBoxPlayerView,
 } from "./types";
 
 type createGameProps = {
@@ -261,3 +263,39 @@ const validateAllPlayersHaveSelectedBoxOnCurrentRound = (
     )
   );
 };
+
+export function createMysteryBoxGameView(
+  game: MysteryBoxGame
+): MysteryBoxGameView {
+  const currentRound = game.rounds.find(
+    (round) => round.id === game.currentRoundId
+  )!;
+
+  return {
+    id: game.id,
+    players: game.players.map((p) => createPlayerView(p, currentRound)),
+    currentRound,
+    previousRounds: game.rounds.filter(
+      (round) => round.id !== game.currentRoundId
+    ),
+  };
+}
+
+function createPlayerView(
+  player: MysteryBoxPlayer,
+  currentRound: MysteryBoxGameRound
+): MysteryBoxPlayerView {
+  const selectedBox = currentRound.boxes.find((box) =>
+    box.playerIds.includes(player.id)
+  );
+
+  return {
+    id: player.id,
+    name: player.name,
+    status: "waiting",
+    lootTotals: [],
+    currentlySelectedBoxId: selectedBox ? selectedBox.id : undefined,
+    eliminatedRoundId: undefined,
+    advantage: player.advantage,
+  };
+}

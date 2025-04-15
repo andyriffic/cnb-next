@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useSocketIo } from "../../providers/SocketIoProvider";
-import { MysteryBoxGame } from "../../services/mystery-box/types";
+import { MysteryBoxGameView } from "../../services/mystery-box/types";
 
 const BoxOptionContainer = styled.div`
   display: grid;
@@ -12,17 +12,11 @@ const BoxOptionContainer = styled.div`
 const BoxOptionContainerItem = styled.div``;
 
 type Props = {
-  game: MysteryBoxGame;
+  game: MysteryBoxGameView;
 };
 
 export const DebugMysteryBoxGame = ({ game }: Props) => {
   const { mysteryBox } = useSocketIo();
-
-  const currentRound = game.rounds.find((r) => r.id === game.currentRoundId);
-
-  if (!currentRound) {
-    return <p>No current round</p>;
-  }
 
   return (
     <div>
@@ -40,9 +34,9 @@ export const DebugMysteryBoxGame = ({ game }: Props) => {
             <div key={p.id}>
               <p>{p.name}</p>
               <BoxOptionContainer>
-                {currentRound.boxes.map((box) => {
+                {game.currentRound.boxes.map((box) => {
                   const selectedThisBox = box.playerIds.includes(p.id);
-                  const selectedAnotherBox = currentRound.boxes
+                  const selectedAnotherBox = game.currentRound.boxes
                     .flatMap((b) => b.playerIds)
                     .includes(p.id);
                   return (
@@ -62,7 +56,7 @@ export const DebugMysteryBoxGame = ({ game }: Props) => {
                           mysteryBox.playerSelectBox(
                             game.id,
                             p.id,
-                            currentRound.id,
+                            game.currentRound.id,
                             box.id
                           )
                         }

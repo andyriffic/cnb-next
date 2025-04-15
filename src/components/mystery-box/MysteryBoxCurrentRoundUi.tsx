@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { MysteryBoxGameRound } from "../../services/mystery-box/types";
+import { MysteryBoxGameRoundView } from "../../services/mystery-box/types";
 import { SmallHeading } from "../Atoms";
 import { MysteryBoxUi } from "./MysteryBox";
 
@@ -18,7 +18,7 @@ const BoxOptionContainerItem = styled.div`
 `;
 
 type Props = {
-  round: MysteryBoxGameRound;
+  round: MysteryBoxGameRoundView;
 };
 
 type BoxColor = "red" | "blue" | "green" | "yellow";

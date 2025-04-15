@@ -48,9 +48,13 @@ export type MysteryBoxGameView = {
   previousRounds: MysteryBoxGameRoundView[];
 };
 
-type MysteryBoxPlayerView = {
+export type MysteryBoxPlayerView = {
+  id: string;
+  name: string;
+  advantage: boolean;
   status: "waiting" | "selected" | "eliminated";
   eliminatedRoundId?: number;
+  currentlySelectedBoxId?: number;
   lootTotals: {
     [key in MysteryBoxContentsType]: {
       title: string;
@@ -59,4 +63,13 @@ type MysteryBoxPlayerView = {
   }[];
 };
 
-type MysteryBoxGameRoundView = {};
+export type MysteryBoxBoxView = {
+  id: number;
+  contents: MysteryBoxContents;
+  playerIds: string[];
+};
+
+export type MysteryBoxGameRoundView = {
+  id: number;
+  boxes: MysteryBox[];
+};
