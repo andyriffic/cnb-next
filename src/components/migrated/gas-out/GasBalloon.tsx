@@ -6,7 +6,7 @@ import {
   explodeAnimation,
   shakeExtremeAnimation,
 } from "../../animations/keyframes/extreme";
-import sixiaoFaceImage from "./sixiao-face.png";
+import easterEggImage from "./easter-egg.png";
 
 function getCloudAnimationSpeedMilliSeconds(intensity: number): number {
   return Math.max(6000 - intensity * 500, 100);
@@ -61,9 +61,9 @@ const Ballon = styled.div<{ size: number }>`
   }
 `;
 
-const Carol = styled(Image)<{ size: number }>`
+const CustomImage = styled(Image)<{ size: number }>`
   display: inline-block;
-  width: ${({ size }) => size * 10 + 80}px;
+  width: ${({ size }) => size * 10 + 50}px;
   height: ${({ size }) => size * 10 + 80}px;
   transition: all 180ms ease-in;
 `;
@@ -76,7 +76,7 @@ export function GasBallon({ gasCloud }: Props): JSX.Element {
   const visibleSize = gasCloud.exploded ? 10 : gasCloud.pressed;
   return (
     <Container size={visibleSize} exploded={gasCloud.exploded}>
-      <Ballon size={visibleSize} />
+      {/* <Ballon size={visibleSize} /> */}
       {/* <span
         style={{
           fontSize: `${visibleSize * 0.6 + 5}rem`,
@@ -85,7 +85,11 @@ export function GasBallon({ gasCloud }: Props): JSX.Element {
       >
         🤰
       </span> */}
-      {/* <Carol size={visibleSize} src={sixiaoFaceImage} alt="Sixiao's face" /> */}
+      <CustomImage
+        size={visibleSize}
+        src={easterEggImage}
+        alt="Sixiao's face"
+      />
     </Container>
   );
 }
