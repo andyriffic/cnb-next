@@ -1,5 +1,8 @@
 import styled from "styled-components";
-import { MysteryBoxPlayer } from "../../services/mystery-box/types";
+import {
+  MysteryBoxPlayer,
+  MysteryBoxPlayerView,
+} from "../../services/mystery-box/types";
 import { PlayerAvatar } from "../PlayerAvatar";
 
 const Container = styled.div`
@@ -7,15 +10,14 @@ const Container = styled.div`
 `;
 
 type Props = {
-  player: MysteryBoxPlayer;
+  player: MysteryBoxPlayerView;
 };
-
-type PlayerPosition = "waiting";
 
 export const MysteryBoxPlayerUi = ({ player }: Props) => {
   return (
     <Container>
       <PlayerAvatar playerId={player.id} size="thumbnail" />
+      <div>{player.status}</div>
     </Container>
   );
 };

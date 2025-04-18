@@ -108,7 +108,6 @@ const BoxLid = styled.div<{ isOpen: boolean; primaryColor: string }>`
 
 type Props = {
   box: MysteryBox;
-  boxColorHex: string;
   onReveal?: () => void;
 };
 
@@ -119,6 +118,13 @@ const BOX_CONTENTS: Record<MysteryBoxContentsType, JSX.Element> = {
   points: <></>,
   empty: <>🙈</>,
   bomb: <>💣</>,
+};
+
+export const BOX_COLORS: Record<number, string> = {
+  0: "#cc231e",
+  1: "#0d6efd",
+  2: "#198754",
+  3: "#ffc107",
 };
 
 const getBoxContents = (boxContents: MysteryBoxContents): JSX.Element => {
@@ -136,8 +142,9 @@ const getBoxContents = (boxContents: MysteryBoxContents): JSX.Element => {
   }
 };
 
-export const MysteryBoxUi = ({ box, onReveal, boxColorHex }: Props) => {
+export const MysteryBoxUi = ({ box, onReveal }: Props) => {
   const [boxState, setBoxState] = useState<BoxState>("closed");
+  const boxColorHex = BOX_COLORS[box.id] || "#000";
 
   useEffect(() => {
     if (onReveal) {

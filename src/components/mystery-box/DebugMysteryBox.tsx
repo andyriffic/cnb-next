@@ -32,7 +32,14 @@ export const DebugMysteryBoxGame = ({ game }: Props) => {
         {game.players.map((p) => {
           return (
             <div key={p.id}>
-              <p>{p.name}</p>
+              <p
+                style={{
+                  textDecoration:
+                    p.status === "eliminated" ? "line-through" : "unset",
+                }}
+              >
+                {p.name}
+              </p>
               <BoxOptionContainer>
                 {game.currentRound.boxes.map((box) => {
                   const selectedThisBox = box.playerIds.includes(p.id);
@@ -50,7 +57,11 @@ export const DebugMysteryBoxGame = ({ game }: Props) => {
                     >
                       <button
                         type="button"
-                        disabled={selectedAnotherBox || selectedThisBox}
+                        disabled={
+                          selectedAnotherBox ||
+                          selectedThisBox ||
+                          p.status === "eliminated"
+                        }
                         style={{ display: "block" }}
                         onClick={() =>
                           mysteryBox.playerSelectBox(

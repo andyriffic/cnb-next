@@ -14,6 +14,8 @@ import {
   MysteryBoxContentsType,
   MysteryBoxGameView,
   MysteryBoxPlayerView,
+  MysteryBoxPlayerStatus,
+  MysteryBoxGameRoundView,
 } from "./types";
 
 type createGameProps = {
@@ -62,6 +64,8 @@ export const newRound = (
     E.chain(addNewRoundToGame)
   );
 };
+
+function eliminatePlayersOnCurrentRound() {}
 
 function addNewRoundToGame(
   game: MysteryBoxGame,
@@ -205,6 +209,17 @@ function getAllEliminatedPlayerIds(game: MysteryBoxGame): string[] {
   return eliminatedPlayers;
 }
 
+function getAllActivePlayerIds(game: MysteryBoxGame): string[] {
+  const eliminatedPlayerIds = getAllEliminatedPlayerIds(game);
+  return game.players
+    .filter((player) => !eliminatedPlayerIds.includes(player.id))
+    .map((player) => player.id);
+}
+
+function isPlayerEliminated(playerId: string, game: MysteryBoxGame): boolean {
+  return getAllEliminatedPlayerIds(game).includes(playerId);
+}
+
 // Validations
 
 const validatePlayerIsNotEliminated = (
@@ -245,6 +260,25 @@ const validatePlayersRemainingInGame = (
   return E.right(game);
 };
 
+const haveAllPlayersSelectedBoxOnRound = (
+  round: MysteryBoxGameRound,
+  game: MysteryBoxGame
+): { valid: boolean; unselectedPlayers: string[] } => {
+  const allPlayersSelectedBoxOnRound = round.boxes.flatMap(
+    (box) => box.playerIds
+  );
+  const allActivePlayers = getAllActivePlayerIds(game);
+
+  const unselectedPlayers = allActivePlayers.filter(
+    (p) => !allPlayersSelectedBoxOnRound.includes(p)
+  );
+
+  return {
+    valid: unselectedPlayers.length === 0,
+    unselectedPlayers,
+  };
+};
+
 const validateAllPlayersHaveSelectedBoxOnCurrentRound = (
   game: MysteryBoxGame
 ): E.Either<ErrorMessage, MysteryBoxGame> => {
@@ -253,12 +287,14 @@ const validateAllPlayersHaveSelectedBoxOnCurrentRound = (
     O.fold(
       () => E.left("No active round found"),
       (round) => {
-        const allPlayersOnRound = round.boxes.flatMap((box) => box.playerIds);
-        const allPlayers = game.players.map((p) => p.id);
-
-        return allPlayers.length === allPlayersOnRound.length
+        const result = haveAllPlayersSelectedBoxOnRound(round, game);
+        return result.valid
           ? E.right(game)
-          : E.left("Not all players have selected a box");
+          : E.left(
+              `Players ${result.unselectedPlayers.join(
+                ","
+              )} have not selected a box`
+            );
       }
     )
   );
@@ -273,17 +309,41 @@ export function createMysteryBoxGameView(
 
   return {
     id: game.id,
-    players: game.players.map((p) => createPlayerView(p, currentRound)),
-    currentRound,
-    previousRounds: game.rounds.filter(
-      (round) => round.id !== game.currentRoundId
-    ),
+    players: game.players.map((p) => createPlayerView(p, currentRound, game)),
+    currentRound: createMysteryBoxRoundView(currentRound, game),
+    previousRounds: game.rounds
+      .filter((round) => round.id !== game.currentRoundId)
+      .map((r) => createMysteryBoxRoundView(r, game)),
+  };
+}
+
+function createMysteryBoxRoundView(
+  round: MysteryBoxGameRound,
+  game: MysteryBoxGame
+): MysteryBoxGameRoundView {
+  const allPlayersSelectedBoxResult = haveAllPlayersSelectedBoxOnRound(
+    round,
+    game
+  );
+  return {
+    id: round.id,
+    status:
+      round.id !== game.currentRoundId
+        ? "complete"
+        : allPlayersSelectedBoxResult.valid
+        ? "ready"
+        : "in-progress",
+    boxes: round.boxes.map((box) => ({
+      ...box,
+      playerIds: box.playerIds,
+    })),
   };
 }
 
 function createPlayerView(
   player: MysteryBoxPlayer,
-  currentRound: MysteryBoxGameRound
+  currentRound: MysteryBoxGameRound,
+  game: MysteryBoxGame
 ): MysteryBoxPlayerView {
   const selectedBox = currentRound.boxes.find((box) =>
     box.playerIds.includes(player.id)
@@ -292,10 +352,26 @@ function createPlayerView(
   return {
     id: player.id,
     name: player.name,
-    status: "waiting",
+    status: getPlayerStatus(player.id, selectedBox, game),
     lootTotals: [],
     currentlySelectedBoxId: selectedBox ? selectedBox.id : undefined,
     eliminatedRoundId: undefined,
     advantage: player.advantage,
   };
+}
+
+function getPlayerStatus(
+  playerId: string,
+  currentlySelectedBox: MysteryBox | undefined,
+  game: MysteryBoxGame
+): MysteryBoxPlayerStatus {
+  if (currentlySelectedBox) {
+    return "selected";
+  }
+
+  if (isPlayerEliminated(playerId, game)) {
+    return "eliminated";
+  }
+
+  return "waiting";
 }

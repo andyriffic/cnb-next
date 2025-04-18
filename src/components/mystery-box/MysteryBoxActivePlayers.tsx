@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import {
+  MysteryBoxGameRoundView,
   MysteryBoxGameView,
   MysteryBoxPlayerView,
 } from "../../services/mystery-box/types";
@@ -24,9 +25,20 @@ const BOX_POSITIONS: Record<number, Position> = {
 
 export type PlayerPositions = "waiting" | "next-to-chosen-box";
 
-function getPlayerPosition(player: MysteryBoxPlayerView): Position {
+function getPlayerPosition(
+  player: MysteryBoxPlayerView,
+  playerPosition: PlayerPositions,
+  currentRound: MysteryBoxGameRoundView
+): Position {
+  if (playerPosition === "waiting") {
+    return DEFAULT_POSITION;
+  }
+
   if (player.currentlySelectedBoxId !== undefined) {
-    return BOX_POSITIONS[player.currentlySelectedBoxId] || DEFAULT_POSITION;
+    const boxPosition = currentRound.boxes.findIndex(
+      (b) => b.id === player.currentlySelectedBoxId
+    );
+    return BOX_POSITIONS[boxPosition] || DEFAULT_POSITION;
   }
 
   return DEFAULT_POSITION;
@@ -40,16 +52,22 @@ type Props = {
 export const MysteryBoxActivePlayers = ({ game, playerPosition }: Props) => {
   return (
     <>
-      {game.players.map((player) => {
-        return (
-          <PositionedPlayer
-            key={player.id}
-            position={getPlayerPosition(player)}
-          >
-            <MysteryBoxPlayerUi player={player} />
-          </PositionedPlayer>
-        );
-      })}
+      {game.players
+        .filter((p) => p.status !== "eliminated")
+        .map((player) => {
+          return (
+            <PositionedPlayer
+              key={player.id}
+              position={getPlayerPosition(
+                player,
+                playerPosition,
+                game.currentRound
+              )}
+            >
+              <MysteryBoxPlayerUi player={player} />
+            </PositionedPlayer>
+          );
+        })}
     </>
   );
 };

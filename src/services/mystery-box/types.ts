@@ -48,11 +48,13 @@ export type MysteryBoxGameView = {
   previousRounds: MysteryBoxGameRoundView[];
 };
 
+export type MysteryBoxPlayerStatus = "waiting" | "selected" | "eliminated";
+
 export type MysteryBoxPlayerView = {
   id: string;
   name: string;
   advantage: boolean;
-  status: "waiting" | "selected" | "eliminated";
+  status: MysteryBoxPlayerStatus;
   eliminatedRoundId?: number;
   currentlySelectedBoxId?: number;
   lootTotals: {
@@ -71,5 +73,6 @@ export type MysteryBoxBoxView = {
 
 export type MysteryBoxGameRoundView = {
   id: number;
+  status: "in-progress" | "ready" | "complete";
   boxes: MysteryBox[];
 };

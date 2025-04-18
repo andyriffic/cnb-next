@@ -23,23 +23,15 @@ type Props = {
 
 type BoxColor = "red" | "blue" | "green" | "yellow";
 
-const BOX_COLORS: Record<number, string> = {
-  0: "#cc231e",
-  1: "#0d6efd",
-  2: "#198754",
-  3: "#ffc107",
-};
-
 export const MysteryBoxCurrentRoundUi = ({ round }: Props) => {
   return (
     <>
       <SmallHeading>Round {round.id}</SmallHeading>
       <BoxOptionContainer>
         {round.boxes.map((box) => {
-          const color = BOX_COLORS[box.id] || BOX_COLORS[0]!;
           return (
             <BoxOptionContainerItem key={box.id}>
-              <MysteryBoxUi key={box.id} box={box} boxColorHex={color} />
+              <MysteryBoxUi key={box.id} box={box} />
             </BoxOptionContainerItem>
           );
         })}
