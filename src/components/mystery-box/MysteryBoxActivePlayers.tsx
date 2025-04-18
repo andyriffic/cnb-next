@@ -44,6 +44,24 @@ function getPlayerPosition(
   return DEFAULT_POSITION;
 }
 
+// function createDefaultPositionMap() {
+//   const container = document.querySelector(".circle-container");
+//   const items = document.querySelectorAll(".item");
+//   const containerWidth = container.offsetWidth;
+//   const containerHeight = container.offsetHeight;
+//   const radius = Math.min(containerWidth, containerHeight) / 2;
+//   const numItems = items.length;
+
+//   for (let i = 0; i < numItems; i++) {
+//     const angle = (i / numItems) * 2 * Math.PI; // Calculate the angle in radians
+//     const x = containerWidth / 2 + radius * Math.cos(angle); // Calculate X coordinate
+//     const y = containerHeight / 2 + radius * Math.sin(angle); // Calculate Y coordinate
+
+//     items[i].style.left = x + "px";
+//     items[i].style.top = y + "px";
+//   }
+// }
+
 type Props = {
   game: MysteryBoxGameView;
   playerPosition: PlayerPositions;

@@ -13,11 +13,11 @@ type Props = {
 export const MysteryBoxRoundHistory = ({ game }: Props) => {
   //codepen.io/RoyLee0702/pen/RwNgVya
   https: return (
-    <div style={{ display: "flex", gap: "0.5rem" }}>
+    <div style={{ display: "flex", gap: "0.5rem", height: "20vh" }}>
       {game.previousRounds.map((round) => {
-        const bombBox = round.boxes.find(
+        const bombBoxs = round.boxes.filter(
           (box) => box.contents.type === "bomb"
-        )!;
+        );
 
         return (
           <div
@@ -28,7 +28,6 @@ export const MysteryBoxRoundHistory = ({ game }: Props) => {
               flexDirection: "column",
               justifyContent: "flex-start",
               alignItems: "center",
-              height: "20vh",
               border: "1px solid black",
               width: "10vw",
             }}
@@ -36,19 +35,28 @@ export const MysteryBoxRoundHistory = ({ game }: Props) => {
             <SmallHeading style={{ textAlign: "center" }}>
               {round.id}
             </SmallHeading>
-            <div
-              style={{
-                width: "2rem",
-                height: "2rem",
-                backgroundColor: BOX_COLORS[bombBox.id],
-              }}
-            />
+            <div style={{ display: "flex", gap: "0.5rem" }}>
+              {bombBoxs.map((box) => {
+                return (
+                  <div
+                    style={{
+                      width: "2rem",
+                      height: "2rem",
+                      backgroundColor: BOX_COLORS[box.id],
+                    }}
+                  />
+                );
+              })}
+            </div>
+
             <div style={{ display: "flex", width: "100%", gap: "0.2rem" }}>
-              {bombBox.playerIds.map((pid) => (
-                <div key={pid} style={{ width: "1rem" }}>
-                  <PlayerAvatar playerId={pid} size="tiny" />
-                </div>
-              ))}
+              {bombBoxs
+                .flatMap((b) => b.playerIds)
+                .map((pid) => (
+                  <div key={pid} style={{ width: "1rem" }}>
+                    <PlayerAvatar playerId={pid} size="tiny" />
+                  </div>
+                ))}
             </div>
           </div>
         );
