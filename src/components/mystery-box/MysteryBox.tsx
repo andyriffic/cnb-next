@@ -7,6 +7,7 @@ import {
   MysteryBoxContentsType,
 } from "../../services/mystery-box/types";
 import { Coins } from "../Coins";
+import { useDoOnce } from "../hooks/useDoOnce";
 
 const BoxLidAnimation = keyframes`
 0%,
@@ -108,17 +109,18 @@ const BoxLid = styled.div<{ isOpen: boolean; primaryColor: string }>`
 
 type Props = {
   box: MysteryBox;
+  open: boolean;
   onReveal?: () => void;
 };
 
 type BoxState = "open" | "closed";
 
-const BOX_CONTENTS: Record<MysteryBoxContentsType, JSX.Element> = {
-  coin: <Coins totalCoins={1} />,
-  points: <></>,
-  empty: <>🙈</>,
-  bomb: <>💣</>,
-};
+// const BOX_CONTENTS: Record<MysteryBoxContentsType, JSX.Element> = {
+//   coin: <Coins totalCoins={1} />,
+//   points: <></>,
+//   empty: <>🙈</>,
+//   bomb: <>💣</>,
+// };
 
 export const BOX_COLORS: Record<number, string> = {
   0: "#cc231e",
@@ -142,26 +144,24 @@ const getBoxContents = (boxContents: MysteryBoxContents): JSX.Element => {
   }
 };
 
-export const MysteryBoxUi = ({ box, onReveal }: Props) => {
-  const [boxState, setBoxState] = useState<BoxState>("closed");
+export const MysteryBoxUi = ({ box, onReveal, open }: Props) => {
+  // const [boxState, setBoxState] = useState<BoxState>("closed");
   const boxColorHex = BOX_COLORS[box.id] || "#000";
 
-  useEffect(() => {
-    if (onReveal) {
-      setTimeout(() => {
-        onReveal();
-      }, 3000);
-    }
-  }, [onReveal]);
+  // useEffect(() => {
+  //   if (onReveal) {
+  //     setTimeout(() => {
+  //       onReveal();
+  //     }, 3000);
+  //   }
+  // }, [onReveal, open]);
 
   //codepen.io/RoyLee0702/pen/RwNgVya
   return (
-    <Box onClick={() => setBoxState("open")}>
+    <Box>
       <BoxBody primaryColor={boxColorHex} />
-      <BoxLid isOpen={boxState === "open"} primaryColor={boxColorHex} />
-      <BoxContents isOpen={boxState === "open"}>
-        {getBoxContents(box.contents)}
-      </BoxContents>
+      <BoxLid isOpen={open} primaryColor={boxColorHex} />
+      <BoxContents isOpen={open}>{getBoxContents(box.contents)}</BoxContents>
     </Box>
     // <div style={{ display: "flex", gap: "0.5rem" }}>
     //   <SmallHeading style={{ textAlign: "center" }}>

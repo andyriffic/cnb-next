@@ -39,12 +39,18 @@ export const MysteryBoxRoundHistory = ({ game }: Props) => {
               {bombBoxs.map((box) => {
                 return (
                   <div
+                    key={box.id}
                     style={{
                       width: "2rem",
                       height: "2rem",
                       backgroundColor: BOX_COLORS[box.id],
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
                     }}
-                  />
+                  >
+                    💣
+                  </div>
                 );
               })}
             </div>

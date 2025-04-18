@@ -7,7 +7,10 @@ import { DebugMysteryBoxGame } from "./DebugMysteryBox";
 import { MysteryBoxActivePlayers } from "./MysteryBoxActivePlayers";
 import { MysteryBoxCurrentRoundUi } from "./MysteryBoxCurrentRoundUi";
 import { MysteryBoxRoundHistory } from "./MysteryBoxRoundHistory";
-import { useMysteryBoxGameState } from "./useMysteryBoxGameState";
+import {
+  MysteryBoxGameState,
+  useMysteryBoxGameState,
+} from "./useMysteryBoxGameState";
 
 type Props = {
   game: MysteryBoxGameView;
@@ -18,15 +21,21 @@ const View = ({ game }: Props) => {
 
   return (
     <SpectatorPageLayout debug={<DebugMysteryBoxGame game={game} />}>
-      <p>{game.id}</p>
+      <p>
+        {game.id} - {MysteryBoxGameState[gameState.gameState]}
+      </p>
       <div style={{ position: "relative" }}>
-        <MysteryBoxCurrentRoundUi round={game.currentRound} />
+        <MysteryBoxCurrentRoundUi
+          round={game.currentRound}
+          gameState={gameState}
+        />
         <MysteryBoxActivePlayers
           game={game}
           playerPosition={
-            gameState.gameState !== "show-player-box-selections"
-              ? "waiting"
-              : "next-to-chosen-box"
+            gameState.gameState >=
+            MysteryBoxGameState.SHOW_PLAYER_BOX_SELECTIONS
+              ? "next-to-chosen-box"
+              : "waiting"
           }
         />
       </div>

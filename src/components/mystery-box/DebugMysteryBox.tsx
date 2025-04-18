@@ -31,7 +31,10 @@ export const DebugMysteryBoxGame = ({ game }: Props) => {
       <div style={{ display: "flex", gap: "2rem" }}>
         {game.players.map((p) => {
           return (
-            <div key={p.id}>
+            <div
+              key={p.id}
+              style={{ opacity: p.status === "eliminated" ? 0.5 : 1 }}
+            >
               <p
                 style={{
                   textDecoration:

@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { MysteryBoxGameRoundView } from "../../services/mystery-box/types";
 import { SmallHeading } from "../Atoms";
 import { MysteryBoxUi } from "./MysteryBox";
+import { MysteryBoxUIState } from "./useMysteryBoxGameState";
 
 const BoxOptionContainer = styled.div`
   display: grid;
@@ -18,12 +19,13 @@ const BoxOptionContainerItem = styled.div`
 `;
 
 type Props = {
+  gameState: MysteryBoxUIState;
   round: MysteryBoxGameRoundView;
 };
 
 type BoxColor = "red" | "blue" | "green" | "yellow";
 
-export const MysteryBoxCurrentRoundUi = ({ round }: Props) => {
+export const MysteryBoxCurrentRoundUi = ({ round, gameState }: Props) => {
   return (
     <>
       <SmallHeading>Round {round.id}</SmallHeading>
@@ -31,7 +33,7 @@ export const MysteryBoxCurrentRoundUi = ({ round }: Props) => {
         {round.boxes.map((box) => {
           return (
             <BoxOptionContainerItem key={box.id}>
-              <MysteryBoxUi key={box.id} box={box} />
+              <MysteryBoxUi key={box.id} box={box} open={gameState.boxesOpen} />
             </BoxOptionContainerItem>
           );
         })}
