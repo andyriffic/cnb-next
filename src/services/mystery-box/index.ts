@@ -16,6 +16,7 @@ import {
   MysteryBoxPlayerView,
   MysteryBoxPlayerStatus,
   MysteryBoxGameRoundView,
+  MysteryBoxContents,
 } from "./types";
 
 type createGameProps = {
@@ -113,12 +114,36 @@ const getAllPlayerIdsSelectedOnLevel = (
 };
 
 const randomBoxCreator = (roundId: number): MysteryBox[] => {
-  return shuffleArrayJestSafe([
-    createMysteryBox(0, "coin"),
-    createMysteryBox(1, "empty"),
-    createMysteryBox(2, "bomb"),
-    createMysteryBox(3, "points"),
+  const randomBoxContents = shuffleArrayJestSafe([
+    createBoxContents("bomb"),
+    createBoxContents("empty"),
+    createBoxContents("empty"),
+    createBoxContents("empty"),
   ]);
+
+  return shuffleArrayJestSafe([
+    createMysteryBox(0, randomBoxContents[0]!),
+    createMysteryBox(1, randomBoxContents[1]!),
+    createMysteryBox(2, randomBoxContents[2]!),
+    createMysteryBox(3, randomBoxContents[3]!),
+  ]);
+};
+
+const createBoxContents = (
+  contentsType: MysteryBoxContentsType
+): MysteryBoxContents => {
+  switch (contentsType) {
+    case "coin":
+      return { type: "coin", value: 1 };
+    case "empty":
+      return { type: "empty", value: 0 };
+    case "bomb":
+      return { type: "bomb", value: 0 };
+    case "points":
+      return { type: "points", value: 5 };
+    default:
+      throw new Error("Invalid box contents type");
+  }
 };
 
 const createNewGameRound = (
@@ -133,12 +158,12 @@ const createNewGameRound = (
 
 export const createMysteryBox = (
   id: number,
-  type: MysteryBoxContentsType
+  contents: MysteryBoxContents
 ): MysteryBox => {
   return {
     id,
     isOpen: false,
-    contents: { type, value: 2 },
+    contents,
     playerIds: [],
   };
 };

@@ -26,7 +26,11 @@ export const MysteryBoxRoundHistory = ({ game }: Props) => {
               display: "flex",
               gap: "0.5rem",
               flexDirection: "column",
+              justifyContent: "flex-start",
+              alignItems: "center",
               height: "20vh",
+              border: "1px solid black",
+              width: "10vw",
             }}
           >
             <SmallHeading style={{ textAlign: "center" }}>
@@ -39,9 +43,11 @@ export const MysteryBoxRoundHistory = ({ game }: Props) => {
                 backgroundColor: BOX_COLORS[bombBox.id],
               }}
             />
-            <div>
+            <div style={{ display: "flex", width: "100%", gap: "0.2rem" }}>
               {bombBox.playerIds.map((pid) => (
-                <PlayerAvatar key={pid} playerId={pid} size="tiny" />
+                <div key={pid} style={{ width: "1rem" }}>
+                  <PlayerAvatar playerId={pid} size="tiny" />
+                </div>
               ))}
             </div>
           </div>
