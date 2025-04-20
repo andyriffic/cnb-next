@@ -156,7 +156,7 @@ const randomBoxCreator = (roundId: number): MysteryBox[] => {
   ];
 };
 
-const createBoxContents = (
+export const createBoxContents = (
   contentsType: MysteryBoxContentsType,
   value?: number
 ): MysteryBoxContents => {

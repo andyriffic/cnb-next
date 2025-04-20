@@ -2,6 +2,7 @@ import * as E from "fp-ts/Either";
 import { pipe } from "fp-ts/function";
 import { Player } from "../../types/Player";
 import {
+  createBoxContents,
   createMysteryBox,
   createMysteryBoxGame,
   newRound,
@@ -86,7 +87,7 @@ test("Cannot create new round when not all players have selected a box", () => {
 
 test("Cannot create new round when all players are out", () => {
   const createBombOnlyBoxes = () => {
-    return [createMysteryBox(0, "bomb")];
+    return [createMysteryBox(0, createBoxContents("bomb"))];
   };
 
   const result = pipe(
@@ -109,8 +110,8 @@ test("Player cannot select a box if they have been elimindated", () => {
 
   const boxCreator = () => {
     return [
-      createMysteryBox(BOMB_BOX, "bomb"),
-      createMysteryBox(GOOD_BOX, "empty"),
+      createMysteryBox(BOMB_BOX, createBoxContents("bomb")),
+      createMysteryBox(GOOD_BOX, createBoxContents("points", 1)),
     ];
   };
 
