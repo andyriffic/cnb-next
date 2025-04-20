@@ -113,34 +113,62 @@ const getAllPlayerIdsSelectedOnLevel = (
   return level.boxes.flatMap((slot) => slot.playerIds);
 };
 
-const randomBoxCreator = (roundId: number): MysteryBox[] => {
-  const randomBoxContents = shuffleArrayJestSafe([
-    createBoxContents("bomb"),
-    createBoxContents("empty"),
-    createBoxContents("empty"),
-    createBoxContents("empty"),
-  ]);
+function getCustomRoundBoxContents(roundNumber: number): MysteryBoxContents[] {
+  switch (roundNumber) {
+    case 0: {
+      return [
+        createBoxContents("points", 1),
+        createBoxContents("empty"),
+        createBoxContents("empty"),
+        createBoxContents("empty"),
+      ];
+    }
+    case 4: {
+      return [
+        createBoxContents("bomb"),
+        createBoxContents("bomb"),
+        createBoxContents("points", 1),
+        createBoxContents("empty"),
+      ];
+    }
 
-  return shuffleArrayJestSafe([
+    default: {
+      return [
+        createBoxContents("bomb"),
+        createBoxContents("points", 1),
+        createBoxContents("empty"),
+        createBoxContents("empty"),
+      ];
+    }
+  }
+}
+
+const randomBoxCreator = (roundId: number): MysteryBox[] => {
+  const randomBoxContents = shuffleArrayJestSafe(
+    getCustomRoundBoxContents(roundId)
+  );
+
+  return [
     createMysteryBox(0, randomBoxContents[0]!),
     createMysteryBox(1, randomBoxContents[1]!),
     createMysteryBox(2, randomBoxContents[2]!),
     createMysteryBox(3, randomBoxContents[3]!),
-  ]);
+  ];
 };
 
 const createBoxContents = (
-  contentsType: MysteryBoxContentsType
+  contentsType: MysteryBoxContentsType,
+  value?: number
 ): MysteryBoxContents => {
   switch (contentsType) {
     case "coin":
-      return { type: "coin", value: 1 };
+      return { type: "coin", value: value ?? 0 };
     case "empty":
-      return { type: "empty", value: 0 };
+      return { type: "empty", value: value ?? 0 };
     case "bomb":
-      return { type: "bomb", value: 0 };
+      return { type: "bomb", value: value ?? 0 };
     case "points":
-      return { type: "points", value: 5 };
+      return { type: "points", value: value ?? 0 };
     default:
       throw new Error("Invalid box contents type");
   }
@@ -378,9 +406,9 @@ function createPlayerView(
     id: player.id,
     name: player.name,
     status: getPlayerStatus(player.id, selectedBox, game),
-    lootTotals: [],
-    currentlySelectedBoxId: selectedBox ? selectedBox.id : undefined,
-    eliminatedRoundId: undefined,
+    // lootTotals: [],
+    // currentlySelectedBoxId: selectedBox ? selectedBox.id : undefined,
+    // eliminatedRoundId: undefined,
     advantage: player.advantage,
   };
 }

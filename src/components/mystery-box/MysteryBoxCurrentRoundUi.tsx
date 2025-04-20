@@ -29,7 +29,7 @@ export const MysteryBoxCurrentRoundUi = ({ round, gameState }: Props) => {
   return (
     <>
       <SmallHeading>Round {round.id}</SmallHeading>
-      <BoxOptionContainer>
+      <BoxOptionContainer key={round.id}>
         {round.boxes.map((box) => {
           return (
             <BoxOptionContainerItem key={box.id}>

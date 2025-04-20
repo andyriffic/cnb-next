@@ -34,6 +34,16 @@ export function useMysteryBoxGameState(
 
       return () => clearTimeout(timeout);
     }
+  }, [gameState, game]);
+
+  useEffect(() => {
+    if (gameState === MysteryBoxGameState.SHOW_PLAYER_BOX_SELECTIONS) {
+      const timeout = setTimeout(() => {
+        setGameState(MysteryBoxGameState.REVEALING_BOXES);
+      }, 1000);
+
+      return () => clearTimeout(timeout);
+    }
   }, [gameState]);
 
   useEffect(() => {
@@ -47,20 +57,10 @@ export function useMysteryBoxGameState(
   }, [gameState]);
 
   useEffect(() => {
-    if (gameState === MysteryBoxGameState.SHOW_PLAYER_BOX_SELECTIONS) {
-      const timeout = setTimeout(() => {
-        setGameState(MysteryBoxGameState.REVEALING_BOXES);
-      }, 1000);
-
-      return () => clearTimeout(timeout);
-    }
-  }, [gameState]);
-
-  useEffect(() => {
     if (game.currentRound.status === "in-progress") {
       setGameState(MysteryBoxGameState.WAITING_FOR_PLAYERS_TO_SELECT_BOX);
     }
-  }, [gameState]);
+  }, [gameState, game]);
 
   return {
     gameState,
@@ -75,7 +75,7 @@ function initialiseGameStatusToGameState(
     return MysteryBoxGameState.WAITING_FOR_PLAYERS_TO_SELECT_BOX;
   }
 
-  if (game.winningPlayerId) {
+  if (!!game.winningPlayerIds) {
     return MysteryBoxGameState.GAME_OVER;
   }
 

@@ -136,7 +136,7 @@ const getBoxContents = (boxContents: MysteryBoxContents): JSX.Element => {
     case "points":
       return <>+{boxContents.value}</>;
     case "empty":
-      return <>💨</>;
+      return <></>;
     case "bomb":
       return <>💣</>;
     default:

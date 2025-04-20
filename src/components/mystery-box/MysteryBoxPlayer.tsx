@@ -11,9 +11,10 @@ const Container = styled.div`
 
 type Props = {
   player: MysteryBoxPlayerView;
+  exploded: boolean;
 };
 
-export const MysteryBoxPlayerUi = ({ player }: Props) => {
+export const MysteryBoxPlayerUi = ({ player, exploded }: Props) => {
   return (
     <Container>
       <PlayerAvatar playerId={player.id} size="thumbnail" />

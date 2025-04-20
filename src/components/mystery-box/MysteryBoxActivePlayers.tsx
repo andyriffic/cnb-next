@@ -5,6 +5,10 @@ import {
   MysteryBoxPlayerView,
 } from "../../services/mystery-box/types";
 import { MysteryBoxPlayerUi } from "./MysteryBoxPlayer";
+import {
+  MysteryBoxGameState,
+  MysteryBoxUIState,
+} from "./useMysteryBoxGameState";
 
 const PositionedPlayer = styled.div<{ position: Position }>`
   position: absolute;
@@ -64,10 +68,15 @@ function getPlayerPosition(
 
 type Props = {
   game: MysteryBoxGameView;
+  gameState: MysteryBoxUIState;
   playerPosition: PlayerPositions;
 };
 
-export const MysteryBoxActivePlayers = ({ game, playerPosition }: Props) => {
+export const MysteryBoxActivePlayers = ({
+  game,
+  gameState,
+  playerPosition,
+}: Props) => {
   return (
     <>
       {game.players
@@ -82,7 +91,7 @@ export const MysteryBoxActivePlayers = ({ game, playerPosition }: Props) => {
                 game.currentRound
               )}
             >
-              <MysteryBoxPlayerUi player={player} />
+              <MysteryBoxPlayerUi player={player} exploded={false} />
             </PositionedPlayer>
           );
         })}

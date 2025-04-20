@@ -31,6 +31,7 @@ const View = ({ game }: Props) => {
         />
         <MysteryBoxActivePlayers
           game={game}
+          gameState={gameState}
           playerPosition={
             gameState.gameState >=
             MysteryBoxGameState.SHOW_PLAYER_BOX_SELECTIONS

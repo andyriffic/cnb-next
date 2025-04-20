@@ -42,7 +42,7 @@ export type MysteryBoxGameWithRound = {
 // Views
 export type MysteryBoxGameView = {
   id: string;
-  winningPlayerId?: string;
+  winningPlayerIds?: string[];
   players: MysteryBoxPlayerView[];
   currentRound: MysteryBoxGameRoundView;
   previousRounds: MysteryBoxGameRoundView[];
@@ -55,14 +55,14 @@ export type MysteryBoxPlayerView = {
   name: string;
   advantage: boolean;
   status: MysteryBoxPlayerStatus;
-  eliminatedRoundId?: number;
-  currentlySelectedBoxId?: number;
-  lootTotals: {
-    [key in MysteryBoxContentsType]: {
-      title: string;
-      total: number;
-    };
-  }[];
+  // eliminatedRoundId?: number;
+  // currentlySelectedBoxId?: number;
+  // lootTotals: {
+  //   [key in MysteryBoxContentsType]: {
+  //     title: string;
+  //     total: number;
+  //   };
+  // }[];
 };
 
 export type MysteryBoxBoxView = {
