@@ -56,7 +56,7 @@ export type MysteryBoxPlayerView = {
   advantage: boolean;
   status: MysteryBoxPlayerStatus;
   // eliminatedRoundId?: number;
-  // currentlySelectedBoxId?: number;
+  currentlySelectedBoxId?: number;
   // lootTotals: {
   //   [key in MysteryBoxContentsType]: {
   //     title: string;

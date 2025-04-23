@@ -407,7 +407,7 @@ function createPlayerView(
     name: player.name,
     status: getPlayerStatus(player.id, selectedBox, game),
     // lootTotals: [],
-    // currentlySelectedBoxId: selectedBox ? selectedBox.id : undefined,
+    currentlySelectedBoxId: selectedBox ? selectedBox.id : undefined,
     // eliminatedRoundId: undefined,
     advantage: player.advantage,
   };
