@@ -77,19 +77,19 @@ export function GasBallon({ gasCloud }: Props): JSX.Element {
   return (
     <Container size={visibleSize} exploded={gasCloud.exploded}>
       {/* <Ballon size={visibleSize} /> */}
-      {/* <span
+      <span
         style={{
-          fontSize: `${visibleSize * 0.6 + 5}rem`,
+          fontSize: `${visibleSize * 0.6 + 3}rem`,
           transition: "all 500ms linear",
         }}
       >
-        🤰
-      </span> */}
-      <CustomImage
+        💪
+      </span>
+      {/* <CustomImage
         size={visibleSize}
         src={easterEggImage}
         alt="Sixiao's face"
-      />
+      /> */}
     </Container>
   );
 }
