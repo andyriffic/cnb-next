@@ -33,6 +33,7 @@ export type ZombieRunDetails = {
   totalMetresRun: number;
   isZombie: boolean;
   finishPosition?: number;
+  personalBestDistance?: number;
   // playersBitten: string[];
 };
 export type SpaceRaceDetails = {

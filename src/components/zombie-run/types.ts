@@ -22,6 +22,7 @@ export type ZombiePlayer = {
   isZombie: boolean;
   gotBitten: boolean;
   finishPosition?: number;
+  personalBestDistance?: number;
   obstacle?: ZombieObstacle;
 };
 
