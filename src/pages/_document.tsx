@@ -40,6 +40,7 @@ export default class MyDocument extends Document {
         <Head>
           <meta name="robots" content="noindex,nofollow" />
           <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="icon" href="favicon.ico"></link>
           <link
             rel="preconnect"
             href="https://fonts.gstatic.com"
