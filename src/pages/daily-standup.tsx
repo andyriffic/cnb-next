@@ -1,6 +1,6 @@
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
-import { selectRandomOneOf } from "../utils/random";
+import { generateRandomInt, selectRandomOneOf } from "../utils/random";
 
 type Joke = {
   jokeText: string;
@@ -8,18 +8,20 @@ type Joke = {
 };
 
 const JOKES = [
+  // {
+  //   jokeText: "Where does Dumbledore hide his army?",
+  //   answer: "In his sleeve-y.",
+  // },
   {
-    jokeText: "Why did the scarecrow win an award?",
-    answer: " Because he was outstanding in his field!",
+    jokeText: "What's Hermione's favorite TV show?",
+    answer: "Granger Things.",
   },
-  {
-    jokeText: "Why don't scientists trust atoms?",
-    answer: " Because they make up everything!",
-  },
-  { jokeText: "What do you call fake spaghetti?", answer: " An impasta!" },
 ];
 
-const Home = ({ joke }: { joke: Joke }) => {
+const Home = ({ joke }: { joke?: Joke }) => {
+  if (!joke) {
+    return <div>Joke not found</div>;
+  }
   return (
     <div>
       <Head>
@@ -53,6 +55,9 @@ const Home = ({ joke }: { joke: Joke }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
+  const jokeIndex = generateRandomInt(0, JOKES.length - 1);
+  const joke = JOKES[jokeIndex];
+
   return {
     props: {
       joke: selectRandomOneOf(JOKES),
