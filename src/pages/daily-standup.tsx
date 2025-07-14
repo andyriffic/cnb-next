@@ -12,9 +12,14 @@ const JOKES = [
   //   jokeText: "Where does Dumbledore hide his army?",
   //   answer: "In his sleeve-y.",
   // },
+  // {
+  //   jokeText: "What's Hermione's favorite TV show?",
+  //   answer: "Granger Things.",
+  // },
   {
-    jokeText: "What's Hermione's favorite TV show?",
-    answer: "Granger Things.",
+    jokeText:
+      "What did they call the Dark Lord when he stuck his finger in an electrial socket?",
+    answer: "Volt-amort",
   },
 ];
 
