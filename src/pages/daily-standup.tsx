@@ -1,27 +1,11 @@
-import type { GetServerSideProps, NextPage } from "next";
+import type { GetServerSideProps } from "next";
 import Head from "next/head";
-import { generateRandomInt, selectRandomOneOf } from "../utils/random";
+import { getRandomJoke } from "../utils/joke";
 
 type Joke = {
   jokeText: string;
   answer: string;
 };
-
-const JOKES = [
-  // {
-  //   jokeText: "Where does Dumbledore hide his army?",
-  //   answer: "In his sleeve-y.",
-  // },
-  // {
-  //   jokeText: "What's Hermione's favorite TV show?",
-  //   answer: "Granger Things.",
-  // },
-  {
-    jokeText:
-      "What did they call the Dark Lord when he stuck his finger in an electrial socket?",
-    answer: "Volt-amort",
-  },
-];
 
 const Home = ({ joke }: { joke?: Joke }) => {
   if (!joke) {
@@ -60,12 +44,11 @@ const Home = ({ joke }: { joke?: Joke }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const jokeIndex = generateRandomInt(0, JOKES.length - 1);
-  const joke = JOKES[jokeIndex];
+  const joke = getRandomJoke();
 
   return {
     props: {
-      joke: selectRandomOneOf(JOKES),
+      joke,
     },
   };
 };
