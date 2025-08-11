@@ -17,6 +17,7 @@ import {
   MysteryBoxPlayerStatus,
   MysteryBoxGameRoundView,
   MysteryBoxContents,
+  MysteryBoxGameOverSummary,
 } from "./types";
 
 type createGameProps = {
@@ -353,6 +354,23 @@ const validateAllPlayersHaveSelectedBoxOnCurrentRound = (
   );
 };
 
+function createGameOverSummary(
+  game: MysteryBoxGame
+): MysteryBoxGameOverSummary | undefined {
+  const allActivePlayers = getAllActivePlayerIds(game);
+
+  if (allActivePlayers.length === 0) {
+    // No one won 😢
+    return {};
+  } else if (allActivePlayers.length === 1) {
+    // One winner 🎉
+    return { outrightWinnerPlayerId: allActivePlayers[0] };
+  }
+
+  // Game still going
+  return;
+}
+
 export function createMysteryBoxGameView(
   game: MysteryBoxGame
 ): MysteryBoxGameView {
@@ -360,13 +378,18 @@ export function createMysteryBoxGameView(
     (round) => round.id === game.currentRoundId
   )!;
 
+  const gameOverSummary = createGameOverSummary(game);
+
   return {
     id: game.id,
-    players: game.players.map((p) => createPlayerView(p, currentRound, game)),
+    players: game.players.map((p) =>
+      createPlayerView(p, currentRound, game, gameOverSummary)
+    ),
     currentRound: createMysteryBoxRoundView(currentRound, game),
     previousRounds: game.rounds
-      .filter((round) => round.id !== game.currentRoundId)
+      .filter((round) => !!gameOverSummary || round.id !== game.currentRoundId)
       .map((r) => createMysteryBoxRoundView(r, game)),
+    gameOverSummary,
   };
 }
 
@@ -396,7 +419,8 @@ function createMysteryBoxRoundView(
 function createPlayerView(
   player: MysteryBoxPlayer,
   currentRound: MysteryBoxGameRound,
-  game: MysteryBoxGame
+  game: MysteryBoxGame,
+  gameOverSummary: MysteryBoxGameOverSummary | undefined
 ): MysteryBoxPlayerView {
   const selectedBox = currentRound.boxes.find((box) =>
     box.playerIds.includes(player.id)
@@ -405,7 +429,7 @@ function createPlayerView(
   return {
     id: player.id,
     name: player.name,
-    status: getPlayerStatus(player.id, selectedBox, game),
+    status: getPlayerStatus(player.id, selectedBox, game, gameOverSummary),
     // lootTotals: [],
     currentlySelectedBoxId: selectedBox ? selectedBox.id : undefined,
     // eliminatedRoundId: undefined,
@@ -416,8 +440,13 @@ function createPlayerView(
 function getPlayerStatus(
   playerId: string,
   currentlySelectedBox: MysteryBox | undefined,
-  game: MysteryBoxGame
+  game: MysteryBoxGame,
+  gameOverSummary: MysteryBoxGameOverSummary | undefined
 ): MysteryBoxPlayerStatus {
+  if (gameOverSummary && gameOverSummary.outrightWinnerPlayerId === playerId) {
+    return "winner";
+  }
+
   if (currentlySelectedBox) {
     return "selected";
   }

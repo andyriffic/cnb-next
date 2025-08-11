@@ -75,7 +75,7 @@ function initialiseGameStatusToGameState(
     return MysteryBoxGameState.WAITING_FOR_PLAYERS_TO_SELECT_BOX;
   }
 
-  if (!!game.winningPlayerIds) {
+  if (!!game.gameOverSummary) {
     return MysteryBoxGameState.GAME_OVER;
   }
 

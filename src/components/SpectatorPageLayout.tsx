@@ -59,7 +59,12 @@ export function SpectatorPageLayout({
       <SuperSecretDebugToggle onClick={() => setShowDebug(!showDebug)} />
       {showDebug && debug && (
         <DebugContainer style={{ zIndex: 1, border: "1px solid white" }}>
-          {debug}
+          <div style={{ position: "absolute", top: 0, right: 0 }}>
+            <button type="button" onClick={() => setShowDebug(false)}>
+              close
+            </button>
+          </div>
+          <div>{debug}</div>
         </DebugContainer>
       )}
     </Container>

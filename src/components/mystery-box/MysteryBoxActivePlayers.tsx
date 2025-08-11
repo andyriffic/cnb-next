@@ -82,6 +82,9 @@ export const MysteryBoxActivePlayers = ({
       {game.players
         .filter((p) => p.status !== "eliminated")
         .map((player) => {
+          const currentBox = game.currentRound.boxes.find(
+            (b) => b.id === player.currentlySelectedBoxId
+          );
           return (
             <PositionedPlayer
               key={player.id}
@@ -91,7 +94,21 @@ export const MysteryBoxActivePlayers = ({
                 game.currentRound
               )}
             >
-              <MysteryBoxPlayerUi player={player} exploded={false} />
+              <MysteryBoxPlayerUi
+                player={player}
+                status={
+                  game.gameOverSummary &&
+                  game.gameOverSummary.outrightWinnerPlayerId === player.id
+                    ? "winner"
+                    : "active"
+                }
+                explode={
+                  gameState.gameState >=
+                    MysteryBoxGameState.SHOW_BOX_REVEAL_RESULT &&
+                  !!currentBox &&
+                  currentBox.contents.type === "bomb"
+                }
+              />
             </PositionedPlayer>
           );
         })}

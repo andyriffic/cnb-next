@@ -1,24 +1,53 @@
-import styled from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import {
   MysteryBoxPlayer,
   MysteryBoxPlayerView,
 } from "../../services/mystery-box/types";
 import { PlayerAvatar } from "../PlayerAvatar";
+import { Attention } from "../animations/Attention";
+import { ExplodingPlayer } from "../migrated/gas-out/ExplodingPlayer";
 
 const Container = styled.div`
   position: relative;
 `;
 
+export const explodeAnimation = keyframes`
+  0% { transform: translate(0, 0) rotate(0deg); }
+  30% { transform: translate(0, -2000px) rotate(-1080deg); }
+  100% { transform: translate(0, -2000px) rotate(-1080deg); }
+`;
+
+const ExplodingPlayerContainer = styled.div<{ exploded: boolean }>`
+  /* display: flex;
+  justify-content: center;
+  width: 100%; */
+  // visibility: ${({ exploded }) => (exploded ? "visible" : "hidden")};
+  /* visibility: hidden; */
+  /* opacity: ${({ exploded }) => (exploded ? "1" : "0.3")}; */
+  ${({ exploded }) =>
+    exploded &&
+    css`
+      animation: ${explodeAnimation} 2000ms ease-in-out 2s 1 both;
+    `}
+`;
+
 type Props = {
   player: MysteryBoxPlayerView;
-  exploded: boolean;
+  status: "active" | "exploded" | "winner";
+  explode: boolean;
 };
 
-export const MysteryBoxPlayerUi = ({ player, exploded }: Props) => {
+export const MysteryBoxPlayerUi = ({ player, status, explode }: Props) => {
   return (
     <Container>
-      <PlayerAvatar playerId={player.id} size="thumbnail" />
-      <div>{player.status}</div>
+      <ExplodingPlayerContainer exploded={explode}>
+        <Attention animate={status === "winner"} animation="pulse">
+          <PlayerAvatar playerId={player.id} size="thumbnail" />
+          <div>
+            {player.status} {explode && <>💥</>}
+          </div>
+        </Attention>
+      </ExplodingPlayerContainer>
     </Container>
   );
 };

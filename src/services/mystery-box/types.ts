@@ -42,13 +42,22 @@ export type MysteryBoxGameWithRound = {
 // Views
 export type MysteryBoxGameView = {
   id: string;
-  winningPlayerIds?: string[];
+  // winningPlayerIds?: string[];
   players: MysteryBoxPlayerView[];
   currentRound: MysteryBoxGameRoundView;
   previousRounds: MysteryBoxGameRoundView[];
+  gameOverSummary?: MysteryBoxGameOverSummary;
 };
 
-export type MysteryBoxPlayerStatus = "waiting" | "selected" | "eliminated";
+export type MysteryBoxGameOverSummary = {
+  outrightWinnerPlayerId?: string;
+};
+
+export type MysteryBoxPlayerStatus =
+  | "waiting"
+  | "selected"
+  | "eliminated"
+  | "winner";
 
 export type MysteryBoxPlayerView = {
   id: string;

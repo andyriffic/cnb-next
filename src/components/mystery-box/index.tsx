@@ -24,6 +24,9 @@ const View = ({ game }: Props) => {
       <p>
         {game.id} - {MysteryBoxGameState[gameState.gameState]}
       </p>
+      {game.gameOverSummary && (
+        <p>GAME OVER! {game.gameOverSummary.outrightWinnerPlayerId}</p>
+      )}
       <div style={{ position: "relative" }}>
         <MysteryBoxCurrentRoundUi
           round={game.currentRound}
