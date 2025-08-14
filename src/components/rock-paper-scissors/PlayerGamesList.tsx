@@ -6,6 +6,7 @@ import { Card, SubHeading } from "../Atoms";
 import {
   getAiOverlordPlayerUrl,
   getGasOutPlayerUrl,
+  getMysteryBoxPlayerUrl,
   getNumberCrunchPlayerUrl,
 } from "../../utils/url";
 
@@ -26,6 +27,7 @@ export const PlayerGamesList = ({ playerId }: Props): JSX.Element | null => {
     aiOverlord: { aiOverlordGames },
     gasGame: { gasGames },
     numberCrunch: { games: numberCrunchGames },
+    mysteryBox: { games: mysteryBoxGames },
   } = useSocketIo();
 
   const playersRPSGames = useMemo(() => {
@@ -53,6 +55,12 @@ export const PlayerGamesList = ({ playerId }: Props): JSX.Element | null => {
 
   const playerNumberCrunchGames = useMemo(() => {
     return numberCrunchGames.filter((game) =>
+      game.players.map((p) => p.id).includes(playerId)
+    );
+  }, [numberCrunchGames, playerId]);
+
+  const playerMysteryBoxGames = useMemo(() => {
+    return mysteryBoxGames.filter((game) =>
       game.players.map((p) => p.id).includes(playerId)
     );
   }, [numberCrunchGames, playerId]);
@@ -109,6 +117,19 @@ export const PlayerGamesList = ({ playerId }: Props): JSX.Element | null => {
                 legacyBehavior
               >
                 <TappableLink>Number Crunch: {game.id}</TappableLink>
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <ul>
+          {mysteryBoxGames.map((game) => (
+            <li key={game.id}>
+              <Link
+                href={getMysteryBoxPlayerUrl(playerId, game.id)}
+                passHref={true}
+                legacyBehavior
+              >
+                <TappableLink>🎁 Mystery Box: {game.id}</TappableLink>
               </Link>
             </li>
           ))}

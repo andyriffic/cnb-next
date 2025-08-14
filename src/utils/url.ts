@@ -89,3 +89,10 @@ export const getNumberCrunchPlayerUrl = (
 ): string => {
   return `/play/${playerId}/number-crunch?gameId=${gameId}`;
 };
+
+export const getMysteryBoxPlayerUrl = (
+  playerId: string,
+  gameId: string
+): string => {
+  return `/play/${playerId}/mystery-box?gameId=${gameId}`;
+};
