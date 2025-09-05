@@ -1,16 +1,18 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { MysteryBoxGameView } from "../../../services/mystery-box/types";
 import { SmallHeading } from "../../Atoms";
 import { PlayerPageLayout } from "../../PlayerPageLayout";
+import { PlayerBoxSelection } from "./PlayerBoxSelection";
 
 type Props = {
   game: MysteryBoxGameView;
   playerId: string;
+  selectBox: (boxId: number) => void;
 };
 
-const View = ({ game, playerId }: Props) => {
+const View = ({ game, playerId, selectBox }: Props) => {
   const player = useMemo(() => {
-    return game.players.find((player) => player.id === playerId);
+    return game.players.find((player) => player.id === playerId)!;
   }, [game.players, playerId]);
 
   if (!player) {
@@ -26,7 +28,14 @@ const View = ({ game, playerId }: Props) => {
       playerId={playerId}
       headerContent={<SmallHeading>Mystery Box ({game.id}) 🎁</SmallHeading>}
     >
-      <p>Hello {player.name}</p>
+      <p>
+        Hello {player.name} ({player.currentlySelectedBoxId})
+      </p>
+      <PlayerBoxSelection
+        round={game.currentRound}
+        player={player}
+        onSelect={selectBox}
+      />
     </PlayerPageLayout>
   );
 };

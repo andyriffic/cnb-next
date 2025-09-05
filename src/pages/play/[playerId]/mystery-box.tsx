@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import PlayerGameView from "../../../components/mystery-box/player";
 import { useSocketIo } from "../../../providers/SocketIoProvider";
 
@@ -14,8 +14,23 @@ function Page() {
     return mysteryBox.games.find((g) => g.id === gameId);
   }, [gameId, mysteryBox.games]);
 
+  const selectBox = useCallback(
+    (boxId: number) => {
+      if (!game) {
+        return;
+      }
+
+      mysteryBox.playerSelectBox(gameId, playerId, game.currentRound.id, boxId);
+    },
+    [game]
+  );
+
   return game ? (
-    <PlayerGameView game={game} playerId={playerId}></PlayerGameView>
+    <PlayerGameView
+      game={game}
+      playerId={playerId}
+      selectBox={selectBox}
+    ></PlayerGameView>
   ) : (
     <div>Game not found</div>
   );

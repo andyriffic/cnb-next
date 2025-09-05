@@ -7,6 +7,7 @@ import { DebugMysteryBoxGame } from "./DebugMysteryBox";
 import { MysteryBoxActivePlayers } from "./MysteryBoxActivePlayers";
 import { MysteryBoxCurrentRoundUi } from "./MysteryBoxCurrentRoundUi";
 import { MysteryBoxRoundHistory } from "./MysteryBoxRoundHistory";
+import { useMysteryBoxGameSound } from "./useMysteryBoxGameSound";
 import {
   MysteryBoxGameState,
   useMysteryBoxGameState,
@@ -18,6 +19,7 @@ type Props = {
 
 const View = ({ game }: Props) => {
   const gameState = useMysteryBoxGameState(game);
+  useMysteryBoxGameSound(game, gameState.gameState);
 
   return (
     <SpectatorPageLayout debug={<DebugMysteryBoxGame game={game} />}>

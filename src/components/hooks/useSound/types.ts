@@ -58,4 +58,9 @@ export type SoundName =
   | "space-race-rocket-collision"
   | "space-race-player-finish"
   | "coin-rankings-show-player"
-  | "coin-rankings-end";
+  | "coin-rankings-end"
+  | "mystery-box-waiting-to-select-box-music"
+  | "mystery-box-player-select-box"
+  | "mystery-box-move-players-to-boxes"
+  | "mystery-box-show-box-contents"
+  | "mystery-box-player-explode";

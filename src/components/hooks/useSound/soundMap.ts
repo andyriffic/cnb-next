@@ -61,6 +61,11 @@ export const defaultSounds: { [key in SoundName]: string } = {
   "space-race-player-finish": "/sounds/power_mode.mp3",
   "coin-rankings-show-player": "/sounds/default/blip_win.mp3",
   "coin-rankings-end": "/sounds/default/wms_win6.mp3",
+  "mystery-box-waiting-to-select-box-music": "/sounds/music/tmnt_sewers.mp3",
+  "mystery-box-player-select-box": "/sounds/bubble_pop.mp3",
+  "mystery-box-move-players-to-boxes": "/sounds/default/slide_whistle_sms.mp3",
+  "mystery-box-show-box-contents": "/sounds/spinning_heart.mp3",
+  "mystery-box-player-explode": "/sounds/balloon_pop_sound_loud.mp3",
 };
 
 export const xmasSounds: { [key in SoundName]: string } = {

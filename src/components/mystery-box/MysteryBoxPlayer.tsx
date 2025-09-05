@@ -3,9 +3,10 @@ import {
   MysteryBoxPlayer,
   MysteryBoxPlayerView,
 } from "../../services/mystery-box/types";
-import { PlayerAvatar } from "../PlayerAvatar";
+import { AvatarSize, PlayerAvatar } from "../PlayerAvatar";
 import { Attention } from "../animations/Attention";
 import { ExplodingPlayer } from "../migrated/gas-out/ExplodingPlayer";
+import { useDoOnce } from "../hooks/useDoOnce";
 
 const Container = styled.div`
   position: relative;
@@ -35,16 +36,33 @@ type Props = {
   player: MysteryBoxPlayerView;
   status: "active" | "exploded" | "winner";
   explode: boolean;
+  avatarSize: AvatarSize;
+  showSelectedStatus: boolean;
 };
 
-export const MysteryBoxPlayerUi = ({ player, status, explode }: Props) => {
+export const MysteryBoxPlayerUi = ({
+  player,
+  status,
+  explode,
+  avatarSize,
+  showSelectedStatus,
+}: Props) => {
   return (
     <Container>
       <ExplodingPlayerContainer exploded={explode}>
         <Attention animate={status === "winner"} animation="pulse">
-          <PlayerAvatar playerId={player.id} size="thumbnail" />
-          <div>
-            {player.status} {explode && <>💥</>}
+          <PlayerAvatar playerId={player.id} size={avatarSize} />
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              fontSize: "2rem",
+            }}
+          >
+            {/* {player.status === "waiting" && <>⏳</>} */}
+            {showSelectedStatus && player.status === "selected" && <>✅</>}
+            {/* {player.status} {explode && <>💥</>} */}
           </div>
         </Attention>
       </ExplodingPlayerContainer>

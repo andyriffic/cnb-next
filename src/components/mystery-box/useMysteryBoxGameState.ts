@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { MysteryBoxGameView } from "../../services/mystery-box/types";
+import { useSound } from "../hooks/useSound";
 
 export enum MysteryBoxGameState {
   WAITING_FOR_PLAYERS_TO_SELECT_BOX = 0,
@@ -30,7 +31,7 @@ export function useMysteryBoxGameState(
     ) {
       const timeout = setTimeout(() => {
         setGameState(MysteryBoxGameState.SHOW_PLAYER_BOX_SELECTIONS);
-      }, 1000);
+      }, 100);
 
       return () => clearTimeout(timeout);
     }
