@@ -1,6 +1,8 @@
 import type { GetServerSideProps } from "next";
 import Head from "next/head";
-import { getRandomJoke } from "../utils/joke";
+import { pipe } from "fp-ts/lib/function";
+import { getJokeIfExists, getRandomJoke } from "../utils/joke";
+import { getDayOfMonth } from "../utils/date";
 
 type Joke = {
   jokeText: string;
@@ -44,7 +46,11 @@ const Home = ({ joke }: { joke?: Joke }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const joke = getRandomJoke();
+  const joke = pipe(
+    getDayOfMonth() - 1,
+    getJokeIfExists,
+    (j) => j || getRandomJoke()
+  );
 
   return {
     props: {

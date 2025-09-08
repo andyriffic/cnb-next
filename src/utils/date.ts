@@ -25,3 +25,7 @@ export const getDayOfWeek = (date: Date = new Date()): DAY_OF_WEEK => {
 export const getDayName = (date: Date = new Date()): string => {
   return DAYS_OF_WEEK[date.getDay()] || "";
 };
+
+export const getDayOfMonth = (date: Date = new Date()): number => {
+  return date.getDate();
+};
