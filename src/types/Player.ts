@@ -21,6 +21,13 @@ export type PlayerDetails = {
   zombieRun?: ZombieRunDetails;
   achievements?: PlayerAchievements;
   spaceRace?: SpaceRaceDetails;
+  monthlyCoinTotals?: MonthlyCoinTotals;
+};
+
+export type MonthlyCoinTotals = {
+  [year: number]: {
+    [month: number]: number;
+  };
 };
 
 export type PacmanDetails = {

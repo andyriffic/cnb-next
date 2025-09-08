@@ -4,6 +4,7 @@ import {
   SpaceRaceDetails,
 } from "../../types/Player";
 import { getPlayer, updatePlayer } from "../../utils/data/aws-dynamodb";
+import { addToMonthlyCoinTotal } from "../../utils/player";
 import { generateRandomInt } from "../../utils/random";
 import { PlayerGameMoves } from "./types";
 
@@ -45,6 +46,10 @@ const updatePlayerGameMoves = (
         const availableCoins =
           (player.details?.availableCoins || 0) + totalCoinsWon;
         const totalCoins = (player.details?.totalCoins || 0) + totalCoinsWon;
+        const monthlyCoinTotals = addToMonthlyCoinTotal(
+          player.details?.monthlyCoinTotals,
+          totalCoinsWon
+        );
 
         updatePlayer(playerMoves.playerId, {
           ...player.details,
@@ -52,6 +57,7 @@ const updatePlayerGameMoves = (
           spaceRace: spaceRaceDetails,
           totalCoins,
           availableCoins,
+          monthlyCoinTotals,
         }).then(() => resolve());
       })
       .catch((err) => reject(err));

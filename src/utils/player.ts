@@ -1,4 +1,5 @@
-import { Player } from "../types/Player";
+import { MonthlyCoinTotals, Player } from "../types/Player";
+import { getDayOfMonth } from "./date";
 
 export type PlayerCoinRankings = PlayerCoinRankTier[];
 
@@ -33,4 +34,22 @@ export function groupPlayersByTotalCoins(
 
   rankTiers.sort((a, b) => b.totalCoins - a.totalCoins);
   return rankTiers.map((tier, index) => ({ ...tier, rank: index + 1 }));
+}
+
+export function addToMonthlyCoinTotal(
+  currentTotals: MonthlyCoinTotals | undefined = {},
+  coinsToAdd: number,
+  date: Date = new Date()
+): MonthlyCoinTotals {
+  const year = date.getFullYear();
+  const month = getDayOfMonth(date);
+  const yearTotals = currentTotals[year] || {};
+  const monthTotal = yearTotals[month] || 0;
+  return {
+    ...currentTotals,
+    [year]: {
+      ...yearTotals,
+      [month]: monthTotal + coinsToAdd,
+    },
+  };
 }
