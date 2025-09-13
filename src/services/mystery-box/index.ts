@@ -387,7 +387,7 @@ export function createMysteryBoxGameView(
     ),
     currentRound: createMysteryBoxRoundView(currentRound, game),
     previousRounds: game.rounds
-      .filter((round) => !!gameOverSummary || round.id !== game.currentRoundId)
+      .filter((round) => !!gameOverSummary || round.id < game.currentRoundId)
       .map((r) => createMysteryBoxRoundView(r, game)),
     gameOverSummary,
   };
@@ -427,6 +427,7 @@ function createPlayerView(
   );
 
   const chosenBoxContentsInPreviousRounds = game.rounds
+    .filter((round) => round.id < currentRound.id)
     .flatMap((round) => round.boxes)
     .filter((box) => box.playerIds.includes(player.id))
     .map((box) => box.contents);

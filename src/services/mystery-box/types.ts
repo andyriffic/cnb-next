@@ -59,6 +59,13 @@ export type MysteryBoxPlayerStatus =
   | "eliminated"
   | "winner";
 
+export type MysteryBoxLootTotalsByType = {
+  [key in MysteryBoxContentsType]?: {
+    title: string;
+    total: number;
+  };
+};
+
 export type MysteryBoxPlayerView = {
   id: string;
   name: string;
@@ -66,12 +73,7 @@ export type MysteryBoxPlayerView = {
   status: MysteryBoxPlayerStatus;
   // eliminatedRoundId?: number;
   currentlySelectedBoxId?: number;
-  lootTotals: {
-    [key in MysteryBoxContentsType]: {
-      title: string;
-      total: number;
-    };
-  };
+  lootTotals: MysteryBoxLootTotalsByType;
 };
 
 export type MysteryBoxBoxView = {

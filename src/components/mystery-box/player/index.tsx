@@ -3,6 +3,7 @@ import { MysteryBoxGameView } from "../../../services/mystery-box/types";
 import { SmallHeading } from "../../Atoms";
 import { PlayerPageLayout } from "../../PlayerPageLayout";
 import { PlayerBoxSelection } from "./PlayerBoxSelection";
+import { PlayerLootTotals } from "./PlayerLootTotals";
 
 type Props = {
   game: MysteryBoxGameView;
@@ -36,6 +37,7 @@ const View = ({ game, playerId, selectBox }: Props) => {
         player={player}
         onSelect={selectBox}
       />
+      <PlayerLootTotals player={player} />
     </PlayerPageLayout>
   );
 };

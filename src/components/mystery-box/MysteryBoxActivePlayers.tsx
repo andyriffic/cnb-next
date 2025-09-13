@@ -163,8 +163,11 @@ export const MysteryBoxActivePlayers = ({
       gameState.gameState ===
       MysteryBoxGameState.WAITING_FOR_PLAYERS_TO_SELECT_BOX
     ) {
-      playerPositionsRef.current = initialPositionMap;
-      return initialPositionMap;
+      playerPositionsRef.current = getInitialPositionMap(
+        activePlayers,
+        windowDimensions.width
+      );
+      return playerPositionsRef.current;
     } else if (
       gameState.gameState >= MysteryBoxGameState.SHOW_PLAYER_BOX_SELECTIONS
     ) {
