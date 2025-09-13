@@ -30,7 +30,7 @@ type Position = { topPercent: number; rightPercent: number };
 const DEFAULT_POSITION: Position = { topPercent: 30, rightPercent: 50 };
 
 type PlayerWithCoordinates = {
-  player: MysteryBoxPlayerView;
+  playerId: string;
   coordinates: Coordinates;
 };
 
@@ -90,6 +90,27 @@ function getPlayerCoordinates(
   return { x: 0, y: 0 };
 }
 
+function getInitialPositionMap(
+  activePlayers: MysteryBoxPlayerView[],
+  windowWidth: number
+): PlayerWithCoordinates[] {
+  const positionMap = createCircularPositionMap(
+    400,
+    400,
+    activePlayers.length,
+    {
+      x: windowWidth / 2 - 200,
+      y: 200,
+    }
+  );
+
+  const pp = activePlayers.map<PlayerWithCoordinates>((p, i) => ({
+    playerId: p.id,
+    coordinates: positionMap[i] || { x: 0, y: 0 },
+  }));
+  return pp;
+}
+
 function getPlayerBoxSelectionCoordinates(
   activePlayers: MysteryBoxPlayerView[],
   boxId: number,
@@ -107,7 +128,7 @@ function getPlayerBoxSelectionCoordinates(
   );
 
   const pp = playersChosenBox.map<PlayerWithCoordinates>((p, i) => ({
-    player: p,
+    playerId: p.id,
     coordinates: box1PositionMap[i] || { x: 0, y: 0 },
   }));
   return pp;
@@ -130,37 +151,22 @@ export const MysteryBoxActivePlayers = ({
     height: typeof window !== "undefined" ? window.innerHeight : 0,
   });
 
+  const activePlayers = game.players.filter((p) => p.status !== "eliminated");
+
   const activePlayerPositions = useMemo(() => {
-    const activePlayers = game.players.filter((p) => p.status !== "eliminated");
+    const initialPositionMap =
+      playerPositionsRef.current.length !== activePlayers.length
+        ? getInitialPositionMap(activePlayers, windowDimensions.width)
+        : playerPositionsRef.current;
 
     if (
       gameState.gameState ===
-        MysteryBoxGameState.WAITING_FOR_PLAYERS_TO_SELECT_BOX &&
-      playerPositionsRef.current.length !== activePlayers.length
+      MysteryBoxGameState.WAITING_FOR_PLAYERS_TO_SELECT_BOX
     ) {
-      // Initialize player positions in a circle
-      const activePlayers = game.players.filter(
-        (p) => p.status !== "eliminated"
-      );
-      const positionMap = createCircularPositionMap(
-        400,
-        400,
-        game.players.filter((p) => p.status !== "eliminated").length,
-        {
-          x: windowDimensions.width / 2 - 200,
-          y: 200,
-        }
-      );
-
-      const pp = activePlayers.map<PlayerWithCoordinates>((p, i) => ({
-        player: p,
-        coordinates: positionMap[i] || { x: 0, y: 0 },
-      }));
-      playerPositionsRef.current = pp;
-      return pp;
+      playerPositionsRef.current = initialPositionMap;
+      return initialPositionMap;
     } else if (
-      gameState.gameState === MysteryBoxGameState.SHOW_PLAYER_BOX_SELECTIONS &&
-      activePlayers.length === playerPositionsRef.current.length
+      gameState.gameState >= MysteryBoxGameState.SHOW_PLAYER_BOX_SELECTIONS
     ) {
       const updatedPlayerPositionsArray = [
         ...getPlayerBoxSelectionCoordinates(activePlayers, 0, {
@@ -183,7 +189,7 @@ export const MysteryBoxActivePlayers = ({
 
       const updatedPlayerPositions = playerPositionsRef.current.map((pp) => {
         const newPosition = updatedPlayerPositionsArray.find(
-          (p) => p.player.id === pp.player.id
+          (p) => p.playerId === pp.playerId
         );
         if (newPosition) {
           return newPosition;
@@ -196,27 +202,27 @@ export const MysteryBoxActivePlayers = ({
     } else {
       return playerPositionsRef.current;
     }
-  }, [gameState.gameState, game]);
+  }, [activePlayers, gameState.gameState, windowDimensions.width]);
 
   // const positionMap = createCircularPositionMap(400, 400, activePlayers.length);
   return (
     <>
-      {activePlayerPositions.map((playerWithCoordinates, index) => {
+      {activePlayers.map((player) => {
+        const coordinates = activePlayerPositions.find(
+          (p) => p.playerId === player.id
+        )!.coordinates;
+
         const currentBox = game.currentRound.boxes.find(
-          (b) => b.id === playerWithCoordinates.player.currentlySelectedBoxId
+          (b) => b.id === player.currentlySelectedBoxId
         );
         // const offset = positionMap[index] || { x: 0, y: 0 };
         return (
-          <PositionedPlayerPixels
-            key={playerWithCoordinates.player.id}
-            coordinates={playerWithCoordinates.coordinates}
-          >
+          <PositionedPlayerPixels key={player.id} coordinates={coordinates}>
             <MysteryBoxPlayerUi
-              player={playerWithCoordinates.player}
+              player={player}
               status={
                 game.gameOverSummary &&
-                game.gameOverSummary.outrightWinnerPlayerId ===
-                  playerWithCoordinates.player.id
+                game.gameOverSummary.outrightWinnerPlayerId === player.id
                   ? "winner"
                   : "active"
               }

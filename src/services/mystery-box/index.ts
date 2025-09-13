@@ -119,7 +119,7 @@ function getCustomRoundBoxContents(roundNumber: number): MysteryBoxContents[] {
     case 0: {
       return [
         createBoxContents("points", 1),
-        createBoxContents("empty"),
+        createBoxContents("points", 2),
         createBoxContents("empty"),
         createBoxContents("empty"),
       ];
@@ -137,7 +137,7 @@ function getCustomRoundBoxContents(roundNumber: number): MysteryBoxContents[] {
       return [
         createBoxContents("bomb"),
         createBoxContents("points", 1),
-        createBoxContents("empty"),
+        createBoxContents("points", 2),
         createBoxContents("empty"),
       ];
     }
@@ -426,11 +426,32 @@ function createPlayerView(
     box.playerIds.includes(player.id)
   );
 
+  const chosenBoxContentsInPreviousRounds = game.rounds
+    .flatMap((round) => round.boxes)
+    .filter((box) => box.playerIds.includes(player.id))
+    .map((box) => box.contents);
+
+  const lootTotalsSoFar = chosenBoxContentsInPreviousRounds.reduce(
+    (acc, content) => {
+      const existing = acc[content.type];
+      if (existing) {
+        existing.total += content.value;
+      } else {
+        acc[content.type] = {
+          title: content.type,
+          total: content.value,
+        };
+      }
+      return acc;
+    },
+    {} as { [key in MysteryBoxContentsType]: { title: string; total: number } }
+  );
+
   return {
     id: player.id,
     name: player.name,
     status: getPlayerStatus(player.id, selectedBox, game, gameOverSummary),
-    // lootTotals: [],
+    lootTotals: lootTotalsSoFar,
     currentlySelectedBoxId: selectedBox ? selectedBox.id : undefined,
     // eliminatedRoundId: undefined,
     advantage: player.advantage,

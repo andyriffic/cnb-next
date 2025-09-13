@@ -66,12 +66,12 @@ export type MysteryBoxPlayerView = {
   status: MysteryBoxPlayerStatus;
   // eliminatedRoundId?: number;
   currentlySelectedBoxId?: number;
-  // lootTotals: {
-  //   [key in MysteryBoxContentsType]: {
-  //     title: string;
-  //     total: number;
-  //   };
-  // }[];
+  lootTotals: {
+    [key in MysteryBoxContentsType]: {
+      title: string;
+      total: number;
+    };
+  };
 };
 
 export type MysteryBoxBoxView = {
