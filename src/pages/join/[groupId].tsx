@@ -278,7 +278,7 @@ function Page({ regularPlayers }: Props) {
                   )}
                 </PlayerHintContainer>
                 <GameSelectorContainer>
-                  {suggestedGame ? (
+                  {suggestedGame !== "ask-audience" ? (
                     <>
                       {availableGameTypes.map((gameType) => {
                         return (
