@@ -64,7 +64,7 @@ export const AudienceGameSelection = ({ playerIds, onGameSelected }: Props) => {
       disabled={playerIds.length < 3}
     >
       <>
-        <SuggestedText>Wait until all players are ready 😅</SuggestedText>
+        <SuggestedText>Wait until all players have joined 😅</SuggestedText>
         <br />
       </>
       Ask the audience 💬

@@ -6,9 +6,13 @@ import { CaptionText } from "./Atoms";
 
 type Props = {
   group: PlayerGroup;
+  setForceShowAllGameSelection: (show: boolean) => void;
 };
 
-export const DebugPlayerJoin = ({ group }: Props) => {
+export const DebugPlayerJoin = ({
+  group,
+  setForceShowAllGameSelection,
+}: Props) => {
   const { names } = usePlayerNames();
   const { groupJoin } = useSocketIo();
 
@@ -28,6 +32,10 @@ export const DebugPlayerJoin = ({ group }: Props) => {
           </button>
         ))}
       </div>
+      <hr />
+      <button type="button" onClick={() => setForceShowAllGameSelection(true)}>
+        Force Show All Game Selection
+      </button>
     </div>
   );
 };

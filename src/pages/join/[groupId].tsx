@@ -169,6 +169,8 @@ function Page({ regularPlayers }: Props) {
   const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [showWaitingPlayersHint, setShowWaitingPlayersHint] = useState(false);
   const [suggestedGame] = useState(getSuggestedGame(new Date()));
+  const [forceShowAllGameSelection, setForceShowAllGameSelection] =
+    useState(false);
 
   useEffect(() => {
     const joinMusic = loop("join-music");
@@ -208,7 +210,16 @@ function Page({ regularPlayers }: Props) {
     group && group.players.length > 20 ? "thumbnail" : "small";
 
   return (
-    <SpectatorPageLayout debug={group && <DebugPlayerJoin group={group} />}>
+    <SpectatorPageLayout
+      debug={
+        group && (
+          <DebugPlayerJoin
+            group={group}
+            setForceShowAllGameSelection={setForceShowAllGameSelection}
+          />
+        )
+      }
+    >
       <SplitScreenContainer>
         <JoinDetailsContainer>
           <JoinDetailsInfoContainer>
@@ -278,7 +289,8 @@ function Page({ regularPlayers }: Props) {
                   )}
                 </PlayerHintContainer>
                 <GameSelectorContainer>
-                  {suggestedGame !== "ask-audience" ? (
+                  {suggestedGame !== "ask-audience" ||
+                  forceShowAllGameSelection ? (
                     <>
                       {availableGameTypes.map((gameType) => {
                         return (
