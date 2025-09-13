@@ -5,6 +5,7 @@ import {
   xmasSounds,
 } from "../components/hooks/useSound/soundMap";
 import { CnyJoinScreenDecoration } from "./chinese-new-year/JoinScreenDecoration";
+import { JoinScreenDecoration } from "./default/JoinScreenDecoration";
 import { GlobalGameTheme, ThemeTokens } from "./types";
 import { XmasJoinScreenDecoration } from "./xmas/JoinScreenDecoration";
 
@@ -37,7 +38,9 @@ const DEFAULT_THEME: GlobalGameTheme = {
     },
   },
   sounds: defaultSounds,
-  components: {},
+  components: {
+    JoinScreenDecoration: <JoinScreenDecoration />,
+  },
 };
 
 const XMAS_THEME: GlobalGameTheme = {
