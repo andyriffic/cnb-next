@@ -29,3 +29,7 @@ export const getDayName = (date: Date = new Date()): string => {
 export const getDayOfMonth = (date: Date = new Date()): number => {
   return date.getDate();
 };
+
+export const getMonthNumber = (date: Date = new Date()): number => {
+  return date.getMonth();
+};
