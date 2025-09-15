@@ -31,5 +31,5 @@ export const getDayOfMonth = (date: Date = new Date()): number => {
 };
 
 export const getMonthNumber = (date: Date = new Date()): number => {
-  return date.getMonth();
+  return date.getMonth() + 1;
 };
