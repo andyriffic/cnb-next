@@ -23,7 +23,10 @@ import {
 type createGameProps = {
   id: string;
   players: Player[];
-  mysteryBoxCreator?: (id: number) => MysteryBox[];
+  mysteryBoxCreator?: (id: number) => {
+    boxes: MysteryBox[];
+    specialInfo?: string;
+  };
 };
 
 export const createMysteryBoxGame = ({
@@ -114,47 +117,62 @@ const getAllPlayerIdsSelectedOnLevel = (
   return level.boxes.flatMap((slot) => slot.playerIds);
 };
 
-function getCustomRoundBoxContents(roundNumber: number): MysteryBoxContents[] {
+function getCustomRoundBoxContents(roundNumber: number): {
+  boxes: MysteryBoxContents[];
+  specialInfo?: string;
+} {
   switch (roundNumber) {
     case 0: {
-      return [
-        createBoxContents("points", 1),
-        createBoxContents("points", 2),
-        createBoxContents("empty"),
-        createBoxContents("empty"),
-      ];
+      return {
+        specialInfo: "Free round - no bombs!",
+        boxes: [
+          createBoxContents("points", 1),
+          createBoxContents("points", 2),
+          createBoxContents("empty"),
+          createBoxContents("empty"),
+        ],
+      };
     }
     case 4: {
-      return [
-        createBoxContents("bomb"),
-        createBoxContents("bomb"),
-        createBoxContents("points", 1),
-        createBoxContents("empty"),
-      ];
+      return {
+        specialInfo: "2 bombs this round! - choose wisely!",
+        boxes: [
+          createBoxContents("bomb"),
+          createBoxContents("bomb"),
+          createBoxContents("points", 1),
+          createBoxContents("empty"),
+        ],
+      };
     }
 
     default: {
-      return [
-        createBoxContents("bomb"),
-        createBoxContents("points", 1),
-        createBoxContents("points", 2),
-        createBoxContents("empty"),
-      ];
+      return {
+        boxes: [
+          createBoxContents("bomb"),
+          createBoxContents("points", 1),
+          createBoxContents("points", 2),
+          createBoxContents("empty"),
+        ],
+      };
     }
   }
 }
 
-const randomBoxCreator = (roundId: number): MysteryBox[] => {
-  const randomBoxContents = shuffleArrayJestSafe(
-    getCustomRoundBoxContents(roundId)
-  );
+const randomBoxCreator = (
+  roundId: number
+): { boxes: MysteryBox[]; specialInfo?: string } => {
+  const roundWithBoxes = getCustomRoundBoxContents(roundId);
+  const randomBoxContents = shuffleArrayJestSafe(roundWithBoxes.boxes);
 
-  return [
-    createMysteryBox(0, randomBoxContents[0]!),
-    createMysteryBox(1, randomBoxContents[1]!),
-    createMysteryBox(2, randomBoxContents[2]!),
-    createMysteryBox(3, randomBoxContents[3]!),
-  ];
+  return {
+    specialInfo: roundWithBoxes.specialInfo,
+    boxes: [
+      createMysteryBox(0, randomBoxContents[0]!),
+      createMysteryBox(1, randomBoxContents[1]!),
+      createMysteryBox(2, randomBoxContents[2]!),
+      createMysteryBox(3, randomBoxContents[3]!),
+    ],
+  };
 };
 
 export const createBoxContents = (
@@ -179,9 +197,11 @@ const createNewGameRound = (
   id: number,
   mysteryBoxCreator: MysteryBoxCreator
 ): MysteryBoxGameRound => {
+  const boxContents = mysteryBoxCreator(id);
   return {
     id,
-    boxes: mysteryBoxCreator(id),
+    specialInfo: boxContents.specialInfo,
+    boxes: boxContents.boxes,
   };
 };
 
@@ -359,16 +379,23 @@ function createGameOverSummary(
 ): MysteryBoxGameOverSummary | undefined {
   const allActivePlayers = getAllActivePlayerIds(game);
 
-  if (allActivePlayers.length === 0) {
-    // No one won 😢
-    return {};
-  } else if (allActivePlayers.length === 1) {
-    // One winner 🎉
-    return { outrightWinnerPlayerId: allActivePlayers[0] };
+  if (allActivePlayers.length > 1) {
+    // Game still going
+    return;
   }
 
-  // Game still going
-  return;
+  if (allActivePlayers.length === 0) {
+    // No one won 😢
+    return {
+      maxRoundId: game.currentRoundId,
+    };
+  } else if (allActivePlayers.length === 1) {
+    // One winner 🎉
+    return {
+      outrightWinnerPlayerId: allActivePlayers[0],
+      maxRoundId: game.currentRoundId,
+    };
+  }
 }
 
 export function createMysteryBoxGameView(
@@ -403,6 +430,7 @@ function createMysteryBoxRoundView(
   );
   return {
     id: round.id,
+    specialInfo: round.specialInfo,
     status:
       round.id !== game.currentRoundId
         ? "complete"

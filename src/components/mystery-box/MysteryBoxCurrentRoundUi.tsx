@@ -59,6 +59,9 @@ export const MysteryBoxCurrentRoundUi = ({ round, gameState }: Props) => {
   return (
     <>
       <SmallHeading>Round {round.id}</SmallHeading>
+      <SmallHeading style={{ textAlign: "center" }}>
+        {round.specialInfo}
+      </SmallHeading>
       <BoxLayoutContainer>
         {round.boxes.map((box, index) => {
           const position = BoxPositions[index] || {};
@@ -66,7 +69,7 @@ export const MysteryBoxCurrentRoundUi = ({ round, gameState }: Props) => {
             <PositionedBox key={box.id} position={position}>
               <BoxOptionContainerItem>
                 <MysteryBoxUi
-                  key={box.id}
+                  key={`${round.id}-${box.id}`}
                   box={box}
                   open={gameState.boxesOpen}
                 />

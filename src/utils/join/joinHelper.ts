@@ -10,11 +10,11 @@ export function getSuggestedGame(date: Date): GameTypes | "ask-audience" {
       return "number-crunch";
     }
     case "Tuesday": {
-      return "rps";
+      return "balloon";
     }
     // case "Wednesday":
     case "Thursday": {
-      return "balloon";
+      return "rps";
     }
     case "Friday": {
       return "ask-audience";

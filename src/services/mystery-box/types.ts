@@ -8,6 +8,7 @@ export type MysteryBoxGame = {
 export type MysteryBoxGameRound = {
   id: number;
   boxes: MysteryBox[];
+  specialInfo?: string;
 };
 
 export type MysteryBox = {
@@ -30,7 +31,10 @@ export type MysteryBoxPlayer = {
   advantage: boolean;
 };
 
-export type MysteryBoxCreator = (id: number) => MysteryBox[];
+export type MysteryBoxCreator = (id: number) => {
+  boxes: MysteryBox[];
+  specialInfo?: string;
+};
 
 //Helper tyoes?
 
@@ -51,6 +55,7 @@ export type MysteryBoxGameView = {
 
 export type MysteryBoxGameOverSummary = {
   outrightWinnerPlayerId?: string;
+  maxRoundId: number;
 };
 
 export type MysteryBoxPlayerStatus =
@@ -74,6 +79,7 @@ export type MysteryBoxPlayerView = {
   // eliminatedRoundId?: number;
   currentlySelectedBoxId?: number;
   lootTotals: MysteryBoxLootTotalsByType;
+  eliminatedRoundId?: number;
 };
 
 export type MysteryBoxBoxView = {
@@ -84,6 +90,7 @@ export type MysteryBoxBoxView = {
 
 export type MysteryBoxGameRoundView = {
   id: number;
+  specialInfo?: string;
   status: "in-progress" | "ready" | "complete";
   boxes: MysteryBox[];
 };

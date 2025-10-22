@@ -87,7 +87,10 @@ test("Cannot create new round when not all players have selected a box", () => {
 
 test("Cannot create new round when all players are out", () => {
   const createBombOnlyBoxes = () => {
-    return [createMysteryBox(0, createBoxContents("bomb"))];
+    return {
+      boxes: [createMysteryBox(0, createBoxContents("bomb"))],
+      specialInfo: "All Bombs",
+    };
   };
 
   const result = pipe(
@@ -109,10 +112,12 @@ test("Player cannot select a box if they have been elimindated", () => {
   const BOMB_BOX = 0;
 
   const boxCreator = () => {
-    return [
-      createMysteryBox(BOMB_BOX, createBoxContents("bomb")),
-      createMysteryBox(GOOD_BOX, createBoxContents("points", 1)),
-    ];
+    return {
+      boxes: [
+        createMysteryBox(BOMB_BOX, createBoxContents("bomb")),
+        createMysteryBox(GOOD_BOX, createBoxContents("points", 1)),
+      ],
+    };
   };
 
   const result = pipe(

@@ -6,6 +6,7 @@ import cactus02Image from "./catcus-02.png";
 import pixelCinbyImage from "./cinby-pixel-03.png";
 import dinosaurImage from "./dino-01.png";
 import rocketImage from "./pixel-rocket.png";
+import giftBoxImage from "./gift-box.png";
 
 const Container = styled.div`
   border-bottom: 50px solid #9c8df5;
@@ -24,7 +25,7 @@ const CactusContainer = styled.div`
 
 const CharacterContainer = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
   align-items: flex-end;
   position: absolute;
   bottom: 0;
@@ -60,6 +61,7 @@ export function JoinScreenDecoration(): JSX.Element {
           style={{ position: "absolute", bottom: "0", left: "5px" }}
         />
         <Image src={pixelCinbyImage} alt="" width={40} />
+        <Image src={giftBoxImage} alt="" width={30} />
       </CharacterContainer>
     </Container>
   );

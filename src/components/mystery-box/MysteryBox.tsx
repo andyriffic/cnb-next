@@ -22,6 +22,17 @@ const BoxLidAnimation = keyframes`
   }
 `;
 
+const RevealBoxContents = keyframes`
+0%{
+            transform: translate3d(-50%, 110%, 0);
+            opacity: 0;
+  }
+  100% {
+            transform: translate3d(-50%, 0, 0);
+            opacity: 1;
+  }
+`;
+
 const Box = styled.div`
   position: relative;
   height: 100px;
@@ -67,13 +78,7 @@ const BoxContents = styled.div<{ isOpen: boolean }>`
   left: 50%;
   top: 0;
 
-  ${(props) =>
-    props.isOpen &&
-    css`
-      opacity: 1;
-      z-index: 1;
-      transform: translate3d(-50%, 0, 0);
-    `}
+  animation: ${RevealBoxContents} 1s ease-in-out forwards;
 `;
 
 const BoxLid = styled.div<{ isOpen: boolean; primaryColor: string }>`
@@ -159,9 +164,11 @@ export const MysteryBoxUi = ({ box, onReveal, open }: Props) => {
   //codepen.io/RoyLee0702/pen/RwNgVya
   return (
     <Box>
+      {open && (
+        <BoxContents isOpen={open}>{getBoxContents(box.contents)}</BoxContents>
+      )}
       <BoxBody primaryColor={boxColorHex} />
       <BoxLid isOpen={open} primaryColor={boxColorHex} />
-      <BoxContents isOpen={open}>{getBoxContents(box.contents)}</BoxContents>
     </Box>
     // <div style={{ display: "flex", gap: "0.5rem" }}>
     //   <SmallHeading style={{ textAlign: "center" }}>
