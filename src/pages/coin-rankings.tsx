@@ -1,12 +1,18 @@
+import { get } from "http";
 import { GetServerSideProps } from "next";
 import ScreenView from "../components/pages/coin-rankings";
 import { SpectatorPageLayout } from "../components/SpectatorPageLayout";
 import { getAllPlayers } from "../utils/data/aws-dynamodb";
-import { PlayerCoinRankings, groupPlayersByTotalCoins } from "../utils/player";
+import {
+  PlayerCoinTotalByYearAndMonth,
+  getPlayersCoinRankingsForYearAndMonth,
+  groupPlayersByTotalCoins,
+} from "../utils/player";
 import { hasTotalCoins, isRegularPlayer } from "../types/Player";
+import { getYearAndMonth } from "../utils/date";
 
 type Props = {
-  coinRankings?: PlayerCoinRankings;
+  coinRankings?: PlayerCoinTotalByYearAndMonth;
 };
 
 function Page({ coinRankings }: Props) {
@@ -32,13 +38,23 @@ export const getServerSideProps: GetServerSideProps = async () => {
     };
   }
 
-  const activePlayers = players.filter(
-    (p) => isRegularPlayer(p) || hasTotalCoins(p)
+  const activePlayers = players.filter((p) => isRegularPlayer(p));
+  const currentYearAndMonth = getYearAndMonth();
+  const thisMonthsCoinRankings = getPlayersCoinRankingsForYearAndMonth(
+    activePlayers,
+    currentYearAndMonth.year,
+    currentYearAndMonth.month
   );
+
+  const coinRankings: PlayerCoinTotalByYearAndMonth = {
+    [currentYearAndMonth.year]: {
+      [currentYearAndMonth.month]: thisMonthsCoinRankings,
+    },
+  };
 
   return {
     props: {
-      coinRankings: groupPlayersByTotalCoins(activePlayers),
+      coinRankings,
     },
   };
 };

@@ -1,37 +1,17 @@
-import styled from "styled-components";
-import { useEffect } from "react";
-import { PlayerCoinRankings } from "../../../utils/player";
-import { SmallHeading } from "../../Atoms";
+import { getYearAndMonth } from "../../../utils/date";
+import { PlayerCoinTotalByYearAndMonth } from "../../../utils/player";
 import { SpectatorPageLayout } from "../../SpectatorPageLayout";
-import { Appear } from "../../animations/Appear";
-import { useSound } from "../../hooks/useSound";
-import { CoinTierDisplay } from "./CoinTierDisplay";
-import { useCoinRankDisplayTiming } from "./useCoinRankDisplayTiming";
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  align-items: flex-start;
-  margin: 0 3rem;
-`;
+import { CoinTierAvailableDatesMenu } from "./CoinTierAvailableDatesMenu";
+import { DisplayMonthlyCoinRankings } from "./DisplayMonthlyCoinRankings";
 
 type Props = {
-  coinRankings: PlayerCoinRankings;
+  coinRankings: PlayerCoinTotalByYearAndMonth;
 };
 
 const View = ({ coinRankings }: Props) => {
-  const coinUiState = useCoinRankDisplayTiming(coinRankings);
-  const { play } = useSound();
-
-  const tierFinished = () => {
-    if (!coinUiState.allTiersShown) {
-      coinUiState.showNextTier();
-      return;
-    }
-
-    play("coin-rankings-end");
-  };
+  const currentYearAndMonth = getYearAndMonth();
+  const selectedMonth =
+    coinRankings[currentYearAndMonth.year]?.[currentYearAndMonth.month];
 
   return (
     <SpectatorPageLayout scrollable={true}>
@@ -41,22 +21,18 @@ const View = ({ coinRankings }: Props) => {
       >
         Next Tier
       </button> */}
-      <SmallHeading style={{ marginBottom: "2rem" }}>
-        This months Coin Winners
-      </SmallHeading>
-
-      <Container>
-        {coinUiState.tiers.map((tierUi) => {
-          return tierUi.show ? (
-            <Appear key={tierUi.totalCoins} animation="text-focus-in">
-              <CoinTierDisplay
-                coinTier={tierUi}
-                onFinishedDisplaying={tierFinished}
-              />
-            </Appear>
-          ) : null;
-        })}
-      </Container>
+      <CoinTierAvailableDatesMenu
+        totalsByYearAndMonth={coinRankings}
+        onSelectDate={() => {}}
+      />
+      {selectedMonth && (
+        <DisplayMonthlyCoinRankings
+          key={`${currentYearAndMonth.year}-${currentYearAndMonth.month}`}
+          monthlyCoinTotals={selectedMonth}
+          year={currentYearAndMonth.year}
+          month={currentYearAndMonth.month}
+        />
+      )}
     </SpectatorPageLayout>
   );
 };

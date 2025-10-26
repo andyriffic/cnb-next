@@ -1,7 +1,11 @@
 import { MonthlyCoinTotals, Player } from "../types/Player";
 import { getDayOfMonth, getMonthNumber } from "./date";
 
-export type PlayerCoinRankings = PlayerCoinRankTier[];
+export type PlayerCoinTotalByYearAndMonth = {
+  [year: number]: {
+    [month: number]: PlayerCoinRankTier[];
+  };
+};
 
 export type PlayerCoinRankTier = {
   title: string;
@@ -15,6 +19,35 @@ export function groupPlayersByTotalCoins(
 ): PlayerCoinRankTier[] {
   const rankTiers = players.reduce<PlayerCoinRankTier[]>((acc, player) => {
     const playersTotalCoins = player.details?.totalCoins || 0;
+
+    const existingTier = acc.find(
+      (tier) => tier.totalCoins === playersTotalCoins
+    );
+
+    if (existingTier) {
+      existingTier.playerIds.push(player.id);
+    } else {
+      acc.push({
+        title: `Total Coins: ${playersTotalCoins}`,
+        totalCoins: playersTotalCoins,
+        playerIds: [player.id],
+      });
+    }
+    return acc;
+  }, []);
+
+  rankTiers.sort((a, b) => b.totalCoins - a.totalCoins);
+  return rankTiers.map((tier, index) => ({ ...tier, rank: index + 1 }));
+}
+
+export function getPlayersCoinRankingsForYearAndMonth(
+  players: Player[],
+  year: number,
+  month: number
+): PlayerCoinRankTier[] {
+  const rankTiers = players.reduce<PlayerCoinRankTier[]>((acc, player) => {
+    const playersTotalCoins =
+      player.details?.monthlyCoinTotals?.[year]?.[month] || 0;
 
     const existingTier = acc.find(
       (tier) => tier.totalCoins === playersTotalCoins

@@ -18,6 +18,13 @@ export enum DAY_OF_WEEK {
   SATURDAY = 6,
 }
 
+export const getMonthDisplayName = (monthNumber: number): string => {
+  // write a function that converts a month number (1-12) to a month name
+  const date = new Date();
+  date.setMonth(monthNumber - 1);
+  return date.toLocaleString("default", { month: "long" });
+};
+
 export const getDayOfWeek = (date: Date = new Date()): DAY_OF_WEEK => {
   return date.getDay();
 };
@@ -32,4 +39,16 @@ export const getDayOfMonth = (date: Date = new Date()): number => {
 
 export const getMonthNumber = (date: Date = new Date()): number => {
   return date.getMonth() + 1;
+};
+
+export const getYearAndMonth = (
+  date: Date = new Date()
+): {
+  year: number;
+  month: number;
+} => {
+  return {
+    year: date.getFullYear(),
+    month: getMonthNumber(date),
+  };
 };

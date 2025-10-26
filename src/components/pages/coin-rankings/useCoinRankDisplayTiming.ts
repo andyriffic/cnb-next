@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { PlayerCoinRankings, PlayerCoinRankTier } from "../../../utils/player";
+import { PlayerCoinRankTier } from "../../../utils/player";
 
 export type CoinRankUiState = {
   tiers: PlayerCoinRankTierWithUi[];
@@ -12,7 +12,7 @@ export type PlayerCoinRankTierWithUi = PlayerCoinRankTier & {
 };
 
 export const useCoinRankDisplayTiming = (
-  coinRankings: PlayerCoinRankings
+  coinRankings: PlayerCoinRankTier[]
 ): CoinRankUiState => {
   const [coinRankUiTierState, setCoinRankUiTierState] = useState(
     getInititalState(coinRankings)
@@ -48,7 +48,7 @@ export const useCoinRankDisplayTiming = (
   }
 
   function getInititalState(
-    coinRankings: PlayerCoinRankings
+    coinRankings: PlayerCoinRankTier[]
   ): PlayerCoinRankTierWithUi[] {
     const lowestTier = coinRankings[coinRankings.length - 1]!;
     return coinRankings.reduce<PlayerCoinRankTierWithUi[]>((acc, tier) => {
