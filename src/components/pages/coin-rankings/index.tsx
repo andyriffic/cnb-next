@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { getYearAndMonth } from "../../../utils/date";
 import { PlayerCoinTotalByYearAndMonth } from "../../../utils/player";
 import { SpectatorPageLayout } from "../../SpectatorPageLayout";
@@ -10,8 +11,12 @@ type Props = {
 
 const View = ({ coinRankings }: Props) => {
   const currentYearAndMonth = getYearAndMonth();
-  const selectedMonth =
-    coinRankings[currentYearAndMonth.year]?.[currentYearAndMonth.month];
+  const [selectedCoinRankings, setSelectedCoinRankings] = useState({
+    year: currentYearAndMonth.year,
+    month: currentYearAndMonth.month,
+    rankings:
+      coinRankings[currentYearAndMonth.year]?.[currentYearAndMonth.month],
+  });
 
   return (
     <SpectatorPageLayout scrollable={true}>
@@ -23,14 +28,20 @@ const View = ({ coinRankings }: Props) => {
       </button> */}
       <CoinTierAvailableDatesMenu
         totalsByYearAndMonth={coinRankings}
-        onSelectDate={() => {}}
+        onSelectDate={(year, month) => {
+          setSelectedCoinRankings({
+            year,
+            month,
+            rankings: coinRankings[year]?.[month],
+          });
+        }}
       />
-      {selectedMonth && (
+      {selectedCoinRankings.rankings && (
         <DisplayMonthlyCoinRankings
-          key={`${currentYearAndMonth.year}-${currentYearAndMonth.month}`}
-          monthlyCoinTotals={selectedMonth}
-          year={currentYearAndMonth.year}
-          month={currentYearAndMonth.month}
+          key={`${selectedCoinRankings.year}-${selectedCoinRankings.month}`}
+          monthlyCoinTotals={selectedCoinRankings.rankings}
+          year={selectedCoinRankings.year}
+          month={selectedCoinRankings.month}
         />
       )}
     </SpectatorPageLayout>

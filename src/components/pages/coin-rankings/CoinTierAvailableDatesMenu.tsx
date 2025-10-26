@@ -22,7 +22,6 @@ export const CoinTierAvailableDatesMenu = ({
           .sort((a, b) => b - a);
         return (
           <div key={year}>
-            <h3>{year}</h3>
             <ul>
               {months.map((month) => (
                 <li key={month}>

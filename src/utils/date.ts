@@ -52,3 +52,13 @@ export const getYearAndMonth = (
     month: getMonthNumber(date),
   };
 };
+
+export const getPreviousYearAndMonth = (
+  year: number,
+  month: number
+): { year: number; month: number } => {
+  if (month === 1) {
+    return { year: year - 1, month: 12 };
+  }
+  return { year, month: month - 1 };
+};
