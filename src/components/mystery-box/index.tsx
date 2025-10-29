@@ -4,6 +4,7 @@ import {
 } from "../../services/mystery-box/types";
 import { SpectatorPageLayout } from "../SpectatorPageLayout";
 import { DebugMysteryBoxGame } from "./DebugMysteryBox";
+import { GameOverResults } from "./GameOverResults";
 import { MysteryBoxActivePlayers } from "./MysteryBoxActivePlayers";
 import { MysteryBoxCurrentRoundUi } from "./MysteryBoxCurrentRoundUi";
 import { MysteryBoxRoundHistory } from "./MysteryBoxRoundHistory";
@@ -26,28 +27,33 @@ const View = ({ game }: Props) => {
       <p>
         {game.id} - {MysteryBoxGameState[gameState.gameState]}
       </p>
-      {game.gameOverSummary && (
-        <p>GAME OVER! {game.gameOverSummary.outrightWinnerPlayerId}</p>
+      {gameState.gameState === MysteryBoxGameState.GAME_OVER && (
+        <GameOverResults game={game} />
       )}
-      <div style={{ position: "relative" }}>
-        <MysteryBoxCurrentRoundUi
-          round={game.currentRound}
-          gameState={gameState}
-        />
-        <MysteryBoxActivePlayers
-          game={game}
-          gameState={gameState}
-          playerPosition={
-            gameState.gameState >=
-            MysteryBoxGameState.SHOW_PLAYER_BOX_SELECTIONS
-              ? "next-to-chosen-box"
-              : "waiting"
-          }
-        />
-      </div>
-      <div>
-        <MysteryBoxRoundHistory game={game} />
-      </div>
+      {/* {game.gameOverSummary && <GameOverResults gameView={game} />} */}
+      {gameState.gameState !== MysteryBoxGameState.GAME_OVER && (
+        <>
+          <div style={{ position: "relative" }}>
+            <MysteryBoxCurrentRoundUi
+              round={game.currentRound}
+              gameState={gameState}
+            />
+            <MysteryBoxActivePlayers
+              game={game}
+              gameState={gameState}
+              playerPosition={
+                gameState.gameState >=
+                MysteryBoxGameState.SHOW_PLAYER_BOX_SELECTIONS
+                  ? "next-to-chosen-box"
+                  : "waiting"
+              }
+            />
+          </div>
+          <div>
+            <MysteryBoxRoundHistory game={game} />
+          </div>
+        </>
+      )}
     </SpectatorPageLayout>
   );
 };

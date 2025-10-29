@@ -41,13 +41,6 @@ const BOX_POSITIONS: Record<number, Position> = {
   3: { topPercent: 80, rightPercent: 10 },
 };
 
-const BOX_POSITIONS_2: Record<number, Coordinates & { size: number }> = {
-  0: { x: 10, y: 90, size: 200 },
-  1: { x: 10, y: 90, size: 200 },
-  2: { x: 10, y: 90, size: 200 },
-  3: { x: 10, y: 90, size: 200 },
-};
-
 export type PlayerPositions = "waiting" | "next-to-chosen-box";
 
 function getPlayerPosition(
@@ -95,12 +88,12 @@ function getInitialPositionMap(
   windowWidth: number
 ): PlayerWithCoordinates[] {
   const positionMap = createCircularPositionMap(
-    400,
-    400,
+    300,
+    300,
     activePlayers.length,
     {
       x: windowWidth / 2 - 200,
-      y: 200,
+      y: 100,
     }
   );
 
@@ -213,7 +206,11 @@ export const MysteryBoxActivePlayers = ({
       {activePlayers.map((player) => {
         const coordinates = activePlayerPositions.find(
           (p) => p.playerId === player.id
-        )!.coordinates;
+        )?.coordinates;
+
+        if (!coordinates) {
+          return null;
+        }
 
         const currentBox = game.currentRound.boxes.find(
           (b) => b.id === player.currentlySelectedBoxId

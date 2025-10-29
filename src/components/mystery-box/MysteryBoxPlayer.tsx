@@ -1,12 +1,7 @@
 import styled, { css, keyframes } from "styled-components";
-import {
-  MysteryBoxPlayer,
-  MysteryBoxPlayerView,
-} from "../../services/mystery-box/types";
+import { MysteryBoxPlayerView } from "../../services/mystery-box/types";
 import { AvatarSize, PlayerAvatar } from "../PlayerAvatar";
 import { Attention } from "../animations/Attention";
-import { ExplodingPlayer } from "../migrated/gas-out/ExplodingPlayer";
-import { useDoOnce } from "../hooks/useDoOnce";
 
 const Container = styled.div`
   position: relative;

@@ -56,6 +56,7 @@ export type MysteryBoxGameView = {
 export type MysteryBoxGameOverSummary = {
   outrightWinnerPlayerId?: string;
   maxRoundId: number;
+  bonusPointsAwarded: number;
 };
 
 export type MysteryBoxPlayerStatus =

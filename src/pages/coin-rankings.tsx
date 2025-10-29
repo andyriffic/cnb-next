@@ -88,7 +88,7 @@ function combineCoinRankings(
     if (!result[year]) {
       result[year] = {};
     }
-    result[year][month] = rankings;
+    result[year]![month] = rankings;
   });
 
   return result;

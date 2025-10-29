@@ -58,6 +58,20 @@ export function useMysteryBoxGameState(
   }, [gameState]);
 
   useEffect(() => {
+    if (gameState === MysteryBoxGameState.SHOW_BOX_REVEAL_RESULT) {
+      if (game.gameOverSummary) {
+        setTimeout(() => {
+          setGameState(MysteryBoxGameState.GAME_OVER);
+        }, 5000);
+      } else {
+        setTimeout(() => {
+          setGameState(MysteryBoxGameState.ROUND_OVER);
+        }, 5000);
+      }
+    }
+  }, [game.gameOverSummary, gameState]);
+
+  useEffect(() => {
     if (game.currentRound.status === "in-progress") {
       setGameState(MysteryBoxGameState.WAITING_FOR_PLAYERS_TO_SELECT_BOX);
     }

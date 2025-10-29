@@ -31,17 +31,29 @@ export function useMysteryBoxGameSound(
         waitingMusic.stop();
       };
     }
-  }, [gameState]);
+  }, [gameState, loop]);
 
   useEffect(() => {
     if (gameState === MysteryBoxGameState.SHOW_PLAYER_BOX_SELECTIONS) {
       play("mystery-box-move-players-to-boxes");
     }
-  }, [gameState]);
+  }, [gameState, play]);
 
   useEffect(() => {
     if (gameState === MysteryBoxGameState.SHOW_BOX_REVEAL_RESULT) {
-      play("mystery-box-player-select-box");
+      if (
+        game.currentRound.boxes.find((box) => box.contents.type === "bomb")
+          ?.playerIds.length ||
+        0 > 0
+      ) {
+        setTimeout(() => {
+          play("mystery-box-player-explode");
+        }, 2000);
+      } else {
+        setTimeout(() => {
+          play("mystery-box-everyone-survives-round");
+        }, 2000);
+      }
     }
-  }, [gameState]);
+  }, [game.currentRound.boxes, gameState, play]);
 }

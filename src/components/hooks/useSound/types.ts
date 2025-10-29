@@ -63,4 +63,5 @@ export type SoundName =
   | "mystery-box-player-select-box"
   | "mystery-box-move-players-to-boxes"
   | "mystery-box-show-box-contents"
+  | "mystery-box-everyone-survives-round"
   | "mystery-box-player-explode";

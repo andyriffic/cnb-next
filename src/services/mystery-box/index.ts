@@ -65,6 +65,7 @@ export const newRound = (
   return pipe(
     game,
     validatePlayersRemainingInGame,
+    E.chain(validateGameHasNoWinner),
     E.chain(validateAllPlayersHaveSelectedBoxOnCurrentRound),
     E.chain(addNewRoundToGame)
   );
@@ -141,6 +142,18 @@ function getCustomRoundBoxContents(roundNumber: number): {
           createBoxContents("bomb"),
           createBoxContents("points", 1),
           createBoxContents("empty"),
+        ],
+      };
+    }
+
+    case 10: {
+      return {
+        specialInfo: "3 bombs this round! 💀",
+        boxes: [
+          createBoxContents("bomb"),
+          createBoxContents("bomb"),
+          createBoxContents("points", 2),
+          createBoxContents("bomb"),
         ],
       };
     }
@@ -334,6 +347,16 @@ const validatePlayersRemainingInGame = (
   return E.right(game);
 };
 
+const validateGameHasNoWinner = (
+  game: MysteryBoxGame
+): E.Either<ErrorMessage, MysteryBoxGame> => {
+  if (getAllActivePlayerIds(game).length === 1) {
+    return E.left("Game already has a winner");
+  }
+
+  return E.right(game);
+};
+
 const haveAllPlayersSelectedBoxOnRound = (
   round: MysteryBoxGameRound,
   game: MysteryBoxGame
@@ -388,12 +411,14 @@ function createGameOverSummary(
     // No one won 😢
     return {
       maxRoundId: game.currentRoundId,
+      bonusPointsAwarded: 0,
     };
   } else if (allActivePlayers.length === 1) {
     // One winner 🎉
     return {
       outrightWinnerPlayerId: allActivePlayers[0],
       maxRoundId: game.currentRoundId,
+      bonusPointsAwarded: 5,
     };
   }
 }

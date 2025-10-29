@@ -13,13 +13,13 @@ const BoxLayoutContainer = styled.div`
 const PositionedBox = styled.div<{ position: BoxPosition }>`
   position: absolute;
   top: ${({ position }) =>
-    position.topPx !== undefined ? `${position.topPx}px` : "auto"};
+    position.top !== undefined ? `${position.top}vh` : "auto"};
   left: ${({ position }) =>
-    position.leftPx !== undefined ? `${position.leftPx}px` : "auto"};
+    position.left !== undefined ? `${position.left}vw` : "auto"};
   right: ${({ position }) =>
-    position.rightPx !== undefined ? `${position.rightPx}px` : "auto"};
+    position.right !== undefined ? `${position.right}vw` : "auto"};
   bottom: ${({ position }) =>
-    position.bottomPx !== undefined ? `${position.bottomPx}px` : "auto"};
+    position.bottom !== undefined ? `${position.bottom}vh` : "auto"};
 `;
 
 const BoxOptionContainer = styled.div`
@@ -37,17 +37,17 @@ const BoxOptionContainerItem = styled.div`
 `;
 
 type BoxPosition = {
-  leftPx?: number;
-  topPx?: number;
-  rightPx?: number;
-  bottomPx?: number;
+  left?: number;
+  top?: number;
+  right?: number;
+  bottom?: number;
 };
 
 const BoxPositions: BoxPosition[] = [
-  { leftPx: 250, topPx: 100 },
-  { rightPx: 250, topPx: 100 },
-  { leftPx: 250, topPx: 500 },
-  { rightPx: 250, topPx: 500 },
+  { left: 10, top: 5 },
+  { right: 10, top: 5 },
+  { left: 10, bottom: 25 },
+  { right: 10, bottom: 25 },
 ];
 
 type Props = {
