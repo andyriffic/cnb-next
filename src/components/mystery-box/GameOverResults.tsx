@@ -37,6 +37,7 @@ const PlayerList = styled.div`
 
 const PlayerContainer = styled.div`
   position: relative;
+  text-align: center;
 `;
 const Points = styled.div`
   position: absolute;
@@ -55,6 +56,16 @@ const Points = styled.div`
   font-size: 1.2rem;
   font-family: ${FONT_FAMILY.numeric};
   font-weight: bold;
+`;
+
+const Round = styled.span`
+  display: inline-block;
+  background: darkorange;
+  padding: 0.3rem 0.5rem;
+  color: ${THEME.tokens.colours.primaryText};
+  border-radius: 1rem;
+  border: 0.1rem solid white;
+  font-family: ${THEME.tokens.fonts.body};
 `;
 
 type Props = {
@@ -98,6 +109,7 @@ export const GameOverResults = ({ game }: Props) => {
                   size="small"
                 />
                 {/* <Points>{game}</Points> */}
+                <Round>Round {game.gameOverSummary?.maxRoundId}</Round>
               </PlayerContainer>
             ) : (
               <SubHeading style={{ fontSize: "4rem", lineHeight: "8rem" }}>

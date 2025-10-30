@@ -15,6 +15,7 @@ import { useSocketIo } from "../../../providers/SocketIoProvider";
 import {
   getAiOverlordPlayerUrl,
   getGasOutPlayerUrl,
+  getMysteryBoxPlayerUrl,
   getNumberCrunchPlayerUrl,
   playersBettingGameUrl,
   playersRockPaperScissorsGameUrl,
@@ -38,6 +39,7 @@ function Page({}: Props) {
     aiOverlord,
     gasGame,
     numberCrunch,
+    mysteryBox,
   } = useSocketIo();
   const [groupId, setGroupId] = useState(autoJoinId || joinedId || "");
 
@@ -103,6 +105,17 @@ function Page({}: Props) {
     );
   }, [joinedGroup, numberCrunch.games, playerId]);
 
+  const relatedMysteryBoxGame = useMemo(() => {
+    return (
+      joinedGroup &&
+      mysteryBox.games.find(
+        (g) =>
+          g.id === joinedGroup.id &&
+          g.players.map((p) => p.id).includes(playerId)
+      )
+    );
+  }, [joinedGroup, mysteryBox.games, playerId]);
+
   return (
     <PlayerPageLayout headerContent={<>Header</>} playerId={playerId}>
       {joinedGroup ? (
@@ -161,6 +174,13 @@ function Page({}: Props) {
               )}
             >
               Play Number Crunch 💯
+            </ThemedPrimaryLinkButton>
+          )}
+          {relatedMysteryBoxGame && (
+            <ThemedPrimaryLinkButton
+              href={getMysteryBoxPlayerUrl(playerId, relatedMysteryBoxGame.id)}
+            >
+              Play Mystery Box 🎁
             </ThemedPrimaryLinkButton>
           )}
         </div>

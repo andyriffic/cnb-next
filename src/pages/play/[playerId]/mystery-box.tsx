@@ -22,7 +22,7 @@ function Page() {
 
       mysteryBox.playerSelectBox(gameId, playerId, game.currentRound.id, boxId);
     },
-    [game]
+    [game, gameId, mysteryBox, playerId]
   );
 
   return game ? (
