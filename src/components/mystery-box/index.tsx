@@ -1,3 +1,4 @@
+import { useSocketIo } from "../../providers/SocketIoProvider";
 import {
   MysteryBoxGame,
   MysteryBoxGameView,
@@ -19,6 +20,8 @@ type Props = {
 };
 
 const View = ({ game }: Props) => {
+  const { mysteryBox } = useSocketIo();
+
   const gameState = useMysteryBoxGameState(game);
   useMysteryBoxGameSound(game, gameState.gameState);
 
@@ -27,6 +30,11 @@ const View = ({ game }: Props) => {
       <p>
         {game.id} - {MysteryBoxGameState[gameState.gameState]}
       </p>
+      {gameState.gameState === MysteryBoxGameState.ROUND_OVER && (
+        <button type="button" onClick={() => mysteryBox.newRound(game.id)}>
+          New Round
+        </button>
+      )}
       {gameState.gameState === MysteryBoxGameState.GAME_OVER && (
         <GameOverResults game={game} />
       )}
