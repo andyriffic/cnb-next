@@ -8,15 +8,19 @@ import { BOX_COLORS } from "./MysteryBox";
 
 type Props = {
   game: MysteryBoxGameView;
+  includeCurrentRound?: boolean;
 };
 
-export const MysteryBoxRoundHistory = ({ game }: Props) => {
+export const MysteryBoxRoundHistory = ({
+  game,
+  includeCurrentRound = false,
+}: Props) => {
   //codepen.io/RoyLee0702/pen/RwNgVya
   return (
     <div style={{ display: "flex", gap: "0.5rem", height: "20vh" }}>
       {game.previousRounds
         .filter((r) => r.id > 0)
-        .filter((r) => r.id !== game.currentRound.id)
+        .filter((r) => includeCurrentRound || r.id !== game.currentRound.id)
         .map((round) => {
           const bombBoxs = round.boxes.filter(
             (box) => box.contents.type === "bomb"

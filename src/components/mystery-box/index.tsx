@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useSocketIo } from "../../providers/SocketIoProvider";
 import {
   MysteryBoxGame,
@@ -25,6 +26,12 @@ const View = ({ game }: Props) => {
   const gameState = useMysteryBoxGameState(game);
   useMysteryBoxGameSound(game, gameState.gameState);
 
+  useEffect(() => {
+    if (gameState.gameState === MysteryBoxGameState.ROUND_OVER) {
+      mysteryBox.newRound(game.id);
+    }
+  }, [game.id, gameState.gameState, mysteryBox]);
+
   return (
     <SpectatorPageLayout debug={<DebugMysteryBoxGame game={game} />}>
       <p>
@@ -36,7 +43,12 @@ const View = ({ game }: Props) => {
         </button>
       )}
       {gameState.gameState === MysteryBoxGameState.GAME_OVER && (
-        <GameOverResults game={game} />
+        <>
+          <GameOverResults game={game} />
+          <div style={{ position: "absolute", bottom: "0" }}>
+            <MysteryBoxRoundHistory game={game} includeCurrentRound={true} />
+          </div>
+        </>
       )}
       {/* {game.gameOverSummary && <GameOverResults gameView={game} />} */}
       {gameState.gameState !== MysteryBoxGameState.GAME_OVER && (
