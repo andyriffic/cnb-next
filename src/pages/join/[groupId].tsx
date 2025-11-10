@@ -113,9 +113,12 @@ export type GameTypes =
   | "number-crunch"
   | "mystery-box";
 
-const availableGameTypes: GameTypes[] = isClientSideFeatureEnabled("mb")
-  ? ["rps", "balloon", "number-crunch", "mystery-box"]
-  : ["rps", "balloon", "number-crunch"];
+const availableGameTypes: GameTypes[] = [
+  "rps",
+  "balloon",
+  "number-crunch",
+  "mystery-box",
+];
 
 const GAME_CONFIG: {
   [key in GameTypes]: { displayName: string; canTakeCoins: boolean };
@@ -126,7 +129,7 @@ const GAME_CONFIG: {
   "balloon-quick": { displayName: "Balloon (quick)", canTakeCoins: false },
   ai: { displayName: "AI Overlord", canTakeCoins: false },
   "number-crunch": { displayName: "Number Crunch 💯", canTakeCoins: true },
-  "mystery-box": { displayName: "Mystery Box 🎁", canTakeCoins: true },
+  "mystery-box": { displayName: "Mystery Box (beta) 🎁", canTakeCoins: false },
 };
 
 const gameCreators: {
@@ -303,6 +306,10 @@ function Page({ regularPlayers }: Props) {
                               <ThemedPrimaryButton
                                 highlight={gameType === suggestedGame}
                                 disabled={group.playerIds.length < 3}
+                                style={{
+                                  fontSize: "0.8rem",
+                                  padding: "0.5rem 0.8rem",
+                                }}
                                 onClick={() => {
                                   gameCreators[gameType](
                                     group,
@@ -526,10 +533,10 @@ function createMysteryBoxGame(
 ): Promise<GameUrl> {
   return new Promise((resolve) => {
     socketIoService.mysteryBox.createGame(group.id, group.players, (game) => {
-      game.players
-        .filter((p) => p.advantage)
-        .map((p) => p.id)
-        .forEach(deductAvailableCoinFromPlayer);
+      // game.players
+      //   .filter((p) => p.advantage)
+      //   .map((p) => p.id)
+      //   .forEach(deductAvailableCoinFromPlayer);
       resolve(getMysteryBoxSpectatorUrl(game.id));
     });
   });
