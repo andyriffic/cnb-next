@@ -1,3 +1,4 @@
+import { on } from "events";
 import * as E from "fp-ts/lib/Either";
 import * as O from "fp-ts/lib/Option";
 import { pipe } from "fp-ts/lib/function";
@@ -18,15 +19,13 @@ import {
   MysteryBoxGameRoundView,
   MysteryBoxContents,
   MysteryBoxGameOverSummary,
+  MysteryBoxIndividualModeView,
 } from "./types";
 
 type createGameProps = {
   id: string;
   players: Player[];
-  mysteryBoxCreator?: (id: number) => {
-    boxes: MysteryBox[];
-    specialInfo?: string;
-  };
+  mysteryBoxCreator?: MysteryBoxCreator;
 };
 
 export const createMysteryBoxGame = ({
@@ -38,7 +37,7 @@ export const createMysteryBoxGame = ({
     id,
     currentRoundId: 0,
     players: players.map(createPlayer),
-    rounds: [createNewGameRound(0, mysteryBoxCreator)],
+    rounds: [createNewGameRound(0, players.length, mysteryBoxCreator)],
   };
   return E.right(game);
 };
@@ -65,7 +64,7 @@ export const newRound = (
   return pipe(
     game,
     validatePlayersRemainingInGame,
-    E.chain(validateGameHasNoWinner),
+    E.chain(validateGameHasActivePlayers),
     E.chain(validateAllPlayersHaveSelectedBoxOnCurrentRound),
     E.chain(addNewRoundToGame)
   );
@@ -77,7 +76,12 @@ function addNewRoundToGame(
   game: MysteryBoxGame,
   mysteryBoxCreator: MysteryBoxCreator = randomBoxCreator
 ): E.Either<ErrorMessage, MysteryBoxGame> {
-  const newRound = createNewGameRound(game.rounds.length, mysteryBoxCreator);
+  const playersRemaining = getAllActivePlayerIds(game).length;
+  const newRound = createNewGameRound(
+    game.rounds.length,
+    playersRemaining,
+    mysteryBoxCreator
+  );
   const updatedGame: MysteryBoxGame = {
     ...game,
     currentRoundId: newRound.id,
@@ -118,10 +122,25 @@ const getAllPlayerIdsSelectedOnLevel = (
   return level.boxes.flatMap((slot) => slot.playerIds);
 };
 
-function getCustomRoundBoxContents(roundNumber: number): {
+function getCustomRoundBoxContents(
+  roundNumber: number,
+  numberPlayersRemaining: number
+): {
   boxes: MysteryBoxContents[];
   specialInfo?: string;
 } {
+  if (numberPlayersRemaining === 1) {
+    return {
+      specialInfo: "One player remaining, 3 bombs! Good Luck! 🤞",
+      boxes: [
+        createBoxContents("bomb"),
+        createBoxContents("bomb"),
+        createBoxContents("bomb"),
+        createBoxContents("points", 2),
+      ],
+    };
+  }
+
   switch (roundNumber) {
     case 0: {
       return {
@@ -171,20 +190,23 @@ function getCustomRoundBoxContents(roundNumber: number): {
   }
 }
 
-const randomBoxCreator = (
-  roundId: number
-): { boxes: MysteryBox[]; specialInfo?: string } => {
-  const roundWithBoxes = getCustomRoundBoxContents(roundId);
-  const randomBoxContents = shuffleArrayJestSafe(roundWithBoxes.boxes);
+const randomBoxCreator = (numberPlayersRemaining: number) => {
+  return (roundId: number): { boxes: MysteryBox[]; specialInfo?: string } => {
+    const roundWithBoxes = getCustomRoundBoxContents(
+      roundId,
+      numberPlayersRemaining
+    );
+    const randomBoxContents = shuffleArrayJestSafe(roundWithBoxes.boxes);
 
-  return {
-    specialInfo: roundWithBoxes.specialInfo,
-    boxes: [
-      createMysteryBox(0, randomBoxContents[0]!),
-      createMysteryBox(1, randomBoxContents[1]!),
-      createMysteryBox(2, randomBoxContents[2]!),
-      createMysteryBox(3, randomBoxContents[3]!),
-    ],
+    return {
+      specialInfo: roundWithBoxes.specialInfo,
+      boxes: [
+        createMysteryBox(0, randomBoxContents[0]!),
+        createMysteryBox(1, randomBoxContents[1]!),
+        createMysteryBox(2, randomBoxContents[2]!),
+        createMysteryBox(3, randomBoxContents[3]!),
+      ],
+    };
   };
 };
 
@@ -208,9 +230,10 @@ export const createBoxContents = (
 
 const createNewGameRound = (
   id: number,
+  playersRemaining: number,
   mysteryBoxCreator: MysteryBoxCreator
 ): MysteryBoxGameRound => {
-  const boxContents = mysteryBoxCreator(id);
+  const boxContents = mysteryBoxCreator(playersRemaining)(id);
   return {
     id,
     specialInfo: boxContents.specialInfo,
@@ -347,11 +370,11 @@ const validatePlayersRemainingInGame = (
   return E.right(game);
 };
 
-const validateGameHasNoWinner = (
+const validateGameHasActivePlayers = (
   game: MysteryBoxGame
 ): E.Either<ErrorMessage, MysteryBoxGame> => {
-  if (getAllActivePlayerIds(game).length === 1) {
-    return E.left("Game already has a winner");
+  if (getAllActivePlayerIds(game).length === 0) {
+    return E.left("Game has no players to continue");
   }
 
   return E.right(game);
@@ -397,26 +420,54 @@ const validateAllPlayersHaveSelectedBoxOnCurrentRound = (
   );
 };
 
+function createIndividualModeSummary(
+  game: MysteryBoxGame
+): MysteryBoxIndividualModeView | undefined {
+  const allActivePlayers = getAllActivePlayerIds(game);
+
+  const roundsWithOnePlayer = game.rounds.filter((round) => {
+    const activePlayersThisRound = round.boxes.flatMap((box) => box.playerIds);
+    return activePlayersThisRound.length === 1;
+  });
+
+  if (roundsWithOnePlayer.length === 0) {
+    return;
+  }
+
+  return {
+    playerId: roundsWithOnePlayer[0]!.boxes
+      .flatMap((box) => box.playerIds)
+      .find((pid) => allActivePlayers.includes(pid))!,
+    roundsSurvivedCount: roundsWithOnePlayer.length,
+  };
+}
+
 function createGameOverSummary(
   game: MysteryBoxGame
 ): MysteryBoxGameOverSummary | undefined {
   const allActivePlayers = getAllActivePlayerIds(game);
 
-  if (allActivePlayers.length > 1) {
+  if (allActivePlayers.length > 0) {
     // Game still going
     return;
   }
 
-  if (allActivePlayers.length === 0) {
+  const currentRoundPlayerIds = game.rounds
+    .find((round) => round.id === game.currentRoundId)
+    ?.boxes.flatMap((box) => box.playerIds);
+  const possibleSurvivingWinnerId =
+    currentRoundPlayerIds?.length === 1 ? currentRoundPlayerIds[0] : undefined;
+
+  if (!possibleSurvivingWinnerId) {
     // No one won 😢
     return {
       maxRoundId: game.currentRoundId,
       bonusPointsAwarded: 0,
     };
-  } else if (allActivePlayers.length === 1) {
+  } else {
     // One winner 🎉
     return {
-      outrightWinnerPlayerId: allActivePlayers[0],
+      outrightWinnerPlayerId: possibleSurvivingWinnerId,
       maxRoundId: game.currentRoundId,
       bonusPointsAwarded: 5,
     };
@@ -431,6 +482,7 @@ export function createMysteryBoxGameView(
   )!;
 
   const gameOverSummary = createGameOverSummary(game);
+  const individualMode = createIndividualModeSummary(game);
 
   return {
     id: game.id,
@@ -442,6 +494,7 @@ export function createMysteryBoxGameView(
       .filter((round) => !!gameOverSummary || round.id < game.currentRoundId)
       .map((r) => createMysteryBoxRoundView(r, game)),
     gameOverSummary,
+    individualMode,
   };
 }
 

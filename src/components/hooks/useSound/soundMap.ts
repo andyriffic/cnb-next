@@ -67,6 +67,7 @@ export const defaultSounds: { [key in SoundName]: string } = {
   "mystery-box-move-players-to-boxes": "/sounds/default/slide_whistle_sms.mp3",
   "mystery-box-show-box-contents": "/sounds/spinning_heart.mp3",
   "mystery-box-everyone-survives-round": "/sounds/crowd_oooo.mp3",
+  "mystery-box-zero-point-losers": "/sounds/wah_wah_wah.mp3",
   "mystery-box-player-explode": "/sounds/default/explode.mp3",
 };
 

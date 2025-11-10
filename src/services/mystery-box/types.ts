@@ -31,7 +31,7 @@ export type MysteryBoxPlayer = {
   advantage: boolean;
 };
 
-export type MysteryBoxCreator = (id: number) => {
+export type MysteryBoxCreator = (playersRemaining: number) => (id: number) => {
   boxes: MysteryBox[];
   specialInfo?: string;
 };
@@ -51,6 +51,12 @@ export type MysteryBoxGameView = {
   currentRound: MysteryBoxGameRoundView;
   previousRounds: MysteryBoxGameRoundView[];
   gameOverSummary?: MysteryBoxGameOverSummary;
+  individualMode?: MysteryBoxIndividualModeView;
+};
+
+export type MysteryBoxIndividualModeView = {
+  playerId: string;
+  roundsSurvivedCount: number;
 };
 
 export type MysteryBoxGameOverSummary = {
