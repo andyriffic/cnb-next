@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useSocketIo } from "../../providers/SocketIoProvider";
 import { MysteryBoxGameView } from "../../services/mystery-box/types";
+import { BOX_COLORS, getBoxContents } from "./MysteryBox";
 
 const BoxOptionContainer = styled.div`
   display: grid;
@@ -26,7 +27,20 @@ export const DebugMysteryBoxGame = ({ game }: Props) => {
           New Round
         </button>
       </div>
-      <h3>Current Round</h3>
+
+      <div style={{ display: "flex", gap: "2rem" }}>
+        <h3>Current Round</h3>
+        <div style={{ display: "flex", gap: "2rem" }}>
+          {game.currentRound.boxes.map((box) => (
+            <div
+              key={box.id}
+              style={{ backgroundColor: BOX_COLORS[box.id], padding: "0.5rem" }}
+            >
+              <p>{getBoxContents(box.contents)}</p>
+            </div>
+          ))}
+        </div>
+      </div>
 
       <div style={{ display: "flex", gap: "2rem" }}>
         {game.players.map((p) => {

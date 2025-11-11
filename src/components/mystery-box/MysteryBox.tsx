@@ -134,7 +134,9 @@ export const BOX_COLORS: Record<number, string> = {
   3: "#ffc107",
 };
 
-const getBoxContents = (boxContents: MysteryBoxContents): JSX.Element => {
+export const getBoxContents = (
+  boxContents: MysteryBoxContents
+): JSX.Element => {
   switch (boxContents.type) {
     case "coin":
       return <Coins totalCoins={boxContents.value} />;
