@@ -227,7 +227,7 @@ export const MysteryBoxActivePlayers = ({
                   : "active"
               }
               avatarSize={
-                activePlayerPositions.length === 2 ? "thumbnail" : "tiny"
+                activePlayerPositions.length <= 4 ? "thumbnail" : "tiny"
               }
               explode={
                 gameState.gameState >=

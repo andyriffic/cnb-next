@@ -60,6 +60,7 @@ export type SoundName =
   | "coin-rankings-show-player"
   | "coin-rankings-end"
   | "mystery-box-waiting-to-select-box-music"
+  | "mystery-box-waiting-to-select-bonus-music"
   | "mystery-box-player-select-box"
   | "mystery-box-move-players-to-boxes"
   | "mystery-box-show-box-contents"

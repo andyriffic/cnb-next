@@ -1,6 +1,8 @@
 import styled from "styled-components";
+import { use, useCallback } from "react";
 import { useSocketIo } from "../../providers/SocketIoProvider";
 import { MysteryBoxGameView } from "../../services/mystery-box/types";
+import { selectRandomOneOf } from "../../utils/random";
 import { BOX_COLORS, getBoxContents } from "./MysteryBox";
 
 const BoxOptionContainer = styled.div`
@@ -19,6 +21,26 @@ type Props = {
 export const DebugMysteryBoxGame = ({ game }: Props) => {
   const { mysteryBox } = useSocketIo();
 
+  const randomBoxSelection = useCallback(() => {
+    game.players.forEach((p) => {
+      if (p.status === "waiting") {
+        const randomBox = selectRandomOneOf(game.currentRound.boxes);
+        mysteryBox.playerSelectBox(
+          game.id,
+          p.id,
+          game.currentRound.id,
+          randomBox.id
+        );
+      }
+    });
+  }, [
+    game.currentRound.boxes,
+    game.currentRound.id,
+    game.id,
+    game.players,
+    mysteryBox,
+  ]);
+
   return (
     <div>
       <p>❓🎁</p>
@@ -29,7 +51,12 @@ export const DebugMysteryBoxGame = ({ game }: Props) => {
       </div>
 
       <div style={{ display: "flex", gap: "2rem" }}>
-        <h3>Current Round</h3>
+        <div>
+          <h3>Current Round</h3>
+          <button type="button" onClick={randomBoxSelection}>
+            Random box selection
+          </button>
+        </div>
         <div style={{ display: "flex", gap: "2rem" }}>
           {game.currentRound.boxes.map((box) => (
             <div

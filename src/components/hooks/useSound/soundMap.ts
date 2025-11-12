@@ -63,6 +63,7 @@ export const defaultSounds: { [key in SoundName]: string } = {
   "coin-rankings-end": "/sounds/default/wms_win6.mp3",
   "mystery-box-waiting-to-select-box-music":
     "/sounds/music/simpsons_phone_booth.mp3",
+  "mystery-box-waiting-to-select-bonus-music": "/sounds/music/mm3_title_ww.mp3",
   "mystery-box-player-select-box": "/sounds/bubble_pop.mp3",
   "mystery-box-move-players-to-boxes": "/sounds/default/slide_whistle_sms.mp3",
   "mystery-box-show-box-contents": "/sounds/spinning_heart.mp3",

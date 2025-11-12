@@ -108,7 +108,14 @@ export const GameOverResults = ({ game }: Props) => {
                   playerId={game.gameOverSummary?.outrightWinnerPlayerId}
                   size="small"
                 />
-                {/* <Points>{game}</Points> */}
+                <Points>
+                  {
+                    game.players.find(
+                      (p) =>
+                        p.id === game.gameOverSummary?.outrightWinnerPlayerId
+                    )?.lootTotals.points?.total
+                  }
+                </Points>
                 <Round>Round {game.gameOverSummary?.maxRoundId}</Round>
               </PlayerContainer>
             ) : (

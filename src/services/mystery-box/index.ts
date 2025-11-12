@@ -148,7 +148,7 @@ function getCustomRoundBoxContents(
         boxes: [
           createBoxContents("points", 1),
           createBoxContents("points", 2),
-          createBoxContents("empty"),
+          createBoxContents("points", 1),
           createBoxContents("empty"),
         ],
       };
@@ -469,7 +469,7 @@ function createGameOverSummary(
     return {
       outrightWinnerPlayerId: possibleSurvivingWinnerId,
       maxRoundId: game.currentRoundId,
-      bonusPointsAwarded: 5,
+      bonusPointsAwarded: 2,
     };
   }
 }

@@ -25,13 +25,17 @@ export function useMysteryBoxGameSound(
 
   useEffect(() => {
     if (gameState === MysteryBoxGameState.WAITING_FOR_PLAYERS_TO_SELECT_BOX) {
-      const waitingMusic = loop("mystery-box-waiting-to-select-box-music");
+      const waitingMusic = loop(
+        game.individualMode
+          ? "mystery-box-waiting-to-select-bonus-music"
+          : "mystery-box-waiting-to-select-box-music"
+      );
       waitingMusic.play();
       return () => {
         waitingMusic.stop();
       };
     }
-  }, [gameState, loop]);
+  }, [game.individualMode, gameState, loop]);
 
   useEffect(() => {
     if (gameState === MysteryBoxGameState.SHOW_PLAYER_BOX_SELECTIONS) {

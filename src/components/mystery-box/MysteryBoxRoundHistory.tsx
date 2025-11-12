@@ -17,7 +17,7 @@ export const MysteryBoxRoundHistory = ({
 }: Props) => {
   //codepen.io/RoyLee0702/pen/RwNgVya
   return (
-    <div style={{ display: "flex", gap: "0.5rem", height: "20vh" }}>
+    <div style={{ display: "flex", gap: "0.5rem", height: "15vh" }}>
       {game.previousRounds
         .filter((r) => r.id > 0)
         .filter((r) => includeCurrentRound || r.id !== game.currentRound.id)
@@ -36,7 +36,7 @@ export const MysteryBoxRoundHistory = ({
                 justifyContent: "flex-start",
                 alignItems: "center",
                 border: "1px solid black",
-                width: "10vw",
+                minWidth: "5vw",
               }}
             >
               <SmallHeading style={{ textAlign: "center" }}>

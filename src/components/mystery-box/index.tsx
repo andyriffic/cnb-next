@@ -15,6 +15,7 @@ import {
   MysteryBoxGameState,
   useMysteryBoxGameState,
 } from "./useMysteryBoxGameState";
+import { GameOverResultsByRound } from "./GameOverResultsByRound";
 
 type Props = {
   game: MysteryBoxGameView;
@@ -44,10 +45,7 @@ const View = ({ game }: Props) => {
       )}
       {gameState.gameState === MysteryBoxGameState.GAME_OVER && (
         <>
-          <GameOverResults game={game} />
-          <div style={{ position: "absolute", bottom: "0" }}>
-            <MysteryBoxRoundHistory game={game} includeCurrentRound={true} />
-          </div>
+          <GameOverResultsByRound game={game} />
         </>
       )}
       {/* {game.gameOverSummary && <GameOverResults gameView={game} />} */}
@@ -69,7 +67,7 @@ const View = ({ game }: Props) => {
               }
             />
           </div>
-          <div>
+          <div style={{ position: "absolute", bottom: "0" }}>
             <MysteryBoxRoundHistory game={game} />
           </div>
         </>
