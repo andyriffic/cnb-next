@@ -93,7 +93,7 @@ function getInitialPositionMap(
     activePlayers.length,
     {
       x: windowWidth / 2 - 200,
-      y: 100,
+      y: 160,
     }
   );
 

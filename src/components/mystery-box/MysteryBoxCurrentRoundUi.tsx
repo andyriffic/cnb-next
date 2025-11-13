@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { MysteryBoxGameRoundView } from "../../services/mystery-box/types";
-import { SmallHeading } from "../Atoms";
+import { FeatureHeading, SmallHeading } from "../Atoms";
 import { MysteryBoxUi } from "./MysteryBox";
 import { MysteryBoxUIState } from "./useMysteryBoxGameState";
 
@@ -58,7 +58,12 @@ type Props = {
 export const MysteryBoxCurrentRoundUi = ({ round, gameState }: Props) => {
   return (
     <>
-      <SmallHeading>Round {round.id}</SmallHeading>
+      <FeatureHeading
+        style={{ fontSize: "6rem", textAlign: "center", marginTop: "2rem" }}
+      >
+        Round {round.id}
+      </FeatureHeading>
+
       <SmallHeading style={{ textAlign: "center" }}>
         {round.specialInfo}
       </SmallHeading>
