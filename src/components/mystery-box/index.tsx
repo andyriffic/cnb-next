@@ -35,14 +35,14 @@ const View = ({ game }: Props) => {
 
   return (
     <SpectatorPageLayout debug={<DebugMysteryBoxGame game={game} />}>
-      <p>
+      {/* <p>
         {game.id} - {MysteryBoxGameState[gameState.gameState]}
       </p>
       {gameState.gameState === MysteryBoxGameState.ROUND_OVER && (
         <button type="button" onClick={() => mysteryBox.newRound(game.id)}>
           New Round
         </button>
-      )}
+      )} */}
       {gameState.gameState === MysteryBoxGameState.GAME_OVER && (
         <>
           <GameOverResultsByRound game={game} />

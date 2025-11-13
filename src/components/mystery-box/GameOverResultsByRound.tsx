@@ -1,12 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { COLORS, FONT_FAMILY } from "../../colors";
-import { MysteryBoxGameView } from "../../services/mystery-box/types";
+import {
+  MysteryBoxGameView,
+  MysteryBoxPlayer,
+} from "../../services/mystery-box/types";
 import THEME from "../../themes";
 import { FeatureHeading, SmallHeading } from "../Atoms";
 import { PlayerAvatar } from "../PlayerAvatar";
 import { Appear } from "../animations/Appear";
 import { useSound } from "../hooks/useSound";
+import { Player } from "../../types/Player";
+import { useDoOnce } from "../hooks/useDoOnce";
+import { MysteryBoxGameToPoints } from "../../services/mystery-box/points";
+import { savePlayerGameMovesFetch } from "../../utils/api";
 
 const Container = styled.div`
   width: 80vw;
@@ -77,6 +84,13 @@ type Props = {
 export const GameOverResultsByRound = ({ game }: Props) => {
   const { play } = useSound();
   const [displayIndex, setDisplayIndex] = useState(0);
+
+  useDoOnce(() => {
+    const gameMoves = MysteryBoxGameToPoints(game);
+    savePlayerGameMovesFetch(game.id, gameMoves);
+    console.log("saving Mysterybox game moves", gameMoves);
+  });
+
   const roundsWithPlayersEliminated = useMemo(() => {
     return game.previousRounds.filter((r) =>
       r.boxes.some(
@@ -142,9 +156,9 @@ export const GameOverResultsByRound = ({ game }: Props) => {
                     )
                     .filter((p) => p !== undefined)
                     .map((player) => (
-                      <RoundPlayer key={player.id}>
-                        <PlayerAvatar playerId={player.id} size="tiny" />
-                        <Points>{player.lootTotals.points?.total}</Points>
+                      <RoundPlayer key={player?.id}>
+                        <PlayerAvatar playerId={player?.id || ""} size="tiny" />
+                        <Points>{player?.lootTotals.points?.total}</Points>
                       </RoundPlayer>
                     ))}
                 </RoundPlayers>
