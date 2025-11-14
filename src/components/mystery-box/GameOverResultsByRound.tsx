@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { use, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { COLORS, FONT_FAMILY } from "../../colors";
 import {
@@ -14,6 +14,8 @@ import { Player } from "../../types/Player";
 import { useDoOnce } from "../hooks/useDoOnce";
 import { MysteryBoxGameToPoints } from "../../services/mystery-box/points";
 import { savePlayerGameMovesFetch } from "../../utils/api";
+import { CenterSpaced } from "../Layouts";
+import { LinkToMiniGame } from "../LinkToMiniGame";
 
 const Container = styled.div`
   width: 80vw;
@@ -166,6 +168,14 @@ export const GameOverResultsByRound = ({ game }: Props) => {
             </Appear>
           ))}
       </Container>
+      <Appear
+        animation="text-focus-in"
+        delayMilliseconds={roundsWithPlayersEliminated.length * 2000 + 1000}
+      >
+        <CenterSpaced style={{ marginTop: "2rem" }}>
+          <LinkToMiniGame />
+        </CenterSpaced>
+      </Appear>
     </>
   );
 };
