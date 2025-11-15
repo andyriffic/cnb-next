@@ -425,13 +425,25 @@ function createIndividualModeSummary(
 ): MysteryBoxIndividualModeView | undefined {
   const allActivePlayers = getAllActivePlayerIds(game);
 
-  const roundsWithOnePlayer = game.rounds.filter((round) => {
-    const activePlayersThisRound = round.boxes.flatMap((box) => box.playerIds);
-    return activePlayersThisRound.length === 1;
-  });
+  const roundsWithOnePlayer = game.rounds
+    .filter((r) => r.id !== game.currentRoundId)
+    .filter((round) => {
+      const activePlayersThisRound = round.boxes.flatMap(
+        (box) => box.playerIds
+      );
+      return activePlayersThisRound.length === 1;
+    });
 
   if (roundsWithOnePlayer.length === 0) {
-    return;
+    if (allActivePlayers.length === 1) {
+      //for the case of one player remaining and hasn't selected a box yet
+      return {
+        playerId: allActivePlayers[0]!,
+        roundsSurvivedCount: 0,
+      };
+    } else {
+      return;
+    }
   }
 
   return {

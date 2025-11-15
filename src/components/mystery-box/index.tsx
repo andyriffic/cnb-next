@@ -6,7 +6,6 @@ import {
 } from "../../services/mystery-box/types";
 import { SpectatorPageLayout } from "../SpectatorPageLayout";
 import { DebugMysteryBoxGame } from "./DebugMysteryBox";
-import { GameOverResults } from "./GameOverResults";
 import { MysteryBoxActivePlayers } from "./MysteryBoxActivePlayers";
 import { MysteryBoxCurrentRoundUi } from "./MysteryBoxCurrentRoundUi";
 import { MysteryBoxRoundHistory } from "./MysteryBoxRoundHistory";

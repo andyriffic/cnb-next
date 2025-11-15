@@ -26,7 +26,7 @@ export function useMysteryBoxGameSound(
   useEffect(() => {
     if (gameState === MysteryBoxGameState.WAITING_FOR_PLAYERS_TO_SELECT_BOX) {
       const waitingMusic = loop(
-        game.individualMode
+        !!game.individualMode
           ? "mystery-box-waiting-to-select-bonus-music"
           : "mystery-box-waiting-to-select-box-music"
       );

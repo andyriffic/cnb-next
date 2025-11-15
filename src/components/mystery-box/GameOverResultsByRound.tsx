@@ -160,7 +160,9 @@ export const GameOverResultsByRound = ({ game }: Props) => {
                     .map((player) => (
                       <RoundPlayer key={player?.id}>
                         <PlayerAvatar playerId={player?.id || ""} size="tiny" />
-                        <Points>{player?.lootTotals.points?.total}</Points>
+                        <Points>
+                          {player?.lootTotals.points?.total || <>😭</>}
+                        </Points>
                       </RoundPlayer>
                     ))}
                 </RoundPlayers>

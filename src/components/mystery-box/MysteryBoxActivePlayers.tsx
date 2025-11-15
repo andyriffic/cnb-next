@@ -6,6 +6,7 @@ import {
   MysteryBoxPlayerView,
 } from "../../services/mystery-box/types";
 import { Coordinates } from "../pacman/types";
+import { Attention } from "../animations/Attention";
 import { createCircularPositionMap } from "./DisplayItemsInCircle";
 import { MysteryBoxPlayerUi } from "./MysteryBoxPlayer";
 import {
@@ -218,28 +219,36 @@ export const MysteryBoxActivePlayers = ({
         // const offset = positionMap[index] || { x: 0, y: 0 };
         return (
           <PositionedPlayerPixels key={player.id} coordinates={coordinates}>
-            <MysteryBoxPlayerUi
-              player={player}
-              status={
-                game.gameOverSummary &&
-                game.gameOverSummary.outrightWinnerPlayerId === player.id
-                  ? "winner"
-                  : "active"
+            <Attention
+              animate={
+                game.individualMode &&
+                game.individualMode.playerId === player.id
               }
-              avatarSize={
-                activePlayerPositions.length <= 4 ? "thumbnail" : "tiny"
-              }
-              explode={
-                gameState.gameState >=
-                  MysteryBoxGameState.SHOW_BOX_REVEAL_RESULT &&
-                !!currentBox &&
-                currentBox.contents.type === "bomb"
-              }
-              showSelectedStatus={
-                gameState.gameState ===
-                MysteryBoxGameState.WAITING_FOR_PLAYERS_TO_SELECT_BOX
-              }
-            />
+              animation="vibrate"
+            >
+              <MysteryBoxPlayerUi
+                player={player}
+                status={
+                  game.gameOverSummary &&
+                  game.gameOverSummary.outrightWinnerPlayerId === player.id
+                    ? "winner"
+                    : "active"
+                }
+                avatarSize={
+                  activePlayerPositions.length <= 4 ? "thumbnail" : "tiny"
+                }
+                explode={
+                  gameState.gameState >=
+                    MysteryBoxGameState.SHOW_BOX_REVEAL_RESULT &&
+                  !!currentBox &&
+                  currentBox.contents.type === "bomb"
+                }
+                showSelectedStatus={
+                  gameState.gameState ===
+                  MysteryBoxGameState.WAITING_FOR_PLAYERS_TO_SELECT_BOX
+                }
+              />
+            </Attention>
           </PositionedPlayerPixels>
         );
       })}
