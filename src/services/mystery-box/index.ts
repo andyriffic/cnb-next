@@ -425,7 +425,7 @@ function createIndividualModeSummary(
 ): MysteryBoxIndividualModeView | undefined {
   const allActivePlayers = getAllActivePlayerIds(game);
 
-  const roundsWithOnePlayer = game.rounds
+  const previousRoundsWithOnePlayer = game.rounds
     .filter((r) => r.id !== game.currentRoundId)
     .filter((round) => {
       const activePlayersThisRound = round.boxes.flatMap(
@@ -434,7 +434,7 @@ function createIndividualModeSummary(
       return activePlayersThisRound.length === 1;
     });
 
-  if (roundsWithOnePlayer.length === 0) {
+  if (previousRoundsWithOnePlayer.length === 0) {
     if (allActivePlayers.length === 1) {
       //for the case of one player remaining and hasn't selected a box yet
       return {
@@ -447,10 +447,10 @@ function createIndividualModeSummary(
   }
 
   return {
-    playerId: roundsWithOnePlayer[0]!.boxes
+    playerId: previousRoundsWithOnePlayer[0]!.boxes
       .flatMap((box) => box.playerIds)
       .find((pid) => allActivePlayers.includes(pid))!,
-    roundsSurvivedCount: roundsWithOnePlayer.length,
+    roundsSurvivedCount: previousRoundsWithOnePlayer.length,
   };
 }
 
