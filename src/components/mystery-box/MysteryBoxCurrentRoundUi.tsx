@@ -1,8 +1,13 @@
 import styled from "styled-components";
 import { MysteryBoxGameRoundView } from "../../services/mystery-box/types";
 import { FeatureHeading, SmallHeading } from "../Atoms";
+import { Appear } from "../animations/Appear";
+import { growAnimation } from "../animations/keyframes/size";
 import { MysteryBoxUi } from "./MysteryBox";
-import { MysteryBoxUIState } from "./useMysteryBoxGameState";
+import {
+  MysteryBoxGameState,
+  MysteryBoxUIState,
+} from "./useMysteryBoxGameState";
 
 const BoxLayoutContainer = styled.div`
   position: relative;
@@ -22,18 +27,23 @@ const PositionedBox = styled.div<{ position: BoxPosition }>`
     position.bottom !== undefined ? `${position.bottom}vh` : "auto"};
 `;
 
-const BoxOptionContainer = styled.div`
-  display: grid;
-  grid-template-columns: 50% 50%;
-  grid-row: auto auto;
-  grid-column-gap: 1rem;
-  grid-row-gap: 1rem;
-  height: 80vh;
-  width: 100vw;
+const Explosion = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12rem;
+  z-index: 2;
 `;
+
+const ExplodeAnimation = styled.div`
+  animation: ${growAnimation} 200ms ease-in-out 2000ms 1 both;
+`;
+
 const BoxOptionContainerItem = styled.div`
   display: flex;
   justify-content: center;
+  position: relative;
 `;
 
 type BoxPosition = {
@@ -78,6 +88,14 @@ export const MysteryBoxCurrentRoundUi = ({ round, gameState }: Props) => {
                   box={box}
                   open={gameState.boxesOpen}
                 />
+
+                {box.contents.type === "bomb" &&
+                  gameState.gameState ===
+                    MysteryBoxGameState.SHOW_BOX_REVEAL_RESULT && (
+                    <Explosion key={`${round.id}-${box.id}-explosion`}>
+                      <ExplodeAnimation>💥</ExplodeAnimation>
+                    </Explosion>
+                  )}
               </BoxOptionContainerItem>
             </PositionedBox>
           );
