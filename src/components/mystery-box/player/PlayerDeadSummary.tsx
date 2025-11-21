@@ -4,18 +4,12 @@ import {
   MysteryBoxGameView,
   MysteryBoxPlayerView,
 } from "../../../services/mystery-box/types";
+import { CenterSpaced } from "../../Layouts";
+import { SmallHeading } from "../../Atoms";
 import { PlayerMysteryBoxUi } from "./PlayerMysteryBoxUI";
 
-const BoxOptionContainer = styled.div`
-  display: grid;
-  grid-template-columns: 50% 50%;
-  grid-row: auto auto;
-  grid-column-gap: 1rem;
-  grid-row-gap: 4rem;
-  margin: 2rem 0;
-  padding: 0;
-  align-items: center;
-  justify-items: center;
+const DeadIcon = styled.div`
+  font-size: 5rem;
 `;
 
 const BoxOptionContainerItem = styled.div`
@@ -38,16 +32,18 @@ const BoxButton = styled.button`
 `;
 
 type Props = {
+  game: MysteryBoxGameView;
   player: MysteryBoxPlayerView;
 };
 
-export const PlayerLootTotals = ({ player }: Props) => {
+export const PlayerDeadSummary = ({ player, game }: Props) => {
   return (
-    <div>
-      <h3>Your Loot Totals so far</h3>
+    <CenterSpaced stacked={true}>
+      <SmallHeading>You dead!</SmallHeading>
+      <DeadIcon>☠️</DeadIcon>
       <div>
         <p>Points: {player.lootTotals.points?.total || 0}</p>
       </div>
-    </div>
+    </CenterSpaced>
   );
 };

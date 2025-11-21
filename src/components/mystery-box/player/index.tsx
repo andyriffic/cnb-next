@@ -4,6 +4,7 @@ import { SmallHeading } from "../../Atoms";
 import { PlayerPageLayout } from "../../PlayerPageLayout";
 import { PlayerBoxSelection } from "./PlayerBoxSelection";
 import { PlayerLootTotals } from "./PlayerLootTotals";
+import { PlayerDeadSummary } from "./PlayerDeadSummary";
 
 type Props = {
   game: MysteryBoxGameView;
@@ -15,6 +16,10 @@ const View = ({ game, playerId, selectBox }: Props) => {
   const player = useMemo(() => {
     return game.players.find((player) => player.id === playerId)!;
   }, [game.players, playerId]);
+
+  const playerAlive = useMemo(() => {
+    return player.status !== "eliminated";
+  }, [player.status]);
 
   if (!player) {
     return (
@@ -29,15 +34,15 @@ const View = ({ game, playerId, selectBox }: Props) => {
       playerId={playerId}
       headerContent={<SmallHeading>Mystery Box ({game.id}) 🎁</SmallHeading>}
     >
-      <p>
-        Hello {player.name} ({player.currentlySelectedBoxId})
-      </p>
-      <PlayerBoxSelection
-        round={game.currentRound}
-        player={player}
-        onSelect={selectBox}
-      />
-      <PlayerLootTotals player={player} />
+      {playerAlive ? (
+        <PlayerBoxSelection
+          round={game.currentRound}
+          player={player}
+          onSelect={selectBox}
+        />
+      ) : (
+        <PlayerDeadSummary player={player} game={game} />
+      )}
     </PlayerPageLayout>
   );
 };

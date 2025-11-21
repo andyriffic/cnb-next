@@ -221,7 +221,7 @@ export const MysteryBoxActivePlayers = ({
           <PositionedPlayerPixels key={player.id} coordinates={coordinates}>
             <Attention
               animate={
-                game.individualMode &&
+                !!game.individualMode &&
                 game.individualMode.playerId === player.id
               }
               animation="vibrate"
