@@ -86,7 +86,7 @@ export const STARMAP_CHART: SpaceRaceStarmap = {
     createEntity("earth2", { x: 29, y: 4 }, "finish"),
     createEntity("satellite", { x: 29, y: 5 }),
     createEntity("satellite", { x: 29, y: 6 }),
-    createEntity("earth3", { x: 29, y: 7 }, "finish"),
+    createEntity("earth3", { x: 29, y: 7 }, "block"),
     createEntity("satellite", { x: 29, y: 8 }),
   ],
 };
