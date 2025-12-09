@@ -1,4 +1,6 @@
+import Image from "next/image";
 import { Attention } from "../animations/Attention";
+import spacedockImage from "./spacedock.png";
 import {
   SpaceRaceCoordinates,
   SpaceRaceEntityBehaviour,
@@ -70,7 +72,7 @@ export const STARMAP_CHART: SpaceRaceStarmap = {
     createEntity("asteroid", { x: 23, y: 5 }),
     createEntity("asteroid", { x: 23, y: 6 }),
     createEntity("asteroid", { x: 25, y: 2 }),
-    createEntity("asteroid", { x: 25, y: 7 }),
+    // createEntity("asteroid", { x: 25, y: 7 }),
     createEntity("asteroid", { x: 27, y: 1 }),
     createEntity("asteroid", { x: 27, y: 2 }),
     createEntity("asteroid", { x: 27, y: 4 }),
@@ -130,7 +132,21 @@ function getDisplayElement(entityType: SpaceRaceEntityType): JSX.Element {
     case "earth3":
       return (
         <Attention animation="pulse">
-          <div style={{ transform: "scale(1.3)" }}>🌎</div>
+          <div style={{ transform: "translateX(-10px)", position: "relative" }}>
+            <Image src={spacedockImage} width={100} alt="" />
+            <div
+              style={{
+                position: "absolute",
+                color: "yellow",
+                fontSize: "0.7rem",
+                width: "100%",
+                bottom: "12px",
+                textAlign: "center",
+              }}
+            >
+              Listing Foundations Squad
+            </div>
+          </div>
         </Attention>
       );
     default:
