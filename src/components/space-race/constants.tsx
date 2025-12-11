@@ -86,7 +86,7 @@ export const STARMAP_CHART: SpaceRaceStarmap = {
     createEntity("earth2", { x: 29, y: 4 }, "finish"),
     createEntity("satellite", { x: 29, y: 5 }),
     createEntity("satellite", { x: 29, y: 6 }),
-    createEntity("earth3", { x: 29, y: 7 }, "block"),
+    createEntity("earth3", { x: 29, y: 7 }, "finish", false, ["callum"]),
     createEntity("satellite", { x: 29, y: 8 }),
   ],
 };
@@ -95,7 +95,8 @@ export function createEntity(
   type: SpaceRaceEntityType,
   position: SpaceRaceCoordinates,
   behaviour: SpaceRaceEntityBehaviour = "block",
-  removable = true
+  removable = true,
+  allowedPlayerIds: string[] = []
 ) {
   return {
     type,
@@ -103,6 +104,7 @@ export function createEntity(
     display: getDisplayElement(type),
     behaviour,
     removable,
+    allowedPlayerIds,
   };
 }
 

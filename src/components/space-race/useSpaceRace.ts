@@ -598,6 +598,13 @@ function getEndingCooridinates(
     };
   }
 
+  if (entity.allowedPlayerIds && !entity.allowedPlayerIds.includes(player.id)) {
+    return {
+      entity,
+      coordinates: { x: entity.position.x - 1, y: player.currentPosition.y },
+    };
+  }
+
   return {
     entity,
     coordinates: { ...entity.position },
