@@ -8,6 +8,7 @@ import { Appear } from "../animations/Appear";
 import { useSound } from "../hooks/useSound";
 import { PacManGhost } from "./PacManGhost";
 import { PacManPlayer } from "./types";
+import { PacManGhostWithSantaHat } from "./PacManGhostWithSantaHat";
 
 const Container = styled.div<{ goingToJail: boolean }>`
   position: relative;
@@ -107,7 +108,10 @@ export function BoardPlayer({ pacPlayer }: Props): JSX.Element {
 
   return (
     <Container goingToJail={goingToJail}>
-      <PacManGhost color={inJail ? "#777777" : pacPlayer.color} width="3vw" />
+      <PacManGhostWithSantaHat
+        color={inJail ? "#777777" : pacPlayer.color}
+        width="3vw"
+      />
       <PlayerName
         style={{
           backgroundColor: pacPlayer.color,
