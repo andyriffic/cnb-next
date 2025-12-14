@@ -9,6 +9,8 @@ export const SOCKET_ENDPOINT: string =
 export const DB_TABLE_NAME_PLAYERS: string =
   process.env.DB_TABLE_NAME_PLAYERS || "";
 
+export const S3_BUCKET_NAME = process.env.S3_BUCKET_NAME || "";
+
 export const ENVIRONMENT_NAME: string = process.env.ENVIRONMENT_NAME || "";
 
 //private
