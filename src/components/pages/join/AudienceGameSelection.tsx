@@ -19,7 +19,7 @@ export const GAME_QUESTION: QueryUserQuestion<GameTypes> = {
   question: "What game should we play?",
   style: "normal",
   options: [
-    { text: "Betting 🎲", value: "rps" },
+    // { text: "Betting 🎲", value: "rps" },
     { text: "Balloon 🎈", value: "balloon" },
     { text: "Number Crunch 💯", value: "number-crunch" },
     { text: "Mystery Box 🎁", value: "mystery-box" },

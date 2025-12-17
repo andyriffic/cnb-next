@@ -114,7 +114,7 @@ export type GameTypes =
   | "mystery-box";
 
 const availableGameTypes: GameTypes[] = [
-  "rps",
+  // "rps",
   "balloon",
   "number-crunch",
   "mystery-box",

@@ -14,7 +14,7 @@ export function getSuggestedGame(date: Date): GameTypes | "ask-audience" {
     }
     // case "Wednesday":
     case "Thursday": {
-      return "rps";
+      return "mystery-box";
     }
     case "Friday": {
       return "ask-audience";
