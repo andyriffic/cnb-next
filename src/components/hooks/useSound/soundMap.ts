@@ -81,6 +81,7 @@ export const xmasSounds: { [key in SoundName]: string } = {
   "rps-new-round": "/sounds/xmas/santa_ho_ho_ho_ho_ho.mp3",
   "rps-game-on": "/sounds/xmas/santa_ho_ho_ho_ho_ho.mp3",
   "rps-spectator-choice-reveal": "/sounds/xmas/sleigh_bell.mp3",
+  "mystery-box-waiting-to-select-box-music": "/sounds/xmas/jingle_bells_2.mp3",
 };
 
 export const chineseNewYearSounds: { [key in SoundName]: string } = {
