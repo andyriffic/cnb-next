@@ -7,58 +7,106 @@ export type Joke = {
 
 const JOKES: Joke[] = [
   {
-    jokeText: "Where does Dumbledore hide his army?",
-    answer: "In his sleeve-y.",
+    jokeText: "Why did Harry Potter get lost in the forest?",
+    answer: "Because he kept wand-ering off the trail.",
   },
   {
-    jokeText: "What's Hermione's favorite TV show?",
-    answer: "Granger Things.",
+    jokeText: "Why doesn't Hogwarts have Wi-Fi?",
+    answer:
+      "Because they already have a strong connection to the Floo Network.",
   },
   {
-    jokeText:
-      "What did they call the Dark Lord when he stuck his finger in an electrical socket?",
-    answer: "Volt-amort",
+    jokeText: "Why did the Muggle bring a ladder to Hogwarts?",
+    answer: "Because they heard the standards were high.",
   },
   {
-    jokeText: "Why did Barty Crouch Jr quit drinking?",
-    answer: "It was making him Moody!",
+    jokeText: "What is a Death Eater's least favorite band?",
+    answer: "The Grateful Dead.",
   },
   {
-    jokeText: "Why did the protons vote for Harry as class president?",
-    answer: "They didn't want to elect Ron!",
+    jokeText: "Why did Snape stand in the middle of the road?",
+    answer: "So you would not know which side he was on.",
   },
   {
-    jokeText: "How does Harry Potter enter a building?",
-    answer: "Easy, he walks through a Gryffin-door!",
+    jokeText: "Why did Hermione bring a ruler to bed?",
+    answer: "To see how long she slept.",
   },
   {
-    jokeText: "What do you a Harry Potter fan riding a horse?",
-    answer: "Harry Trotter. 🐴",
+    jokeText: "Why are Slytherins good at basketball?",
+    answer: "Because they know how to make a lot of sneaky passes.",
   },
   {
-    jokeText:
-      "What's the difference between Harry Potter and a spelling bee contestant?",
-    answer: "One conjures spells and the other spells conjure!",
+    jokeText: "What is Voldemort's favorite exercise?",
+    answer: "Splitting hairs.",
   },
   {
-    jokeText: "Why did Snape give Harry Potter detention?",
-    answer: "He was cursing in class!",
+    jokeText: "Why did the spell fail in class?",
+    answer: "Because it did not have the proper incantation.",
   },
   {
-    jokeText: "Why did Harry Potter make a great computer programmer?",
-    answer: "Because he spoke Python!",
+    jokeText: "What do you call a wizard who tells dad jokes?",
+    answer: "Pun-umbledore.",
   },
   {
-    jokeText: "What is Harry Potter's favourite type of drink?",
-    answer: "Something gin-ey!",
+    jokeText: "Why are ghosts terrible liars?",
+    answer: "Because the truth always comes back to haunt them.",
   },
   {
-    jokeText: "What do you call Quidditch players who live together?",
-    answer: "Broom mates!",
+    jokeText: "Why did the Quidditch player bring string to the match?",
+    answer: "In case he needed to tie the score.",
   },
   {
-    jokeText: "Why did Harry Potter cross the road?",
-    answer: "No reason, but a book will be written about it",
+    jokeText: "Why was the spellbook so calm?",
+    answer: "Because it had all the answers.",
+  },
+  {
+    jokeText: "Why did Harry bring a pencil to class?",
+    answer: "In case he needed to draw his wand.",
+  },
+  {
+    jokeText: "Why was the potion feeling insecure?",
+    answer: "Because it was constantly being stirred up.",
+  },
+  {
+    jokeText: "Why did Voldemort fail his job interview?",
+    answer: "He could not explain the gap in his nose.",
+  },
+  {
+    jokeText: "Why did the wizard bring a clock to class?",
+    answer: "Because he wanted to learn about time turners.",
+  },
+  {
+    jokeText: "Why did the Dementor fail its performance review?",
+    answer: "He was sucking the joy out of every meeting.",
+  },
+  {
+    jokeText: "Why did the Basilisk get a bad Yelp review?",
+    answer: "Too many people said the service was petrifying.",
+  },
+  {
+    jokeText: "Why did Lucius Malfoy hate casual Fridays?",
+    answer: "Because it undermined the importance of dramatic cloaks.",
+  },
+  {
+    jokeText: "Why did Hogwarts switch to Agile?",
+    answer:
+      "Because Dumbledore preferred sprint planning over long-term prophecies.",
+  },
+  {
+    jokeText: "Why did the Hogwarts website never go down?",
+    answer: "Because it was hosted on Platform Nine and Three-Quarters.",
+  },
+  {
+    jokeText: "Why did Dobby become a product manager?",
+    answer: "Because he was very focused on user freedom.",
+  },
+  {
+    jokeText: "Why did the Basilisk trigger an incident alert?",
+    answer: "Because everyone froze at once.",
+  },
+  {
+    jokeText: "Why is the Room of Requirement so depenable",
+    answer: "Because it scales on demand.",
   },
 ];
 
