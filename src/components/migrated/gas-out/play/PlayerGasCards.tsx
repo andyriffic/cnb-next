@@ -33,7 +33,7 @@ const CardText = styled.div`
 
 const isCardDisabled = (
   card: GasCard,
-  curse: CurseType | undefined
+  curse: CurseType | undefined,
 ): boolean => {
   if (!curse) {
     return false;
@@ -48,6 +48,7 @@ const isCardDisabled = (
 type Props = {
   cards: GasCard[];
   enabled: boolean;
+  dark: boolean;
   playCard: (cardIndex: number) => void;
   player: GasPlayer;
 };
@@ -55,6 +56,7 @@ type Props = {
 export const PlayerGasCards = ({
   cards,
   enabled,
+  dark,
   playCard,
   player,
 }: Props): JSX.Element => {
@@ -66,7 +68,10 @@ export const PlayerGasCards = ({
           disabled={!enabled || isCardDisabled(c, player.curse)}
           onClick={() => playCard(i)}
         >
-          <BalloonCard card={c} pressesRemaining={c.presses}></BalloonCard>
+          <BalloonCard
+            card={dark ? { type: "blank" } : c}
+            pressesRemaining={c.presses}
+          ></BalloonCard>
         </CardButtonContainer>
       ))}
     </Container>

@@ -6,6 +6,7 @@ import THEME from "../../../themes";
 import { FlipX } from "../../FlipX";
 import bombImage from "./cnb-card-bomb.png";
 import curseImage from "./cnb-card-curse.png";
+import darkModeImage from "./cnb-card-dark-mode.png";
 import reverseImage from "./cnb-card-reverse.png";
 
 const BaseCard = styled.div`
@@ -50,6 +51,11 @@ const SkipCard = styled(BaseCard)`
   color: ${THEME.tokens.colours.ballonGame.cardAltText};
 `;
 
+const DarkCard = styled(BaseCard)`
+  background-color: black;
+  color: black;
+`;
+
 const PressesRemainingText = styled.div`
   font-size: 3rem;
   font-family: ${THEME.tokens.fonts.feature};
@@ -76,13 +82,13 @@ const CardIcon = styled.div`
 `;
 
 type Props = {
-  card: GasCard;
+  card: GasCard | { type: "blank" };
   pressesRemaining: number;
 };
 
 function renderCard(
-  card: GasCard,
-  pressesRemaining: number
+  card: GasCard | { type: "blank" },
+  pressesRemaining: number,
 ): JSX.Element | null {
   switch (card.type) {
     case "press":
@@ -92,12 +98,12 @@ function renderCard(
           <PressesRemainingText>{pressesRemaining}</PressesRemainingText>
         </NumberCard>
       );
-    case "risky":
+    case "dark-mode":
       return (
         <CurseCard>
           <CardText>Curse</CardText>
           <PressesRemainingText>{pressesRemaining}</PressesRemainingText>
-          <CardImage src={curseImage} width={40} alt="" />
+          <CardImage src={darkModeImage} width={40} alt="" />
         </CurseCard>
       );
     case "curse-all-fives":
@@ -131,8 +137,10 @@ function renderCard(
           <CardText style={{ fontSize: "1.1rem" }}>Reverse</CardText>
         </ReverseCard>
       );
+    case "blank":
+      return <DarkCard></DarkCard>;
     default:
-      return <CardText>{card.type}</CardText>;
+      return <BaseCard>Unknown</BaseCard>;
   }
 }
 

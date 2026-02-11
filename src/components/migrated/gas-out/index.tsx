@@ -15,6 +15,7 @@ import { useGasSound } from "./hooks/useGasSound";
 import { TalkingHeadBalloon } from "./TalkingHeadBalloon";
 import { FinalShowdown } from "./FinalShowdown";
 import { BombDisposalChoice } from "./BombDisposalChoice";
+import { LightBulb } from "./LightBulb";
 
 const Container = styled.div`
   margin: 50px auto;
@@ -66,7 +67,7 @@ const View = ({ gasGame, team }: Props) => {
 
   const nextPlayerForThisGame = useCallback(
     () => nextPlayer(gasGame.id),
-    [gasGame, nextPlayer]
+    [gasGame, nextPlayer],
   );
 
   const [bombVictimId, setBombVictimId] = useState<string | undefined>();
@@ -116,11 +117,9 @@ const View = ({ gasGame, team }: Props) => {
     >
       <Container>
         <GameModeDisplay>
-          {gasGame.gameType === "crazy" ? (
-            <AnimatedText>Crazy mode</AnimatedText>
-          ) : (
-            `${gasGame.gameType} mode`
-          )}
+          <LightBulb
+            state={gasGame.globalEffect?.type === "lights-out" ? "off" : "on"}
+          />
         </GameModeDisplay>
         {gasGame.superGuessInEffect && (
           <SuperGuessDisplay>

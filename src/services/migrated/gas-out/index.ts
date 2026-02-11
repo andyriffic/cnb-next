@@ -74,13 +74,14 @@ function createPointsMap(totalPlayerCount: number): number[] {
 }
 
 export function moveToNextAlivePlayerWithExtraCardRules(
-  game: GasGame
+  game: GasGame,
 ): GasGame {
   return pipe(
     game,
     moveToNextAlivePlayer,
+    applyGlobalEffectsActivatedFromLastPress,
     applyCursesToCurrentPlayer,
-    applyBoomerangDeath
+    applyBoomerangDeath,
     // applyBombDeath
   );
 }
@@ -167,7 +168,7 @@ function applyBombDeath(game: GasGame): GasGame {
     game.alivePlayersIds.includes(lastCardMove.playerId)
   ) {
     const randomAlivePlayerId = selectRandomOneOf(
-      game.alivePlayersIds.filter((pid) => pid !== lastCardMove.playerId)
+      game.alivePlayersIds.filter((pid) => pid !== lastCardMove.playerId),
     );
 
     return explode(
@@ -178,7 +179,7 @@ function applyBombDeath(game: GasGame): GasGame {
           pressesRemaining: 0,
         },
       },
-      { playerId: lastCardMove.playerId, deathType: "bomb" }
+      { playerId: lastCardMove.playerId, deathType: "bomb" },
     );
   }
 
@@ -214,34 +215,75 @@ function incrementTurnCount(game: GasGame): GasGame {
   };
 }
 
-function applyCursesToCurrentPlayer(game: GasGame): GasGame {
+function getCurseActivatedFromLastPress(game: GasGame): CurseType | undefined {
   if (game.alivePlayersIds.length === 2) {
-    return game;
+    return;
   }
 
   if (game.moveHistory.length < 1) {
-    return game;
+    return;
   }
 
   const lastCardMove = game.moveHistory[0]!;
 
   if (
-    (lastCardMove.cardPlayed.type === "risky" ||
+    (lastCardMove.cardPlayed.type === "dark-mode" ||
       lastCardMove.cardPlayed.type === "curse-all-fives") &&
     game.alivePlayersIds.includes(lastCardMove.playerId)
   ) {
+    return lastCardMove.cardPlayed.type === "dark-mode"
+      ? "dark-mode"
+      : "all-fives";
+  }
+}
+
+function applyGlobalEffectsActivatedFromLastPress(game: GasGame): GasGame {
+  const curseActivatedThisTurn = getCurseActivatedFromLastPress(game);
+  if (!curseActivatedThisTurn) {
+    return game;
+  }
+
+  switch (curseActivatedThisTurn) {
+    case "dark-mode": {
+      if (game.globalEffect?.type === "lights-out") {
+        // lights were out, so turn back on
+        return {
+          ...game,
+          globalEffect: undefined,
+        };
+      }
+
+      // Lights not already out, so turn them off
+      const lastCardMove = game.moveHistory[0]!;
+      return {
+        ...game,
+        globalEffect: {
+          type: "lights-out",
+          playedByPlayerId: lastCardMove.playerId,
+        },
+      };
+    }
+    default: {
+      return game;
+    }
+  }
+}
+
+function applyCursesToCurrentPlayer(game: GasGame): GasGame {
+  const curseActivatedThisTurn = getCurseActivatedFromLastPress(game);
+
+  if (curseActivatedThisTurn && curseActivatedThisTurn === "all-fives") {
     const currentPlayer = getPlayerOrThrow(game, game.currentPlayer.id);
     const cursedPlayer: GasPlayer = {
       ...currentPlayer,
-      curse:
-        lastCardMove.cardPlayed.type === "risky" ? "double-press" : "all-fives",
+      curse: curseActivatedThisTurn,
     };
 
     return {
       ...game,
       allPlayers: updatePlayerInList(
         game.allPlayers,
-        applyCurseEffectsToPlayer(cursedPlayer)
+        applyCurseEffectsToPlayer(cursedPlayer),
       ),
     };
   }
@@ -274,6 +316,9 @@ function applyCurseEffectsToPlayer(player: GasPlayer): GasPlayer {
           createCard("press", 5),
         ],
       };
+    case "dark-mode":
+      // dark mode doesn't affect players hand
+      return player;
   }
 }
 
@@ -284,7 +329,7 @@ export function moveToNextPlayer(game: GasGame): GasGame {
   }
 
   const currentPlayerIndex = game.allPlayers.findIndex(
-    (p) => p.player.id === game.currentPlayer.id
+    (p) => p.player.id === game.currentPlayer.id,
   );
   const unvalidatedNextPlayerIndex =
     game.direction === "left" ? currentPlayerIndex - 1 : currentPlayerIndex + 1;
@@ -324,7 +369,7 @@ export function moveToNextPlayer(game: GasGame): GasGame {
 function giveEffectPowerToPlayer(
   game: GasGame,
   playerId: string,
-  effect: EffectType
+  effect: EffectType,
 ): GasGame {
   const player = getPlayerOrThrow(game, playerId);
 
@@ -359,15 +404,25 @@ function activateEffect(game: GasGame, effect: GlobalEffect): GasGame {
 export function playEffect(game: GasGame, effect: GlobalEffect): GasGame {
   return removeEffectPowerFromPlayer(
     activateEffect(game, effect),
-    effect.playedByPlayerId
+    effect.playedByPlayerId,
   );
 }
 
 function deactivateGlobalEffect(game: GasGame): GasGame {
-  return {
-    ...game,
-    globalEffect: undefined,
-  };
+  if (
+    game.globalEffect &&
+    game.allPlayers
+      .filter((p) => p.status === "dead")
+      .map((p) => p.player.id)
+      .includes(game.globalEffect.playedByPlayerId)
+  ) {
+    return {
+      ...game,
+      globalEffect: undefined,
+    };
+  }
+
+  return game;
 }
 
 export function resetCloud(game: GasGame): GasGame {
@@ -406,7 +461,7 @@ function assignMvps(game: GasGame): GasGame {
 
 function getMostPressesPlayerId(game: GasGame): string[] {
   const mostPressesCount = Math.max(
-    ...game.allPlayers.map((p) => p.totalPresses)
+    ...game.allPlayers.map((p) => p.totalPresses),
   );
 
   if (mostPressesCount === 0) {
@@ -420,7 +475,7 @@ function getMostPressesPlayerId(game: GasGame): string[] {
 
 function getMostCorrectGuessesPlayerId(game: GasGame): string[] {
   const mostCorrectGuessesCount = Math.max(
-    ...game.allPlayers.map((p) => p.guesses.correctGuessCount)
+    ...game.allPlayers.map((p) => p.guesses.correctGuessCount),
   );
 
   if (mostCorrectGuessesCount === 0) {
@@ -451,7 +506,7 @@ function assignWinner(game: GasGame): GasGame {
   }
 
   const maxPointsByOtherPlayers = Math.max(
-    ...game.allPlayers.map<number>((p) => p.points)
+    ...game.allPlayers.map<number>((p) => p.points),
   );
 
   const winningPlayer: GasPlayer = {
@@ -471,7 +526,7 @@ function assignWinner(game: GasGame): GasGame {
 export function makeNextPlayerOutGuess(
   game: GasGame,
   playerId: string,
-  guessPlayerId: string
+  guessPlayerId: string,
 ): GasGame {
   const guessingPlayer = getPlayerOrThrow(game, playerId);
   const updatedGuessingPlayer: GasPlayer = {
@@ -484,7 +539,7 @@ export function makeNextPlayerOutGuess(
 
   const updatedPlayers = updatePlayerInList(
     game.allPlayers,
-    updatedGuessingPlayer
+    updatedGuessingPlayer,
   );
 
   return setSuperGuessBonus({
@@ -508,7 +563,7 @@ function setSuperGuessBonus(game: GasGame): GasGame {
   }
 
   const allDeadPlayersHaveGuessed = allDeadPlayers.every(
-    (p) => p.guesses.nextPlayerOutGuess !== undefined
+    (p) => p.guesses.nextPlayerOutGuess !== undefined,
   );
   const firstDeadPlayerGuess = allDeadPlayers[0]!.guesses.nextPlayerOutGuess;
 
@@ -517,7 +572,7 @@ function setSuperGuessBonus(game: GasGame): GasGame {
     superGuessInEffect:
       allDeadPlayersHaveGuessed &&
       allDeadPlayers.every(
-        (p) => p.guesses.nextPlayerOutGuess === firstDeadPlayerGuess
+        (p) => p.guesses.nextPlayerOutGuess === firstDeadPlayerGuess,
       ),
     potentialSuperGuessStillAvailable: canYouStillSuperGuess(game),
   };
@@ -540,7 +595,7 @@ function canYouStillSuperGuess(game: GasGame): boolean {
     .map((p) => p.guesses.nextPlayerOutGuess);
 
   const allGuessPlayersGuessedSamePlayer = guessedPlayerGuesses.every(
-    (p) => p === guessedPlayerGuesses[0]
+    (p) => p === guessedPlayerGuesses[0],
   );
 
   const allPlayersGuessed =
@@ -551,7 +606,7 @@ function canYouStillSuperGuess(game: GasGame): boolean {
 
 function totalOutNominationsCount(
   allPlayers: GasPlayer[],
-  playerId: string
+  playerId: string,
 ): number {
   return allPlayers.filter((p) => p.guesses.nextPlayerOutGuess === playerId)
     .length;
@@ -583,7 +638,7 @@ export function press(game: GasGame): GasGame {
     applyBombGlobalEffect,
     resetPlayerGuessesAndGivePoints,
     assignWinner,
-    assignMvps
+    assignMvps,
   );
 
   // return assignMvps(
@@ -605,7 +660,7 @@ export function press(game: GasGame): GasGame {
 function explode(game: GasGame, killedBy: PlayerKilledBy | undefined): GasGame {
   const deadPlayerIds = [...game.deadPlayerIds, game.currentPlayer.id];
   const alivePlayersIds = game.alivePlayersIds.filter(
-    (id) => id !== game.currentPlayer.id
+    (id) => id !== game.currentPlayer.id,
   );
   const currentPlayer = getPlayerOrThrow(game, game.currentPlayer.id);
 
@@ -636,7 +691,7 @@ function explode(game: GasGame, killedBy: PlayerKilledBy | undefined): GasGame {
     assignWinner,
     assignMvps,
     setSuperGuessBonus,
-    deactivateGlobalEffect
+    deactivateGlobalEffect,
   );
 
   // return setSuperGuessBonus(
@@ -683,6 +738,11 @@ function takeOnePressFromCurrentPlayer(game: GasGame): GasGame {
 
 function applyBombGlobalEffect(game: GasGame): GasGame {
   if (game.alivePlayersIds.length <= 2) {
+    return game;
+  }
+
+  if (game.globalEffect) {
+    //dont override a current global effect
     return game;
   }
 
@@ -733,7 +793,7 @@ function resetPlayerGuessesAndGivePoints(game: GasGame): GasGame {
 function addCardToHistory(
   history: CardHistory[],
   playerId: string,
-  card: GasCard
+  card: GasCard,
 ): CardHistory[] {
   return [{ playerId, cardPlayed: card }, ...history];
 }
@@ -741,7 +801,7 @@ function addCardToHistory(
 export function playCard(
   game: GasGame,
   playerId: string,
-  cardIndex: number
+  cardIndex: number,
 ): GasGame {
   if (playerId !== game.currentPlayer.id) {
     // throw `Player ${playerId} is not the current player ${game.currentPlayer.id}`;
@@ -764,7 +824,7 @@ export function playCard(
       createRandomCard(
         game.gameType,
         player.advantage,
-        game.alivePlayersIds.length === 2
+        game.alivePlayersIds.length === 2,
       ),
     ],
   };
@@ -778,7 +838,7 @@ export function playCard(
       pressesRemaining: applyEffectToCardPresses(
         card,
         game.globalEffect,
-        playerId
+        playerId,
       ),
     },
     direction:
@@ -804,7 +864,7 @@ export function explodePlayer(game: GasGame, playerId: string): GasGame {
 function applyEffectToCardPresses(
   card: GasCard,
   effect: GlobalEffect | undefined,
-  playerId: string
+  playerId: string,
 ): number {
   if (!effect || effect.playedByPlayerId === playerId) {
     return card.presses;
@@ -830,7 +890,7 @@ export function playerTimedOut(game: GasGame, playerId: string): GasGame {
 
 function updatePlayerInList(
   allPlayers: GasPlayer[],
-  player: GasPlayer
+  player: GasPlayer,
 ): GasPlayer[] {
   return allPlayers.map((p) => (p.player.id === player.player.id ? player : p));
 }
@@ -851,7 +911,7 @@ function getPlayerOrThrow(game: GasGame, playerId: string): GasPlayer {
 function getPlayerAndCardOrThrow(
   game: GasGame,
   playerId: string,
-  cardIndex: number
+  cardIndex: number,
 ): { player: GasPlayer; card: GasCard } {
   const player = getPlayerOrThrow(game, playerId);
 
@@ -891,7 +951,7 @@ function createGasPlayer(player: Player, gameType: GasGameType): GasPlayer {
 
 function getRandomCardType(
   gameType: GasGameType,
-  isFinalRound: boolean
+  isFinalRound: boolean,
 ): CardType {
   const cardWeights: WeightedItem<CardType>[] =
     gameType === "crazy"
@@ -900,9 +960,9 @@ function getRandomCardType(
           { weight: 2, item: isFinalRound ? "press" : "reverse" },
         ]
       : [
-          { weight: 1, item: "skip" },
-          { weight: 2, item: "bomb" },
-          { weight: 3, item: "risky" },
+          { weight: 2, item: "skip" },
+          { weight: 1, item: "bomb" },
+          { weight: 5, item: "dark-mode" },
           { weight: 3, item: "curse-all-fives" },
           { weight: 3, item: "reverse" },
           { weight: 14, item: "press" },
@@ -920,8 +980,8 @@ function createCard(cardType: CardType, presses: number): GasCard {
     case "skip":
     case "reverse":
       return { type: cardType, presses: 0 };
-    case "risky":
-      return { type: "risky", presses: 4 };
+    case "dark-mode":
+      return { type: "dark-mode", presses: 4 };
     case "curse-all-fives":
       return { type: "curse-all-fives", presses: 6 };
     case "press":
@@ -934,12 +994,12 @@ function createCard(cardType: CardType, presses: number): GasCard {
 function createRandomCard(
   gameType: GasGameType,
   advantage: boolean,
-  isFinalRound: boolean = false
+  isFinalRound: boolean = false,
 ): GasCard {
   const nextCardType = getRandomCardType(gameType, isFinalRound);
   const card = createCard(
     nextCardType,
-    gameType === "crazy" || advantage ? 1 : selectRandomOneOf([1, 2, 3, 4, 5])
+    gameType === "crazy" || advantage ? 1 : selectRandomOneOf([1, 2, 3, 4, 5]),
   );
 
   return card;

@@ -26,7 +26,7 @@ export function BalloonCardWithSoundAndAnimation({
       case "skip":
         play("gas-play-skip-card");
         break;
-      case "risky":
+      case "dark-mode":
       case "bomb":
         play("gas-play-risky-card");
         break;

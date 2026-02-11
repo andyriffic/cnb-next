@@ -48,6 +48,10 @@ const View = ({ playerId, gasGameId }: Props) => {
 
   const showCloudPresser = playersTurn && pressesRemaining > 0;
 
+  const darkmode =
+    game.globalEffect?.type === "lights-out" &&
+    game.globalEffect.playedByPlayerId !== playerId;
+
   return (
     <PlayerPageLayout playerId={playerId}>
       <PlayerStatus>{statusText}</PlayerStatus>
@@ -55,6 +59,7 @@ const View = ({ playerId, gasGameId }: Props) => {
         <>
           <PlayerGasCards
             cards={gasPlayer.cards}
+            dark={darkmode}
             enabled={playersTurn && !game.currentPlayer.cardPlayed}
             playCard={playPlayersCard}
             player={gasPlayer}

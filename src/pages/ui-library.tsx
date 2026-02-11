@@ -51,7 +51,7 @@ const Home: NextPage = () => {
             pressesRemaining={0}
           />
           <BalloonCard
-            card={{ presses: 4, type: "risky" }}
+            card={{ presses: 4, type: "dark-mode" }}
             pressesRemaining={4}
           />
           <BalloonCard
@@ -62,6 +62,7 @@ const Home: NextPage = () => {
             card={{ presses: 8, type: "bomb" }}
             pressesRemaining={8}
           />
+          <BalloonCard card={{ type: "blank" }} pressesRemaining={8} />
         </div>
       </UiSection>
     </SpectatorPageLayout>

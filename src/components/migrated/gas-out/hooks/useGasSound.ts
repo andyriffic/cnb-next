@@ -34,7 +34,7 @@ export function useGasSound(game: GasGame | undefined) {
     return (
       game.currentPlayer.pressesRemaining === 0 &&
       !!game.currentPlayer.cardPlayed &&
-      game.currentPlayer.cardPlayed.type === "risky" &&
+      game.currentPlayer.cardPlayed.type === "dark-mode" &&
       game.alivePlayersIds.includes(game.currentPlayer.id)
     );
   }, [game]);
@@ -91,7 +91,7 @@ export function useGasSound(game: GasGame | undefined) {
     }
 
     const currentPlayer = game.allPlayers.find(
-      (p) => p.player.id === game.currentPlayer.id
+      (p) => p.player.id === game.currentPlayer.id,
     );
 
     if (!currentPlayer) {

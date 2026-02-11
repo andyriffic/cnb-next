@@ -25,7 +25,7 @@ const DEFAULT_THEME: GlobalGameTheme = {
         cardAltText: "#E700B4",
         numberCardBackground: "#CBFFEF",
         skipCardBackground: "#FFD29D",
-        cursedCardBackground: "#9ED38B",
+        cursedCardBackground: "#8e8f8d",
         cursedCardVariantBackground: "#c17da8",
         bombCardBackground: "#F4576A",
         reverseCardBackground: "#FFD29D",
