@@ -6,29 +6,25 @@ import {
 } from "../../../services/mystery-box/types";
 import { CenterSpaced } from "../../Layouts";
 import { SmallHeading } from "../../Atoms";
+import { NumericValue } from "../../NumericValue";
 import { PlayerMysteryBoxUi } from "./PlayerMysteryBoxUI";
 
 const DeadIcon = styled.div`
   font-size: 5rem;
 `;
 
-const BoxOptionContainerItem = styled.div`
+const DefinitionList = styled.dl`
   display: flex;
-  justify-content: center;
-  height: 80px;
-  width: 80px;
-  margin: 0;
-  padding: 0;
+  font-size: 1.5rem;
+  align-items: center;
 `;
-
-const BoxButton = styled.button`
-  display: block;
-  width: 100%;
-  height: 100%;
+const DefinitionTerm = styled.dt`
+  margin-right: 1rem;
+`;
+const DefinitionValue = styled.dd`
   margin: 0;
-  padding: 0;
-  border: none;
-  cursor: pointer;
+  font-weight: bold;
+  font-size: 2rem;
 `;
 
 type Props = {
@@ -42,7 +38,21 @@ export const PlayerDeadSummary = ({ player, game }: Props) => {
       <SmallHeading>You dead!</SmallHeading>
       <DeadIcon>☠️</DeadIcon>
       <div>
-        <p>Points: {player.lootTotals.points?.total || 0}</p>
+        <DefinitionList>
+          <DefinitionTerm>Points:</DefinitionTerm>
+          <DefinitionValue>
+            <NumericValue>{player.lootTotals.points?.total || 0}</NumericValue>
+          </DefinitionValue>
+        </DefinitionList>
+        <DefinitionList>
+          <DefinitionTerm>Correct Bomb Guesses:</DefinitionTerm>
+          <DefinitionValue>
+            <NumericValue>
+              {player.lootTotals["bonus-bomb-guess"]?.total || 0}
+            </NumericValue>
+          </DefinitionValue>
+        </DefinitionList>
+        <p></p>
       </div>
     </CenterSpaced>
   );

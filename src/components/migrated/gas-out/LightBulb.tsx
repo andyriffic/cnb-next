@@ -8,6 +8,8 @@ const Bulb = styled.div<{ glow: boolean }>`
   filter: ${({ glow }) => (glow ? "unset" : "invert(80%)")};
 `;
 
+//box-shadow: 100px 100px 80px 100px #ffffff;
+
 const Text = styled.div`
   text-align: center;
   background: black;

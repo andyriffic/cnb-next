@@ -16,6 +16,7 @@ export type MysteryBox = {
   isOpen: boolean;
   contents: MysteryBoxContents;
   playerIds: string[];
+  eliminatedPlayerIdsGuessingThisBox: string[];
 };
 
 export type MysteryBoxContentsType = "coin" | "bomb" | "empty" | "points";
@@ -76,6 +77,12 @@ export type MysteryBoxLootTotalsByType = {
     title: string;
     total: number;
   };
+} & {
+  "bonus-bomb-guess"?: {
+    title: string;
+    total: number;
+  };
+  "total-actual-points": { title: string; total: number };
 };
 
 export type MysteryBoxPlayerView = {

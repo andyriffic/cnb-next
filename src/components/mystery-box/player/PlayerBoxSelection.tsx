@@ -57,7 +57,10 @@ export const PlayerBoxSelection = ({ round, player, onSelect }: Props) => {
                 <PlayerMysteryBoxUi
                   key={box.id}
                   box={box}
-                  selected={player.currentlySelectedBoxId === box.id}
+                  selected={
+                    box.playerIds.includes(player.id) ||
+                    box.eliminatedPlayerIdsGuessingThisBox.includes(player.id)
+                  }
                 />
               </BoxButton>
             </BoxOptionContainerItem>

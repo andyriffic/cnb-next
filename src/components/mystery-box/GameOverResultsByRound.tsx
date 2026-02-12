@@ -68,7 +68,7 @@ const Points = styled.div`
 function getBackgroundColourForRoundIndex(
   index: number,
   totalRounds: number,
-  hasWinner: boolean
+  hasWinner: boolean,
 ) {
   if (hasWinner && index === totalRounds - 1) {
     return "goldenrod";
@@ -96,8 +96,8 @@ export const GameOverResultsByRound = ({ game }: Props) => {
   const roundsWithPlayersEliminated = useMemo(() => {
     return game.previousRounds.filter((r) =>
       r.boxes.some(
-        (box) => box.contents.type === "bomb" && box.playerIds.length > 0
-      )
+        (box) => box.contents.type === "bomb" && box.playerIds.length > 0,
+      ),
     );
   }, [game.previousRounds]);
 
@@ -144,7 +144,7 @@ export const GameOverResultsByRound = ({ game }: Props) => {
                   backgroundColor: getBackgroundColourForRoundIndex(
                     i,
                     roundsWithPlayersEliminated.length,
-                    !!game.gameOverSummary?.outrightWinnerPlayerId
+                    !!game.gameOverSummary?.outrightWinnerPlayerId,
                   ),
                 }}
               >
@@ -154,14 +154,16 @@ export const GameOverResultsByRound = ({ game }: Props) => {
                     .filter((box) => box.contents.type === "bomb")
                     .flatMap((box) => box.playerIds)
                     .map((playerId) =>
-                      game.players.find((p) => p.id === playerId)
+                      game.players.find((p) => p.id === playerId),
                     )
                     .filter((p) => p !== undefined)
                     .map((player) => (
                       <RoundPlayer key={player?.id}>
                         <PlayerAvatar playerId={player?.id || ""} size="tiny" />
                         <Points>
-                          {player?.lootTotals.points?.total || <>😭</>}
+                          {player?.lootTotals["total-actual-points"].total || (
+                            <>😭</>
+                          )}
                         </Points>
                       </RoundPlayer>
                     ))}

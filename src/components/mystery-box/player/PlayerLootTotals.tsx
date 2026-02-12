@@ -47,6 +47,10 @@ export const PlayerLootTotals = ({ player }: Props) => {
       <h3>Your Loot Totals so far</h3>
       <div>
         <p>Points: {player.lootTotals.points?.total || 0}</p>
+        <p>
+          Correct Bomb Guess:{" "}
+          {player.lootTotals["bonus-bomb-guess"]?.total || 0}
+        </p>
       </div>
     </div>
   );

@@ -22,7 +22,23 @@ function Page() {
 
       mysteryBox.playerSelectBox(gameId, playerId, game.currentRound.id, boxId);
     },
-    [game, gameId, mysteryBox, playerId]
+    [game, gameId, mysteryBox, playerId],
+  );
+
+  const guessBombBox = useCallback(
+    (boxId: number) => {
+      if (!game) {
+        return;
+      }
+
+      mysteryBox.eliminatedPlayerGuessBox(
+        gameId,
+        playerId,
+        game.currentRound.id,
+        boxId,
+      );
+    },
+    [game, gameId, mysteryBox, playerId],
   );
 
   return game ? (
@@ -30,6 +46,7 @@ function Page() {
       game={game}
       playerId={playerId}
       selectBox={selectBox}
+      guessBombBox={guessBombBox}
     ></PlayerGameView>
   ) : (
     <div>Game not found</div>

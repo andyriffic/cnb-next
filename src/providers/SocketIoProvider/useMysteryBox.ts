@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import {
   CreateMysteryBoxGameHandler,
+  EliminatedPlayerGuessMysteryBoxHandler,
   MYSTERY_BOX_ACTIONS,
   NewRoundMysteryBoxHandler,
   PlayerSelectMysteryBoxHandler,
@@ -12,6 +13,7 @@ export type MysteryBoxSocketService = {
   games: MysteryBoxGameView[];
   createGame: CreateMysteryBoxGameHandler;
   playerSelectBox: PlayerSelectMysteryBoxHandler;
+  eliminatedPlayerGuessBox: EliminatedPlayerGuessMysteryBoxHandler;
   newRound: NewRoundMysteryBoxHandler;
 };
 
@@ -21,7 +23,7 @@ export function useMysteryBox(socket: Socket): MysteryBoxSocketService {
   const createGame = useCallback<CreateMysteryBoxGameHandler>(
     (gameId, players, onCreated) =>
       socket.emit(MYSTERY_BOX_ACTIONS.CREATE_GAME, gameId, players, onCreated),
-    [socket]
+    [socket],
   );
 
   const playerSelectBox = useCallback<PlayerSelectMysteryBoxHandler>(
@@ -31,14 +33,27 @@ export function useMysteryBox(socket: Socket): MysteryBoxSocketService {
         gameId,
         playerId,
         roundId,
-        boxId
+        boxId,
       ),
-    [socket]
+    [socket],
   );
+
+  const eliminatedPlayerGuessBox =
+    useCallback<EliminatedPlayerGuessMysteryBoxHandler>(
+      (gameId, playerId, roundId, boxId) =>
+        socket.emit(
+          MYSTERY_BOX_ACTIONS.MAKE_PLAYER_ELIMINATED_BOX_GUESS,
+          gameId,
+          playerId,
+          roundId,
+          boxId,
+        ),
+      [socket],
+    );
 
   const newRound = useCallback<NewRoundMysteryBoxHandler>(
     (gameId) => socket.emit(MYSTERY_BOX_ACTIONS.NEW_ROUND, gameId),
-    [socket]
+    [socket],
   );
 
   useEffect(() => {
@@ -48,7 +63,7 @@ export function useMysteryBox(socket: Socket): MysteryBoxSocketService {
       (games: MysteryBoxGameView[]) => {
         console.log("Mystery Box Games", games);
         setGames(games);
-      }
+      },
     );
 
     return () => {
@@ -61,6 +76,7 @@ export function useMysteryBox(socket: Socket): MysteryBoxSocketService {
     games,
     createGame,
     playerSelectBox,
+    eliminatedPlayerGuessBox,
     newRound,
   };
 }

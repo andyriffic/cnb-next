@@ -29,7 +29,15 @@ export const DebugMysteryBoxGame = ({ game }: Props) => {
           game.id,
           p.id,
           game.currentRound.id,
-          randomBox.id
+          randomBox.id,
+        );
+      } else if (p.status === "eliminated") {
+        const randomBox = selectRandomOneOf(game.currentRound.boxes);
+        mysteryBox.eliminatedPlayerGuessBox(
+          game.id,
+          p.id,
+          game.currentRound.id,
+          randomBox.id,
         );
       }
     });
@@ -90,31 +98,46 @@ export const DebugMysteryBoxGame = ({ game }: Props) => {
                   const selectedAnotherBox = game.currentRound.boxes
                     .flatMap((b) => b.playerIds)
                     .includes(p.id);
+                  const eliminatedAndGuessedThisBox =
+                    p.status === "eliminated" &&
+                    box.eliminatedPlayerIdsGuessingThisBox.includes(p.id);
                   return (
                     <BoxOptionContainerItem
                       key={box.id}
                       style={{
                         boxSizing: "border-box",
                         flexBasis: "0.5",
-                        border: selectedThisBox ? "2px solid red" : undefined,
+                        border:
+                          selectedThisBox || eliminatedAndGuessedThisBox
+                            ? "2px solid red"
+                            : undefined,
                       }}
                     >
                       <button
                         type="button"
                         disabled={
+                          eliminatedAndGuessedThisBox ||
                           selectedAnotherBox ||
-                          selectedThisBox ||
-                          p.status === "eliminated"
+                          selectedThisBox
                         }
                         style={{ display: "block" }}
-                        onClick={() =>
-                          mysteryBox.playerSelectBox(
-                            game.id,
-                            p.id,
-                            game.currentRound.id,
-                            box.id
-                          )
-                        }
+                        onClick={() => {
+                          if (p.status === "eliminated") {
+                            mysteryBox.eliminatedPlayerGuessBox(
+                              game.id,
+                              p.id,
+                              game.currentRound.id,
+                              box.id,
+                            );
+                          } else {
+                            mysteryBox.playerSelectBox(
+                              game.id,
+                              p.id,
+                              game.currentRound.id,
+                              box.id,
+                            );
+                          }
+                        }}
                       >
                         🎁
                       </button>

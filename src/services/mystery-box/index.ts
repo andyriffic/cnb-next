@@ -45,7 +45,7 @@ export const createMysteryBoxGame = ({
 export const playerSelectBox = (
   playerId: string,
   roundIndex: number,
-  boxIndex: number
+  boxIndex: number,
 ) => {
   return (game: MysteryBoxGame): E.Either<ErrorMessage, MysteryBoxGame> => {
     return pipe(
@@ -53,20 +53,36 @@ export const playerSelectBox = (
       validatePlayerIsNotEliminated(playerId),
       E.chain(getRound(roundIndex)),
       E.chain(validatePlayerHasNotSelectedThisRound(playerId)),
-      E.chain(addPlayerToBox(playerId, boxIndex))
+      E.chain(addPlayerToBox(playerId, boxIndex)),
+    );
+  };
+};
+
+export const eliminatedPlayerGuessBox = (
+  playerId: string,
+  roundIndex: number,
+  boxIndex: number,
+) => {
+  return (game: MysteryBoxGame): E.Either<ErrorMessage, MysteryBoxGame> => {
+    return pipe(
+      game,
+      validatePlayerIsEliminated(playerId),
+      E.chain(getRound(roundIndex)),
+      E.chain(validatePlayerHasNotGuessedThisRound(playerId)),
+      E.chain(addPlayerGuessToBox(playerId, boxIndex)),
     );
   };
 };
 
 export const newRound = (
-  game: MysteryBoxGame
+  game: MysteryBoxGame,
 ): E.Either<ErrorMessage, MysteryBoxGame> => {
   return pipe(
     game,
     validatePlayersRemainingInGame,
     E.chain(validateGameHasActivePlayers),
     E.chain(validateAllPlayersHaveSelectedBoxOnCurrentRound),
-    E.chain(addNewRoundToGame)
+    E.chain(addNewRoundToGame),
   );
 };
 
@@ -74,13 +90,13 @@ function eliminatePlayersOnCurrentRound() {}
 
 function addNewRoundToGame(
   game: MysteryBoxGame,
-  mysteryBoxCreator: MysteryBoxCreator = randomBoxCreator
+  mysteryBoxCreator: MysteryBoxCreator = randomBoxCreator,
 ): E.Either<ErrorMessage, MysteryBoxGame> {
   const playersRemaining = getAllActivePlayerIds(game).length;
   const newRound = createNewGameRound(
     game.rounds.length,
     playersRemaining,
-    mysteryBoxCreator
+    mysteryBoxCreator,
   );
   const updatedGame: MysteryBoxGame = {
     ...game,
@@ -91,21 +107,21 @@ function addNewRoundToGame(
 }
 
 export const getLatestRound = (
-  game: MysteryBoxGame
+  game: MysteryBoxGame,
 ): O.Option<MysteryBoxGameRound> => {
   return O.fromNullable(game.rounds[game.rounds.length - 1]);
 };
 
 export const getLatestRoundIndex = (
-  game: MysteryBoxGame
+  game: MysteryBoxGame,
 ): { game: MysteryBoxGame; roundIndex: number } => {
   return { game, roundIndex: game.rounds.length - 1 };
 };
 
 const getRound = (
-  levelIndex: number
+  levelIndex: number,
 ): ((
-  game: MysteryBoxGame
+  game: MysteryBoxGame,
 ) => E.Either<ErrorMessage, MysteryBoxGameWithRound>) => {
   return (game) => {
     const round = game.rounds[levelIndex];
@@ -117,14 +133,20 @@ const getRound = (
 };
 
 const getAllPlayerIdsSelectedOnLevel = (
-  level: MysteryBoxGameRound
+  level: MysteryBoxGameRound,
 ): string[] => {
   return level.boxes.flatMap((slot) => slot.playerIds);
 };
 
+const getAllEliminatedPlayerIdsWhoveGuessedABox = (
+  level: MysteryBoxGameRound,
+): string[] => {
+  return level.boxes.flatMap((slot) => slot.eliminatedPlayerIdsGuessingThisBox);
+};
+
 function getCustomRoundBoxContents(
   roundNumber: number,
-  numberPlayersRemaining: number
+  numberPlayersRemaining: number,
 ): {
   boxes: MysteryBoxContents[];
   specialInfo?: string;
@@ -194,7 +216,7 @@ const randomBoxCreator = (numberPlayersRemaining: number) => {
   return (roundId: number): { boxes: MysteryBox[]; specialInfo?: string } => {
     const roundWithBoxes = getCustomRoundBoxContents(
       roundId,
-      numberPlayersRemaining
+      numberPlayersRemaining,
     );
     const randomBoxContents = shuffleArrayJestSafe(roundWithBoxes.boxes);
 
@@ -212,7 +234,7 @@ const randomBoxCreator = (numberPlayersRemaining: number) => {
 
 export const createBoxContents = (
   contentsType: MysteryBoxContentsType,
-  value?: number
+  value?: number,
 ): MysteryBoxContents => {
   switch (contentsType) {
     case "coin":
@@ -231,7 +253,7 @@ export const createBoxContents = (
 const createNewGameRound = (
   id: number,
   playersRemaining: number,
-  mysteryBoxCreator: MysteryBoxCreator
+  mysteryBoxCreator: MysteryBoxCreator,
 ): MysteryBoxGameRound => {
   const boxContents = mysteryBoxCreator(playersRemaining)(id);
   return {
@@ -243,13 +265,14 @@ const createNewGameRound = (
 
 export const createMysteryBox = (
   id: number,
-  contents: MysteryBoxContents
+  contents: MysteryBoxContents,
 ): MysteryBox => {
   return {
     id,
     isOpen: false,
     contents,
     playerIds: [],
+    eliminatedPlayerIdsGuessingThisBox: [],
   };
 };
 
@@ -262,14 +285,14 @@ const createPlayer = (player: Player): MysteryBoxPlayer => {
 };
 
 const getBoxForRound = (
-  boxIndex: number
+  boxIndex: number,
 ): ((level: MysteryBoxGameRound) => O.Option<MysteryBox>) => {
   return (level) => O.fromNullable(level.boxes[boxIndex]);
 };
 
 const addPlayerToBox = (playerId: string, boxId: number) => {
   return (
-    gameWithRound: MysteryBoxGameWithRound
+    gameWithRound: MysteryBoxGameWithRound,
   ): E.Either<ErrorMessage, MysteryBoxGame> => {
     const box = gameWithRound.round.boxes.find((b) => b.id === boxId);
 
@@ -288,11 +311,35 @@ const addPlayerToBox = (playerId: string, boxId: number) => {
   };
 };
 
+const addPlayerGuessToBox = (playerId: string, boxId: number) => {
+  return (
+    gameWithRound: MysteryBoxGameWithRound,
+  ): E.Either<ErrorMessage, MysteryBoxGame> => {
+    const box = gameWithRound.round.boxes.find((b) => b.id === boxId);
+
+    if (!box) {
+      return E.left(`Box with id ${boxId} not found`);
+    }
+
+    const updatedBox = {
+      ...box,
+      eliminatedPlayerIdsGuessingThisBox: [
+        ...box.eliminatedPlayerIdsGuessingThisBox,
+        playerId,
+      ],
+    };
+
+    const updatedRound = updateBoxOnRound(updatedBox, gameWithRound.round);
+    const updatedGame = updateRoundOnGame(updatedRound, gameWithRound.game);
+    return E.right(updatedGame);
+  };
+};
+
 // Utility functions
 
 function updateRoundOnGame(
   round: MysteryBoxGameRound,
-  game: MysteryBoxGame
+  game: MysteryBoxGame,
 ): MysteryBoxGame {
   return {
     ...game,
@@ -302,7 +349,7 @@ function updateRoundOnGame(
 
 function updateBoxOnRound(
   box: MysteryBox,
-  round: MysteryBoxGameRound
+  round: MysteryBoxGameRound,
 ): MysteryBoxGameRound {
   return {
     ...round,
@@ -312,8 +359,21 @@ function updateBoxOnRound(
 
 function getAllEliminatedPlayerIds(game: MysteryBoxGame): string[] {
   const allExplodedBoxes = game.rounds.flatMap((round) =>
-    round.boxes.filter((box) => box.contents.type === "bomb")
+    round.boxes.filter((box) => box.contents.type === "bomb"),
   );
+
+  const eliminatedPlayers = allExplodedBoxes.flatMap((box) => box.playerIds);
+  return eliminatedPlayers;
+}
+
+function getAllEliminatedPlayerIdsInPreviousRounds(
+  game: MysteryBoxGame,
+): string[] {
+  const allExplodedBoxes = game.rounds
+    .filter((r) => r.id !== game.currentRoundId)
+    .flatMap((round) =>
+      round.boxes.filter((box) => box.contents.type === "bomb"),
+    );
 
   const eliminatedPlayers = allExplodedBoxes.flatMap((box) => box.playerIds);
   return eliminatedPlayers;
@@ -330,15 +390,31 @@ function isPlayerEliminated(playerId: string, game: MysteryBoxGame): boolean {
   return getAllEliminatedPlayerIds(game).includes(playerId);
 }
 
+function isPlayerEliminatedInPreviousRounds(
+  playerId: string,
+  game: MysteryBoxGame,
+): boolean {
+  return getAllEliminatedPlayerIdsInPreviousRounds(game).includes(playerId);
+}
+
 // Validations
 
 const validatePlayerIsNotEliminated = (
-  playerId: string
+  playerId: string,
 ): ((game: MysteryBoxGame) => E.Either<ErrorMessage, MysteryBoxGame>) => {
   return (game) =>
     getAllEliminatedPlayerIds(game).includes(playerId)
       ? E.left(`Player '${playerId}' is already eliminated`)
       : E.right(game);
+};
+
+const validatePlayerIsEliminated = (
+  playerId: string,
+): ((game: MysteryBoxGame) => E.Either<ErrorMessage, MysteryBoxGame>) => {
+  return (game) =>
+    getAllEliminatedPlayerIds(game).includes(playerId)
+      ? E.right(game)
+      : E.left(`Player '${playerId}' is not eliminated`);
 };
 
 const validatePlayerHasNotSelectedThisRound =
@@ -352,7 +428,7 @@ const validatePlayerHasNotSelectedThisRound =
   > => {
     const allPlayerIdsOnActiveLevel = pipe(
       round,
-      getAllPlayerIdsSelectedOnLevel
+      getAllPlayerIdsSelectedOnLevel,
     );
 
     return allPlayerIdsOnActiveLevel.includes(playerId)
@@ -360,8 +436,26 @@ const validatePlayerHasNotSelectedThisRound =
       : E.right({ game, round });
   };
 
+const validatePlayerHasNotGuessedThisRound =
+  (playerId: string) =>
+  ({
+    game,
+    round,
+  }: MysteryBoxGameWithRound): E.Either<
+    ErrorMessage,
+    MysteryBoxGameWithRound
+  > => {
+    const allGuessedPlayersInRound = pipe(
+      round,
+      getAllEliminatedPlayerIdsWhoveGuessedABox,
+    );
+
+    return allGuessedPlayersInRound.includes(playerId)
+      ? E.left(`Player '${playerId}' has already guessed a box for this round`)
+      : E.right({ game, round });
+  };
 const validatePlayersRemainingInGame = (
-  game: MysteryBoxGame
+  game: MysteryBoxGame,
 ): E.Either<ErrorMessage, MysteryBoxGame> => {
   if (getAllEliminatedPlayerIds(game).length === game.players.length) {
     return E.left("All players have been eliminated");
@@ -371,7 +465,7 @@ const validatePlayersRemainingInGame = (
 };
 
 const validateGameHasActivePlayers = (
-  game: MysteryBoxGame
+  game: MysteryBoxGame,
 ): E.Either<ErrorMessage, MysteryBoxGame> => {
   if (getAllActivePlayerIds(game).length === 0) {
     return E.left("Game has no players to continue");
@@ -382,15 +476,15 @@ const validateGameHasActivePlayers = (
 
 const haveAllPlayersSelectedBoxOnRound = (
   round: MysteryBoxGameRound,
-  game: MysteryBoxGame
+  game: MysteryBoxGame,
 ): { valid: boolean; unselectedPlayers: string[] } => {
   const allPlayersSelectedBoxOnRound = round.boxes.flatMap(
-    (box) => box.playerIds
+    (box) => box.playerIds,
   );
   const allActivePlayers = getAllActivePlayerIds(game);
 
   const unselectedPlayers = allActivePlayers.filter(
-    (p) => !allPlayersSelectedBoxOnRound.includes(p)
+    (p) => !allPlayersSelectedBoxOnRound.includes(p),
   );
 
   return {
@@ -400,7 +494,7 @@ const haveAllPlayersSelectedBoxOnRound = (
 };
 
 const validateAllPlayersHaveSelectedBoxOnCurrentRound = (
-  game: MysteryBoxGame
+  game: MysteryBoxGame,
 ): E.Either<ErrorMessage, MysteryBoxGame> => {
   return pipe(
     getLatestRound(game),
@@ -412,16 +506,16 @@ const validateAllPlayersHaveSelectedBoxOnCurrentRound = (
           ? E.right(game)
           : E.left(
               `Players ${result.unselectedPlayers.join(
-                ","
-              )} have not selected a box`
+                ",",
+              )} have not selected a box`,
             );
-      }
-    )
+      },
+    ),
   );
 };
 
 function createIndividualModeSummary(
-  game: MysteryBoxGame
+  game: MysteryBoxGame,
 ): MysteryBoxIndividualModeView | undefined {
   const allActivePlayers = getAllActivePlayerIds(game);
 
@@ -429,7 +523,7 @@ function createIndividualModeSummary(
     .filter((r) => r.id !== game.currentRoundId)
     .filter((round) => {
       const activePlayersThisRound = round.boxes.flatMap(
-        (box) => box.playerIds
+        (box) => box.playerIds,
       );
       return activePlayersThisRound.length === 1;
     });
@@ -455,7 +549,7 @@ function createIndividualModeSummary(
 }
 
 function createGameOverSummary(
-  game: MysteryBoxGame
+  game: MysteryBoxGame,
 ): MysteryBoxGameOverSummary | undefined {
   const allActivePlayers = getAllActivePlayerIds(game);
 
@@ -487,10 +581,10 @@ function createGameOverSummary(
 }
 
 export function createMysteryBoxGameView(
-  game: MysteryBoxGame
+  game: MysteryBoxGame,
 ): MysteryBoxGameView {
   const currentRound = game.rounds.find(
-    (round) => round.id === game.currentRoundId
+    (round) => round.id === game.currentRoundId,
   )!;
 
   const gameOverSummary = createGameOverSummary(game);
@@ -499,7 +593,7 @@ export function createMysteryBoxGameView(
   return {
     id: game.id,
     players: game.players.map((p) =>
-      createPlayerView(p, currentRound, game, gameOverSummary)
+      createPlayerView(p, currentRound, game, gameOverSummary),
     ),
     currentRound: createMysteryBoxRoundView(currentRound, game),
     previousRounds: game.rounds
@@ -512,11 +606,11 @@ export function createMysteryBoxGameView(
 
 function createMysteryBoxRoundView(
   round: MysteryBoxGameRound,
-  game: MysteryBoxGame
+  game: MysteryBoxGame,
 ): MysteryBoxGameRoundView {
   const allPlayersSelectedBoxResult = haveAllPlayersSelectedBoxOnRound(
     round,
-    game
+    game,
   );
   return {
     id: round.id,
@@ -525,8 +619,8 @@ function createMysteryBoxRoundView(
       round.id !== game.currentRoundId
         ? "complete"
         : allPlayersSelectedBoxResult.valid
-        ? "ready"
-        : "in-progress",
+          ? "ready"
+          : "in-progress",
     boxes: round.boxes.map((box) => ({
       ...box,
       playerIds: box.playerIds,
@@ -538,16 +632,24 @@ function createPlayerView(
   player: MysteryBoxPlayer,
   currentRound: MysteryBoxGameRound,
   game: MysteryBoxGame,
-  gameOverSummary: MysteryBoxGameOverSummary | undefined
+  gameOverSummary: MysteryBoxGameOverSummary | undefined,
 ): MysteryBoxPlayerView {
-  const selectedBox = currentRound.boxes.find((box) =>
-    box.playerIds.includes(player.id)
+  const selectedBox = currentRound.boxes.find(
+    (box) =>
+      box.playerIds.includes(player.id) ||
+      box.eliminatedPlayerIdsGuessingThisBox.includes(player.id),
   );
 
   const chosenBoxContentsInPreviousRounds = game.rounds
     .filter((round) => round.id < currentRound.id)
     .flatMap((round) => round.boxes)
     .filter((box) => box.playerIds.includes(player.id))
+    .map((box) => box.contents);
+
+  const chosenBonusBombGuessBoxesInPreviousRounds = game.rounds
+    .filter((round) => round.id < currentRound.id)
+    .flatMap((round) => round.boxes)
+    .filter((box) => box.eliminatedPlayerIdsGuessingThisBox.includes(player.id))
     .map((box) => box.contents);
 
   const lootTotalsSoFar = chosenBoxContentsInPreviousRounds.reduce(
@@ -563,14 +665,32 @@ function createPlayerView(
       }
       return acc;
     },
-    {} as { [key in MysteryBoxContentsType]: { title: string; total: number } }
+    {} as { [key in MysteryBoxContentsType]: { title: string; total: number } },
   );
+
+  const totalBonusPointsFromBombGuesses =
+    chosenBonusBombGuessBoxesInPreviousRounds.filter(
+      (content) => content.type === "bomb",
+    ).length;
+
+  const totalRealPoints =
+    (lootTotalsSoFar.points?.total || 0) + totalBonusPointsFromBombGuesses;
 
   return {
     id: player.id,
     name: player.name,
     status: getPlayerStatus(player.id, selectedBox, game, gameOverSummary),
-    lootTotals: lootTotalsSoFar,
+    lootTotals: {
+      ...lootTotalsSoFar,
+      "bonus-bomb-guess": {
+        title: "Bonus Bomb Guesses",
+        total: totalBonusPointsFromBombGuesses,
+      },
+      "total-actual-points": {
+        title: "Total Points",
+        total: totalRealPoints,
+      },
+    },
     currentlySelectedBoxId: selectedBox ? selectedBox.id : undefined,
     // eliminatedRoundId: undefined,
     advantage: player.advantage,
@@ -581,18 +701,18 @@ function getPlayerStatus(
   playerId: string,
   currentlySelectedBox: MysteryBox | undefined,
   game: MysteryBoxGame,
-  gameOverSummary: MysteryBoxGameOverSummary | undefined
+  gameOverSummary: MysteryBoxGameOverSummary | undefined,
 ): MysteryBoxPlayerStatus {
   if (gameOverSummary && gameOverSummary.outrightWinnerPlayerId === playerId) {
     return "winner";
   }
 
-  if (currentlySelectedBox) {
-    return "selected";
+  if (isPlayerEliminatedInPreviousRounds(playerId, game)) {
+    return "eliminated";
   }
 
-  if (isPlayerEliminated(playerId, game)) {
-    return "eliminated";
+  if (currentlySelectedBox) {
+    return "selected";
   }
 
   return "waiting";

@@ -10,6 +10,7 @@ import { MysteryBoxGame } from "./types";
 import {
   createMysteryBoxGame,
   createMysteryBoxGameView,
+  eliminatedPlayerGuessBox,
   newRound,
   playerSelectBox,
 } from ".";
@@ -18,20 +19,28 @@ export enum MYSTERY_BOX_ACTIONS {
   GAME_UPDATE = "MYSTERY_BOX_GAME_UPDATE",
   CREATE_GAME = "MYSTERY_BOX_CREATE_GAME",
   MAKE_PLAYER_GUESS = "MYSTERY_BOX_PLAYER_SELECT_BOX",
+  MAKE_PLAYER_ELIMINATED_BOX_GUESS = "MAKE_PLAYER_ELIMINATED_BOX_GUESS",
   NEW_ROUND = "MYSTERY_BOX_NEW_ROUND",
 }
 
 export type CreateMysteryBoxGameHandler = (
   id: string,
   players: Player[],
-  onCreated: (game: MysteryBoxGame) => void
+  onCreated: (game: MysteryBoxGame) => void,
 ) => void;
 
 export type PlayerSelectMysteryBoxHandler = (
   gameId: string,
   playerId: string,
   roundId: number,
-  boxId: number
+  boxId: number,
+) => void;
+
+export type EliminatedPlayerGuessMysteryBoxHandler = (
+  gameId: string,
+  playerId: string,
+  roundId: number,
+  boxId: number,
 ) => void;
 
 export type NewRoundMysteryBoxHandler = (gameId: string) => void;
@@ -47,13 +56,13 @@ const emitUpdatedGameViewsToAllClients = (io: SocketIOServer) => {
   // console.info("Emitting updated games to all clients", getGameViews());
   io.emit(
     MYSTERY_BOX_ACTIONS.GAME_UPDATE,
-    inMemoryGames.map(createMysteryBoxGameView)
+    inMemoryGames.map(createMysteryBoxGameView),
   );
 };
 
 const getGame = (
   gameId: string,
-  allGames: MysteryBoxGame[]
+  allGames: MysteryBoxGame[],
 ): E.Either<ErrorMessage, MysteryBoxGame> => {
   const game = allGames.find((g) => g.id === gameId);
   return game ? E.right(game) : E.left("Game not found");
@@ -61,12 +70,12 @@ const getGame = (
 
 export function initialiseMysteryBoxSocket(
   io: SocketIOServer,
-  socket: Socket
+  socket: Socket,
 ): void {
   const createGameHandler: CreateMysteryBoxGameHandler = (
     id,
     players,
-    onCreated
+    onCreated,
   ) => {
     console.log("Got to creating mystery box game socket");
     pipe(
@@ -76,15 +85,15 @@ export function initialiseMysteryBoxSocket(
       }),
       E.match(
         (e) => {
-          console.error(e), sendClientMessage(socket, e);
+          (console.error(e), sendClientMessage(socket, e));
         },
         (game) => {
           console.info("mystery box game created", game);
           updateInMemoryGame(game);
           onCreated(game);
           emitUpdatedGameViewsToAllClients(io);
-        }
-      )
+        },
+      ),
     );
   };
 
@@ -92,22 +101,39 @@ export function initialiseMysteryBoxSocket(
     gameId,
     playerId,
     roundId,
-    boxId
+    boxId,
   ) => {
     pipe(
       getGame(gameId, inMemoryGames),
       E.chain(playerSelectBox(playerId, roundId, boxId)),
       E.match(
         (e) => {
-          console.error(e), sendClientMessage(socket, e);
+          (console.error(e), sendClientMessage(socket, e));
         },
         (updatedGame) => {
           updateInMemoryGame(updatedGame);
           emitUpdatedGameViewsToAllClients(io);
-        }
-      )
+        },
+      ),
     );
   };
+
+  const eliminatedPlayerGuessMysteryBoxHandler: EliminatedPlayerGuessMysteryBoxHandler =
+    (gameId, playerId, roundId, boxId) => {
+      pipe(
+        getGame(gameId, inMemoryGames),
+        E.chain(eliminatedPlayerGuessBox(playerId, roundId, boxId)),
+        E.match(
+          (e) => {
+            (console.error(e), sendClientMessage(socket, e));
+          },
+          (updatedGame) => {
+            updateInMemoryGame(updatedGame);
+            emitUpdatedGameViewsToAllClients(io);
+          },
+        ),
+      );
+    };
 
   const newRoundMysteryBoxHandler: NewRoundMysteryBoxHandler = (gameId) => {
     pipe(
@@ -115,13 +141,13 @@ export function initialiseMysteryBoxSocket(
       E.chain(newRound),
       E.match(
         (e) => {
-          console.error(e), sendClientMessage(socket, e);
+          (console.error(e), sendClientMessage(socket, e));
         },
         (updatedGame) => {
           updateInMemoryGame(updatedGame);
           emitUpdatedGameViewsToAllClients(io);
-        }
-      )
+        },
+      ),
     );
   };
 
@@ -130,12 +156,16 @@ export function initialiseMysteryBoxSocket(
   socket.on(MYSTERY_BOX_ACTIONS.CREATE_GAME, createGameHandler);
   socket.on(
     MYSTERY_BOX_ACTIONS.MAKE_PLAYER_GUESS,
-    playerSelectMysteryBoxHandler
+    playerSelectMysteryBoxHandler,
+  );
+  socket.on(
+    MYSTERY_BOX_ACTIONS.MAKE_PLAYER_ELIMINATED_BOX_GUESS,
+    eliminatedPlayerGuessMysteryBoxHandler,
   );
   socket.on(MYSTERY_BOX_ACTIONS.NEW_ROUND, newRoundMysteryBoxHandler);
   socket.emit(
     MYSTERY_BOX_ACTIONS.GAME_UPDATE,
-    inMemoryGames.map(createMysteryBoxGameView)
+    inMemoryGames.map(createMysteryBoxGameView),
   );
   sendClientMessage(socket, "Welcome to Mystery Box ❓🎁");
 }
