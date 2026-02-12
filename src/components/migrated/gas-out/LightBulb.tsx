@@ -8,10 +8,22 @@ const Bulb = styled.div<{ glow: boolean }>`
   filter: ${({ glow }) => (glow ? "unset" : "invert(80%)")};
 `;
 
+const Text = styled.div`
+  text-align: center;
+  background: black;
+  color: white;
+  padding: 0.5rem 1rem;
+`;
+
 type Props = {
   state: "on" | "off";
 };
 
 export function LightBulb({ state }: Props): JSX.Element {
-  return <Bulb glow={state === "on"}>💡</Bulb>;
+  return (
+    <div>
+      <Bulb glow={state === "on"}>💡</Bulb>
+      {state === "off" && <Text>Dark mode</Text>}
+    </div>
+  );
 }

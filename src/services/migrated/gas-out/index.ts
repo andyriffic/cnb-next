@@ -82,7 +82,7 @@ export function moveToNextAlivePlayerWithExtraCardRules(
     applyGlobalEffectsActivatedFromLastPress,
     applyCursesToCurrentPlayer,
     applyBoomerangDeath,
-    // applyBombDeath
+    // applyBombDeath,
   );
 }
 
@@ -741,11 +741,6 @@ function applyBombGlobalEffect(game: GasGame): GasGame {
     return game;
   }
 
-  if (game.globalEffect) {
-    //dont override a current global effect
-    return game;
-  }
-
   const currentPlayer = getPlayerOrThrow(game, game.currentPlayer.id);
 
   if (
@@ -961,7 +956,7 @@ function getRandomCardType(
         ]
       : [
           { weight: 2, item: "skip" },
-          { weight: 1, item: "bomb" },
+          // { weight: 1, item: "bomb" },
           { weight: 5, item: "dark-mode" },
           { weight: 3, item: "curse-all-fives" },
           { weight: 3, item: "reverse" },
