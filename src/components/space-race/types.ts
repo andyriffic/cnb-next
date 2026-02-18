@@ -10,6 +10,7 @@ export type SpaceRaceGame = {
   uiState: SpaceRaceUiState;
   voidXDistance: number;
   rocketTrails: SpaceRaceRocketTrail[];
+  allPlayersMoved: boolean;
 };
 
 export type SpaceRaceUiState = {
@@ -22,7 +23,7 @@ export type SpaceRaceEntityType =
   | "planet"
   | "asteroid"
   | "asteroid"
-  | "wormhole"
+  | "gate"
   | "earth1"
   | "earth2"
   | "earth3"
@@ -37,6 +38,7 @@ export type SpaceRaceEntity = {
   display: JSX.Element;
   removable: boolean;
   allowedPlayerIds?: string[];
+  value?: number;
 };
 
 export type SpaceRaceStarmap = {
@@ -61,6 +63,7 @@ export type SpaceRacePlayer = {
   collidedWith?: SpaceRaceEntity;
   color: string;
   highlight: boolean;
+  passedThroughGate: boolean;
 };
 
 export type SpaceRaceCoordinates = {

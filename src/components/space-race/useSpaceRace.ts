@@ -44,7 +44,7 @@ export type UseSpaceRace = {
 
 export const useSpaceRace = (
   players: Player[],
-  disableSave: boolean
+  disableSave: boolean,
 ): UseSpaceRace => {
   const [game, setGame] = useState(() => createSpaceRaceGame(players));
   const { playerQuery } = useSocketIo();
@@ -57,7 +57,7 @@ export const useSpaceRace = (
         spacePlayers: assignPlannedCourse(game.spacePlayers, playerId, up),
       });
     },
-    [game]
+    [game],
   );
 
   const movePlayerVertically = useCallback(
@@ -66,7 +66,7 @@ export const useSpaceRace = (
         ...updatePlayerVerticalPosition(game, playerId),
       });
     },
-    [game]
+    [game],
   );
 
   const highlightPlayer = useCallback(
@@ -75,30 +75,56 @@ export const useSpaceRace = (
         ...setPlayerHighlight(game, playerId),
       });
     },
-    [game]
+    [game],
   );
 
   const movePlayerHorizontally = useCallback(
     (playerId: string) => {
       const updatedGame: SpaceRaceGame = updatePlayerDuplicateSquarePositions(
         playerId,
-        updatePlayerHorizontalPosition(game, playerId, game.starmap)
+        updatePlayerHorizontalPosition(game, playerId, game.starmap),
       );
       const updatedPlayer = updatedGame.spacePlayers[playerId];
       setGame(updatedGame);
       return updatedPlayer;
     },
-    [game]
+    [game],
+  );
+
+  const moveAllPlayersWhoCanPassGates = useCallback(
+    (currentGame: SpaceRaceGame) => {
+      console.log("Moving all players who can pass gates");
+      const updatedGame = movePlayersWhoCanPassGates(currentGame);
+      setGame(updatedGame);
+      Object.values(updatedGame.spacePlayers)
+        .filter((p) => p.passedThroughGate)
+        .forEach((updatedPlayer) => {
+          if (disableSave) return;
+
+          updatePlayerDetails(updatedPlayer.id, {
+            spaceRace: {
+              xCoordinate: updatedPlayer.currentPosition.x,
+              yCoordinate: updatedPlayer.currentPosition.y,
+            },
+          });
+        });
+    },
+    [disableSave],
   );
 
   useEffect(() => {
     const playersToMoveVertically = Object.values(game.spacePlayers).filter(
-      (p) => p.plannedCourse.lockedIn && !p.plannedCourse.movedVertically
+      (p) => p.plannedCourse.lockedIn && !p.plannedCourse.movedVertically,
     );
 
     if (playersToMoveVertically.length > 0) {
       const playerToMove = playersToMoveVertically[0]!;
-      play("space-race-rocket-move");
+      play(
+        selectRandomOneOf([
+          "space-race-rocket-move",
+          "space-race-rocket-move-alt",
+        ]),
+      );
       movePlayerVertically(playerToMove.id);
     }
   }, [game.spacePlayers, movePlayerVertically, play]);
@@ -108,7 +134,7 @@ export const useSpaceRace = (
       (p) =>
         p.plannedCourse.lockedIn &&
         p.plannedCourse.movedVertically &&
-        !p.plannedCourse.movedHorizontally
+        !p.plannedCourse.movedHorizontally,
     );
 
     if (playersToMoveHorizontally.length > 0) {
@@ -128,6 +154,25 @@ export const useSpaceRace = (
       return () => clearTimeout(timeout);
     }
   }, [game.spacePlayers, movePlayerHorizontally, disableSave]);
+
+  //Move players through gates after everyone moved
+  useEffect(() => {
+    if (game.allPlayersMoved) {
+      return;
+    }
+
+    const playerWhoHaventMoved = Object.values(game.spacePlayers).filter(
+      (p) => p.courseMovesRemaining > 0 || !p.plannedCourse.movedHorizontally,
+    );
+
+    console.log("Players who havent moved", playerWhoHaventMoved);
+
+    if (playerWhoHaventMoved.length > 0) {
+      return;
+    }
+
+    moveAllPlayersWhoCanPassGates(game);
+  }, [game, moveAllPlayersWhoCanPassGates]);
 
   //Check answers of course question
   useEffect(() => {
@@ -164,7 +209,7 @@ export const useSpaceRace = (
 
       const courseQuestion = createCourseQuestionForPlayer(
         game.spacePlayers[playerId]!,
-        game
+        game,
       );
       if (courseQuestion) {
         playerQuery.createPlayerQuestion(playerId, courseQuestion);
@@ -183,7 +228,7 @@ export const useSpaceRace = (
         spacePlayers: assignPlannedCourse(
           gameCopy.spacePlayers,
           playerId,
-          selectRandomOneOf([-2, -1, 0, 1, 2])
+          selectRandomOneOf([-2, -1, 0, 1, 2]),
         ),
       };
     });
@@ -260,12 +305,13 @@ function createPlayer(player: Player): SpaceRacePlayer {
       movedVertically: gameMoves === 0 ? true : false,
       movedHorizontally: gameMoves === 0 ? true : false,
     },
+    passedThroughGate: false,
   };
 }
 
 function createCourseQuestionForPlayer(
   spacePlayer: SpaceRacePlayer,
-  game: SpaceRaceGame
+  game: SpaceRaceGame,
 ): QueryUserQuestion<number> | undefined {
   if (spacePlayer.courseMovesRemaining === 0) {
     return;
@@ -273,12 +319,12 @@ function createCourseQuestionForPlayer(
   const upObstacle = getVerticalEntityBetween(
     spacePlayer.currentPosition,
     -MAX_COURSE_Y_OFFSET,
-    game.starmap
+    game.starmap,
   );
   const downObstacle = getVerticalEntityBetween(
     spacePlayer.currentPosition,
     MAX_COURSE_Y_OFFSET,
-    game.starmap
+    game.starmap,
   );
 
   const maxUp = upObstacle
@@ -335,10 +381,11 @@ function createSpaceRaceGame(players: Player[]): SpaceRaceGame {
     },
     voidXDistance: 0,
     rocketTrails: [],
+    allPlayersMoved: false,
   };
 
   const updatedGameWithPlayerPositionOffsets = Object.values(
-    defaultGame.spacePlayers
+    defaultGame.spacePlayers,
   ).reduce<SpaceRaceGame>((acc, player) => {
     return updatePlayerDuplicateSquarePositions(player.id, acc);
   }, defaultGame);
@@ -353,7 +400,7 @@ function getVoidXPosition(game: SpaceRaceGame): number {
 
 function getLeadingPlayerIndex(game: SpaceRaceGame): number {
   const allPlayerXPositions = Object.values(game.spacePlayers).map(
-    (p) => p.currentPosition.x
+    (p) => p.currentPosition.x,
   );
   const maxXPosition = Math.max(...allPlayerXPositions);
   return maxXPosition;
@@ -363,7 +410,7 @@ function removeTrailingObstacles(game: SpaceRaceGame): SpaceRaceGame {
   const xPositionToRemoveObstaclesBefore = getVoidXPosition(game);
 
   const removedObstacles = game.starmap.entities.filter(
-    (e) => e.position.x >= xPositionToRemoveObstaclesBefore || !e.removable
+    (e) => e.position.x >= xPositionToRemoveObstaclesBefore || !e.removable,
   );
   return {
     ...game,
@@ -378,7 +425,7 @@ function removeTrailingObstacles(game: SpaceRaceGame): SpaceRaceGame {
 function assignPlannedCourse(
   spacePlayers: SpacePlayersById,
   playerId: string,
-  up: number
+  up: number,
 ): SpacePlayersById {
   const player = spacePlayers[playerId];
   if (!player) return spacePlayers;
@@ -404,7 +451,7 @@ function assignPlannedCourse(
 
 function setPlayerHighlight(
   spaceRaceGame: SpaceRaceGame,
-  playerId: string
+  playerId: string,
 ): SpaceRaceGame {
   console.log("finding player", playerId);
 
@@ -426,7 +473,7 @@ function setPlayerHighlight(
 }
 function updatePlayerVerticalPosition(
   spaceRaceGame: SpaceRaceGame,
-  playerId: string
+  playerId: string,
 ): SpaceRaceGame {
   const player = spaceRaceGame.spacePlayers[playerId];
   if (!player) return spaceRaceGame;
@@ -437,7 +484,7 @@ function updatePlayerVerticalPosition(
     y: clamp(
       player.currentPosition.y + player.plannedCourse.up,
       0,
-      STARMAP_HEIGHT - 1
+      STARMAP_HEIGHT - 1,
     ),
   };
 
@@ -471,7 +518,7 @@ function updatePlayerVerticalPosition(
 
 function setPlayerCoordinates(
   player: SpaceRacePlayer,
-  coordinates: SpaceRaceCoordinates
+  coordinates: SpaceRaceCoordinates,
 ): SpaceRacePlayer {
   return {
     ...player,
@@ -482,22 +529,22 @@ function setPlayerCoordinates(
 function getHorizontalEntityBetween(
   currentPosition: SpaceRaceCoordinates,
   horizontalDistance: number,
-  starmap: SpaceRaceStarmap
+  starmap: SpaceRaceStarmap,
 ): SpaceRaceEntity | undefined {
   console.log(
     "finding horizontal entity between",
     currentPosition,
-    horizontalDistance
+    horizontalDistance,
   );
 
   for (
-    let i = currentPosition.x;
+    let i = currentPosition.x + 1;
     i <= horizontalDistance + currentPosition.x;
     i++
   ) {
     const entity = starmap.entities.find(
       (entity) =>
-        entity.position.x === i && entity.position.y === currentPosition.y
+        entity.position.x === i && entity.position.y === currentPosition.y,
     );
     if (entity) {
       return entity;
@@ -508,17 +555,17 @@ function getHorizontalEntityBetween(
 function getVerticalEntityBetween(
   currentPosition: SpaceRaceCoordinates,
   verticalDistance: number,
-  starmap: SpaceRaceStarmap
+  starmap: SpaceRaceStarmap,
 ): SpaceRaceEntity | undefined {
   if (verticalDistance === 0) return;
 
   const direction = verticalDistance < 0 ? "up" : "down";
 
   if (direction === "up") {
-    for (let i = currentPosition.y; i >= verticalDistance; i--) {
+    for (let i = currentPosition.y - 1; i >= verticalDistance; i--) {
       const entity = starmap.entities.find(
         (entity) =>
-          entity.position.x === currentPosition.x && entity.position.y === i
+          entity.position.x === currentPosition.x && entity.position.y === i,
       );
       if (entity) {
         return entity;
@@ -532,13 +579,13 @@ function getVerticalEntityBetween(
 
   if (direction === "down") {
     for (
-      let i = currentPosition.y;
+      let i = currentPosition.y + 1;
       i <= verticalDistance + currentPosition.y;
       i++
     ) {
       const entity = starmap.entities.find(
         (entity) =>
-          entity.position.x === currentPosition.x && entity.position.y === i
+          entity.position.x === currentPosition.x && entity.position.y === i,
       );
       if (entity) {
         return entity;
@@ -557,15 +604,16 @@ function getVerticalEntityBetween(
 function getEndingCooridinates(
   player: SpaceRacePlayer,
   spacePlayers: SpacePlayersById,
-  starmap: SpaceRaceStarmap
+  starmap: SpaceRaceStarmap,
 ): {
   entity?: SpaceRaceEntity;
   coordinates: SpaceRaceCoordinates;
+  movesRemaining: number;
 } {
   const entity = getHorizontalEntityBetween(
     player.currentPosition,
     player.plannedCourse.right,
-    starmap
+    starmap,
   );
 
   if (!entity) {
@@ -574,6 +622,7 @@ function getEndingCooridinates(
         x: player.currentPosition.x + Math.abs(player.plannedCourse.right),
         y: player.currentPosition.y,
       },
+      movesRemaining: 0,
     };
   }
 
@@ -583,7 +632,7 @@ function getEndingCooridinates(
       (p) =>
         p.id !== player.id &&
         p.currentPosition.x === entity.position.x &&
-        p.currentPosition.y === entity.position.y
+        p.currentPosition.y === entity.position.y,
     );
     console.log("Other player finished", otherPlayerFinished);
     if (otherPlayerFinished) {
@@ -595,6 +644,10 @@ function getEndingCooridinates(
     return {
       entity,
       coordinates: { x: entity.position.x - 1, y: player.currentPosition.y },
+      movesRemaining:
+        player.plannedCourse.right -
+        (entity.position.x - player.currentPosition.x) +
+        1,
     };
   }
 
@@ -602,19 +655,26 @@ function getEndingCooridinates(
     return {
       entity,
       coordinates: { x: entity.position.x - 1, y: player.currentPosition.y },
+      movesRemaining:
+        player.plannedCourse.right -
+        (entity.position.x - player.currentPosition.x) +
+        1,
     };
   }
 
   return {
     entity,
     coordinates: { ...entity.position },
+    movesRemaining:
+      player.plannedCourse.right -
+      (entity.position.x - player.currentPosition.x),
   };
 }
 
 function updatePlayerHorizontalPosition(
   spaceRaceGame: SpaceRaceGame,
   playerId: string,
-  starmap: SpaceRaceStarmap
+  starmap: SpaceRaceStarmap,
 ): SpaceRaceGame {
   const player = spaceRaceGame.spacePlayers[playerId];
   if (!player) return spaceRaceGame;
@@ -623,7 +683,7 @@ function updatePlayerHorizontalPosition(
   const moveResult = getEndingCooridinates(
     player,
     spaceRaceGame.spacePlayers,
-    starmap
+    starmap,
   );
 
   const newPlannedCourse = {
@@ -640,23 +700,110 @@ function updatePlayerHorizontalPosition(
     color: player.color,
   };
 
+  let updatedEntities = spaceRaceGame.starmap.entities;
+  let updatedEntity = moveResult.entity;
+
+  if (moveResult.entity && moveResult.entity.type === "gate") {
+    updatedEntity = {
+      ...moveResult.entity,
+      value: Math.max(
+        (moveResult.entity.value || 0) - moveResult.movesRemaining,
+        0,
+      ),
+    };
+
+    console.log("Updating gate entity", updatedEntity);
+    updatedEntities = updateEntity(
+      spaceRaceGame.starmap.entities,
+      updatedEntity,
+    );
+  }
+
   return {
     ...spaceRaceGame,
+    starmap: {
+      ...spaceRaceGame.starmap,
+      entities: updatedEntities,
+    },
     rocketTrails: [...spaceRaceGame.rocketTrails, newTrail],
     spacePlayers: {
       ...spaceRaceGame.spacePlayers,
       [playerId]: {
         ...setPlayerCoordinates(player, moveResult.coordinates),
         plannedCourse: newPlannedCourse,
-        collidedWith: moveResult.entity,
+        collidedWith: updatedEntity,
       },
     },
   };
 }
 
+function updateEntity(
+  entities: SpaceRaceEntity[],
+  updatedEntity: SpaceRaceEntity,
+): SpaceRaceEntity[] {
+  return entities.map((entity) => {
+    if (
+      entity.position.x === updatedEntity.position.x &&
+      entity.position.y === updatedEntity.position.y
+    ) {
+      return updatedEntity;
+    }
+    return entity;
+  });
+}
+
+function movePlayersWhoCanPassGates(
+  spaceRaceGame: SpaceRaceGame,
+): SpaceRaceGame {
+  // find all players that have CollidedWith entity of type gate
+  const playersWhoHitGates = Object.values(spaceRaceGame.spacePlayers).filter(
+    (player) => player.collidedWith && player.collidedWith.type === "gate",
+  );
+
+  if (playersWhoHitGates.length === 0) {
+    return spaceRaceGame;
+  }
+
+  const updatedSpaceRaceGame: SpaceRaceGame = {
+    ...spaceRaceGame,
+    allPlayersMoved: true,
+  };
+
+  // for each of these players, check if they can pass the gate if the entity has a value of zero, and if so, update the players postion to that of the entity
+  playersWhoHitGates.forEach((player) => {
+    const gateValue = getEntityCurrentValue(
+      spaceRaceGame.starmap.entities,
+      player.collidedWith!,
+    );
+    console.log("Player hit gate", player.id, gateValue);
+    if (gateValue === 0) {
+      // move the player to the gate position
+      updatedSpaceRaceGame.spacePlayers[player.id] = {
+        ...updatedSpaceRaceGame.spacePlayers[player.id],
+        ...setPlayerCoordinates(player, { ...player.collidedWith!.position }),
+        passedThroughGate: true,
+      };
+    }
+  });
+
+  return updatedSpaceRaceGame;
+}
+
+function getEntityCurrentValue(
+  entities: SpaceRaceEntity[],
+  entityToFind: SpaceRaceEntity,
+): number {
+  const entity = entities.find(
+    (e) =>
+      e.position.x === entityToFind.position.x &&
+      e.position.y === entityToFind.position.y,
+  );
+  return entity ? entity.value || 0 : 0;
+}
+
 function updatePlayerDuplicateSquarePositions(
   playerId: string,
-  spaceRaceGame: SpaceRaceGame
+  spaceRaceGame: SpaceRaceGame,
 ): SpaceRaceGame {
   const player = spaceRaceGame.spacePlayers[playerId];
   if (!player) return spaceRaceGame;
@@ -664,12 +811,12 @@ function updatePlayerDuplicateSquarePositions(
   const playerCoordinates = player.currentPosition;
 
   const otherPlayersInSameCoordinatesWithPositionOffset = Object.values(
-    spaceRaceGame.spacePlayers
+    spaceRaceGame.spacePlayers,
   )
     .filter(
       (p) =>
         p.currentPosition.x === playerCoordinates.x &&
-        p.currentPosition.y === playerCoordinates.y
+        p.currentPosition.y === playerCoordinates.y,
     )
     .map<SpaceRacePlayer>((p, i) => ({ ...p, positionOffset: i }));
 

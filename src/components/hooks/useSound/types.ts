@@ -55,6 +55,7 @@ export type SoundName =
   | "space-race-intro"
   | "space-race-plot-course"
   | "space-race-rocket-move"
+  | "space-race-rocket-move-alt"
   | "space-race-rocket-collision"
   | "space-race-player-finish"
   | "coin-rankings-show-player"

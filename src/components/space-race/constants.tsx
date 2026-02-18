@@ -1,8 +1,15 @@
 import Image from "next/image";
+import styled from "styled-components";
 import { Attention } from "../animations/Attention";
-import spacedockImage from "./spacedock.png";
+import THEME from "../../themes";
+import cnyGoldIngot from "./cny-gold-ingot.png";
+import cnyRedLantern from "./cny-red-lantern.png";
+import cnyFireCrackers from "./cny-fire-crackers.png";
+import cnyGrandGate from "./cny-grand-gate.png";
+import cnyWoodenGate from "./cny-wooden-hurdle.png";
 import {
   SpaceRaceCoordinates,
+  SpaceRaceEntity,
   SpaceRaceEntityBehaviour,
   SpaceRaceEntityType,
   SpaceRaceStarmap,
@@ -10,6 +17,22 @@ import {
 
 export const STARMAP_WIDTH = 30;
 export const STARMAP_HEIGHT = 9;
+
+const Gate = styled.div`
+  position: relative;
+`;
+const GateValue = styled.div`
+  position: absolute;
+  font-size: 1rem;
+  font-family: ${THEME.tokens.fonts.numbers};
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: darkred;
+  padding: 0.2rem;
+  border-radius: 1rem;
+`;
+const GateIcon = styled.div``;
 
 export const STARMAP_CHART: SpaceRaceStarmap = {
   entities: [
@@ -19,7 +42,7 @@ export const STARMAP_CHART: SpaceRaceStarmap = {
     createEntity("asteroid", { x: 2, y: 8 }),
     createEntity("asteroid", { x: 3, y: 0 }),
     createEntity("asteroid", { x: 3, y: 2 }),
-    createEntity("planet", { x: 4, y: 3 }, "block", false),
+    createEntity("planet", { x: 4, y: 3 }, "block", undefined, false),
     createEntity("asteroid", { x: 5, y: 1 }),
     // createEntity("asteroid", { x: 5, y: 4 }),
     createEntity("asteroid", { x: 5, y: 7 }),
@@ -31,33 +54,33 @@ export const STARMAP_CHART: SpaceRaceStarmap = {
     createEntity("asteroid", { x: 7, y: 3 }),
     createEntity("asteroid", { x: 7, y: 6 }),
     // createEntity("asteroid", { x: 8, y: 4 }),
-    createEntity("satellite", { x: 8, y: 7 }, "block", false),
+    createEntity("satellite", { x: 8, y: 7 }, "block", undefined, false),
     createEntity("asteroid", { x: 10, y: 1 }),
     createEntity("asteroid", { x: 10, y: 1 }),
     createEntity("asteroid", { x: 10, y: 4 }),
     createEntity("asteroid", { x: 10, y: 5 }),
-    createEntity("asteroid", { x: 10, y: 6 }),
+    createEntity("gate", { x: 10, y: 6 }, "block", 2),
     createEntity("asteroid", { x: 10, y: 8 }),
     createEntity("asteroid", { x: 11, y: 1 }),
-    createEntity("planet", { x: 11, y: 2 }, "block", false),
+    createEntity("planet", { x: 11, y: 2 }, "block", undefined, false),
     createEntity("asteroid", { x: 12, y: 4 }),
     createEntity("asteroid", { x: 12, y: 5 }),
     createEntity("asteroid", { x: 12, y: 8 }),
-    createEntity("asteroid", { x: 13, y: 0 }),
+    createEntity("gate", { x: 13, y: 0 }, "block", 2),
     createEntity("asteroid", { x: 14, y: 1 }),
-    createEntity("asteroid", { x: 14, y: 3 }),
+    createEntity("gate", { x: 14, y: 3 }, "block", 2),
     createEntity("asteroid", { x: 14, y: 4 }),
-    createEntity("planet", { x: 14, y: 6 }, "block", false),
+    createEntity("planet", { x: 14, y: 6 }, "block", undefined, false),
     createEntity("asteroid", { x: 14, y: 7 }),
     createEntity("asteroid", { x: 15, y: 1 }),
     createEntity("asteroid", { x: 16, y: 7 }),
-    createEntity("asteroid", { x: 16, y: 8 }),
-    createEntity("satellite", { x: 17, y: 1 }, "block", false),
+    createEntity("gate", { x: 16, y: 8 }, "block", 2),
+    createEntity("satellite", { x: 17, y: 1 }, "block", undefined, false),
     createEntity("asteroid", { x: 17, y: 2 }),
     createEntity("asteroid", { x: 17, y: 3 }),
     createEntity("asteroid", { x: 17, y: 5 }),
     createEntity("asteroid", { x: 19, y: 0 }),
-    createEntity("satellite", { x: 19, y: 3 }, "block", false),
+    createEntity("satellite", { x: 19, y: 3 }, "block", undefined, false),
     createEntity("asteroid", { x: 19, y: 4 }),
     createEntity("asteroid", { x: 19, y: 6 }),
     createEntity("asteroid", { x: 19, y: 7 }),
@@ -86,7 +109,7 @@ export const STARMAP_CHART: SpaceRaceStarmap = {
     createEntity("earth2", { x: 29, y: 4 }, "finish"),
     createEntity("satellite", { x: 29, y: 5 }),
     createEntity("satellite", { x: 29, y: 6 }),
-    createEntity("earth3", { x: 29, y: 7 }, "finish", false, ["callum"]),
+    createEntity("earth3", { x: 29, y: 7 }, "finish"),
     createEntity("satellite", { x: 29, y: 8 }),
   ],
 };
@@ -95,60 +118,71 @@ export function createEntity(
   type: SpaceRaceEntityType,
   position: SpaceRaceCoordinates,
   behaviour: SpaceRaceEntityBehaviour = "block",
+  initialValue = 0,
   removable = true,
-  allowedPlayerIds: string[] = []
+  allowedPlayerIds: string[] = [],
 ) {
   return {
     type,
     position,
-    display: getDisplayElement(type),
+    display: getDisplayElement(type, initialValue),
     behaviour,
     removable,
+    value: initialValue,
     allowedPlayerIds,
   };
 }
 
-function getDisplayElement(entityType: SpaceRaceEntityType): JSX.Element {
+export function renderEntity(entity: SpaceRaceEntity) {
+  return getDisplayElement(entity.type, entity.value || 0);
+}
+
+function getDisplayElement(
+  entityType: SpaceRaceEntityType,
+  initialValue: number,
+): JSX.Element {
   switch (entityType) {
     case "satellite":
-      return <span style={{ transform: "scale(0.8)" }}>🛰️</span>;
+      return (
+        <Image src={cnyRedLantern} alt="Red lantern" width={60} height={60} />
+      );
     case "planet":
-      return <span style={{ transform: "scale(1.5)" }}>🪐</span>;
+      return (
+        <Image src={cnyGoldIngot} alt="Gold ingot" width={60} height={60} />
+      );
 
     case "asteroid":
-      return <>🪨</>;
-    case "wormhole":
-      return <>🌀</>;
+      return (
+        <Image
+          src={cnyFireCrackers}
+          alt="Fire crackers"
+          width={45}
+          height={45}
+        />
+      );
+    case "gate":
+      return (
+        <Gate>
+          <Image src={cnyWoodenGate} alt="Wooden gate" width={80} height={80} />
+          <GateValue>{initialValue}</GateValue>
+        </Gate>
+      );
     case "earth1":
       return (
         <Attention animation="pulse">
-          <div style={{ transform: "scale(1.3)" }}>🌏</div>
+          <Image src={cnyGrandGate} alt="Grand gate" width={80} height={80} />
         </Attention>
       );
     case "earth2":
       return (
         <Attention animation="pulse">
-          <div style={{ transform: "scale(1.3)" }}>🌍</div>
+          <Image src={cnyGrandGate} alt="Grand gate" width={80} height={80} />
         </Attention>
       );
     case "earth3":
       return (
         <Attention animation="pulse">
-          <div style={{ transform: "translateX(-10px)", position: "relative" }}>
-            <Image src={spacedockImage} width={100} alt="" />
-            <div
-              style={{
-                position: "absolute",
-                color: "yellow",
-                fontSize: "0.7rem",
-                width: "100%",
-                bottom: "12px",
-                textAlign: "center",
-              }}
-            >
-              Listing Foundations Squad
-            </div>
-          </div>
+          <Image src={cnyGrandGate} alt="Grand gate" width={100} height={100} />
         </Attention>
       );
     default:

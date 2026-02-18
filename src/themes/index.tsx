@@ -98,4 +98,4 @@ const WEDDING_THEME: GlobalGameTheme = {
   components: {},
 };
 
-export default DEFAULT_THEME;
+export default CNY_THEME;

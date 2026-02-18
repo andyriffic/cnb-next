@@ -57,6 +57,7 @@ export const defaultSounds: { [key in SoundName]: string } = {
   "space-race-intro": "/sounds/default/galaga_redux_coin.mp3",
   "space-race-plot-course": "/sounds/default/galaga_start.mp3",
   "space-race-rocket-move": "/sounds/default/spaceship.mp3",
+  "space-race-rocket-move-alt": "/sounds/default/spaceship_2.mp3",
   "space-race-rocket-collision": "/sounds/default/blast_off_sms.mp3",
   "space-race-player-finish": "/sounds/power_mode.mp3",
   "coin-rankings-show-player": "/sounds/default/blip_win.mp3",
@@ -91,6 +92,9 @@ export const chineseNewYearSounds: { [key in SoundName]: string } = {
   "gas-background-music": "/sounds/chinese-new-year/god_of_wealth.mp3",
   "number-crunch-guessing-music":
     "/sounds/chinese-new-year/db_instrumental.mp3",
+  "space-race-rocket-collision": "/sounds/chinese-new-year/pokemon_bump.mp3",
+  "space-race-rocket-move": "/sounds/chinese-new-year/horse_message.mp3",
+  "space-race-rocket-move-alt": "/sounds/chinese-new-year/horse_sms_tone.mp3",
 };
 
 export const weddingSounds: { [key in SoundName]: string } = {

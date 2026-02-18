@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { fadeInAnimation } from "../animations/keyframes/fade";
-import { STARMAP_HEIGHT, STARMAP_WIDTH } from "./constants";
+import { renderEntity, STARMAP_HEIGHT, STARMAP_WIDTH } from "./constants";
 import { SpacePlayersById, SpaceRaceEntity } from "./types";
 
 const Container = styled.div`
@@ -35,19 +35,20 @@ type Props = {
 export const SpaceEntity = ({ entity, players }: Props) => {
   const colonisedEarthPlayer = Object.values(players).find((player) => {
     return (
+      entity.behaviour === "finish" &&
       player.currentPosition.x === entity.position.x &&
       player.currentPosition.y === entity.position.y
     );
   });
   return colonisedEarthPlayer ? (
     <Container>
-      {entity.display}
+      {renderEntity(entity)}
       <Signpost>
         Planet{" "}
         <span style={{ fontWeight: "bold" }}>{colonisedEarthPlayer.name}</span>
       </Signpost>
     </Container>
   ) : (
-    <Container>{entity.display}</Container>
+    <Container>{renderEntity(entity)}</Container>
   );
 };

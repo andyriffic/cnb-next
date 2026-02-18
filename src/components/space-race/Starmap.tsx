@@ -12,6 +12,7 @@ import {
 import { STARMAP_HEIGHT, STARMAP_WIDTH } from "./constants";
 import { SpaceEntity } from "./SpaceEntity";
 import { PlayerShip } from "./PlayerShip";
+import { PlayerHorse } from "./PlayerHorse";
 
 const Space = styled.div`
   position: fixed;
@@ -21,8 +22,9 @@ const Space = styled.div`
   height: 100vh;
   background-color: black;
   font-size: 5rem;
-  background-image: url("/images/space-background-01.jpg");
-  background-size: 100% 100%;
+  background-image: url("/images/cny-space-race-background-03.png");
+  // background-size: 100% 100%;
+  backround-repeat: repeat;
 `;
 
 const TheVoid = styled.div`
@@ -40,7 +42,9 @@ const SpaceEntityContainer = styled.span`
 const SpacePlayerContainer = styled.span`
   display: inline-block;
   position: absolute;
-  transition: top 0.5s, left 0.5s;
+  transition:
+    top 0.5s,
+    left 0.5s;
 `;
 
 const GridLine = styled.div<{ visible: boolean }>`
@@ -65,7 +69,8 @@ const VerticalGridLine = styled(GridLine)`
 const DebugCoordinates = styled.span`
   font-size: 0.9rem;
   text-align: center;
-  opacity: 0.3;
+  opacity: 0.6;
+  color: white;
 `;
 
 const OFFSETS = [
@@ -164,7 +169,7 @@ export const StarMap = ({
             key={i}
             style={getStarmapCssPosition(player.currentPosition, offset)}
           >
-            <PlayerShip player={player} />
+            <PlayerHorse player={player} />
           </SpacePlayerContainer>
         );
       })}
@@ -193,7 +198,7 @@ const halfWidth = 100 / STARMAP_WIDTH / 2;
 
 function getStarmapCssPosition(
   position: SpaceRaceCoordinates,
-  offset: { x: number; y: number } = { x: 0, y: 0 }
+  offset: { x: number; y: number } = { x: 0, y: 0 },
 ) {
   return {
     top: `${(100 / STARMAP_HEIGHT) * position.y + offset.y}vh`,
