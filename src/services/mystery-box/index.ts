@@ -640,19 +640,19 @@ function createPlayerView(
       box.eliminatedPlayerIdsGuessingThisBox.includes(player.id),
   );
 
-  const chosenBoxContentsInPreviousRounds = game.rounds
-    .filter((round) => round.id < currentRound.id)
+  const chosenBoxContents = game.rounds
+    .filter((round) => (!!gameOverSummary ? true : round.id < currentRound.id))
     .flatMap((round) => round.boxes)
     .filter((box) => box.playerIds.includes(player.id))
     .map((box) => box.contents);
 
-  const chosenBonusBombGuessBoxesInPreviousRounds = game.rounds
-    .filter((round) => round.id < currentRound.id)
+  const chosenBonusBombBoxContents = game.rounds
+    .filter((round) => (!!gameOverSummary ? true : round.id < currentRound.id))
     .flatMap((round) => round.boxes)
     .filter((box) => box.eliminatedPlayerIdsGuessingThisBox.includes(player.id))
     .map((box) => box.contents);
 
-  const lootTotalsSoFar = chosenBoxContentsInPreviousRounds.reduce(
+  const lootTotalsSoFar = chosenBoxContents.reduce(
     (acc, content) => {
       const existing = acc[content.type];
       if (existing) {
@@ -668,10 +668,9 @@ function createPlayerView(
     {} as { [key in MysteryBoxContentsType]: { title: string; total: number } },
   );
 
-  const totalBonusPointsFromBombGuesses =
-    chosenBonusBombGuessBoxesInPreviousRounds.filter(
-      (content) => content.type === "bomb",
-    ).length;
+  const totalBonusPointsFromBombGuesses = chosenBonusBombBoxContents.filter(
+    (content) => content.type === "bomb",
+  ).length;
 
   const totalRealPoints =
     (lootTotalsSoFar.points?.total || 0) + totalBonusPointsFromBombGuesses;
