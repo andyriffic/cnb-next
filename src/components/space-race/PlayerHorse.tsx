@@ -65,6 +65,7 @@ const PlayerShipContainer = styled.div<{ colorHex: string }>`
   // transform: rotate(45deg);
   // color: transparent;
   // text-shadow: 0 0 0 ${({ colorHex }) => colorHex};
+  filter: brightness(1.6);
 `;
 
 const PlayerStatusIndicator = styled.div`
