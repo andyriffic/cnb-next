@@ -111,7 +111,7 @@ function getInitialPositionMap(
   //   },
   // );
 
-  const playerCloseness = 2;
+  const playerCloseness = 4;
 
   const leftOffset = 50 - (activePlayers.length / 2) * playerCloseness;
 

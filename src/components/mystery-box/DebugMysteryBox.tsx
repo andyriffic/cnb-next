@@ -120,7 +120,12 @@ export const DebugMysteryBoxGame = ({ game }: Props) => {
                           selectedAnotherBox ||
                           selectedThisBox
                         }
-                        style={{ display: "block" }}
+                        style={{
+                          display: "block",
+                          backgroundColor: BOX_COLORS[box.id],
+                          width: "100%",
+                          height: "100%",
+                        }}
                         onClick={() => {
                           if (p.status === "eliminated") {
                             mysteryBox.eliminatedPlayerGuessBox(

@@ -7,7 +7,7 @@ import {
   MysteryBoxContentsType,
 } from "../../services/mystery-box/types";
 import { Coins } from "../Coins";
-import { useDoOnce } from "../hooks/useDoOnce";
+import THEME from "../../themes";
 
 const BoxLidAnimation = keyframes`
 0%,
@@ -31,6 +31,24 @@ const RevealBoxContents = keyframes`
             transform: translate3d(-50%, 0, 0);
             opacity: 1;
   }
+`;
+
+const Points = styled.div`
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3vw;
+  height: 3vw;
+  background: darkblue;
+  color: ${THEME.tokens.colours.primaryText};
+  border-radius: 50%;
+  border: 0.2rem solid ${THEME.tokens.colours.secondaryBackground};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  font-family: ${THEME.tokens.fonts.numbers};
+  font-weight: bold;
 `;
 
 const Box = styled.div`
@@ -135,13 +153,13 @@ export const BOX_COLORS: Record<number, string> = {
 };
 
 export const getBoxContents = (
-  boxContents: MysteryBoxContents
+  boxContents: MysteryBoxContents,
 ): JSX.Element => {
   switch (boxContents.type) {
     case "coin":
       return <Coins totalCoins={boxContents.value} />;
     case "points":
-      return <>+{boxContents.value}</>;
+      return <Points>+{boxContents.value}</Points>;
     case "empty":
       return <></>;
     case "bomb":

@@ -39,6 +39,10 @@ const View = ({ game, playerId, selectBox, guessBombBox }: Props) => {
       {!game.gameOverSummary && (
         <>
           <SmallHeading centered={true}>
+            Round {game.currentRound.id}
+          </SmallHeading>
+
+          <SmallHeading centered={true}>
             {playerAlive ? "Don't pick the bomb!" : "Find the bomb!"}
           </SmallHeading>
           <PlayerBoxSelection

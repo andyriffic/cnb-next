@@ -126,7 +126,7 @@ export const PlayerMysteryBoxUi = ({ box, selected, dim = false }: Props) => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        opacity: dim ? 0.5 : 1,
+        opacity: dim ? 0 : 1,
         borderRadius: "1rem",
       }}
     >

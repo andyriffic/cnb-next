@@ -1,6 +1,5 @@
 import { use, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
-import { COLORS, FONT_FAMILY } from "../../colors";
 import {
   MysteryBoxGameView,
   MysteryBoxPlayer,
@@ -56,12 +55,12 @@ const Points = styled.div`
   background: darkblue;
   color: ${THEME.tokens.colours.primaryText};
   border-radius: 50%;
-  border: 0.2rem solid ${COLORS.borderPrimary};
+  border: 0.2rem solid ${THEME.tokens.colours.secondaryBackground};
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 1.2rem;
-  font-family: ${FONT_FAMILY.numeric};
+  font-family: ${THEME.tokens.fonts.numbers};
   font-weight: bold;
 `;
 
