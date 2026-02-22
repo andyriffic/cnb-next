@@ -84,6 +84,7 @@ const BoxLid = styled.div<{ primaryColor: string }>`
 type Props = {
   box: MysteryBox;
   selected: boolean;
+  dim: boolean;
 };
 
 type BoxState = "open" | "closed";
@@ -102,7 +103,7 @@ export const BOX_COLORS: Record<number, string> = {
   3: "#ffc107",
 };
 
-export const PlayerMysteryBoxUi = ({ box, selected }: Props) => {
+export const PlayerMysteryBoxUi = ({ box, selected, dim = false }: Props) => {
   // const [boxState, setBoxState] = useState<BoxState>("closed");
   const boxColorHex = BOX_COLORS[box.id] || "#000";
 
@@ -121,13 +122,15 @@ export const PlayerMysteryBoxUi = ({ box, selected }: Props) => {
         width: "100%",
         height: "100%",
         backgroundColor: boxColorHex,
-        fontSize: "2rem",
+        fontSize: "5rem",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        opacity: dim ? 0.5 : 1,
+        borderRadius: "1rem",
       }}
     >
-      {selected && <>✅</>}
+      {selected && <>🤞</>}
     </div>
     // <div style={{ display: "flex", gap: "0.5rem" }}>
     //   <SmallHeading style={{ textAlign: "center" }}>

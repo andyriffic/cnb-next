@@ -67,6 +67,8 @@ export const eliminatedPlayerGuessBox = (
     return pipe(
       game,
       validatePlayerIsEliminated(playerId),
+      E.chain(validateGameHasActivePlayers),
+      E.chain(validateSomeActivePlayersStillYetToPickBoxOnCurrentRound),
       E.chain(getRound(roundIndex)),
       E.chain(validatePlayerHasNotGuessedThisRound(playerId)),
       E.chain(addPlayerGuessToBox(playerId, boxIndex)),
@@ -472,6 +474,23 @@ const validateGameHasActivePlayers = (
   }
 
   return E.right(game);
+};
+
+const validateSomeActivePlayersStillYetToPickBoxOnCurrentRound = (
+  game: MysteryBoxGame,
+): E.Either<ErrorMessage, MysteryBoxGame> => {
+  return pipe(
+    getLatestRound(game),
+    O.fold(
+      () => E.left("No active round found"),
+      (round) => {
+        const result = haveAllPlayersSelectedBoxOnRound(round, game);
+        return !result.valid
+          ? E.right(game)
+          : E.left("All players have selected a box for this round");
+      },
+    ),
+  );
 };
 
 const haveAllPlayersSelectedBoxOnRound = (

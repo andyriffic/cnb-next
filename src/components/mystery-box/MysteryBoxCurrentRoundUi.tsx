@@ -54,10 +54,10 @@ type BoxPosition = {
 };
 
 const BoxPositions: BoxPosition[] = [
-  { left: 10, top: 5 },
-  { right: 10, top: 5 },
-  { left: 10, bottom: 25 },
-  { right: 10, bottom: 25 },
+  { left: 10, top: 8 },
+  { left: 35, top: 8 },
+  { right: 35, top: 8 },
+  { right: 10, top: 8 },
 ];
 
 type Props = {

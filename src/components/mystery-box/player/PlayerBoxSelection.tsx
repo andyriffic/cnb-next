@@ -7,22 +7,18 @@ import {
 import { PlayerMysteryBoxUi } from "./PlayerMysteryBoxUI";
 
 const BoxOptionContainer = styled.div`
-  display: grid;
-  grid-template-columns: 50% 50%;
-  grid-row: auto auto;
-  grid-column-gap: 1rem;
-  grid-row-gap: 4rem;
+  display: flex;
   margin: 2rem 0;
   padding: 0;
   align-items: center;
-  justify-items: center;
+  justify-content: space-between;
 `;
 
 const BoxOptionContainerItem = styled.div`
   display: flex;
   justify-content: center;
-  height: 80px;
-  width: 80px;
+  height: 20vw;
+  width: 20vw;
   margin: 0;
   padding: 0;
 `;
@@ -35,6 +31,7 @@ const BoxButton = styled.button`
   padding: 0;
   border: none;
   cursor: pointer;
+  border-radius: 1rem;
 `;
 
 type Props = {
@@ -44,10 +41,14 @@ type Props = {
 };
 
 export const PlayerBoxSelection = ({ round, player, onSelect }: Props) => {
+  const hasSelectedBox = player.currentlySelectedBoxId !== undefined;
   return (
     <div>
       <BoxOptionContainer key={round.id}>
         {round.boxes.map((box) => {
+          const selectedThisBox =
+            box.playerIds.includes(player.id) ||
+            box.eliminatedPlayerIdsGuessingThisBox.includes(player.id);
           return (
             <BoxOptionContainerItem key={box.id}>
               <BoxButton
@@ -57,10 +58,8 @@ export const PlayerBoxSelection = ({ round, player, onSelect }: Props) => {
                 <PlayerMysteryBoxUi
                   key={box.id}
                   box={box}
-                  selected={
-                    box.playerIds.includes(player.id) ||
-                    box.eliminatedPlayerIdsGuessingThisBox.includes(player.id)
-                  }
+                  dim={hasSelectedBox && !selectedThisBox}
+                  selected={selectedThisBox}
                 />
               </BoxButton>
             </BoxOptionContainerItem>
