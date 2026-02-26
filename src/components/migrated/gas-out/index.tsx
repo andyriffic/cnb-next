@@ -143,8 +143,8 @@ const View = ({ gasGame, team }: Props) => {
         {!!gasGame.winningPlayerId && <LinkToMiniGame />}
         <LastTwoPlayersNotification game={gasGame} />
         <BalloonContainer>
-          {/* <TalkingHeadBalloon gasCloud={gasGame.gasCloud} /> */}
-          <GasBallon gasCloud={gasGame.gasCloud} />
+          <TalkingHeadBalloon gasCloud={gasGame.gasCloud} />
+          {/* <GasBallon gasCloud={gasGame.gasCloud} /> */}
         </BalloonContainer>
 
         <GraveyardContainer>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styled, { css, keyframes } from "styled-components";
 import tinycolor from "tinycolor2";
+import Image from "next/image";
 import {
   MysteryBox,
   MysteryBoxContents,
@@ -8,6 +9,7 @@ import {
 } from "../../services/mystery-box/types";
 import { Coins } from "../Coins";
 import THEME from "../../themes";
+import michellFaceimage from "./michelleface.png";
 
 const BoxLidAnimation = keyframes`
 0%,
@@ -163,7 +165,9 @@ export const getBoxContents = (
     case "empty":
       return <></>;
     case "bomb":
-      return <>💣</>;
+      return (
+        <Image src={michellFaceimage} alt="Bomb" width={100} height={100} />
+      );
     default:
       return <></>;
   }

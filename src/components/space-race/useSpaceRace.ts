@@ -399,9 +399,9 @@ function getVoidXPosition(game: SpaceRaceGame): number {
 }
 
 function getLeadingPlayerIndex(game: SpaceRaceGame): number {
-  const allPlayerXPositions = Object.values(game.spacePlayers).map(
-    (p) => p.currentPosition.x,
-  );
+  const allPlayerXPositions = Object.values(game.spacePlayers)
+    .filter((p) => p.id !== "michelle_l")
+    .map((p) => p.currentPosition.x);
   const maxXPosition = Math.max(...allPlayerXPositions);
   return maxXPosition;
 }

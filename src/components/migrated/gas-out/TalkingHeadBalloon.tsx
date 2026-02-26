@@ -9,22 +9,40 @@ import {
   explodeAnimation,
   shakeExtremeAnimation,
 } from "../../animations/keyframes/extreme";
-import bananaImage from "./banana-01.png";
+import michelleFaceImage from "./michelleface.png";
 
 function getCloudAnimationSpeedMilliSeconds(intensity: number): number {
   return Math.max(8000 - intensity * 500, 100);
 }
 
 const SpeechText = [
-  "I just applied for a home loan because I want to upgrade to a banana split-level house",
-  "I talked to my mortgage broker and a-peeled for a good rate",
-  "I don't like computers because I'm afraid I'll get byte-n",
-  "我正在練習中文: Ni hao-ma-nana 👋",
-  "I'm normally late to meetings because I keep slipping on the keyboard",
-  "I would like to become a DL to make sure everything runs smoothie",
-  "My favorite holiday is Peel-o-ween",
-  "I don't wear shoes, I prefer slippers",
+  "Swift is great but I sometimes miss Objective-C, said no one ever",
+  "I'm trading interest rates for frame rates",
+  "I'm switching from helping people visualise their financial future, to helping them visualise their house",
+  "I don't always test my code, but when I do it's in production",
+  "I'm switching from calculating loan ratios to aspect ratios",
+  "I have 99 problems and they're all in my Xcode build logs",
+  "Goodbye pre-approvals, hello house pre-views",
+  "My git commits are like Hello Kitty accessories - small, cute, and there's way too many of them",
+  "My code compiles almost as fast as a loan gets approved",
+  "I put the 'super' in SuperSquad and the 'hello' in Hello Kitty",
+  "I prefer market crashes over app crashes",
+  "The only thing I foreclose on is Xcode at 5pm",
+  "I've solved more merge conflicts than Hello Kitty has outfit changes",
+  "I'm liquidating my financial assets to invest in visual assets",
+  "I ship iOS features faster than Sanrio ships Hello Kitty merch",
+  "I don't always test on Android, but when I do, I remember why I chose iOS",
 ];
+// const SpeechText = [
+//   "I just applied for a home loan because I want to upgrade to a banana split-level house",
+//   "I talked to my mortgage broker and a-peeled for a good rate",
+//   "I don't like computers because I'm afraid I'll get byte-n",
+//   "我正在練習中文: Ni hao-ma-nana 👋",
+//   "I'm normally late to meetings because I keep slipping on the keyboard",
+//   "I would like to become a DL to make sure everything runs smoothie",
+//   "My favorite holiday is Peel-o-ween",
+//   "I don't wear shoes, I prefer slippers",
+// ];
 
 const createSpeechManager = (textOptions: string[]) => {
   let index = -1;
@@ -98,9 +116,19 @@ const SpeechBubble = styled.div`
   background-color: white;
   color: black;
   padding: 0.3rem;
-  box-shadow: 0 -4px white, 0 -8px black, 4px 0 white, 4px -4px black,
-    8px 0 black, 0 4px white, 0 8px black, -4px 0 white, -4px 4px black,
-    -8px 0 black, -4px -4px black, 4px 4px black;
+  box-shadow:
+    0 -4px white,
+    0 -8px black,
+    4px 0 white,
+    4px -4px black,
+    8px 0 black,
+    0 4px white,
+    0 8px black,
+    -4px 0 white,
+    -4px 4px black,
+    -8px 0 black,
+    -4px -4px black,
+    4px 4px black;
 
   box-sizing: border-box;
   width: 200px;
@@ -117,9 +145,19 @@ const SpeechBubble = styled.div`
     top: 20px;
     left: -8px;
     background: white;
-    box-shadow: -4px -4px white, -4px 0 white, -8px 0 white, 0 -8px white,
-      -4px 4px black, -8px 4px black, -12px 4px black, -16px 4px black,
-      -12px 0 black, -8px -4px black, -4px -8px black, 0 -4px white;
+    box-shadow:
+      -4px -4px white,
+      -4px 0 white,
+      -8px 0 white,
+      0 -8px white,
+      -4px 4px black,
+      -8px 4px black,
+      -12px 4px black,
+      -16px 4px black,
+      -12px 0 black,
+      -8px -4px black,
+      -4px -8px black,
+      0 -4px white;
   }
 `;
 
@@ -131,37 +169,41 @@ function getRandomSpeechText() {
   return selectRandomOneOf(SpeechText);
 }
 
-const SPEECH_INTERVAL_MILLISECONDS = 10000;
+const SPEECH_INTERVAL_MILLISECONDS = 5000;
 
 export function TalkingHeadBalloon({ gasCloud }: Props): JSX.Element {
-  // const [speechText, setSpeechText] = useState("");
-  // const speechManager = useRef(createSpeechManager(SpeechText));
+  const [speechText, setSpeechText] = useState("");
+  const speechManager = useRef(createSpeechManager(SpeechText));
   const visibleSize = gasCloud.exploded ? 10 : gasCloud.pressed;
 
-  // useEffect(() => {
-  //   if (gasCloud.exploded) {
-  //     return;
-  //   }
+  useEffect(() => {
+    if (gasCloud.exploded) {
+      return;
+    }
 
-  //   const interval = setInterval(() => {
-  //     setSpeechText(speechManager.current.next());
-  //   }, SPEECH_INTERVAL_MILLISECONDS);
-  //   return () => clearInterval(interval);
-  // }, [gasCloud.exploded, speechText]);
+    const interval = setInterval(() => {
+      setSpeechText(speechManager.current.next());
+    }, SPEECH_INTERVAL_MILLISECONDS);
+    return () => clearInterval(interval);
+  }, [gasCloud.exploded, speechText]);
 
   return (
     <Container>
       <ImageContainer size={visibleSize} exploded={gasCloud.exploded}>
-        <FaceImage src={bananaImage} alt="Dragon" size={visibleSize} />
+        <FaceImage
+          src={michelleFaceImage}
+          alt="Michelle Face"
+          size={visibleSize}
+        />
       </ImageContainer>
-      {/* <TextContainer>
+      <TextContainer>
         <Appear
           show={!!speechText && !gasCloud.exploded}
           animation="text-focus-in"
         >
           <SpeechBubble>{speechText}</SpeechBubble>
         </Appear>
-      </TextContainer> */}
+      </TextContainer>
     </Container>
   );
 }

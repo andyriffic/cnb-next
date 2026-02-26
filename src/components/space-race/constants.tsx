@@ -34,6 +34,24 @@ const GateValue = styled.div`
 `;
 const GateIcon = styled.div``;
 
+const EntityContainer = styled.div`
+  position: relative;
+`;
+const EntityTitle = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: -50%;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 0.2rem 0.2rem;
+  border-radius: 0.5rem;
+  border: 2px solid darkred;
+  text-align: center;
+`;
+
 export const STARMAP_CHART: SpaceRaceStarmap = {
   entities: [
     // createEntity("home-base", { x: 0, y: 4 }),
@@ -176,7 +194,10 @@ function getDisplayElement(
     case "earth2":
       return (
         <Attention animation="pulse">
-          <Image src={cnyGrandGate} alt="Grand gate" width={80} height={80} />
+          <EntityContainer>
+            <Image src={cnyGrandGate} alt="Grand gate" width={80} height={80} />
+            <EntityTitle>Listing Visualisation</EntityTitle>
+          </EntityContainer>
         </Attention>
       );
     case "earth3":

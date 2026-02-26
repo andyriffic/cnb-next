@@ -7,6 +7,7 @@ import {
   shakeExtremeAnimation,
 } from "../../animations/keyframes/extreme";
 import redLanternImage from "./cny-red-lantern.png";
+import michelleFaceImage from "./michelleface.png";
 
 function getCloudAnimationSpeedMilliSeconds(intensity: number): number {
   return Math.max(6000 - intensity * 500, 100);
@@ -85,7 +86,11 @@ export function GasBallon({ gasCloud }: Props): JSX.Element {
       >
         💪
       </span> */}
-      <CustomImage size={visibleSize} src={redLanternImage} alt="Red Lantern" />
+      <CustomImage
+        size={visibleSize}
+        src={michelleFaceImage}
+        alt="Michelle Face"
+      />
     </Container>
   );
 }
