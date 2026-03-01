@@ -957,7 +957,7 @@ function getRandomCardType(
       : [
           { weight: 2, item: "skip" },
           // { weight: 1, item: "bomb" },
-          { weight: 5, item: "dark-mode" },
+          { weight: 4, item: "dark-mode" },
           { weight: 3, item: "curse-all-fives" },
           { weight: 3, item: "reverse" },
           { weight: 14, item: "press" },

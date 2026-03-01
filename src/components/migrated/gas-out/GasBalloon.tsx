@@ -86,11 +86,7 @@ export function GasBallon({ gasCloud }: Props): JSX.Element {
       >
         💪
       </span> */}
-      <CustomImage
-        size={visibleSize}
-        src={michelleFaceImage}
-        alt="Michelle Face"
-      />
+      <CustomImage size={visibleSize} src={redLanternImage} alt="Red Lantern" />
     </Container>
   );
 }

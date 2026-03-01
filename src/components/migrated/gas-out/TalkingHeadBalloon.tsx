@@ -169,7 +169,7 @@ function getRandomSpeechText() {
   return selectRandomOneOf(SpeechText);
 }
 
-const SPEECH_INTERVAL_MILLISECONDS = 5000;
+const SPEECH_INTERVAL_MILLISECONDS = 10000;
 
 export function TalkingHeadBalloon({ gasCloud }: Props): JSX.Element {
   const [speechText, setSpeechText] = useState("");
