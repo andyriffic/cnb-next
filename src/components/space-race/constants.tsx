@@ -194,10 +194,12 @@ function getDisplayElement(
     case "earth2":
       return (
         <Attention animation="pulse">
-          <EntityContainer>
+          <Image src={cnyGrandGate} alt="Grand gate" width={100} height={100} />
+
+          {/* <EntityContainer>
             <Image src={cnyGrandGate} alt="Grand gate" width={80} height={80} />
             <EntityTitle>Listing Visualisation</EntityTitle>
-          </EntityContainer>
+          </EntityContainer> */}
         </Attention>
       );
     case "earth3":
