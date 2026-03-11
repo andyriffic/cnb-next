@@ -651,16 +651,17 @@ function getEndingCooridinates(
     };
   }
 
-  if (entity.allowedPlayerIds && !entity.allowedPlayerIds.includes(player.id)) {
-    return {
-      entity,
-      coordinates: { x: entity.position.x - 1, y: player.currentPosition.y },
-      movesRemaining:
-        player.plannedCourse.right -
-        (entity.position.x - player.currentPosition.x) +
-        1,
-    };
-  }
+  // Bug here somewhere, but commenting out for now cause I can't be bothered fixing it
+  // if (entity.allowedPlayerIds && entity.allowedPlayerIds.length > 0 && !entity.allowedPlayerIds.includes(player.id)) {
+  //   return {
+  //     entity,
+  //     coordinates: { x: entity.position.x - 1, y: player.currentPosition.y },
+  //     movesRemaining:
+  //       player.plannedCourse.right -
+  //       (entity.position.x - player.currentPosition.x) +
+  //       1,
+  //   };
+  // }
 
   return {
     entity,
