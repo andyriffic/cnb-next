@@ -9,7 +9,7 @@ import {
 } from "../../services/mystery-box/types";
 import { Coins } from "../Coins";
 import THEME from "../../themes";
-import michellFaceimage from "./michelleface.png";
+import bombImage from "./bomb.png";
 
 const BoxLidAnimation = keyframes`
 0%,
@@ -165,9 +165,7 @@ export const getBoxContents = (
     case "empty":
       return <></>;
     case "bomb":
-      return (
-        <Image src={michellFaceimage} alt="Bomb" width={100} height={100} />
-      );
+      return <Image src={bombImage} alt="Bomb" width={80} height={100} />;
     default:
       return <></>;
   }
