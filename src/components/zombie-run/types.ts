@@ -24,6 +24,7 @@ export type ZombiePlayer = {
   finishPosition?: number;
   personalBestDistance?: number;
   obstacle?: ZombieObstacle;
+  nerfedPoints: number;
 };
 
 export type OriginalZombieDetails = {

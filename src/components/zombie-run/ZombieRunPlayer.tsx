@@ -173,7 +173,7 @@ export const ZombieRunPlayer = ({
           >
             {playerName}{" "}
             {zombiePlayer.totalMetresToRun > 0 &&
-              `(${zombiePlayer.totalMetresToRun})`}
+              `(${zombiePlayer.totalMetresToRun})${zombiePlayer.nerfedPoints > 0 ? `(-${zombiePlayer.nerfedPoints})` : ""}`}
             {/* {`(index ${zombiePlayer.totalMetresRun})`} */}
           </PlayerName>
         </PlayerDetailsContainer>

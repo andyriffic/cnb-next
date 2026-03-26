@@ -24,7 +24,7 @@ const ZombieBackground = styled.div`
   width: 100vw;
   margin: 0 auto;
   box-sizing: border-box;
-  background: url("/images/zombie-background-dusk.png") no-repeat bottom right;
+  background: url("/images/zombie-background-day.png") no-repeat bottom right;
   // background-size: 150% 100%;
   // background-position: 100% 100%;
   transition: background 3s ease-in-out;
@@ -82,7 +82,7 @@ const BewareSign = styled.div`
 
 const allMarkers: number[] = Array.from(
   { length: ZOMBIE_RUNNING_TRACK_LENGTH_METRES },
-  (_, index) => index + 1
+  (_, index) => index + 1,
 );
 
 const sortByZombiePlayerDistance = (a: ZombiePlayer, b: ZombiePlayer) => {
@@ -91,7 +91,7 @@ const sortByZombiePlayerDistance = (a: ZombiePlayer, b: ZombiePlayer) => {
 
 const getPlayerStackIndex = (
   zombieGame: ZombieRunGame,
-  zp: ZombiePlayer
+  zp: ZombiePlayer,
 ): number => {
   const combinedZombiePlayersInRange = zombieGame.survivors
     .concat(zombieGame.zombies)
@@ -100,11 +100,11 @@ const getPlayerStackIndex = (
       isNumberInRange(
         z.totalMetresRun,
         zp.totalMetresRun - STACK_INDEX_RANGE,
-        zp.totalMetresRun + STACK_INDEX_RANGE
-      )
+        zp.totalMetresRun + STACK_INDEX_RANGE,
+      ),
     );
   const stackIndex = combinedZombiePlayersInRange.findIndex(
-    (p) => p.id === zp.id
+    (p) => p.id === zp.id,
   );
   return stackIndex;
 };
