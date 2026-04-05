@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { MysteryBoxGameView } from "../../services/mystery-box/types";
 import { useSound } from "../hooks/useSound";
 
@@ -6,23 +6,30 @@ export enum MysteryBoxGameState {
   WAITING_FOR_PLAYERS_TO_SELECT_BOX = 0,
   WAITING_TO_SHOW_BOX_SELECTION = 1,
   SHOW_PLAYER_BOX_SELECTIONS = 2,
-  REVEALING_BOXES = 3,
-  SHOW_BOX_REVEAL_RESULT = 4,
-  ROUND_OVER = 5,
-  GAME_OVER = 6,
+  SHOW_BOMB_DROPPER = 4,
+  REVEALING_BOXES = 5,
+  SHOW_BOX_REVEAL_RESULT = 6,
+  ROUND_OVER = 7,
+  GAME_OVER = 8,
 }
 
 export type MysteryBoxUIState = {
   gameState: MysteryBoxGameState;
   boxesOpen: boolean;
+  finishedShowingBoxDropper: () => void;
 };
 
 export function useMysteryBoxGameState(
-  game: MysteryBoxGameView
+  game: MysteryBoxGameView,
+  bombDropperFeatureEnabled = false,
 ): MysteryBoxUIState {
   const [gameState, setGameState] = useState(
-    initialiseGameStatusToGameState(game)
+    initialiseGameStatusToGameState(game),
   );
+
+  const finishedShowingBoxDropper = useCallback(() => {
+    setGameState(MysteryBoxGameState.SHOW_BOX_REVEAL_RESULT);
+  }, []);
 
   useEffect(() => {
     if (
@@ -38,14 +45,30 @@ export function useMysteryBoxGameState(
   }, [gameState, game]);
 
   useEffect(() => {
+    if (!bombDropperFeatureEnabled) {
+      if (gameState === MysteryBoxGameState.SHOW_PLAYER_BOX_SELECTIONS) {
+        const timeout = setTimeout(() => {
+          setGameState(MysteryBoxGameState.REVEALING_BOXES);
+        }, 1000);
+
+        return () => clearTimeout(timeout);
+      }
+    }
+
     if (gameState === MysteryBoxGameState.SHOW_PLAYER_BOX_SELECTIONS) {
       const timeout = setTimeout(() => {
-        setGameState(MysteryBoxGameState.REVEALING_BOXES);
+        if (
+          game.currentRound.boxes.every((box) => box.contents.type !== "bomb")
+        ) {
+          setGameState(MysteryBoxGameState.REVEALING_BOXES);
+        } else {
+          setGameState(MysteryBoxGameState.SHOW_BOMB_DROPPER);
+        }
       }, 1000);
 
       return () => clearTimeout(timeout);
     }
-  }, [gameState]);
+  }, [bombDropperFeatureEnabled, game.currentRound.boxes, gameState]);
 
   useEffect(() => {
     if (gameState === MysteryBoxGameState.REVEALING_BOXES) {
@@ -80,11 +103,12 @@ export function useMysteryBoxGameState(
   return {
     gameState,
     boxesOpen: gameState >= MysteryBoxGameState.REVEALING_BOXES,
+    finishedShowingBoxDropper,
   };
 }
 
 function initialiseGameStatusToGameState(
-  game: MysteryBoxGameView
+  game: MysteryBoxGameView,
 ): MysteryBoxGameState {
   if (game.currentRound.status === "in-progress") {
     return MysteryBoxGameState.WAITING_FOR_PLAYERS_TO_SELECT_BOX;

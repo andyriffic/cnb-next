@@ -8,14 +8,23 @@ import {
   MysteryBoxGameState,
   MysteryBoxUIState,
 } from "./useMysteryBoxGameState";
+import { MysteryBoxBombDropper } from "./MysteryBoxBombDropper";
 
 const BoxLayoutContainer = styled.div`
   position: relative;
   width: 100%;
-  height: 70vh;
+  height: 50vh;
+  border: 1px solid blue;
 `;
 
-const PositionedBox = styled.div<{ position: BoxPosition }>`
+const BombDropperContainer = styled.div`
+  position: relative;
+  height: 10vh;
+  width: 100%;
+  border: 1px solid red;
+`;
+
+export const PositionedBox = styled.div<{ position: BoxPosition }>`
   position: absolute;
   top: ${({ position }) =>
     position.top !== undefined ? `${position.top}vh` : "auto"};
@@ -46,7 +55,7 @@ const BoxOptionContainerItem = styled.div`
   position: relative;
 `;
 
-type BoxPosition = {
+export type BoxPosition = {
   left?: number;
   top?: number;
   right?: number;
@@ -56,16 +65,25 @@ type BoxPosition = {
 const BoxPositions: BoxPosition[] = [
   { left: 10, top: 8 },
   { left: 35, top: 8 },
-  { right: 35, top: 8 },
-  { right: 10, top: 8 },
+  { left: 60, top: 8 },
+  { left: 83, top: 8 },
 ];
 
 type Props = {
   gameState: MysteryBoxUIState;
   round: MysteryBoxGameRoundView;
+  bombDropperFeatureEnabled?: boolean;
 };
 
-export const MysteryBoxCurrentRoundUi = ({ round, gameState }: Props) => {
+export const MysteryBoxCurrentRoundUi = ({
+  round,
+  gameState,
+  bombDropperFeatureEnabled = false,
+}: Props) => {
+  const firstBombBoxIndex = round.boxes.findIndex(
+    (box) => box.contents.type === "bomb",
+  );
+
   return (
     <>
       <FeatureHeading
@@ -77,6 +95,19 @@ export const MysteryBoxCurrentRoundUi = ({ round, gameState }: Props) => {
       <SmallHeading style={{ textAlign: "center" }}>
         {round.specialInfo}
       </SmallHeading>
+      {bombDropperFeatureEnabled && (
+        <BombDropperContainer>
+          {firstBombBoxIndex > -1 &&
+            gameState.gameState >=
+              MysteryBoxGameState.SHOW_PLAYER_BOX_SELECTIONS && (
+              <MysteryBoxBombDropper
+                bombBoxIndex={firstBombBoxIndex}
+                boxPositions={BoxPositions}
+                onBombDrop={() => gameState.finishedShowingBoxDropper()}
+              />
+            )}
+        </BombDropperContainer>
+      )}
       <BoxLayoutContainer>
         {round.boxes.map((box, index) => {
           const position = BoxPositions[index] || {};

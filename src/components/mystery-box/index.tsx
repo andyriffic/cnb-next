@@ -5,6 +5,7 @@ import {
   MysteryBoxGameView,
 } from "../../services/mystery-box/types";
 import { SpectatorPageLayout } from "../SpectatorPageLayout";
+import { isClientSideFeatureEnabled } from "../../utils/feature";
 import { DebugMysteryBoxGame } from "./DebugMysteryBox";
 import { MysteryBoxActivePlayers } from "./MysteryBoxActivePlayers";
 import { MysteryBoxCurrentRoundUi } from "./MysteryBoxCurrentRoundUi";
@@ -22,6 +23,7 @@ type Props = {
 
 const View = ({ game }: Props) => {
   const { mysteryBox } = useSocketIo();
+  const bombDropperFeatureEnabled = isClientSideFeatureEnabled("dropper");
 
   const gameState = useMysteryBoxGameState(game);
   useMysteryBoxGameSound(game, gameState.gameState);
