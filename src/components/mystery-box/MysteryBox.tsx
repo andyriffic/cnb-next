@@ -9,7 +9,7 @@ import {
 } from "../../services/mystery-box/types";
 import { Coins } from "../Coins";
 import THEME from "../../themes";
-import bombImage from "./bomb.png";
+import bombImage from "./mystery-box-bomb.png";
 
 const BoxLidAnimation = keyframes`
 0%,
@@ -51,6 +51,10 @@ const Points = styled.div`
   font-size: 2rem;
   font-family: ${THEME.tokens.fonts.numbers};
   font-weight: bold;
+`;
+
+const HigherPoints = styled(Points)`
+  background-color: darkgreen;
 `;
 
 const Box = styled.div`
@@ -161,11 +165,15 @@ export const getBoxContents = (
     case "coin":
       return <Coins totalCoins={boxContents.value} />;
     case "points":
-      return <Points>+{boxContents.value}</Points>;
+      if (boxContents.value > 1) {
+        return <HigherPoints>+{boxContents.value}</HigherPoints>;
+      } else {
+        return <Points>+{boxContents.value}</Points>;
+      }
     case "empty":
       return <></>;
     case "bomb":
-      return <Image src={bombImage} alt="Bomb" width={80} height={100} />;
+      return <Image src={bombImage} alt="Bomb" width={120} height={120} />;
     default:
       return <></>;
   }

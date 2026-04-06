@@ -28,6 +28,7 @@ export function useMysteryBoxGameState(
   );
 
   const finishedShowingBoxDropper = useCallback(() => {
+    console.log("finished showing box dropper");
     setGameState(MysteryBoxGameState.SHOW_BOX_REVEAL_RESULT);
   }, []);
 
@@ -48,6 +49,8 @@ export function useMysteryBoxGameState(
     if (!bombDropperFeatureEnabled) {
       if (gameState === MysteryBoxGameState.SHOW_PLAYER_BOX_SELECTIONS) {
         const timeout = setTimeout(() => {
+          console.log("dropper disabled, skipping bomb dropper");
+
           setGameState(MysteryBoxGameState.REVEALING_BOXES);
         }, 1000);
 
@@ -60,8 +63,11 @@ export function useMysteryBoxGameState(
         if (
           game.currentRound.boxes.every((box) => box.contents.type !== "bomb")
         ) {
+          console.log("dropper enabled, no bomb boxes");
           setGameState(MysteryBoxGameState.REVEALING_BOXES);
         } else {
+          console.log("dropper enabled, showing dropper");
+
           setGameState(MysteryBoxGameState.SHOW_BOMB_DROPPER);
         }
       }, 1000);

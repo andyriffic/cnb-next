@@ -63,6 +63,7 @@ export type SoundName =
   | "mystery-box-waiting-to-select-box-music"
   | "mystery-box-waiting-to-select-bonus-music"
   | "mystery-box-player-select-box"
+  | "mystery-box-bomb-dropper-move"
   | "mystery-box-move-players-to-boxes"
   | "mystery-box-show-box-contents"
   | "mystery-box-everyone-survives-round"

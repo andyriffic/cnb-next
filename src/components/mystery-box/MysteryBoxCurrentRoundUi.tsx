@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { use, useCallback, useMemo } from "react";
 import { MysteryBoxGameRoundView } from "../../services/mystery-box/types";
 import { FeatureHeading, SmallHeading } from "../Atoms";
 import { Appear } from "../animations/Appear";
@@ -14,14 +15,14 @@ const BoxLayoutContainer = styled.div`
   position: relative;
   width: 100%;
   height: 50vh;
-  border: 1px solid blue;
+  // border: 1px solid blue;
 `;
 
 const BombDropperContainer = styled.div`
   position: relative;
-  height: 10vh;
+  height: 8vh;
   width: 100%;
-  border: 1px solid red;
+  // border: 1px solid red;
 `;
 
 export const PositionedBox = styled.div<{ position: BoxPosition }>`
@@ -80,6 +81,10 @@ export const MysteryBoxCurrentRoundUi = ({
   gameState,
   bombDropperFeatureEnabled = false,
 }: Props) => {
+  const bombBoxes = useMemo(() => {
+    return round.boxes.filter((box) => box.contents.type === "bomb");
+  }, [round.boxes]);
+
   const firstBombBoxIndex = round.boxes.findIndex(
     (box) => box.contents.type === "bomb",
   );
@@ -97,15 +102,21 @@ export const MysteryBoxCurrentRoundUi = ({
       </SmallHeading>
       {bombDropperFeatureEnabled && (
         <BombDropperContainer>
-          {firstBombBoxIndex > -1 &&
-            gameState.gameState >=
-              MysteryBoxGameState.SHOW_PLAYER_BOX_SELECTIONS && (
+          {bombBoxes.length > 0 &&
+            bombBoxes.map((bombBox, i) => (
               <MysteryBoxBombDropper
-                bombBoxIndex={firstBombBoxIndex}
+                key={`${round.id}-${bombBox.id}`}
+                initialBoxIndex={i}
+                dropperState={
+                  gameState.gameState >= MysteryBoxGameState.SHOW_BOMB_DROPPER
+                    ? "dropping"
+                    : "waiting"
+                }
+                bombBoxIndex={bombBox.id}
                 boxPositions={BoxPositions}
-                onBombDrop={() => gameState.finishedShowingBoxDropper()}
+                onBombDrop={gameState.finishedShowingBoxDropper}
               />
-            )}
+            ))}
         </BombDropperContainer>
       )}
       <BoxLayoutContainer>

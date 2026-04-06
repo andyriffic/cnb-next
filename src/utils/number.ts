@@ -1,7 +1,7 @@
 export function isNumberInRange(
   num: number,
   min: number,
-  max: number
+  max: number,
 ): boolean {
   return num >= min && num <= max;
 }
@@ -23,10 +23,14 @@ export function calculateMedian(numbers: number[]): number | null {
   if (sortedNumbers.length % 2 === 0) {
     // If the array length is even, median is the average of the two middle values
     return Math.floor(
-      (sortedNumbers[middleIndex - 1]! + sortedNumbers[middleIndex]!) / 2
+      (sortedNumbers[middleIndex - 1]! + sortedNumbers[middleIndex]!) / 2,
     );
   } else {
     // If the array length is odd, median is the middle value
     return sortedNumbers[middleIndex]!;
   }
+}
+
+export function clampOrMin(min: number, max: number, current: number): number {
+  return current >= min && current <= max ? current : min;
 }

@@ -23,27 +23,31 @@ type Props = {
 
 const View = ({ game }: Props) => {
   const { mysteryBox } = useSocketIo();
+  const disableAutoNextRound = isClientSideFeatureEnabled("no-round-auto-next");
   const bombDropperFeatureEnabled = isClientSideFeatureEnabled("dropper");
 
-  const gameState = useMysteryBoxGameState(game);
+  const gameState = useMysteryBoxGameState(game, bombDropperFeatureEnabled);
   useMysteryBoxGameSound(game, gameState.gameState);
 
   useEffect(() => {
+    if (disableAutoNextRound) return;
+
     if (gameState.gameState === MysteryBoxGameState.ROUND_OVER) {
       mysteryBox.newRound(game.id);
     }
-  }, [game.id, gameState.gameState, mysteryBox]);
+  }, [disableAutoNextRound, game.id, gameState.gameState, mysteryBox]);
 
   return (
     <SpectatorPageLayout debug={<DebugMysteryBoxGame game={game} />}>
-      {/* <p>
+      <p>
         {game.id} - {MysteryBoxGameState[gameState.gameState]}
       </p>
-      {gameState.gameState === MysteryBoxGameState.ROUND_OVER && (
-        <button type="button" onClick={() => mysteryBox.newRound(game.id)}>
-          New Round
-        </button>
-      )} */}
+      {disableAutoNextRound &&
+        gameState.gameState === MysteryBoxGameState.ROUND_OVER && (
+          <button type="button" onClick={() => mysteryBox.newRound(game.id)}>
+            New Round
+          </button>
+        )}
       {gameState.gameState === MysteryBoxGameState.GAME_OVER && (
         <>
           <GameOverResultsByRound game={game} />
@@ -56,6 +60,7 @@ const View = ({ game }: Props) => {
             <MysteryBoxCurrentRoundUi
               round={game.currentRound}
               gameState={gameState}
+              bombDropperFeatureEnabled={bombDropperFeatureEnabled}
             />
             <MysteryBoxActivePlayers
               game={game}
