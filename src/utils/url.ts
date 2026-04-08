@@ -1,11 +1,11 @@
 export const playersRockPaperScissorsGameUrl = (
   playerId: string,
-  gameId: string
+  gameId: string,
 ): string => `/play/${playerId}/rock-paper-scissors?gameId=${gameId}`;
 
 export const playersBettingGameUrl = (
   playerId: string,
-  gameId: string
+  gameId: string,
 ): string => `/play/${playerId}/bet?gameId=${gameId}`;
 
 export const getPlayerAvatarUrl = (playerId: string): string => {
@@ -14,7 +14,7 @@ export const getPlayerAvatarUrl = (playerId: string): string => {
 
 export const getPlayerHomeUrl = (
   playerId: string,
-  autoJoinGameId?: string
+  autoJoinGameId?: string,
 ): string => {
   return `/play/${playerId}${
     autoJoinGameId ? `?autoJoinId=${autoJoinGameId}` : ""
@@ -23,7 +23,7 @@ export const getPlayerHomeUrl = (
 
 export const getPlayerJoinUrl = (
   playerId: string,
-  autoJoinGameId?: string
+  autoJoinGameId?: string,
 ): string => {
   return `/play/${playerId}/join${
     autoJoinGameId ? `?autoJoinId=${autoJoinGameId}` : ""
@@ -39,7 +39,7 @@ export const getPlayRootUrl = (autoJoinGameId?: string): string => {
 };
 
 export const getRockPaperScissorsGameSpectatorUrl = (
-  gameId: string
+  gameId: string,
 ): string => {
   return `/watch/rock-paper-scissors/${gameId}`;
 };
@@ -50,7 +50,7 @@ export const getAiOverlordSpectatorUrl = (gameId: string): string => {
 
 export const getAiOverlordPlayerUrl = (
   playerId: string,
-  gameId: string
+  gameId: string,
 ): string => {
   return `/play/${playerId}/ai-overlord?gameId=${gameId}`;
 };
@@ -60,7 +60,7 @@ export const getNumberCrunchSpectatorUrl = (gameId: string): string => {
 };
 
 export const getMysteryBoxSpectatorUrl = (gameId: string): string => {
-  return `/watch/mystery-box/${gameId}`;
+  return `/watch/mystery-box/${gameId}?dropper=true`;
 };
 
 export const getClassicCnbPlayerUrl = (playerId: string): string => {
@@ -73,7 +73,7 @@ export const getGasOutSpectatorUrl = (gameId: string): string => {
 
 export const getGasOutPlayerUrl = (
   playerId: string,
-  gameId: string
+  gameId: string,
 ): string => {
   return `/play/${playerId}/gas-out?gameId=${gameId}`;
 };
@@ -85,14 +85,14 @@ export const urlWithTeamQueryParam = (url: string, team?: string): string => {
 
 export const getNumberCrunchPlayerUrl = (
   playerId: string,
-  gameId: string
+  gameId: string,
 ): string => {
   return `/play/${playerId}/number-crunch?gameId=${gameId}`;
 };
 
 export const getMysteryBoxPlayerUrl = (
   playerId: string,
-  gameId: string
+  gameId: string,
 ): string => {
   return `/play/${playerId}/mystery-box?gameId=${gameId}`;
 };

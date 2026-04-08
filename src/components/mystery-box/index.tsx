@@ -39,9 +39,9 @@ const View = ({ game }: Props) => {
 
   return (
     <SpectatorPageLayout debug={<DebugMysteryBoxGame game={game} />}>
-      <p>
+      {/* <p>
         {game.id} - {MysteryBoxGameState[gameState.gameState]}
-      </p>
+      </p> */}
       {disableAutoNextRound &&
         gameState.gameState === MysteryBoxGameState.ROUND_OVER && (
           <button type="button" onClick={() => mysteryBox.newRound(game.id)}>
