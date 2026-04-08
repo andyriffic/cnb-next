@@ -13,6 +13,7 @@ import {
 
 const MIN_PLAYER_MOVES = 1;
 const MAX_ZOMBIE_MOVES = 3;
+const ZOMBIE_BOOST_MOVES = 3;
 
 export type UseZombieRun = {
   zombieGame: ZombieRunGame;
@@ -62,10 +63,42 @@ const createZombieGame = (
   );
 
   const activeObstacles: ZombieObstacle[] = [
-    { action: "player-stop" as const, index: 22, name: "Banana", icon: "🍌" },
-    { action: "player-stop" as const, index: 35, name: "Banana", icon: "🍌" },
-    { action: "player-stop" as const, index: 44, name: "Banana", icon: "🍌" },
-  ].filter((o) => o.index > maxSurvivorMetresRun);
+    {
+      action: "zombie-boost",
+      index: 10,
+      name: "Brains",
+      icon: "🧠",
+    } as const,
+    {
+      action: "zombie-boost",
+      index: 20,
+      name: "Brains",
+      icon: "🧠",
+    } as const,
+    {
+      action: "player-stop",
+      index: 22,
+      name: "Banana",
+      icon: "🍌",
+    } as const,
+    {
+      action: "player-stop",
+      index: 35,
+      name: "Banana",
+      icon: "🍌",
+    } as const,
+    {
+      action: "player-stop",
+      index: 44,
+      name: "Banana",
+      icon: "🍌",
+    } as const,
+  ].map((o) => ({
+    ...o,
+    enabled:
+      (o.action === "player-stop" && o.index > maxSurvivorMetresRun) ||
+      o.action === "zombie-boost",
+  }));
 
   return {
     gameStatus: ZombieRunGameStatus.READY_TO_START,
@@ -115,6 +148,7 @@ const getMovePlayerResult = (
   );
   const hitObstacle = game.obstacles.find(
     (o) =>
+      o.enabled == true &&
       o.action === "player-stop" &&
       o.index > startingIndex &&
       o.index <= finalIndex,
@@ -193,6 +227,14 @@ export const useZombieRun = (
       .filter((p) => !p.gotBitten)
       .filter((p) => p.totalMetresRun <= originalZombieNewTotalDistance);
 
+    const zombieBoost = zombieGame.obstacles.find(
+      (o) =>
+        o.enabled == true &&
+        o.action === "zombie-boost" &&
+        o.index > zombieGame.originalZombie.totalMetresRun &&
+        o.index <= originalZombieNewTotalDistance,
+    );
+
     setZombieGame({
       ...zombieGame,
       gameStatus: ZombieRunGameStatus.ORIGINAL_ZOMBIE_RUNNING,
@@ -203,8 +245,11 @@ export const useZombieRun = (
       })),
       originalZombie: {
         ...zombieGame.originalZombie,
-        totalMetresRun: originalZombieNewTotalDistance,
+        totalMetresRun: !!zombieBoost
+          ? originalZombieNewTotalDistance + ZOMBIE_BOOST_MOVES
+          : originalZombieNewTotalDistance,
         totalMetresToRun: 0,
+        boost: !!zombieBoost,
       },
     });
   }, [zombieGame]);

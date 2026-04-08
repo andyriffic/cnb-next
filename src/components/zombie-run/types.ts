@@ -30,6 +30,7 @@ export type ZombiePlayer = {
 export type OriginalZombieDetails = {
   totalMetresRun: number;
   totalMetresToRun: number;
+  boost?: boolean;
 };
 
 export type ZombieRunGame = {
@@ -48,4 +49,5 @@ export type ZombieObstacle = {
   index: number;
   name: string;
   icon: string;
+  enabled?: boolean;
 };

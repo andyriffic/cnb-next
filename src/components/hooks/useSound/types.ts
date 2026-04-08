@@ -43,6 +43,7 @@ export type SoundName =
   | "zombie-run-player-bitten"
   | "zombie-run-party"
   | "zombie-run-banana"
+  | "zombie-run-zombie-boost"
   | "number-crunch-guessing-music"
   | "number-crunch-player-guessed"
   | "number-crunch-reveal-guess"

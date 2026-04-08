@@ -1,5 +1,6 @@
 import Image from "next/image";
 import styled from "styled-components";
+import { useState } from "react";
 import { isNumberInRange } from "../../utils/number";
 import { Attention } from "../animations/Attention";
 import bewareBananaSignImage from "./beware-banana-02.png";
@@ -118,9 +119,12 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
     zombieGame.gameStatus === ZombieRunGameStatus.GAME_OVER &&
     zombieGame.endGameStatus === ZombieRunEndGameStatus.ZOMBIE_PARTY;
 
-  const minDistance = Math.max(zombieGame.originalZombie.totalMetresRun - 5, 0);
-  const totalTrackVisibleMetres =
-    ZOMBIE_RUNNING_TRACK_LENGTH_METRES - minDistance;
+  const [minDistance] = useState(
+    Math.max(zombieGame.originalZombie.totalMetresRun - 5, 0),
+  );
+  const [totalTrackVisibleMetres] = useState(
+    ZOMBIE_RUNNING_TRACK_LENGTH_METRES - minDistance,
+  );
 
   return (
     <div>
@@ -209,22 +213,24 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
           })}
           {zombieGame.obstacles.map((obstacle, i) => {
             return (
-              <PositionedObstacle
-                key={i}
-                style={{
-                  left: `${
-                    (TOTAL_TRACK_WIDTH / totalTrackVisibleMetres) *
-                    (obstacle.index - minDistance)
-                  }vw`,
-                }}
-              >
-                <ZombieObstacleView obstacle={obstacle} />
-              </PositionedObstacle>
+              obstacle.enabled === true && (
+                <PositionedObstacle
+                  key={i}
+                  style={{
+                    left: `${
+                      (TOTAL_TRACK_WIDTH / totalTrackVisibleMetres) *
+                      (obstacle.index - minDistance)
+                    }vw`,
+                  }}
+                >
+                  <ZombieObstacleView obstacle={obstacle} />
+                </PositionedObstacle>
+              )
             );
           })}
         </ZombieCharactersContainer>
       </ZombieBackground>
-      {/* <DistanceMarkerContainer>
+      <DistanceMarkerContainer>
         {allMarkers.map((marker) => (
           <DistanceMarker
             key={marker}
@@ -238,7 +244,7 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
             {marker % 10 === 0 && marker}
           </DistanceMarker>
         ))}
-      </DistanceMarkerContainer> */}
+      </DistanceMarkerContainer>
     </div>
   );
 };

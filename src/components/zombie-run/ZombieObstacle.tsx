@@ -7,5 +7,12 @@ type Props = {
 };
 
 export const ZombieObstacleView = ({ obstacle }: Props) => {
-  return <Image src={bananaPeelImage} width={40} alt="banana peel" />;
+  switch (obstacle.action) {
+    case "player-stop":
+      return <Image src={bananaPeelImage} width={40} alt={obstacle.name} />;
+    case "zombie-boost":
+      return <div style={{ fontSize: 24 }}>{obstacle.icon}</div>;
+    default:
+      return <></>;
+  }
 };
