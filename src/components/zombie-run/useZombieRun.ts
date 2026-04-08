@@ -62,9 +62,9 @@ const createZombieGame = (
   );
 
   const activeObstacles: ZombieObstacle[] = [
-    { index: 22, name: "Banana", icon: "🍌" },
-    { index: 35, name: "Banana", icon: "🍌" },
-    { index: 44, name: "Banana", icon: "🍌" },
+    { action: "player-stop" as const, index: 22, name: "Banana", icon: "🍌" },
+    { action: "player-stop" as const, index: 35, name: "Banana", icon: "🍌" },
+    { action: "player-stop" as const, index: 44, name: "Banana", icon: "🍌" },
   ].filter((o) => o.index > maxSurvivorMetresRun);
 
   return {
@@ -114,7 +114,10 @@ const getMovePlayerResult = (
     ZOMBIE_RUNNING_TRACK_LENGTH_METRES,
   );
   const hitObstacle = game.obstacles.find(
-    (o) => o.index > startingIndex && o.index <= finalIndex,
+    (o) =>
+      o.action === "player-stop" &&
+      o.index > startingIndex &&
+      o.index <= finalIndex,
   );
 
   return {

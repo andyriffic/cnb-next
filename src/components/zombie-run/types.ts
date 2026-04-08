@@ -41,7 +41,10 @@ export type ZombieRunGame = {
   obstacles: ZombieObstacle[];
 };
 
+export type ZombieObstacleAction = "player-stop" | "zombie-boost";
+
 export type ZombieObstacle = {
+  action: ZombieObstacleAction;
   index: number;
   name: string;
   icon: string;
