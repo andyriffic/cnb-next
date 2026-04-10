@@ -229,7 +229,7 @@ function createDropStoryBoard(
   numBoxes: number,
   bombBoxIndex: number,
 ): BoxDropStoryBoard {
-  const totalFrames = 4;
+  const totalFrames = generateRandomInt(2, 5);
   const frames: BoxDropFrame[] = [];
 
   for (let i = 0; i < totalFrames; i++) {
