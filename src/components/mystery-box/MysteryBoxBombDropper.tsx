@@ -94,6 +94,7 @@ type Props = {
   bombBoxIndex: number;
   boxPositions: BoxPosition[];
   onBombDrop: () => void;
+  totalSuspenseFrames: number;
 };
 
 export const MysteryBoxBombDropper = ({
@@ -102,10 +103,15 @@ export const MysteryBoxBombDropper = ({
   bombBoxIndex,
   boxPositions,
   onBombDrop,
+  totalSuspenseFrames,
 }: Props) => {
   const { play } = useSound();
   const [state, dispatch] = useReducer(bombDropperReducer, {
-    storyBoard: createDropStoryBoard(boxPositions.length, bombBoxIndex),
+    storyBoard: createDropStoryBoard(
+      boxPositions.length,
+      bombBoxIndex,
+      totalSuspenseFrames,
+    ),
     boxPositions,
     dropperState,
     currentFrame: {
@@ -228,8 +234,8 @@ function bombDropperReducer(
 function createDropStoryBoard(
   numBoxes: number,
   bombBoxIndex: number,
+  totalFrames: number,
 ): BoxDropStoryBoard {
-  const totalFrames = generateRandomInt(2, 5);
   const frames: BoxDropFrame[] = [];
 
   for (let i = 0; i < totalFrames; i++) {

@@ -4,6 +4,7 @@ import { MysteryBoxGameRoundView } from "../../services/mystery-box/types";
 import { FeatureHeading, SmallHeading } from "../Atoms";
 import { Appear } from "../animations/Appear";
 import { growAnimation } from "../animations/keyframes/size";
+import { generateRandomInt } from "../../utils/random";
 import { MysteryBoxUi } from "./MysteryBox";
 import {
   MysteryBoxGameState,
@@ -85,9 +86,9 @@ export const MysteryBoxCurrentRoundUi = ({
     return round.boxes.filter((box) => box.contents.type === "bomb");
   }, [round.boxes]);
 
-  const firstBombBoxIndex = round.boxes.findIndex(
-    (box) => box.contents.type === "bomb",
-  );
+  const dropperSuspenseFrames = useMemo(() => {
+    return generateRandomInt(2, 5);
+  }, [round.id]);
 
   return (
     <>
@@ -115,6 +116,7 @@ export const MysteryBoxCurrentRoundUi = ({
                 bombBoxIndex={bombBox.id}
                 boxPositions={BoxPositions}
                 onBombDrop={gameState.finishedShowingBoxDropper}
+                totalSuspenseFrames={dropperSuspenseFrames}
               />
             ))}
         </BombDropperContainer>
