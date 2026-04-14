@@ -19,7 +19,7 @@ const CardContainer = styled.div`
   transform: translate(-50%, -50%);
 `;
 
-const PlayerAvatarContainer = styled.div<{ alive: boolean }>`
+const PlayerAvatarContainer = styled.div<{ alive: boolean; blackout: boolean }>`
   display: flex;
   justify-content: center;
   width: 100%;
@@ -27,6 +27,11 @@ const PlayerAvatarContainer = styled.div<{ alive: boolean }>`
     !alive &&
     css`
       animation: ${spinAwayAnimationUp} 1000ms ease-in-out 0s 1 backwards;
+    `}
+  ${({ blackout }) =>
+    blackout &&
+    css`
+      filter: brightness(0.2) invert(0);
     `}
 `;
 
@@ -90,7 +95,7 @@ const getDeathIcons = (total: number) => {
 
 const markedForDeath = (
   player: GasPlayer,
-  active: boolean
+  active: boolean,
 ): JSX.Element | null => {
   if (!player.guesses.nominatedCount) {
     return null;
@@ -137,8 +142,10 @@ export function PlayerCarouselPlayer({
 
   const active = player.player.id === game.currentPlayer.id;
   const winner = player.player.id === game.winningPlayerId;
-
   const notDead = player.status !== "dead";
+  const lightsOut =
+    game.globalEffect?.type === "lights-out" &&
+    game.globalEffect?.playedByPlayerId !== player.player.id;
 
   return show ? (
     <PlayerListItem
@@ -149,7 +156,7 @@ export function PlayerCarouselPlayer({
         <PlayerName>{player.player.name}</PlayerName>
       )} */}
 
-      <PlayerAvatarContainer alive={alive}>
+      <PlayerAvatarContainer alive={alive} blackout={lightsOut}>
         <ZombieTransform
           isZombie={getPlayerZombieRunDetails(player.player).isZombie}
         >
