@@ -65,6 +65,12 @@ const createZombieGame = (
   const activeObstacles: ZombieObstacle[] = [
     {
       action: "zombie-boost",
+      index: 10,
+      name: "Brains",
+      icon: "🧠",
+    } as const,
+    {
+      action: "zombie-boost",
       index: 15,
       name: "Brains",
       icon: "🧠",
@@ -78,6 +84,12 @@ const createZombieGame = (
     {
       action: "zombie-boost",
       index: 24,
+      name: "Brains",
+      icon: "🧠",
+    } as const,
+    {
+      action: "zombie-boost",
+      index: 30,
       name: "Brains",
       icon: "🧠",
     } as const,

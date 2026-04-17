@@ -25,7 +25,7 @@ const ZombieBackground = styled.div`
   width: 100vw;
   margin: 0 auto;
   box-sizing: border-box;
-  background: url("/images/zombie-background-day.png") no-repeat bottom right;
+  background: url("/images/zombie-background-violet.png") no-repeat bottom right;
   // background-size: 150% 100%;
   // background-position: 100% 100%;
   transition: background 3s ease-in-out;
@@ -230,7 +230,7 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
           })}
         </ZombieCharactersContainer>
       </ZombieBackground>
-      <DistanceMarkerContainer>
+      {/* <DistanceMarkerContainer>
         {allMarkers.map((marker) => (
           <DistanceMarker
             key={marker}
@@ -244,7 +244,7 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
             {marker % 10 === 0 && marker}
           </DistanceMarker>
         ))}
-      </DistanceMarkerContainer>
+      </DistanceMarkerContainer> */}
     </div>
   );
 };
