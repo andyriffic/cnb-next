@@ -9,6 +9,7 @@ export type MysteryBoxGameRound = {
   id: number;
   boxes: MysteryBox[];
   specialInfo?: string;
+  bombPlacersPlayerIds?: string[];
 };
 
 export type MysteryBox = {
@@ -17,6 +18,7 @@ export type MysteryBox = {
   contents: MysteryBoxContents;
   playerIds: string[];
   eliminatedPlayerIdsGuessingThisBox: string[];
+  contentsPlacedByPlayerId?: string;
 };
 
 export type MysteryBoxContentsType = "coin" | "bomb" | "empty" | "points";
@@ -94,6 +96,7 @@ export type MysteryBoxPlayerView = {
   currentlySelectedBoxId?: number;
   lootTotals: MysteryBoxLootTotalsByType;
   eliminatedRoundId?: number;
+  isBombBoxGuesserThisRound: boolean;
 };
 
 export type MysteryBoxBoxView = {
@@ -107,4 +110,5 @@ export type MysteryBoxGameRoundView = {
   specialInfo?: string;
   status: "in-progress" | "ready" | "complete";
   boxes: MysteryBox[];
+  bombBoxGuesserPlayerIds?: string[];
 };

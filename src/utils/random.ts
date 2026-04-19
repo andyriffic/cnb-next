@@ -20,7 +20,7 @@ export function generateRandomInt(min: number, max: number): number {
 }
 
 export function selectWeightedRandomOneOf<T>(
-  weightedList: WeightedItem<T>[]
+  weightedList: WeightedItem<T>[],
 ): T {
   // https://medium.com/@peterkellyonline/weighted-random-selection-3ff222917eb6
   const totalWeights = weightedList.reduce((acc, weightedItem) => {

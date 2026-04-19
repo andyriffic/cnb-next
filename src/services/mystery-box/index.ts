@@ -5,6 +5,7 @@ import { pipe } from "fp-ts/lib/function";
 import { getPlayerAvailableCoins, Player } from "../../types/Player";
 import { ErrorMessage } from "../../types/common";
 import { shuffleArrayJestSafe } from "../../utils/array";
+import { selectRandomOneOf } from "../../utils/random";
 import {
   MysteryBox,
   MysteryBoxCreator,
@@ -22,6 +23,8 @@ import {
   MysteryBoxIndividualModeView,
 } from "./types";
 
+export const CINBY_PLAYER_ID = "CINBY";
+
 type createGameProps = {
   id: string;
   players: Player[];
@@ -37,9 +40,10 @@ export const createMysteryBoxGame = ({
     id,
     currentRoundId: 0,
     players: players.map(createPlayer),
-    rounds: [createNewGameRound(0, players.length, mysteryBoxCreator)],
+    rounds: [],
   };
-  return E.right(game);
+
+  return pipe(game, addNewRoundToGame(mysteryBoxCreator));
 };
 
 export const playerSelectBox = (
@@ -76,36 +80,105 @@ export const eliminatedPlayerGuessBox = (
   };
 };
 
+export const playerPlaceBombIntoBox = (
+  playerId: string,
+  roundIndex: number,
+  boxIndex: number,
+) => {
+  return (game: MysteryBoxGame): E.Either<ErrorMessage, MysteryBoxGame> => {
+    return pipe(
+      game,
+      validatePlayerIsEliminated(playerId),
+      E.chain(validateGameHasActivePlayers),
+      E.chain(validateSomeActivePlayersStillYetToPickBoxOnCurrentRound),
+      E.chain(getRound(roundIndex)),
+      E.chain(validatePlayerHasNotGuessedThisRound(playerId)),
+      E.chain(addPlayerGuessToBox(playerId, boxIndex)),
+    );
+  };
+};
+
 export const newRound = (
   game: MysteryBoxGame,
+  mysteryBoxCreator: MysteryBoxCreator = randomBoxCreator,
 ): E.Either<ErrorMessage, MysteryBoxGame> => {
   return pipe(
     game,
     validatePlayersRemainingInGame,
     E.chain(validateGameHasActivePlayers),
     E.chain(validateAllPlayersHaveSelectedBoxOnCurrentRound),
-    E.chain(addNewRoundToGame),
+    E.chain(addNewRoundToGame(mysteryBoxCreator)),
   );
 };
 
-function eliminatePlayersOnCurrentRound() {}
-
 function addNewRoundToGame(
-  game: MysteryBoxGame,
   mysteryBoxCreator: MysteryBoxCreator = randomBoxCreator,
-): E.Either<ErrorMessage, MysteryBoxGame> {
-  const playersRemaining = getAllActivePlayerIds(game).length;
-  const newRound = createNewGameRound(
-    game.rounds.length,
-    playersRemaining,
-    mysteryBoxCreator,
-  );
-  const updatedGame: MysteryBoxGame = {
-    ...game,
-    currentRoundId: newRound.id,
-    rounds: [...game.rounds, newRound],
+) {
+  return (game: MysteryBoxGame): E.Either<ErrorMessage, MysteryBoxGame> => {
+    const playersRemaining = getAllActivePlayerIds(game).length;
+
+    const newRound = createNewGameRound(
+      game.rounds.length,
+      playersRemaining,
+      mysteryBoxCreator,
+    );
+
+    const updatedGame: MysteryBoxGame = {
+      ...game,
+      currentRoundId: newRound.id,
+      rounds: [...game.rounds, newRound],
+    };
+
+    return pipe(newRound, selectBombPlacersForRound(updatedGame));
   };
-  return E.right(updatedGame);
+}
+
+function selectBombPlacersForRound(game: MysteryBoxGame) {
+  return (round: MysteryBoxGameRound) => {
+    if (!!round.bombPlacersPlayerIds) {
+      return E.right(game);
+    }
+
+    const totalBombPlacers = round.boxes.filter(
+      (b) => b.contents.type === "bomb",
+    ).length;
+
+    if (totalBombPlacers === 0) {
+      return E.right(game);
+    }
+
+    const eligiblePlayerIds = getAllEliminatedPlayerIds(game);
+    const defaultBombDropperPlayerIds = new Array(totalBombPlacers).fill(
+      CINBY_PLAYER_ID,
+    );
+
+    // replace default bomb dropper with random eliminated players where possible
+    for (let i = 0; i < totalBombPlacers; i++) {
+      if (eligiblePlayerIds.length > 0) {
+        //filter out already selected bomb placers to ensure different players get selected where possible
+        const eligiblePlayerIdsForThisBombPlacer = eligiblePlayerIds.filter(
+          (id) => !defaultBombDropperPlayerIds.includes(id),
+        );
+        const randomPlayerId = selectRandomOneOf(
+          eligiblePlayerIdsForThisBombPlacer,
+        );
+        //select CINBY if there are no eligible players left to select to ensure all bomb placers get assigned
+        defaultBombDropperPlayerIds[i] = !randomPlayerId
+          ? CINBY_PLAYER_ID
+          : randomPlayerId;
+      }
+    }
+
+    const updatedGame = updateRoundOnGame(
+      {
+        ...round,
+        bombPlacersPlayerIds: defaultBombDropperPlayerIds,
+      },
+      game,
+    );
+
+    return E.right(updatedGame);
+  };
 }
 
 export const getLatestRound = (
@@ -644,6 +717,7 @@ function createMysteryBoxRoundView(
       ...box,
       playerIds: box.playerIds,
     })),
+    bombBoxGuesserPlayerIds: round.bombPlacersPlayerIds,
   };
 }
 
@@ -712,6 +786,9 @@ function createPlayerView(
     currentlySelectedBoxId: selectedBox ? selectedBox.id : undefined,
     // eliminatedRoundId: undefined,
     advantage: player.advantage,
+    isBombBoxGuesserThisRound: !!currentRound.bombPlacersPlayerIds?.includes(
+      player.id,
+    ),
   };
 }
 
