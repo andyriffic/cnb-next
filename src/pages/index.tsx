@@ -39,7 +39,7 @@ const StyledLink = styled(Link)`
 
 const PositionContainer = styled.div`
   position: absolute;
-  bottom: -10%;
+  bottom: 0;
   left: 50%;
   transform: translate(-50%, -50%);
 `;

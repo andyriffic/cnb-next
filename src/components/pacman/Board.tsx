@@ -94,7 +94,7 @@ export function Board({ uiState }: Props): JSX.Element {
   const animatePath = isClientSideFeatureEnabled("animate");
   return (
     <BoardBackground>
-      <BoardBackgroundImage src="/images/pacman/pac-man-board.png" />
+      <BoardBackgroundImage src="/images/pacman/pac-man-indian-street-board.png" />
       {boardConfig.playerPath.map((s, i) => {
         const direction = getCellDirection(boardConfig, i);
         return (
