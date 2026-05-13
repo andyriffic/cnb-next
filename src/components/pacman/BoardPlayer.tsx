@@ -29,14 +29,14 @@ const PlayerName = styled.div`
   font-size: 0.6rem;
   text-align: center;
   position: absolute;
-  top: -10px;
+  bottom: -10px;
   border: 1px solid;
   white-space: nowrap;
 `;
 
 const MovesRemaining = styled.div`
   position: absolute;
-  bottom: -15%;
+  top: -50%;
   left: 15%;
   padding: 0.1rem;
   background: black;

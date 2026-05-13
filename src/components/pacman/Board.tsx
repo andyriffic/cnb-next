@@ -73,13 +73,17 @@ const getDirectionIndicator = (
   } else {
     switch (pathDirection) {
       case "up":
-        return <>👆🏻</>;
+        // return <>👆🏻</>;
+        return <>↑</>;
       case "down":
-        return <>👇🏻</>;
+        // return <>👇🏻</>;
+        return <>↓</>;
       case "left":
-        return <>👈🏻</>;
+        // return <>👈🏻</>;
+        return <>←</>;
       case "right":
-        return <>👉🏻</>;
+        // return <>👉🏻</>;
+        return <>→</>;
       case "start":
         return <>🏡</>;
       case "end":
@@ -94,7 +98,7 @@ export function Board({ uiState }: Props): JSX.Element {
   const animatePath = isClientSideFeatureEnabled("animate");
   return (
     <BoardBackground>
-      <BoardBackgroundImage src="/images/pacman/pac-man-indian-street-board.png" />
+      <BoardBackgroundImage src="/images/pacman/pac-man-board.png" />
       {boardConfig.playerPath.map((s, i) => {
         const direction = getCellDirection(boardConfig, i);
         return (

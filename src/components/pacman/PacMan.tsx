@@ -28,6 +28,14 @@ const Container = styled.div`
   position: relative;
 `;
 
+const Turban = styled.img`
+  display: block;
+  position: absolute;
+  top: -55%;
+  left: -5%;
+  width: 70%;
+`;
+
 const Head = styled.div<{ reverse: boolean }>`
   width: 3vw;
   height: 3vw;
@@ -81,6 +89,7 @@ export function PacMan({ state }: Props): JSX.Element {
       {state.pacMan.movesRemaining > 0 && (
         <MovesRemaining>{state.pacMan.movesRemaining}</MovesRemaining>
       )}
+      <Turban src="/images/pacman/pacman-turban.png" alt="turban" />
     </Container>
   );
 }
