@@ -35,7 +35,8 @@ const PositionedPlayer = styled.div<{
   width: 5%;
   height: 5%;
   text-align: center;
-  transition: top linear ${({ moveSpeedMs }) => moveSpeedMs}ms,
+  transition:
+    top linear ${({ moveSpeedMs }) => moveSpeedMs}ms,
     left linear ${({ moveSpeedMs }) => moveSpeedMs}ms;
 
   &:hover {
@@ -50,7 +51,7 @@ type Props = {
 const getDirectionIndicator = (
   pathDirection: PathDirection | undefined,
   index: number,
-  animate: boolean
+  animate: boolean,
 ): JSX.Element => {
   if (animate) {
     const delayMs = index * 200;
@@ -98,7 +99,7 @@ export function Board({ uiState }: Props): JSX.Element {
   const animatePath = isClientSideFeatureEnabled("animate");
   return (
     <BoardBackground>
-      <BoardBackgroundImage src="/images/pacman/pac-man-board.png" />
+      <BoardBackgroundImage src="/images/pacman/pac-man-board-india.png" />
       {boardConfig.playerPath.map((s, i) => {
         const direction = getCellDirection(boardConfig, i);
         return (
