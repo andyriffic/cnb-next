@@ -147,7 +147,13 @@ function selectBombPlacersForRound(game: MysteryBoxGame) {
       return E.right(game);
     }
 
-    const eligiblePlayerIds = getAllEliminatedPlayerIds(game);
+    const previousBombPickers = game.rounds.flatMap(
+      (r) => r.bombPlacersPlayerIds,
+    );
+
+    const eligiblePlayerIds = getAllEliminatedPlayerIds(game).filter(
+      (p) => !previousBombPickers.includes(p),
+    );
     const defaultBombDropperPlayerIds = new Array(totalBombPlacers).fill(
       CINBY_PLAYER_ID,
     );
