@@ -619,13 +619,10 @@ export function press(game: GasGame): GasGame {
 
   const explodedWeights: WeightedItem<boolean>[] = [
     { weight: game.gasCloud.pressed + 1, item: true },
-    { weight: 100, item: false },
+    { weight: 80, item: false },
   ];
 
-  const exploded =
-    game.currentPlayer.id === "carol"
-      ? false
-      : selectWeightedRandomOneOf(explodedWeights);
+  const exploded = selectWeightedRandomOneOf(explodedWeights);
 
   return pipe(
     exploded
@@ -955,9 +952,9 @@ function getRandomCardType(
           { weight: 2, item: isFinalRound ? "press" : "reverse" },
         ]
       : [
-          { weight: 2, item: "skip" },
+          { weight: 4, item: "skip" },
           // { weight: 1, item: "bomb" },
-          { weight: 4, item: "dark-mode" },
+          // { weight: 1, item: "dark-mode" },
           { weight: 3, item: "curse-all-fives" },
           { weight: 3, item: "reverse" },
           { weight: 14, item: "press" },
