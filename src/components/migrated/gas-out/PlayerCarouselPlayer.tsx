@@ -56,6 +56,20 @@ const Curse = styled.div`
   white-space: nowrap;
   animation: ${shakeAnimationLeft} 800ms ease-in infinite both;
 `;
+const PlayerName = styled.div`
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 2px solid #ccc;
+  color: darkred;
+  background-color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  white-space: nowrap;
+`;
 
 const DeathContainer = styled.div<{ active: boolean }>`
   position: absolute;
@@ -166,6 +180,7 @@ export function PlayerCarouselPlayer({
             hasAdvantage={player.advantage}
           />
         </ZombieTransform>
+        <PlayerName>{player.player.name}</PlayerName>
         {/* {player.curse === "double-press" && <Curse>Double Press ‼️</Curse>} */}
       </PlayerAvatarContainer>
       {active &&

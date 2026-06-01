@@ -51,7 +51,7 @@ const Home: NextPage = () => {
             pressesRemaining={0}
           />
           <BalloonCard
-            card={{ presses: 4, type: "dark-mode" }}
+            card={{ presses: 3, type: "dark-mode" }}
             pressesRemaining={4}
           />
           <BalloonCard
