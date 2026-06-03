@@ -58,7 +58,7 @@ const Curse = styled.div`
 `;
 const PlayerName = styled.div`
   position: absolute;
-  top: 20%;
+  bottom: 10%;
   left: 50%;
   transform: translateX(-50%);
   border: 2px solid #ccc;
@@ -73,7 +73,7 @@ const PlayerName = styled.div`
 
 const DeathContainer = styled.div<{ active: boolean }>`
   position: absolute;
-  bottom: 0;
+  bottom: -5%;
   left: 50%;
   transform: translateX(-50%);
   transition: opacity 0.1s;
