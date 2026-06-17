@@ -92,6 +92,7 @@ export const chineseNewYearSounds: { [key in SoundName]: string } = {
   "join-music": "/sounds/chinese-new-year/cny_138.mp3",
   "join-player-joined": "/sounds/chinese-new-year/guzheng.mp3",
   "gas-background-music": "/sounds/chinese-new-year/god_of_wealth.mp3",
+  "gas-player-die": "/sounds/screaming.mp3",
   "number-crunch-guessing-music":
     "/sounds/chinese-new-year/db_instrumental.mp3",
   "space-race-rocket-collision": "/sounds/chinese-new-year/pokemon_bump.mp3",
