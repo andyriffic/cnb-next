@@ -8,6 +8,7 @@ import { CnyJoinScreenDecoration } from "./chinese-new-year/JoinScreenDecoration
 import { JoinScreenDecoration } from "./default/JoinScreenDecoration";
 import { GlobalGameTheme, ThemeTokens } from "./types";
 import { XmasJoinScreenDecoration } from "./xmas/JoinScreenDecoration";
+import { JoinScreenDecoration as CorgiJoinScreenDecoration } from "./corgi/JoinScreenDecoration";
 
 const DEFAULT_THEME: GlobalGameTheme = {
   tokens: {
@@ -98,4 +99,31 @@ const WEDDING_THEME: GlobalGameTheme = {
   components: {},
 };
 
-export default CNY_THEME;
+const CORGI_THEME: GlobalGameTheme = {
+  tokens: {
+    ...DEFAULT_THEME.tokens,
+    colours: {
+      ...DEFAULT_THEME.tokens.colours,
+      primaryText: "#FFFFFF",
+      textAccent: "#FFE66D",
+
+      primaryBackground: "#3F9E6D",
+      secondaryBackground: "#2F7653",
+
+      buttonPrimaryBackground: "#7EF2A7",
+      buttonSecondaryBackground: "#A4FFE3",
+
+      buttonPrimaryText: "#1A2B20",
+      buttonAccent: "rgb(0 0 0 / 0.22)",
+    },
+  },
+  sounds: {
+    ...DEFAULT_THEME.sounds,
+  },
+  components: {
+    ...DEFAULT_THEME.components,
+    JoinScreenDecoration: <CorgiJoinScreenDecoration />,
+  },
+};
+
+export default DEFAULT_THEME;
