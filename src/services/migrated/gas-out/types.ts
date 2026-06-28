@@ -47,6 +47,7 @@ export type PlayerKilledBy = {
 
 export type GasPlayer = {
   player: Player;
+  team?: string;
   status: "alive" | "dead" | "winner";
   cards: GasCard[];
   effectPower?: EffectType;

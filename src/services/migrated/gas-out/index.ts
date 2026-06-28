@@ -919,6 +919,7 @@ function createGasPlayer(player: Player, gameType: GasGameType): GasPlayer {
   const advantage = getPlayerAvailableCoins(player) > 0;
   return {
     player,
+    team: player.details?.team,
     status: "alive",
     advantage,
     cards: [

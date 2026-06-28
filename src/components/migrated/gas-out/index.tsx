@@ -16,6 +16,8 @@ import { TalkingHeadBalloon } from "./TalkingHeadBalloon";
 import { FinalShowdown } from "./FinalShowdown";
 import { BombDisposalChoice } from "./BombDisposalChoice";
 import { LightBulb } from "./LightBulb";
+import { ScopeCreepBalloon } from "./ScopeCreepBalloon";
+import { GoodbyePlayers } from "./GoodbyePlayers";
 
 const Container = styled.div`
   margin: 50px auto;
@@ -117,9 +119,10 @@ const View = ({ gasGame, team }: Props) => {
     >
       <Container>
         <GameModeDisplay>
-          <LightBulb
+          {/* <LightBulb
             state={gasGame.globalEffect?.type === "lights-out" ? "off" : "on"}
-          />
+          /> */}
+          <GoodbyePlayers gasGame={gasGame} />
         </GameModeDisplay>
         {gasGame.superGuessInEffect && (
           <SuperGuessDisplay>
@@ -143,8 +146,9 @@ const View = ({ gasGame, team }: Props) => {
         {!!gasGame.winningPlayerId && <LinkToMiniGame />}
         <LastTwoPlayersNotification game={gasGame} />
         <BalloonContainer>
+          <ScopeCreepBalloon gasCloud={gasGame.gasCloud} />
           {/* <TalkingHeadBalloon gasCloud={gasGame.gasCloud} /> */}
-          <GasBallon gasCloud={gasGame.gasCloud} />
+          {/* <GasBallon gasCloud={gasGame.gasCloud} /> */}
         </BalloonContainer>
 
         <GraveyardContainer>
