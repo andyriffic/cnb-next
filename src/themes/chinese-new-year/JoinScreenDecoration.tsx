@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Attention } from "../../components/animations/Attention";
-import imageSrc from "./cny-sticker-horse-01.png";
+import imageSrc from "./farewell-xian-sticker.png";
 
 export function CnyJoinScreenDecoration(): JSX.Element {
   return (

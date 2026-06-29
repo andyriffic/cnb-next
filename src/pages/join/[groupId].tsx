@@ -116,8 +116,8 @@ export type GameTypes =
 const availableGameTypes: GameTypes[] = [
   // "rps",
   "balloon",
-  "number-crunch",
-  "mystery-box",
+  // "number-crunch",
+  // "mystery-box",
 ];
 
 const GAME_CONFIG: {
@@ -137,7 +137,7 @@ const gameCreators: {
     group: PlayerGroup,
     socketIoService: SocketIoService,
     getName: (playerId: string) => string,
-    team: string | undefined
+    team: string | undefined,
   ) => Promise<GameUrl>;
 } = {
   rps: createRockPaperScissorsWithBettingGame(3),
@@ -206,7 +206,7 @@ function Page({ regularPlayers }: Props) {
   }, [socketService.groupJoin.playerGroups, groupId]);
 
   useSomethingWhenArraySizeChanges(group?.playerIds, () =>
-    play("join-player-joined")
+    play("join-player-joined"),
   );
 
   const playerAvatarSize: AvatarSize =
@@ -315,10 +315,10 @@ function Page({ regularPlayers }: Props) {
                                     group,
                                     socketService,
                                     getName,
-                                    team
+                                    team,
                                   ).then((gameUrl) => {
                                     router.push(
-                                      urlWithTeamQueryParam(gameUrl, team)
+                                      urlWithTeamQueryParam(gameUrl, team),
                                     );
                                   });
                                 }}
@@ -351,7 +351,7 @@ function Page({ regularPlayers }: Props) {
                           group,
                           socketService,
                           getName,
-                          team
+                          team,
                         ).then((gameUrl) => {
                           router.push(urlWithTeamQueryParam(gameUrl, team));
                         })
@@ -396,12 +396,12 @@ export default Page;
 type GameUrl = string;
 
 function createRockPaperScissorsWithBettingGame(
-  spectatorTargetGuesses: number
+  spectatorTargetGuesses: number,
 ) {
   return function (
     group: PlayerGroup,
     socketIoService: SocketIoService,
-    getName: (playerId: string) => string
+    getName: (playerId: string) => string,
   ): Promise<GameUrl> {
     return new Promise((resolve) => {
       const randomisedPlayerIds = shuffleArray(group.players);
@@ -447,9 +447,9 @@ function createRockPaperScissorsWithBettingGame(
               },
             ],
             bettingPlayerWallets,
-            () => resolve(getRockPaperScissorsGameSpectatorUrl(gameId))
+            () => resolve(getRockPaperScissorsGameSpectatorUrl(gameId)),
           );
-        }
+        },
       );
     });
   };
@@ -459,7 +459,7 @@ function createBallonGameNormal(
   group: PlayerGroup,
   socketIoService: SocketIoService,
   getName: (playerId: string) => string,
-  team: string | undefined
+  team: string | undefined,
 ): Promise<GameUrl> {
   return new Promise((resolve) => {
     socketIoService.gasGame.createGasGame(
@@ -473,7 +473,7 @@ function createBallonGameNormal(
           .map((p) => p.player.id)
           .forEach(deductAvailableCoinFromPlayer);
         resolve(getGasOutSpectatorUrl(game.id));
-      }
+      },
     );
   });
 }
@@ -482,7 +482,7 @@ function createBallonGameQuick(
   group: PlayerGroup,
   socketIoService: SocketIoService,
   getName: (playerId: string) => string,
-  team: string | undefined
+  team: string | undefined,
 ): Promise<GameUrl> {
   return new Promise((resolve) => {
     socketIoService.gasGame.createGasGame(
@@ -492,14 +492,14 @@ function createBallonGameQuick(
       "quick",
       (game) => {
         resolve(getGasOutSpectatorUrl(game.id));
-      }
+      },
     );
   });
 }
 
 function createAiGame(
   group: PlayerGroup,
-  socketIoService: SocketIoService
+  socketIoService: SocketIoService,
 ): Promise<GameUrl> {
   return new Promise((resolve) => {
     socketIoService.aiOverlord.createAiOverlordGame(
@@ -507,14 +507,14 @@ function createAiGame(
       group.playerIds,
       (gameId) => {
         resolve(getAiOverlordSpectatorUrl(gameId));
-      }
+      },
     );
   });
 }
 
 function createNumberCrunchGame(
   group: PlayerGroup,
-  socketIoService: SocketIoService
+  socketIoService: SocketIoService,
 ): Promise<GameUrl> {
   return new Promise((resolve) => {
     socketIoService.numberCrunch.createGame(group.id, group.players, (game) => {
@@ -529,7 +529,7 @@ function createNumberCrunchGame(
 
 function createMysteryBoxGame(
   group: PlayerGroup,
-  socketIoService: SocketIoService
+  socketIoService: SocketIoService,
 ): Promise<GameUrl> {
   return new Promise((resolve) => {
     socketIoService.mysteryBox.createGame(group.id, group.players, (game) => {
