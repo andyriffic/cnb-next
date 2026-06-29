@@ -12,7 +12,7 @@ import { CenterSpaced } from "../../components/Layouts";
 import { SpectatorPageLayout } from "../../components/SpectatorPageLayout";
 import { Appear } from "../../components/animations/Appear";
 import { useSocketIo } from "../../providers/SocketIoProvider";
-import cinbyWave from "../../assets/cinby-india.png";
+import cinbyWave from "../../assets/cinby-china.png";
 
 const Container = styled.div`
   display: flex;
@@ -36,7 +36,7 @@ function Page() {
         router.push(`/join/${groupId}${team ? `?team=${team}` : ""}`);
       });
     },
-    [groupJoin, router]
+    [groupJoin, router],
   );
 
   return (
