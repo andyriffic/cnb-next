@@ -115,8 +115,8 @@ export type GameTypes =
 
 const availableGameTypes: GameTypes[] = [
   // "rps",
-  "balloon",
-  // "number-crunch",
+  // "balloon",
+  "number-crunch",
   // "mystery-box",
 ];
 
@@ -227,7 +227,7 @@ function Page({ regularPlayers }: Props) {
         <JoinDetailsContainer>
           <JoinDetailsInfoContainer>
             <SmallHeading style={{ textAlign: "right", marginBottom: "2rem" }}>
-              Come in!
+              Let&apos;s Play!
             </SmallHeading>
             {qrCodeUrl && (
               <div style={{ textAlign: "right", marginBottom: "2rem" }}>

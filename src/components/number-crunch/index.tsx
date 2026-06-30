@@ -14,12 +14,14 @@ import {
   NUMBER_CRUNCH_GAME_STATE,
   useNumberCrunchGameTiming,
 } from "./hooks/useNumberCrunchGameTiming";
+import { ElevatorResults } from "./ElevatorResults";
 
 type Props = {
   game: NumberCrunchGameView;
 };
 
 const View = ({ game }: Props) => {
+  console.log("Rendering NumberCrunchGameView", game);
   const [revealWinner, setRevealWinner] = useState(false);
   const { numberCrunch } = useSocketIo();
   const gameState = useNumberCrunchGameTiming(game);
@@ -37,13 +39,18 @@ const View = ({ game }: Props) => {
       {gameState.state <= NUMBER_CRUNCH_GAME_STATE.REVEAL_WINNER && (
         <>
           <NumberTarget game={game} />
-          <WaitingToGuessList game={game} />
-          {/* <NumbersRemainingIndicator gameView={game} /> */}
-          <RoundResultBuckets
+          <ElevatorResults
             gameView={game}
             gameState={gameState.state}
             onRoundRevealed={onRoundRevealed}
           />
+          {/* <WaitingToGuessList game={game} /> */}
+          {/* <NumbersRemainingIndicator gameView={game} /> */}
+          {/* <RoundResultBuckets
+            gameView={game}
+            gameState={gameState.state}
+            onRoundRevealed={onRoundRevealed}
+          /> */}
         </>
       )}
 

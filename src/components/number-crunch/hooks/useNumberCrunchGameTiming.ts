@@ -13,13 +13,13 @@ export enum NUMBER_CRUNCH_GAME_STATE {
 }
 
 export const useNumberCrunchGameTiming = (
-  gameView: NumberCrunchGameView
+  gameView: NumberCrunchGameView,
 ): {
   state: NUMBER_CRUNCH_GAME_STATE;
   setState: (state: NUMBER_CRUNCH_GAME_STATE) => void;
 } => {
   const [gameState, setGameState] = useState(
-    NUMBER_CRUNCH_GAME_STATE.PLAYERS_GUESSING
+    NUMBER_CRUNCH_GAME_STATE.PLAYERS_GUESSING,
   );
   const { numberCrunch } = useSocketIo();
 
@@ -30,7 +30,7 @@ export const useNumberCrunchGameTiming = (
     ) {
       setTimeout(
         () => setGameState(NUMBER_CRUNCH_GAME_STATE.WAITING_TO_REVEAL_ROUND),
-        1000
+        1000,
       );
     }
   }, [gameState, gameView.currentRound.allPlayersGuessed]);
@@ -46,12 +46,12 @@ export const useNumberCrunchGameTiming = (
       if (gameView.finalResults) {
         setTimeout(
           () => setGameState(NUMBER_CRUNCH_GAME_STATE.REVEAL_WINNER),
-          1000
+          1000,
         );
       } else {
         setTimeout(
           () => setGameState(NUMBER_CRUNCH_GAME_STATE.START_NEW_ROUND),
-          100
+          2000,
         );
       }
     }

@@ -16,9 +16,9 @@ export const ElevatorResults = ({
 }: Props) => {
   return (
     <div>
-      <SmallHeading style={{ textAlign: "center" }}>
+      {/* <SmallHeading style={{ textAlign: "center" }}>
         Elevator Results
-      </SmallHeading>
+      </SmallHeading> */}
       <ElevatorResultsBuckets
         gameView={gameView}
         gameState={gameState}

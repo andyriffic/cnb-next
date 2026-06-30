@@ -7,7 +7,7 @@ type Props = {
 
 export const NumberTarget = ({ game }: Props) => {
   return (
-    <SmallHeading style={{ textAlign: "center" }}>
+    <SmallHeading style={{ textAlign: "center", margin: "2rem" }}>
       Find the number between {game.currentRound.range.low} and{" "}
       {game.currentRound.range.high}
     </SmallHeading>

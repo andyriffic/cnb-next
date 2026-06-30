@@ -96,7 +96,7 @@ export const setPlayerGuessOnLatestRound =
       validatePlayerHasNotGuessedOnLatestRound(game, playerId),
       E.chain(getLatestRound),
       E.map(setPlayerGuessOnRound(playerId, guess, game.target)),
-      E.map(replaceLatestRound(game))
+      E.map(replaceLatestRound(game)),
     );
   };
 
@@ -140,7 +140,7 @@ function addRoundToGame(game: NumberCrunchGame): NumberCrunchGame {
 }
 
 export function newRound(
-  game: NumberCrunchGame
+  game: NumberCrunchGame,
 ): E.Either<ErrorMessage, NumberCrunchGame> {
   return pipe(validateLatestRoundIsComplete(game), E.map(addRoundToGame));
 }
@@ -148,7 +148,7 @@ export function newRound(
 function createRoundView(
   game: NumberCrunchGame,
   round: NumberCrunchRound,
-  roundNumber: number
+  roundNumber: number,
 ): NumberCrunchRoundView {
   return {
     roundNumber,
@@ -163,12 +163,12 @@ function createRoundView(
 }
 
 export function createGameView(
-  game: NumberCrunchGame
+  game: NumberCrunchGame,
 ): E.Either<ErrorMessage, NumberCrunchGameView> {
   const allGuessedNumbers = Array.from(
     new Set(
-      game.rounds.map((r) => r.playerGuesses.map((pg) => pg.guess)).flat()
-    )
+      game.rounds.map((r) => r.playerGuesses.map((pg) => pg.guess)).flat(),
+    ),
   );
   return pipe(
     getLatestRound(game),
@@ -191,7 +191,7 @@ export function createGameView(
         guessedNumbers: allGuessedNumbers,
         guessedInFirstRound: game.rounds.length === 1 && hasCorrectGuess(round),
       };
-    })
+    }),
   );
 }
 
@@ -201,10 +201,10 @@ function hasCorrectGuess(round: NumberCrunchRound): boolean {
 
 function createFinalResultsView(
   game: NumberCrunchGame,
-  latestRound: NumberCrunchRound
+  latestRound: NumberCrunchRound,
 ): NumberCrunchFinalResultsView | undefined {
   const winningPlayers = latestRound.playerGuesses.filter(
-    (pg) => getNumberCrunchRangeBucketIndex(pg.offBy) === 0
+    (pg) => getNumberCrunchRangeBucketIndex(pg.offBy) === 0,
   );
 
   const allPlayersGuessed =
@@ -234,10 +234,10 @@ function createFinalResultsView(
 
 function createFinalRoundSummary(
   game: NumberCrunchGame,
-  latestRound: NumberCrunchRound
+  latestRound: NumberCrunchRound,
 ): NumberCrunchFinalRoundSummaryView[] {
   const allGuessedNumbers = Array.from(
-    new Set(latestRound.playerGuesses.map((pg) => pg.guess))
+    new Set(latestRound.playerGuesses.map((pg) => pg.guess)),
   ).sort((a, b) => b - a);
 
   return allGuessedNumbers.map((guessNumber) => {
@@ -247,7 +247,7 @@ function createFinalRoundSummary(
         .filter((pg) => pg.guess === guessNumber)
         .map((pg) => pg.id),
       bucketRangeIndex: getNumberCrunchRangeBucketIndex(
-        Math.abs(game.target - guessNumber)
+        Math.abs(game.target - guessNumber),
       ),
     };
   });

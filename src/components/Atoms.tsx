@@ -104,6 +104,15 @@ export const Pill = styled.div`
   display: inline-block;
 `;
 
+export const SmallPill = styled.div`
+  background-color: ${THEME.tokens.colours.primaryBackground};
+  font-size: 0.7rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 1rem;
+  display: inline-block;
+  text-transform: uppercase;
+`;
+
 export const Heading = styled.h1`
   font-weight: 600;
   font-size: 2.3rem;

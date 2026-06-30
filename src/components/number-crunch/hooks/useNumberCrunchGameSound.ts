@@ -6,7 +6,7 @@ import { NUMBER_CRUNCH_GAME_STATE } from "./useNumberCrunchGameTiming";
 
 export const useNumberCrunchGameSound = (
   gameView: NumberCrunchGameView,
-  gameState: NUMBER_CRUNCH_GAME_STATE
+  gameState: NUMBER_CRUNCH_GAME_STATE,
 ): void => {
   const { loop, play } = useSound();
 
@@ -17,7 +17,7 @@ export const useNumberCrunchGameSound = (
         play("number-crunch-player-guessed");
       }
     },
-    [gameState]
+    [gameState],
   );
 
   useEffect(() => {
@@ -34,14 +34,14 @@ export const useNumberCrunchGameSound = (
     if (gameState === NUMBER_CRUNCH_GAME_STATE.LATEST_ROUND_REVEALED) {
       if (
         gameView.currentRound.playerGuesses.some(
-          (guess) => guess.bucketRangeIndex === 0
+          (guess) => guess.bucketRangeIndex === 0,
         )
       ) {
         play("number-crunch-player-gusssed-number");
       } else if (
         gameView.currentRound.playerGuesses.some(
           (guess) =>
-            guess.bucketRangeIndex === 1 || guess.bucketRangeIndex === 2
+            guess.bucketRangeIndex === 1 || guess.bucketRangeIndex === 2,
         )
       ) {
         play("number-crunch-player-guessed-close");

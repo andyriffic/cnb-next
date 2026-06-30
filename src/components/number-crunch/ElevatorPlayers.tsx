@@ -26,6 +26,17 @@ const PlayerPositionContainer = styled.div<{
     transform 0.3s ease-in-out;
 `;
 
+const PlayerName = styled.div`
+  border: 2px solid #ccc;
+  color: darkred;
+  background-color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  white-space: nowrap;
+`;
+
 const sortGuessesFurthestFirst = (
   a: NumberCrunchPlayerGuessView,
   b: NumberCrunchPlayerGuessView,
@@ -150,7 +161,7 @@ export const ElevatorPlayers = ({
                 hasAdvantage={p.advantage}
               />
             </Attention>
-            <Pill>{p.name}</Pill>
+            <PlayerName>{p.name}</PlayerName>
           </PlayerPositionContainer>
         );
       })}
