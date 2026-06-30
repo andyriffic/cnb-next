@@ -126,4 +126,4 @@ const CORGI_THEME: GlobalGameTheme = {
   },
 };
 
-export default CNY_THEME;
+export default CORGI_THEME;
