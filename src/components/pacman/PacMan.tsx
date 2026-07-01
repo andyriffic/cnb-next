@@ -89,7 +89,7 @@ export function PacMan({ state }: Props): JSX.Element {
       {state.pacMan.movesRemaining > 0 && (
         <MovesRemaining>{state.pacMan.movesRemaining}</MovesRemaining>
       )}
-      <Turban src="/images/pacman/pacman-turban.png" alt="turban" />
+      {/* <Turban src="/images/pacman/pacman-turban.png" alt="turban" /> */}
     </Container>
   );
 }

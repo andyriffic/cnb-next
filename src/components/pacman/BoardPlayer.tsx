@@ -109,10 +109,7 @@ export function BoardPlayer({ pacPlayer }: Props): JSX.Element {
 
   return (
     <Container goingToJail={goingToJail}>
-      <PacManGhostWithTurban
-        color={inJail ? "#777777" : pacPlayer.color}
-        width="3vw"
-      />
+      <PacManGhost color={inJail ? "#777777" : pacPlayer.color} width="3vw" />
       <PlayerName
         style={{
           backgroundColor: pacPlayer.color,
