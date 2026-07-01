@@ -5,7 +5,7 @@ import Link from "next/link";
 import styled from "styled-components";
 import { useRouter } from "next/router";
 import { useCallback } from "react";
-import finxMascotImage from "../assets/cinby-china.png";
+import finxMascotImage from "../assets/cinby-dog.png";
 import { Appear } from "../components/animations/Appear";
 import { spinAnimation } from "../components/animations/keyframes/spinAnimations";
 import { useSocketIo } from "../providers/SocketIoProvider";
@@ -26,7 +26,7 @@ const Space = styled.div`
   width: 100vw;
   height: 100vh;
   background-color: black;
-  background-image: url("/images/cinby-china-background.png");
+  background-image: url("/images/cnb-dogpark-background.png");
   background-size: 100% 100%;
 `;
 
