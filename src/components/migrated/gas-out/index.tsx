@@ -122,7 +122,7 @@ const View = ({ gasGame, team }: Props) => {
           {/* <LightBulb
             state={gasGame.globalEffect?.type === "lights-out" ? "off" : "on"}
           /> */}
-          <GoodbyePlayers gasGame={gasGame} />
+          {/* <GoodbyePlayers gasGame={gasGame} /> */}
         </GameModeDisplay>
         {gasGame.superGuessInEffect && (
           <SuperGuessDisplay>
