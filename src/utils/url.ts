@@ -31,7 +31,7 @@ export const getPlayerJoinUrl = (
 };
 
 export const getWhosThatUrl = (continueUrl?: string): string => {
-  return `/whos-that-team?team=Xian${continueUrl ? `&continueUrl=${continueUrl}` : ""}`;
+  return `/whos-that${continueUrl ? `?continueUrl=${continueUrl}` : ""}`;
 };
 
 export const getPlayRootUrl = (autoJoinGameId?: string): string => {
