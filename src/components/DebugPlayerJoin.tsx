@@ -2,16 +2,18 @@ import { useMemo } from "react";
 import { usePlayerNames } from "../providers/PlayerNamesProvider";
 import { useSocketIo } from "../providers/SocketIoProvider";
 import { PlayerGroup } from "../services/player-join/types";
-import { CaptionText } from "./Atoms";
+import { CaptionText, Pill, SmallPill } from "./Atoms";
 
 type Props = {
   group: PlayerGroup;
   setForceShowAllGameSelection: (show: boolean) => void;
+  team?: string;
 };
 
 export const DebugPlayerJoin = ({
   group,
   setForceShowAllGameSelection,
+  team,
 }: Props) => {
   const { names } = usePlayerNames();
   const { groupJoin } = useSocketIo();
@@ -24,6 +26,7 @@ export const DebugPlayerJoin = ({
 
   return (
     <div>
+      {team && <SmallPill>{team}</SmallPill>}
       <CaptionText>Join Group</CaptionText>
       <div>
         {playersNotJoined.map((pid) => (

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import styled from "styled-components";
-import backgroundImage from "./happy-puppy-image.png";
+import backgroundImage from "./corgi-decoration.png";
 
 const Container = styled.div`
   position: relative;

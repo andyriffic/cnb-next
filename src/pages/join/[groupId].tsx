@@ -219,6 +219,7 @@ function Page({ regularPlayers }: Props) {
           <DebugPlayerJoin
             group={group}
             setForceShowAllGameSelection={setForceShowAllGameSelection}
+            team={team}
           />
         )
       }
