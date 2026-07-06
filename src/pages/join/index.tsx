@@ -53,9 +53,14 @@ function Page() {
             <FeatureHeading>CNB</FeatureHeading>
           </div>
         </CenterSpaced>
-        <ThemedPrimaryButton onClick={() => startNewGame()}>
-          Create a game
-        </ThemedPrimaryButton>
+        <CenterSpaced>
+          <ThemedPrimaryButton onClick={() => startNewGame("Corgi")}>
+            Team Corgi 🐩
+          </ThemedPrimaryButton>
+          <ThemedPrimaryButton onClick={() => startNewGame("Finvengers")}>
+            Team Finvengers 🦈
+          </ThemedPrimaryButton>
+        </CenterSpaced>
       </Container>
     </SpectatorPageLayout>
   );

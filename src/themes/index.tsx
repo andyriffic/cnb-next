@@ -9,6 +9,7 @@ import { JoinScreenDecoration } from "./default/JoinScreenDecoration";
 import { GlobalGameTheme, ThemeTokens } from "./types";
 import { XmasJoinScreenDecoration } from "./xmas/JoinScreenDecoration";
 import { JoinScreenDecoration as CorgiJoinScreenDecoration } from "./corgi/JoinScreenDecoration";
+import { JoinScreenDecoration as FinvengersJoinScreenDecoration } from "./finvengers/JoinScreenDecoration";
 
 const DEFAULT_THEME: GlobalGameTheme = {
   tokens: {
@@ -131,4 +132,31 @@ const CORGI_THEME: GlobalGameTheme = {
   },
 };
 
-export default CORGI_THEME;
+const FINVENGERS_THEME: GlobalGameTheme = {
+  tokens: {
+    ...DEFAULT_THEME.tokens,
+    colours: {
+      ...DEFAULT_THEME.tokens.colours,
+      primaryText: "#FFFFFF",
+      textAccent: "#FBA727",
+
+      primaryBackground: "#4D8DFF",
+      secondaryBackground: "#2F5FD0",
+
+      buttonPrimaryBackground: "#6AE29A",
+      buttonSecondaryBackground: "#7AFFE7",
+
+      buttonPrimaryText: "#252525",
+      buttonAccent: "rgb(0 0 0 / 0.25)",
+    },
+  },
+  sounds: {
+    ...DEFAULT_THEME.sounds,
+  },
+  components: {
+    ...DEFAULT_THEME.components,
+    JoinScreenDecoration: <FinvengersJoinScreenDecoration />,
+  },
+};
+
+export default FINVENGERS_THEME;

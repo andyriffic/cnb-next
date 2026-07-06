@@ -3,6 +3,7 @@ import { createGlobalStyle } from "styled-components";
 import { GraphqlProvider } from "../providers/GraphqlProvider";
 import { PlayerNamesProvider } from "../providers/PlayerNamesProvider";
 import { SocketIoProvider } from "../providers/SocketIoProvider";
+import { UiThemeProvider } from "../providers/UiThemeProvider";
 
 const GlobalStyles = createGlobalStyle`
 /* http://meyerweb.com/eric/tools/css/reset/ 
@@ -71,7 +72,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         <GraphqlProvider>
           <SocketIoProvider>
             <PlayerNamesProvider>
-              <Component {...pageProps} />
+              <UiThemeProvider>
+                <Component {...pageProps} />
+              </UiThemeProvider>
             </PlayerNamesProvider>
           </SocketIoProvider>
         </GraphqlProvider>

@@ -370,8 +370,14 @@ function Page({ regularPlayers }: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async ({
+  params,
+  query,
+}) => {
   const players = await getAllPlayers();
+  const team = query?.team as string | undefined;
+
+  console.log("getServerSideProps", { team });
 
   if (!players) {
     return {
@@ -383,6 +389,9 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
   const regularPlayers = players
     .filter(isRegularPlayer)
+    .filter(
+      (p) => !team || p.details?.team?.toLowerCase() === team.toLowerCase(),
+    )
     .map<PlayerNameDetails>((p) => ({ id: p.id, name: p.name }));
 
   return {
