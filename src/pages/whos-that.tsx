@@ -126,7 +126,7 @@ export default function Page({ player, continueUrl }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const { playerId, continueUrl } = query;
+  const { playerId, continueUrl, team } = query;
 
   if (playerId) {
     const player = await getPlayer(playerId as string);
@@ -140,17 +140,17 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   }
 
   const allPlayers = (await getAllPlayers()) || [];
-  const allValidPlayers = allPlayers.filter(
-    (p) => !p.tags.includes("no-whos-that")
-  );
+  const allValidPlayers = allPlayers
+    .filter((p) => !p.tags.includes("no-whos-that"))
+    .filter((p) => !team || p.details?.team === team);
   const allViewCounts = allValidPlayers.map(
-    (p) => p.details?.whosThatCount || 0
+    (p) => p.details?.whosThatCount || 0,
   );
 
   const lowestViewCount = Math.min(...allViewCounts);
 
   const lowestViewCountPlayers = allValidPlayers.filter(
-    (p) => (p.details?.whosThatCount || 0) === lowestViewCount
+    (p) => (p.details?.whosThatCount || 0) === lowestViewCount,
   );
 
   return {

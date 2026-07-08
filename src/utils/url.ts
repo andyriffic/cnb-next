@@ -31,7 +31,7 @@ export const getPlayerJoinUrl = (
 };
 
 export const getWhosThatUrl = (continueUrl?: string): string => {
-  return `/whos-that${continueUrl ? `?continueUrl=${continueUrl}` : ""}`;
+  return `/whos-that?team=Corgi${continueUrl ? `&continueUrl=${continueUrl}` : ""}`;
 };
 
 export const getPlayRootUrl = (autoJoinGameId?: string): string => {
