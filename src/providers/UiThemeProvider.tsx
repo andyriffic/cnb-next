@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
-import DEFAULT_THEME from "../themes";
+import { useRouter } from "next/router";
+import { DEFAULT_THEME, CORGI_THEME, FINVENGERS_THEME } from "../themes";
 import { GlobalGameTheme } from "../themes/types";
 
 type PlayerNames = { [playerId: string]: string };
@@ -17,7 +18,17 @@ const UiThemeContext = React.createContext<UiThemeService | undefined>(
 );
 
 export const UiThemeProvider = ({ children }: Props): JSX.Element => {
-  const [currentTheme] = useState<GlobalGameTheme>(DEFAULT_THEME);
+  const { team } = useRouter().query;
+  const currentTheme = useMemo(() => {
+    switch (team) {
+      case "Corgi":
+        return CORGI_THEME;
+      case "Finvengers":
+        return FINVENGERS_THEME;
+      default:
+        return DEFAULT_THEME;
+    }
+  }, [team]);
 
   return (
     <UiThemeContext.Provider

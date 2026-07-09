@@ -1,15 +1,16 @@
+import { GetServerSideProps } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import qrcode from "qrcode";
 import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
-import { GetServerSideProps } from "next";
 import {
   Heading,
   SmallHeading,
   SubHeading,
   ThemedPrimaryButton,
 } from "../../components/Atoms";
+import { Coins } from "../../components/Coins";
 import { DebugPlayerJoin } from "../../components/DebugPlayerJoin";
 import { JoinedPlayer } from "../../components/JoinedPlayer";
 import { NumericValue } from "../../components/NumericValue";
@@ -19,12 +20,17 @@ import { Appear } from "../../components/animations/Appear";
 import { Attention } from "../../components/animations/Attention";
 import { useSomethingWhenArraySizeChanges } from "../../components/hooks/useSomethingWhenArraySizeChanges";
 import { useSound } from "../../components/hooks/useSound";
+import { AudienceGameSelection } from "../../components/pages/join/AudienceGameSelection";
 import { WaitingPlayerNamesHint } from "../../components/pages/join/WaitingPlayerNamesHint";
 import { usePlayerNames } from "../../providers/PlayerNamesProvider";
 import { SocketIoService, useSocketIo } from "../../providers/SocketIoProvider";
+import { useUiTheme } from "../../providers/UiThemeProvider";
 import { PlayerWallet } from "../../services/betting/types";
 import { PlayerGroup } from "../../services/player-join/types";
-import THEME from "../../themes";
+import { GlobalGameTheme } from "../../themes/types";
+import { isRegularPlayer } from "../../types/Player";
+import { deductAvailableCoinFromPlayer } from "../../utils/api";
+import { getAllPlayers } from "../../utils/data/aws-dynamodb";
 import { getSuggestedGame } from "../../utils/join/joinHelper";
 import { shuffleArray } from "../../utils/random";
 import {
@@ -36,12 +42,6 @@ import {
   getRockPaperScissorsGameSpectatorUrl,
   urlWithTeamQueryParam,
 } from "../../utils/url";
-import { AudienceGameSelection } from "../../components/pages/join/AudienceGameSelection";
-import { deductAvailableCoinFromPlayer } from "../../utils/api";
-import { Coins } from "../../components/Coins";
-import { getAllPlayers } from "../../utils/data/aws-dynamodb";
-import { isRegularPlayer } from "../../types/Player";
-import { isClientSideFeatureEnabled } from "../../utils/feature";
 
 const JoinedPlayerContainer = styled.div`
   display: flex;
@@ -56,9 +56,9 @@ const SplitScreenContainer = styled.div`
   align-items: stretch;
 `;
 
-const JoinDetailsContainer = styled.div`
+const JoinDetailsContainer = styled.div<{ theme: GlobalGameTheme }>`
   width: 30%;
-  background-color: ${THEME.tokens.colours.primaryBackground};
+  background-color: ${({ theme }) => theme.tokens.colours.primaryBackground};
   display: flex;
   flex-direction: column;
 `;
@@ -70,9 +70,9 @@ const JoinDetailsInfoContainer = styled.div`
 
 const JoinDetailsDecorationContainer = styled.div``;
 
-const WaitingRoomContainer = styled.div`
+const WaitingRoomContainer = styled.div<{ theme: GlobalGameTheme }>`
   flex: 1;
-  background-color: ${THEME.tokens.colours.secondaryBackground};
+  background-color: ${({ theme }) => theme.tokens.colours.secondaryBackground};
   padding: 4rem;
   overflow-y: scroll;
 `;
@@ -84,8 +84,8 @@ const GameInfoContainer = styled.div`
   gap: 1rem;
 `;
 
-const SuggestedText = styled.span`
-  color: ${THEME.tokens.colours.primaryText}};
+const SuggestedText = styled.span<{ theme: GlobalGameTheme }>`
+  color: ${({ theme }) => theme.tokens.colours.primaryText};
   text-transform: uppercase;
   font-size: 0.8rem;
 `;
@@ -164,6 +164,7 @@ type Props = {
 
 function Page({ regularPlayers }: Props) {
   const router = useRouter();
+  const { theme } = useUiTheme();
   const groupId = router.query.groupId as string;
   const team = router.query.team as string;
   const socketService = useSocketIo();
@@ -225,7 +226,7 @@ function Page({ regularPlayers }: Props) {
       }
     >
       <SplitScreenContainer>
-        <JoinDetailsContainer>
+        <JoinDetailsContainer theme={theme}>
           <JoinDetailsInfoContainer>
             <SmallHeading style={{ textAlign: "right", marginBottom: "2rem" }}>
               Let&apos;s Play!
@@ -249,13 +250,13 @@ function Page({ regularPlayers }: Props) {
               cnb.finx-rocks.com/play
             </SubHeading>
           </JoinDetailsInfoContainer>
-          {THEME.components.JoinScreenDecoration && (
+          {theme.components.JoinScreenDecoration && (
             <JoinDetailsDecorationContainer>
-              {THEME.components.JoinScreenDecoration}
+              {theme.components.JoinScreenDecoration}
             </JoinDetailsDecorationContainer>
           )}
         </JoinDetailsContainer>
-        <WaitingRoomContainer>
+        <WaitingRoomContainer theme={theme}>
           {group && (
             <div
               style={{
@@ -326,7 +327,7 @@ function Page({ regularPlayers }: Props) {
                               >
                                 {gameType === suggestedGame && (
                                   <>
-                                    <SuggestedText>
+                                    <SuggestedText theme={theme}>
                                       🌟Recommended🌟
                                     </SuggestedText>
                                     <br />

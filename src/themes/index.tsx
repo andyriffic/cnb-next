@@ -11,7 +11,7 @@ import { XmasJoinScreenDecoration } from "./xmas/JoinScreenDecoration";
 import { JoinScreenDecoration as CorgiJoinScreenDecoration } from "./corgi/JoinScreenDecoration";
 import { JoinScreenDecoration as FinvengersJoinScreenDecoration } from "./finvengers/JoinScreenDecoration";
 
-const DEFAULT_THEME: GlobalGameTheme = {
+export const DEFAULT_THEME: GlobalGameTheme = {
   tokens: {
     colours: {
       primaryText: "#FFFFFF",
@@ -100,7 +100,7 @@ const WEDDING_THEME: GlobalGameTheme = {
   components: {},
 };
 
-const CORGI_THEME: GlobalGameTheme = {
+export const CORGI_THEME: GlobalGameTheme = {
   tokens: {
     ...DEFAULT_THEME.tokens,
     colours: {
@@ -132,7 +132,7 @@ const CORGI_THEME: GlobalGameTheme = {
   },
 };
 
-const FINVENGERS_THEME: GlobalGameTheme = {
+export const FINVENGERS_THEME: GlobalGameTheme = {
   tokens: {
     ...DEFAULT_THEME.tokens,
     colours: {
