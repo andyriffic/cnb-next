@@ -18,9 +18,10 @@ import { ElevatorResults } from "./ElevatorResults";
 
 type Props = {
   game: NumberCrunchGameView;
+  team?: string;
 };
 
-const View = ({ game }: Props) => {
+const View = ({ game, team }: Props) => {
   console.log("Rendering NumberCrunchGameView", game);
   const [revealWinner, setRevealWinner] = useState(false);
   const { numberCrunch } = useSocketIo();
@@ -56,7 +57,11 @@ const View = ({ game }: Props) => {
 
       {game.finalResults &&
         gameState.state === NUMBER_CRUNCH_GAME_STATE.SHOW_RESULTS && (
-          <FinalResults gameView={game} finalResults={game.finalResults} />
+          <FinalResults
+            gameView={game}
+            finalResults={game.finalResults}
+            team={team}
+          />
         )}
       {gameState.state === NUMBER_CRUNCH_GAME_STATE.START_NEW_ROUND && (
         <SplashContent>

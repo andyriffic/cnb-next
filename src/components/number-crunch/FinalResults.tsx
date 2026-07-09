@@ -93,6 +93,7 @@ const TargetDot = styled(GuessDot)`
 type Props = {
   gameView: NumberCrunchGameView;
   finalResults: NumberCrunchFinalResultsView;
+  team?: string;
 };
 
 enum RevealState {
@@ -102,7 +103,7 @@ enum RevealState {
   SHOW_POINTS_LEGEND = 3,
 }
 
-export const FinalResults = ({ gameView, finalResults }: Props) => {
+export const FinalResults = ({ gameView, finalResults, team }: Props) => {
   const [revealState, setRevealState] = useState(RevealState.SHOW_TARGET);
   useRevealTiming(revealState, gameView, setRevealState);
   const [revealBucketIndex, setRevealBucketIndex] = useState(0);
@@ -194,7 +195,7 @@ export const FinalResults = ({ gameView, finalResults }: Props) => {
                             {getPointsTotalForRange(
                               NUMBER_CRUNCH_BUCKET_RANGES,
                               roundView.bucketRangeIndex,
-                              gameView.guessedInFirstRound
+                              gameView.guessedInFirstRound,
                             )}
                             )
                           </PlayerName>
@@ -210,7 +211,7 @@ export const FinalResults = ({ gameView, finalResults }: Props) => {
       )}
       {revealState >= RevealState.SHOW_POINTS_LEGEND && (
         <Positioned horizontalAlign={{ align: "center", bottomPercent: 20 }}>
-          <LinkToMiniGame />
+          <LinkToMiniGame team={team} />
         </Positioned>
       )}
     </CenterSpaced>
@@ -220,7 +221,7 @@ export const FinalResults = ({ gameView, finalResults }: Props) => {
 function useRevealTiming(
   revealState: RevealState,
   gameView: NumberCrunchGameView,
-  setRevealState: (revealState: RevealState) => void
+  setRevealState: (revealState: RevealState) => void,
 ) {
   const { play } = useSound();
 

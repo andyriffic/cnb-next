@@ -80,9 +80,10 @@ function getBackgroundColourForRoundIndex(
 
 type Props = {
   game: MysteryBoxGameView;
+  team?: string;
 };
 
-export const GameOverResultsByRound = ({ game }: Props) => {
+export const GameOverResultsByRound = ({ game, team }: Props) => {
   const { play } = useSound();
   const [displayIndex, setDisplayIndex] = useState(0);
 
@@ -176,7 +177,7 @@ export const GameOverResultsByRound = ({ game }: Props) => {
         delayMilliseconds={roundsWithPlayersEliminated.length * 2000 + 1000}
       >
         <CenterSpaced style={{ marginTop: "2rem" }}>
-          <LinkToMiniGame />
+          <LinkToMiniGame team={team} />
         </CenterSpaced>
       </Appear>
     </>

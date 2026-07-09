@@ -93,7 +93,7 @@ export const PointsAwardCeremony = ({
                 />
                 <Points>{gamePoints.outrightWinner.points}</Points>
                 {winningConditions?.hotPlayerIds.includes(
-                  gamePoints.outrightWinner.playerId
+                  gamePoints.outrightWinner.playerId,
                 ) && (
                   <div style={{ position: "absolute", bottom: 0, left: 0 }}>
                     🔥
@@ -148,7 +148,7 @@ export const PointsAwardCeremony = ({
         <Appear animation="flip-in">
           {" "}
           <CenterSpaced stacked={true} style={{ marginTop: "4vh" }}>
-            <LinkToMiniGame />
+            <LinkToMiniGame team={team} />
           </CenterSpaced>
         </Appear>
       )}
@@ -159,7 +159,7 @@ export const PointsAwardCeremony = ({
 function useStoryBoardTiming({ losers }: { losers: boolean }): STORYBOARD {
   const { play } = useSound();
   const [currentStoryboard, setCurrentStoryboard] = useState<STORYBOARD>(
-    STORYBOARD.SHOW_WINNER
+    STORYBOARD.SHOW_WINNER,
   );
 
   useEffect(() => {
@@ -188,7 +188,7 @@ function useStoryBoardTiming({ losers }: { losers: boolean }): STORYBOARD {
       () => {
         setCurrentStoryboard(STORYBOARD.SHOW_MINIGAME_CTA);
       },
-      losers ? 8000 : 5000
+      losers ? 8000 : 5000,
     );
   }, [losers]);
 

@@ -19,9 +19,10 @@ import { GameOverResultsByRound } from "./GameOverResultsByRound";
 
 type Props = {
   game: MysteryBoxGameView;
+  team?: string;
 };
 
-const View = ({ game }: Props) => {
+const View = ({ game, team }: Props) => {
   const { mysteryBox } = useSocketIo();
   const disableAutoNextRound = isClientSideFeatureEnabled("no-round-auto-next");
   const bombDropperFeatureEnabled = isClientSideFeatureEnabled("dropper");
@@ -50,7 +51,7 @@ const View = ({ game }: Props) => {
         )}
       {gameState.gameState === MysteryBoxGameState.GAME_OVER && (
         <>
-          <GameOverResultsByRound game={game} />
+          <GameOverResultsByRound game={game} team={team} />
         </>
       )}
       {/* {game.gameOverSummary && <GameOverResults gameView={game} />} */}

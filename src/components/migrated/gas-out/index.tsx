@@ -143,7 +143,7 @@ const View = ({ gasGame, team }: Props) => {
         )}
         {/* <Winner game={game} /> */}
         {!!gasGame.winningPlayerId && <FinalPodium game={gasGame} />}
-        {!!gasGame.winningPlayerId && <LinkToMiniGame />}
+        {!!gasGame.winningPlayerId && <LinkToMiniGame team={team} />}
         <LastTwoPlayersNotification game={gasGame} />
         <BalloonContainer>
           {/* <ScopeCreepBalloon gasCloud={gasGame.gasCloud} /> */}

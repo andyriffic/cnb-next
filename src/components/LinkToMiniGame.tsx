@@ -1,11 +1,17 @@
 import styled from "styled-components";
 import Link from "next/link";
-import { getWhosThatUrl } from "../utils/url";
+import { getWhosThatUrl, urlWithTeamQueryParam } from "../utils/url";
 
 const FancyLink = styled(Link)``;
 
-export function LinkToMiniGame() {
+type Props = {
+  team?: string;
+};
+
+export function LinkToMiniGame({ team }: Props) {
   return (
-    <FancyLink href={getWhosThatUrl("/pacman")}>To Minigame! 🚀</FancyLink>
+    <FancyLink href={urlWithTeamQueryParam(getWhosThatUrl("/pacman"), team)}>
+      To Minigame! 🚀
+    </FancyLink>
   );
 }

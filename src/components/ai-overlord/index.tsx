@@ -106,7 +106,7 @@ const View = ({ aiOverlordGame, team }: Props) => {
       </Positioned>
       {!!aiOverlordGame.aiOverlord.finalSummary && (
         <Positioned horizontalAlign={{ align: "center", topPercent: 15 }}>
-          <LinkToMiniGame />
+          <LinkToMiniGame team={team} />
         </Positioned>
       )}
     </SpectatorPageLayout>

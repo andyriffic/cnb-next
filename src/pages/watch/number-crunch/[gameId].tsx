@@ -10,15 +10,16 @@ type Props = {};
 function Page({}: Props) {
   const router = useRouter();
   const gameId = router.query.gameId as string;
+  const team = router.query.team as string;
   const { numberCrunch } = useSocketIo();
 
   const game = useMemo(
     () => numberCrunch.games.find((game) => game.id === gameId),
-    [gameId, numberCrunch.games]
+    [gameId, numberCrunch.games],
   );
 
   return game ? (
-    <NumberCrunchGameScreen game={game} />
+    <NumberCrunchGameScreen game={game} team={team} />
   ) : (
     <SpectatorPageLayout>
       <SmallHeading>Cannot find game {gameId} yet</SmallHeading>
