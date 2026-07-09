@@ -27,11 +27,16 @@ export type PacManUiState = {
   status: GameUiStatus;
 };
 
-function createPacManPlayer(player: Player): PacManPlayer {
+function createPacManPlayer(
+  player: Player,
+  team: string | undefined,
+): PacManPlayer {
   return {
     player,
     status: "",
     offset: 0,
+    teamName: player.details?.team,
+    onTeam: team ? player.details?.team === team : true,
     movesRemaining: player.details?.gameMoves || 0,
     pathIndex: player.details?.pacmanDetails?.index || 0,
     color: player.details?.colourHex || "#FF0000",
@@ -40,7 +45,7 @@ function createPacManPlayer(player: Player): PacManPlayer {
     finishPosition: getPlayerIntegerAttributeValue(
       player.tags,
       "pac_finish",
-      0
+      0,
     ),
   };
 }
@@ -56,12 +61,13 @@ export function createInitialState({
   team?: string;
   pacmanStartingIndex: number;
 }): PacManUiState {
-  const eligiblePlayers = allPlayers
-    .filter((p) => !!p.details?.pacmanPlayer)
-    .filter((p) => !team || p.details?.team === team);
+  const eligiblePlayers = allPlayers.filter((p) => !!p.details?.pacmanPlayer);
+  // .filter((p) => !team || p.details?.team === team);
 
   const initialState: PacManUiState = {
-    allPacPlayers: eligiblePlayers.map(createPacManPlayer),
+    allPacPlayers: eligiblePlayers.map((player) =>
+      createPacManPlayer(player, team),
+    ),
     status: "ready",
     board,
     pacMan: setPacManFacingDirection(
@@ -71,13 +77,13 @@ export function createInitialState({
         status: "",
         facingDirection: "right",
       },
-      board
+      board,
     ),
   };
 
   return initialState.allPacPlayers.reduce(
     setPlayerPositionOffset,
-    initialState
+    initialState,
   );
 }
 
@@ -109,7 +115,7 @@ export function reducer(
     | MovePacManAction
     | StartMovePacManAction
     | ReleasePlayersFromJailAction
-    | SetGameUiStatus
+    | SetGameUiStatus,
 ): PacManUiState {
   switch (action.type) {
     case "MOVE_PLAYERS": {
@@ -141,7 +147,7 @@ export function reducer(
     }
     case "RELEASE_PLAYERS_FROM_JAIL": {
       return setGameUiStatus("moving-players")(
-        reduceJailCountForPlayers(state)
+        reduceJailCountForPlayers(state),
       );
       // return pipe(
       //   state,
@@ -181,18 +187,18 @@ function pickPlayerToMove(state: PacManUiState): PacManUiState {
 
   return movePlayer(
     { ...nextPlayer, status: "moving" },
-    { ...state, status: "moving-players" }
+    { ...state, status: "moving-players" },
   );
 }
 
 function movePlayer(
   pacPlayer: PacManPlayer,
-  state: PacManUiState
+  state: PacManUiState,
 ): PacManUiState {
   if (pacPlayer.movesRemaining === 0) {
     return setPlayerPositionOffset(
       updatePlayer({ ...pacPlayer, status: "" }, state),
-      pacPlayer
+      pacPlayer,
     );
   }
 
@@ -212,7 +218,7 @@ function movePlayer(
         : pacPlayer.pathIndex + 1,
       finishPosition,
     },
-    state
+    state,
   );
 }
 
@@ -223,14 +229,14 @@ function getNextFinishPosition(state: PacManUiState): number {
 
 function setPlayerStatus(
   player: PacManPlayer,
-  status: PacManPlayerStatus
+  status: PacManPlayerStatus,
 ): PacManPlayer {
   return { ...player, status };
 }
 
 function setPlayerPositionOffset(
   state: PacManUiState,
-  player: PacManPlayer
+  player: PacManPlayer,
 ): PacManUiState {
   if (playerInJail(player)) {
     const updatedPlayers = state.allPacPlayers
@@ -294,7 +300,7 @@ function movePacmanOneSquare(state: PacManUiState): PacManUiState {
         movesRemaining: state.pacMan.movesRemaining - 1,
         pathIndex: newPathIndex,
       },
-      state.board
+      state.board,
     ),
   };
 }
@@ -336,7 +342,7 @@ function reducePlayerJailCount(player: PacManPlayer): PacManPlayer {
 }
 
 function setGameUiStatus(
-  status: GameUiStatus
+  status: GameUiStatus,
 ): (state: PacManUiState) => PacManUiState {
   return (state) => {
     return {
@@ -368,14 +374,14 @@ function sendPlayersToJail(state: PacManUiState): PacManUiState {
 }
 
 function updatePlayers(
-  pacPlayers: readonly PacManPlayer[]
+  pacPlayers: readonly PacManPlayer[],
 ): (state: PacManUiState) => PacManUiState {
   return (state) => {
     return {
       ...state,
       allPacPlayers: state.allPacPlayers.map((p) => {
         const updatedPlayer = pacPlayers.find(
-          (up) => up.player.id === p.player.id
+          (up) => up.player.id === p.player.id,
         );
         return updatedPlayer ? updatedPlayer : p;
       }),
@@ -385,19 +391,19 @@ function updatePlayers(
 
 function updatePlayer(
   pacPlayer: PacManPlayer,
-  state: PacManUiState
+  state: PacManUiState,
 ): PacManUiState {
   return {
     ...state,
     allPacPlayers: state.allPacPlayers.map((p) =>
-      p.player.id === pacPlayer.player.id ? pacPlayer : p
+      p.player.id === pacPlayer.player.id ? pacPlayer : p,
     ),
   };
 }
 
 function setPacManFacingDirection(
   pacMan: PacManCharacter,
-  board: PacManBoard
+  board: PacManBoard,
 ): PacManCharacter {
   const currentPosition = board.pacManPath[pacMan.pathIndex]!;
   const nextPosition = board.pacManPath[pacMan.pathIndex + 1]

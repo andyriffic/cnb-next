@@ -23,6 +23,8 @@ export type PacManPlayerStatus = "" | "moving";
 
 export type PacManPlayer = {
   player: Player;
+  teamName?: string;
+  onTeam: boolean;
   status: PacManPlayerStatus;
   pathIndex: number;
   movesRemaining: number;

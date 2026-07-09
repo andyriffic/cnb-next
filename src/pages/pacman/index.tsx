@@ -5,16 +5,25 @@ import { sortByPlayerName } from "../../utils/sort";
 import { Player } from "../../types/Player";
 import { SETTINGS_PLAYER_ID } from "../../constants";
 
-type Props = { players: Player[]; pacmanStartingIndex: number };
+type Props = {
+  players: Player[];
+  pacmanStartingIndex: number;
+  team: string | null;
+};
 
-function Page({ players, pacmanStartingIndex }: Props) {
+function Page({ players, pacmanStartingIndex, team }: Props) {
   return (
-    <PacmanScreen players={players} pacmanStartingIndex={pacmanStartingIndex} />
+    <PacmanScreen
+      players={players}
+      pacmanStartingIndex={pacmanStartingIndex}
+      team={team || undefined}
+    />
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const allPlayers = await getAllPlayers();
+  const { team } = query;
 
   const activePlayers = allPlayers
     ? allPlayers.filter((p) => !p.tags.includes("retired"))
@@ -29,6 +38,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     props: {
       players: activePlayers.sort(sortByPlayerName),
       pacmanStartingIndex,
+      team: team ? (team as string) : null,
     },
   };
 };

@@ -1,18 +1,17 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import styled, { css } from "styled-components";
 import tinycolor from "tinycolor2";
 import { FONT_FAMILY } from "../../colors";
-import { spinAnimation } from "../animations/keyframes/spinAnimations";
 import THEME from "../../themes";
 import { Appear } from "../animations/Appear";
+import { spinAnimation } from "../animations/keyframes/spinAnimations";
 import { useSound } from "../hooks/useSound";
 import { PacManGhost } from "./PacManGhost";
 import { PacManPlayer } from "./types";
-import { PacManGhostWithSantaHat } from "./PacManGhostWithSantaHat";
-import { PacManGhostWithTurban } from "./PacManGhostWithTurban";
 
-const Container = styled.div<{ goingToJail: boolean }>`
+const Container = styled.div<{ goingToJail: boolean; onTeam: boolean }>`
   position: relative;
+  opacity: ${({ onTeam }) => (onTeam ? 1 : 0.3)};
   ${({ goingToJail }) =>
     goingToJail &&
     css`
@@ -108,7 +107,7 @@ export function BoardPlayer({ pacPlayer }: Props): JSX.Element {
   }, [inJail, pacPlayer.jailTurnsCount]);
 
   return (
-    <Container goingToJail={goingToJail}>
+    <Container goingToJail={goingToJail} onTeam={pacPlayer.onTeam}>
       <PacManGhost color={inJail ? "#777777" : pacPlayer.color} width="3vw" />
       <PlayerName
         style={{

@@ -10,7 +10,12 @@ type Props = {
 
 export function LinkToMiniGame({ team }: Props) {
   return (
-    <FancyLink href={urlWithTeamQueryParam(getWhosThatUrl("/pacman"), team)}>
+    <FancyLink
+      href={urlWithTeamQueryParam(
+        getWhosThatUrl(urlWithTeamQueryParam("/pacman", team)),
+        team,
+      )}
+    >
       To Minigame! 🚀
     </FancyLink>
   );

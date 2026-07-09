@@ -23,20 +23,19 @@ const Container = styled.div`
 type Props = {
   players: Player[];
   pacmanStartingIndex: number;
+  team?: string;
 };
 
 const saveDisabled = isClientSideFeatureEnabled("no-save");
 
-const View = ({ players, pacmanStartingIndex }: Props) => {
+const View = ({ players, pacmanStartingIndex, team }: Props) => {
   // const { triggerUpdate } = usePlayersProvider();
-  const router = useRouter();
-  const team = router.query.team as string;
 
   const pacManService = usePacMan(
     players,
     boardConfig,
     team,
-    pacmanStartingIndex
+    pacmanStartingIndex,
   );
   usePacmanSound(pacManService.uiState);
   usePlayerAutoMove(pacManService);
@@ -72,7 +71,7 @@ const View = ({ players, pacmanStartingIndex }: Props) => {
             onClick={pacManService.startGame}
             disabled={pacManService.uiState.status !== "ready"}
           >
-            Start Game
+            Start Game ({team})
           </PrimaryButton>
           {/* <BoardFinalMatchup state={pacManService.uiState} /> */}
         </div>
@@ -80,7 +79,7 @@ const View = ({ players, pacmanStartingIndex }: Props) => {
       {pacManService.uiState.status === "game-over" && (
         <WinningPlayer
           winningPlayer={pacManService.uiState.allPacPlayers.find(
-            (p) => p.finishPosition === 1
+            (p) => p.finishPosition === 1 && p.onTeam,
           )}
         />
       )}
