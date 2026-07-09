@@ -110,18 +110,50 @@ const JOKES: Joke[] = [
   },
 ];
 
-export function getRandomJokeId(): number {
-  return generateRandomInt(0, JOKES.length - 1);
+const DOG_JOKES: Joke[] = [
+  {
+    jokeText: "What did the mortgage broker say to the Golden Retriever?",
+    answer: "Great news! you've been pre-a-paw-ved",
+  },
+];
+
+const SHARK_JOKES: Joke[] = [
+  {
+    jokeText: "What did the mortgage broker say to the Great White?",
+    answer: "We're going to need a bigger down payment.",
+  },
+];
+
+type JokeCategory = "default" | "shark" | "dog";
+
+const getJokesByCategory = (category: JokeCategory): Joke[] => {
+  switch (category) {
+    case "default":
+      return SHARK_JOKES;
+    case "shark":
+      return SHARK_JOKES;
+    case "dog":
+      return DOG_JOKES;
+    default:
+      return JOKES;
+  }
+};
+
+function getRandomJokeId(jokeCategory: JokeCategory): number {
+  return generateRandomInt(0, getJokesByCategory(jokeCategory).length - 1);
 }
 
-export function getRandomJoke(): Joke {
-  return getJokeIfExists(getRandomJokeId())!;
+export function getRandomJoke(jokeCategory: JokeCategory): Joke {
+  return getJokeIfExists(getRandomJokeId(jokeCategory), jokeCategory)!;
   // return JOKES[3]!;
 }
 
-export function getJokeIfExists(jokeId: number | undefined): Joke | null {
+export function getJokeIfExists(
+  jokeId: number | undefined,
+  jokeCategory: JokeCategory,
+): Joke | null {
   if (jokeId === undefined) {
     return null;
   }
-  return JOKES[jokeId] || null;
+  return getJokesByCategory(jokeCategory)[jokeId] || null;
 }

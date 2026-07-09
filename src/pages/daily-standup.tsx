@@ -138,11 +138,14 @@ const Home = ({ joke }: { joke?: Joke }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const { jokeId } = query;
+  const { jokeId, team } = query;
+
+  const jokeCategory =
+    team === "Corgi" ? "dog" : team === "Finvengers" ? "shark" : "default";
 
   const parsedJokeId = jokeId ? parseInt(jokeId as string, 10) : null;
   if (parsedJokeId) {
-    const joke = getJokeIfExists(parsedJokeId);
+    const joke = getJokeIfExists(parsedJokeId, jokeCategory);
     if (joke) {
       return {
         props: {
@@ -154,8 +157,8 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
   const joke = pipe(
     getDayOfMonth() - 1,
-    getJokeIfExists,
-    (j) => j || getRandomJoke()
+    (id) => getJokeIfExists(id, jokeCategory),
+    (j) => j || getRandomJoke(jokeCategory),
   );
 
   return {
