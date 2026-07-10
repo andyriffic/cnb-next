@@ -106,13 +106,18 @@ const SliderInput = styled.input`
 
 type Props = {
   game: NumberCrunchGameView;
-  startingNumber?: number;
+  startingNumber: number;
   hint?: string;
   onSelected: (val: number) => void;
 };
 
-export const PlayerSelectNumber = ({ game, hint, onSelected }: Props) => {
-  const [val, setVal] = useState(game.currentRound.range.low);
+export const PlayerSelectNumber = ({
+  game,
+  startingNumber,
+  hint,
+  onSelected,
+}: Props) => {
+  const [val, setVal] = useState(startingNumber);
 
   return (
     <Container>

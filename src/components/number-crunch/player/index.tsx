@@ -18,9 +18,15 @@ const View = ({ game, playerId, makePlayerGuess }: Props) => {
 
   const currentGuess = useMemo(() => {
     return game.currentRound.playerGuesses.find(
-      (guess) => guess.playerId === playerId
+      (guess) => guess.playerId === playerId,
     );
   }, [game.currentRound.playerGuesses, playerId]);
+
+  const previousGuess = useMemo(() => {
+    return game.previousRounds[
+      game.previousRounds.length - 1
+    ]?.playerGuesses.find((guess) => guess.playerId === playerId);
+  }, [game.previousRounds, playerId]);
 
   if (!player) {
     return (
@@ -39,6 +45,7 @@ const View = ({ game, playerId, makePlayerGuess }: Props) => {
       ) : (
         <PlayerSelectNumber
           game={game}
+          startingNumber={previousGuess?.guess || game.currentRound.range.low}
           hint={player.extraHint}
           onSelected={(val) => makePlayerGuess(val)}
         />

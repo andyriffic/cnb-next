@@ -159,4 +159,4 @@ export const FINVENGERS_THEME: GlobalGameTheme = {
   },
 };
 
-export default FINVENGERS_THEME;
+export default CORGI_THEME;
