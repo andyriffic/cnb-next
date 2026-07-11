@@ -62,6 +62,14 @@ table {
   font-family: "pixeboy";
   src: url("/fonts/Pixeboy.ttf");
 }
+
+@font-face {
+  font-family: "montserrat";
+  font-style: normal;
+  font-weight: 400;
+  src: url("/fonts/Montserrat/Montserrat-Regular.ttf");
+}
+
 `;
 
 function MyApp({ Component, pageProps }: AppProps) {

@@ -1,34 +1,35 @@
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import styled from "styled-components";
-import { useState } from "react";
-import { PrimaryButton, SubHeading } from "../components/Atoms";
-import { SpectatorPageLayout } from "../components/SpectatorPageLayout";
-import { AdminPlayerView } from "../components/admin/AdminPlayerView";
-import { Player } from "../types/Player";
-import { getAllPlayers } from "../utils/data/aws-dynamodb";
-import { sortByPlayerName } from "../utils/sort";
-import { AdminPlayerEdit } from "../components/admin/AdminPlayerEdit";
-import { CenterSpaced } from "../components/Layouts";
-import { AdminPlayerAdd } from "../components/admin/AdminPlayerAdd";
+import { useMemo, useState } from "react";
+import { PrimaryButton, SubHeading } from "../../../components/Atoms";
+import { SpectatorPageLayout } from "../../../components/SpectatorPageLayout";
+import { AdminPlayerView } from "../../../components/admin/AdminPlayerView";
+import { Player } from "../../../types/Player";
+import { getAllPlayers } from "../../../utils/data/aws-dynamodb";
+import { sortByPlayerName } from "../../../utils/sort";
+import { AdminPlayerEdit } from "../../../components/admin/AdminPlayerEdit";
+import { CenterSpaced } from "../../../components/Layouts";
+import { AdminPlayerAdd } from "../../../components/admin/AdminPlayerAdd";
 import {
   fetchGetPlayer,
   resetAllPlayerPacmanDetails,
   resetAllPlayerSpaceRaceDetails,
   resetAllPlayerTotalCoins,
   resetAllPlayerZombieDetails,
-} from "../utils/api";
+} from "../../../utils/api";
+import { AdminPlayerSummaryView } from "../../../components/admin/AdminPlayerSummaryView";
 
 const PlayerContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 0.7rem;
+  gap: 2rem;
   justify-content: center;
   padding: 2rem;
 `;
 
 const PlayerItem = styled.div`
-  flex-basis: 48%;
+  // flex-basis: 48%;
 `;
 
 const PlayerDetailsContainer = styled.div`
@@ -49,15 +50,20 @@ const EditModalContainer = styled.div`
 
 type Props = {
   activePlayers: Player[];
-  retiredPlayers: Player[];
 };
 
-export default function Page({ activePlayers, retiredPlayers }: Props) {
+export default function Page({ activePlayers }: Props) {
   const [editingPlayer, setEditingPlayer] = useState<Player | undefined>();
   const [addingPlayer, setAddingPlayer] = useState(false);
   const [playersUpdating, setPlayersUpdating] = useState<string[]>([]);
-  const [workingActivePlayers, setWorkingActivePlayers] =
-    useState(activePlayers);
+  const [searchFilterText, setSearchFilterText] = useState("");
+  const filteredPlayers = useMemo(() => {
+    const dynamicRegex: RegExp = new RegExp(searchFilterText, "i");
+    return activePlayers.filter(
+      (p) =>
+        dynamicRegex.test(p.name) || dynamicRegex.test(p.details?.team || ""),
+    );
+  }, [activePlayers, searchFilterText]);
 
   return (
     <>
@@ -65,24 +71,23 @@ export default function Page({ activePlayers, retiredPlayers }: Props) {
         <title>Finx Rocks - Player Admin</title>
       </Head>
       <SpectatorPageLayout>
-        <SubHeading style={{ textAlign: "center", marginTop: "2rem" }}>
-          Active
-        </SubHeading>
+        <CenterSpaced style={{ marginTop: "2rem" }}>
+          <SubHeading style={{ textAlign: "center" }}>
+            Active players
+          </SubHeading>
+
+          <input
+            type="text"
+            placeholder="Search players..."
+            autoFocus
+            value={searchFilterText}
+            onChange={(e) => setSearchFilterText(e.target.value)}
+          />
+        </CenterSpaced>
         <PlayerContainer>
-          {workingActivePlayers.map((player) => (
+          {filteredPlayers.map((player) => (
             <PlayerItem key={player.id}>
-              <AdminPlayerView
-                player={player}
-                onStartEdit={() => setEditingPlayer(player)}
-              />
-            </PlayerItem>
-          ))}
-        </PlayerContainer>
-        <SubHeading style={{ textAlign: "center" }}>Retired</SubHeading>
-        <PlayerContainer>
-          {retiredPlayers.map((player) => (
-            <PlayerItem key={player.id}>
-              <AdminPlayerView
+              <AdminPlayerSummaryView
                 player={player}
                 onStartEdit={() => setEditingPlayer(player)}
               />
@@ -100,14 +105,14 @@ export default function Page({ activePlayers, retiredPlayers }: Props) {
                 }
 
                 setPlayersUpdating([...playersUpdating, editingPlayer.id]);
-                fetchGetPlayer(editingPlayer.id).then((updatedPlayer) => {
-                  updatedPlayer &&
-                    setWorkingActivePlayers(
-                      workingActivePlayers.map((p) =>
-                        p.id === editingPlayer.id ? updatedPlayer : p
-                      )
-                    );
-                });
+                // fetchGetPlayer(editingPlayer.id).then((updatedPlayer) => {
+                //   updatedPlayer &&
+                //     setWorkingActivePlayers(
+                //       filteredPlayers.map((p) =>
+                //         p.id === editingPlayer.id ? updatedPlayer : p,
+                //       ),
+                //     );
+                // });
               }}
             />
           </EditModalContainer>
@@ -132,7 +137,7 @@ export default function Page({ activePlayers, retiredPlayers }: Props) {
             onClick={() => {
               resetAllPlayerZombieDetails().then(() => {
                 alert(
-                  "All player zombie details reset. Remember to check Setting Player settings!"
+                  "All player zombie details reset. Remember to check Setting Player settings!",
                 );
               });
             }}
@@ -145,7 +150,7 @@ export default function Page({ activePlayers, retiredPlayers }: Props) {
             onClick={() => {
               resetAllPlayerPacmanDetails().then(() => {
                 alert(
-                  "All player pacman details reset. Remember to check Setting Player settings!"
+                  "All player pacman details reset. Remember to check Setting Player settings!",
                 );
               });
             }}
@@ -158,7 +163,7 @@ export default function Page({ activePlayers, retiredPlayers }: Props) {
             onClick={() => {
               resetAllPlayerSpaceRaceDetails().then(() => {
                 alert(
-                  "All player Space Race details reset. Remember to check Setting Player settings!"
+                  "All player Space Race details reset. Remember to check Setting Player settings!",
                 );
               });
             }}
@@ -188,14 +193,10 @@ export const getServerSideProps: GetServerSideProps = async () => {
   const activePlayers = allPlayers
     ? allPlayers.filter((p) => !p.details?.retired)
     : [];
-  const retiredPlayers = allPlayers
-    ? allPlayers.filter((p) => !!p.details?.retired)
-    : [];
 
   return {
     props: {
       activePlayers: activePlayers.sort(sortByPlayerName),
-      retiredPlayers: retiredPlayers.sort(sortByPlayerName),
     },
   };
 };

@@ -104,13 +104,19 @@ export const Pill = styled.div`
   display: inline-block;
 `;
 
-export const SmallPill = styled.div`
+export const SmallPill = styled.div<{ fullWidth?: boolean }>`
   background-color: ${THEME.tokens.colours.primaryBackground};
   font-size: 0.7rem;
   padding: 0.3rem 0.5rem;
   border-radius: 1rem;
   display: inline-block;
+  text-align: center;
   text-transform: uppercase;
+  ${({ fullWidth }) =>
+    fullWidth &&
+    css`
+      width: 100%;
+    `}
 `;
 
 export const Heading = styled.h1`

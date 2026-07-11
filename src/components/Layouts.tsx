@@ -13,4 +13,8 @@ export const CenterSpaced = styled.div<{ stacked?: boolean }>`
   align-items: center;
   gap: 1rem;
   flex-direction: ${({ stacked }) => (stacked ? "column" : "row")};
+
+  // > * {
+  //   flex: 1;
+  // }
 `;

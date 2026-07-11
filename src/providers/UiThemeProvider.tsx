@@ -3,8 +3,6 @@ import { useRouter } from "next/router";
 import { DEFAULT_THEME, CORGI_THEME, FINVENGERS_THEME } from "../themes";
 import { GlobalGameTheme } from "../themes/types";
 
-type PlayerNames = { [playerId: string]: string };
-
 type UiThemeService = {
   theme: GlobalGameTheme;
 };
