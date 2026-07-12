@@ -1,6 +1,6 @@
 import { GetServerSideProps } from "next";
 import PacmanScreen from "../../components/pacman";
-import { getAllPlayers } from "../../utils/data/aws-dynamodb";
+import { getAllPlayers } from "../../utils/data/aws-dynamodb-players";
 import { sortByPlayerName } from "../../utils/sort";
 import { Player } from "../../types/Player";
 import { SETTINGS_PLAYER_ID } from "../../constants";

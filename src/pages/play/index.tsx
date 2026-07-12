@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { SpectatorPageLayout } from "../../components/SpectatorPageLayout";
 import { PlayerRejoinDialog } from "../../components/player/PlayerRejoinDialog";
 import { Player } from "../../types/Player";
-import { getAllPlayers } from "../../utils/data/aws-dynamodb";
+import { getAllPlayers } from "../../utils/data/aws-dynamodb-players";
 import { sortByPlayerName } from "../../utils/sort";
 import { getPlayerHomeUrl } from "../../utils/url";
 

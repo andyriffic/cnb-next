@@ -7,7 +7,7 @@ import { useSound } from "../components/hooks/useSound";
 import { PlayerAvatar } from "../components/PlayerAvatar";
 import THEME from "../themes";
 import { Player } from "../types/Player";
-import { getAllPlayers } from "../utils/data/aws-dynamodb";
+import { getAllPlayers } from "../utils/data/aws-dynamodb-players";
 
 const Background = styled.div`
   position: fixed;

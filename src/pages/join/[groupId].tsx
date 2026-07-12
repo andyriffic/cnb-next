@@ -30,7 +30,7 @@ import { PlayerGroup } from "../../services/player-join/types";
 import { GlobalGameTheme } from "../../themes/types";
 import { isRegularPlayer } from "../../types/Player";
 import { deductAvailableCoinFromPlayer } from "../../utils/api";
-import { getAllPlayers } from "../../utils/data/aws-dynamodb";
+import { getAllPlayers } from "../../utils/data/aws-dynamodb-players";
 import { getSuggestedGame } from "../../utils/join/joinHelper";
 import { shuffleArray } from "../../utils/random";
 import {

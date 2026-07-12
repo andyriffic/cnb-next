@@ -4,7 +4,7 @@ import { pipe } from "fp-ts/lib/function";
 import { Server as SocketIOServer, Socket } from "socket.io";
 import { sendClientMessage } from "../socket";
 import { RPSMoveName } from "../rock-paper-scissors/types";
-import { getAllPlayersTE } from "../../utils/data/aws-dynamodb";
+import { getAllPlayersTE } from "../../utils/data/aws-dynamodb-players";
 import {
   createOpenAiOverlord,
   createAiOverlordGameSummary,
@@ -27,7 +27,7 @@ import {
 let aiOverlordGames: AiOverlordGame[] = [];
 
 const getInMemoryAiOverlordGame = (
-  gameId: string
+  gameId: string,
 ): AiOverlordGame | undefined => {
   return aiOverlordGames.find((game) => game.gameId === gameId);
 };
@@ -59,36 +59,36 @@ export enum AI_OVERLORD_ACTIONS {
 export type CreateAiOverlordGameHandler = (
   id: string,
   playerIds: string[],
-  onCreated: (gameId: string) => void
+  onCreated: (gameId: string) => void,
 ) => void;
 
 export type InitialiseAiOverlordHandler = (gameId: string) => void;
 export type InitialiseAiOpponentHandler = (
   gameId: string,
-  opponentId: string
+  opponentId: string,
 ) => void;
 
 export type NewAiOverlordOpponentHandler = (
   gameId: string,
-  opponentId: string
+  opponentId: string,
 ) => void;
 
 export type MakeAiOpponentMoveHandler = (
   gameId: string,
   opponentId: string,
-  move: RPSMoveName
+  move: RPSMoveName,
 ) => void;
 
 export type MakeAiRobotMoveHandler = (
   gameId: string,
-  opponentId: string
+  opponentId: string,
 ) => void;
 
 export type MakeFinalRobotSummaryHandler = (gameId: string) => void;
 
 export function initialiseAiOverlordSocket(
   io: SocketIOServer,
-  socket: Socket
+  socket: Socket,
 ): void {
   const sendRobotMessage = (message: string): void => {
     socket.emit(AI_OVERLORD_ACTIONS.ROBOT_MESSAGE, message);
@@ -97,15 +97,15 @@ export function initialiseAiOverlordSocket(
   const createAiOverlordGameHandler: CreateAiOverlordGameHandler = async (
     id,
     playerIds,
-    onCreated
+    onCreated,
   ) => {
     console.log("Create Ai Overlord game", playerIds);
 
     const game = await pipe(
       createAiOpponents(playerIds, getAllPlayersTE),
       TE.chain((opponents) =>
-        createAiOverlordGame(id, createEmptyAiOverlord, opponents)
-      )
+        createAiOverlordGame(id, createEmptyAiOverlord, opponents),
+      ),
     )();
 
     pipe(
@@ -120,11 +120,11 @@ export function initialiseAiOverlordSocket(
           updateInMemoryAiOverlordGame(game);
           io.emit(
             AI_OVERLORD_ACTIONS.GAME_UPDATE,
-            getAllInMemoryAiOverlordGames()
+            getAllInMemoryAiOverlordGames(),
           );
           onCreated(game.gameId);
-        }
-      )
+        },
+      ),
     );
 
     // pipe(
@@ -172,7 +172,7 @@ export function initialiseAiOverlordSocket(
   };
 
   const initialseAiOverlordHandler: InitialiseAiOverlordHandler = async (
-    gameId
+    gameId,
   ) => {
     const game = getInMemoryAiOverlordGame(gameId);
     if (!game) {
@@ -207,16 +207,16 @@ export function initialiseAiOverlordSocket(
           updateInMemoryAiOverlordGame(game);
           io.emit(
             AI_OVERLORD_ACTIONS.GAME_UPDATE,
-            getAllInMemoryAiOverlordGames()
+            getAllInMemoryAiOverlordGames(),
           );
-        }
-      )
+        },
+      ),
     );
   };
 
   const initialiseOpponentHandler: InitialiseAiOpponentHandler = async (
     gameId,
-    opponentId
+    opponentId,
   ) => {
     const game = getInMemoryAiOverlordGame(gameId);
     if (!game) {
@@ -225,7 +225,7 @@ export function initialiseAiOverlordSocket(
     }
 
     const opponent = game.opponents.find(
-      (opponent) => opponent.playerId === opponentId
+      (opponent) => opponent.playerId === opponentId,
     );
     if (!opponent) {
       console.error(`Player '${opponentId}' not found`);
@@ -258,16 +258,16 @@ export function initialiseAiOverlordSocket(
           updateInMemoryAiOverlordGame(game);
           io.emit(
             AI_OVERLORD_ACTIONS.GAME_UPDATE,
-            getAllInMemoryAiOverlordGames()
+            getAllInMemoryAiOverlordGames(),
           );
-        }
-      )
+        },
+      ),
     );
   };
 
   const newAiOverlordOpponentHandler: NewAiOverlordOpponentHandler = async (
     gameId,
-    opponentId
+    opponentId,
   ) => {
     const game = getInMemoryAiOverlordGame(gameId);
     if (!game) {
@@ -306,7 +306,7 @@ export function initialiseAiOverlordSocket(
   const makeAiOpponentMoveHandler: MakeAiOpponentMoveHandler = async (
     gameId,
     opponentId,
-    move
+    move,
   ) => {
     const game = getInMemoryAiOverlordGame(gameId);
     if (!game) {
@@ -326,16 +326,16 @@ export function initialiseAiOverlordSocket(
           updateInMemoryAiOverlordGame(game);
           io.emit(
             AI_OVERLORD_ACTIONS.GAME_UPDATE,
-            getAllInMemoryAiOverlordGames()
+            getAllInMemoryAiOverlordGames(),
           );
-        }
-      )
+        },
+      ),
     );
   };
 
   const makeAiRobotMoveHandler: MakeAiRobotMoveHandler = async (
     gameId,
-    opponentId
+    opponentId,
   ) => {
     const game = getInMemoryAiOverlordGame(gameId);
     if (!game) {
@@ -361,15 +361,15 @@ export function initialiseAiOverlordSocket(
           updateInMemoryAiOverlordGame(game);
           io.emit(
             AI_OVERLORD_ACTIONS.GAME_UPDATE,
-            getAllInMemoryAiOverlordGames()
+            getAllInMemoryAiOverlordGames(),
           );
-        }
-      )
+        },
+      ),
     );
   };
 
   const makeFinalRobotSummaryHandler: MakeFinalRobotSummaryHandler = async (
-    gameId
+    gameId,
   ) => {
     const game = getInMemoryAiOverlordGame(gameId);
     if (!game) {
@@ -390,10 +390,10 @@ export function initialiseAiOverlordSocket(
           updateInMemoryAiOverlordGame(updatedGame);
           io.emit(
             AI_OVERLORD_ACTIONS.GAME_UPDATE,
-            getAllInMemoryAiOverlordGames()
+            getAllInMemoryAiOverlordGames(),
           );
-        }
-      )
+        },
+      ),
     );
   };
 
@@ -407,7 +407,7 @@ export function initialiseAiOverlordSocket(
   socket.on(AI_OVERLORD_ACTIONS.MAKE_ROBOT_MOVE, makeAiRobotMoveHandler);
   socket.on(
     AI_OVERLORD_ACTIONS.MAKE_FINAL_ROBOT_SUMMARY,
-    makeFinalRobotSummaryHandler
+    makeFinalRobotSummaryHandler,
   );
   socket.emit(AI_OVERLORD_ACTIONS.GAME_UPDATE, aiOverlordGames);
   sendClientMessage(socket, "Welcome to AiOverlord 🤖");

@@ -3,13 +3,13 @@ import {
   getPlayer,
   updatePlayer,
   updatePlayerLegacyTags,
-} from "../../utils/data/aws-dynamodb";
+} from "../../utils/data/aws-dynamodb-players";
 import { PlayerGameMoves } from "./types";
 
 export const incrementIntegerTag = (
   tagPrefix: string,
   by: number,
-  tags: string[]
+  tags: string[],
 ): string[] => {
   const existingTag = tags.find((t) => t.startsWith(tagPrefix));
 
@@ -28,7 +28,7 @@ export const incrementIntegerTag = (
 
 const tagsWithKongImmunity = (
   tags: string[],
-  hasImmunity: boolean
+  hasImmunity: boolean,
 ): string[] => {
   if (!hasImmunity || tags.includes("kong_immunity")) {
     return tags;
@@ -39,25 +39,25 @@ const tagsWithKongImmunity = (
 
 const updateLegacyMovesTag = (
   player: Player,
-  playerMoves: PlayerGameMoves
+  playerMoves: PlayerGameMoves,
 ): Promise<void> => {
   const newTags = tagsWithKongImmunity(
     [
       ...incrementIntegerTag(
         "sl_moves:",
         playerMoves.moves,
-        player.tags
+        player.tags,
       ).filter((t) => t !== "sl_participant"),
       "sl_participant",
     ],
-    !!playerMoves.winner
+    !!playerMoves.winner,
   );
   return updatePlayerLegacyTags(player.id, newTags);
 };
 
 const updatePlayerGameMoves = (
   playerMoves: PlayerGameMoves,
-  team?: string
+  team?: string,
 ): Promise<void> => {
   return new Promise((resolve, reject) => {
     getPlayer(playerMoves.playerId)
@@ -72,7 +72,7 @@ const updatePlayerGameMoves = (
             "Skipping player",
             playerMoves.playerId,
             "not on team",
-            team
+            team,
           );
           return;
         }
@@ -99,7 +99,7 @@ const updatedGameIds: string[] = [];
 export const savePlayersGameMoves = (
   gameId: string,
   moves: PlayerGameMoves[],
-  team?: string
+  team?: string,
 ): Promise<void[]> | Promise<void> => {
   if (updatedGameIds.includes(gameId)) {
     console.log(`Game ${gameId} already updated`, updatedGameIds);

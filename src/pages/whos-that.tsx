@@ -7,7 +7,7 @@ import { useSound } from "../components/hooks/useSound";
 import { PlayerAvatar } from "../components/PlayerAvatar";
 import { Player } from "../types/Player";
 import { incrementPlayersWhosThatCountFetch } from "../utils/api";
-import { getAllPlayers, getPlayer } from "../utils/data/aws-dynamodb";
+import { getAllPlayers, getPlayer } from "../utils/data/aws-dynamodb-players";
 import { selectRandomOneOf } from "../utils/random";
 import THEME from "../themes";
 

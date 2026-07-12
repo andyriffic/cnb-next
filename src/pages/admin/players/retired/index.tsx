@@ -6,7 +6,7 @@ import { PrimaryButton, SubHeading } from "../../../../components/Atoms";
 import { SpectatorPageLayout } from "../../../../components/SpectatorPageLayout";
 import { AdminPlayerView } from "../../../../components/admin/AdminPlayerView";
 import { Player } from "../../../../types/Player";
-import { getAllPlayers } from "../../../../utils/data/aws-dynamodb";
+import { getAllPlayers } from "../../../../utils/data/aws-dynamodb-players";
 import { sortByPlayerName } from "../../../../utils/sort";
 import { AdminPlayerEdit } from "../../../../components/admin/AdminPlayerEdit";
 import { CenterSpaced } from "../../../../components/Layouts";

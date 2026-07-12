@@ -1,6 +1,6 @@
 import { Socket, Server as SocketIOServer } from "socket.io";
 
-import { getAllPlayers } from "../../../utils/data/aws-dynamodb";
+import { getAllPlayers } from "../../../utils/data/aws-dynamodb-players";
 import savePlayersGameMoves from "../../save-game-moves";
 import { sendClientMessage } from "../../socket";
 import { gasGameToPoints } from "./points";
@@ -51,7 +51,7 @@ export const initialiseGasOutSocket = (io: SocketIOServer, socket: Socket) => {
       gameId: string,
       team: string | undefined,
       gameType: GasGameType,
-      onCreated: (game: GasGame) => void
+      onCreated: (game: GasGame) => void,
     ) => {
       getAllPlayers().then((playersFromDb) => {
         if (!playersFromDb) return;
@@ -63,7 +63,7 @@ export const initialiseGasOutSocket = (io: SocketIOServer, socket: Socket) => {
         io.emit(GAS_GAMES_UPDATE, activeGasGames);
         onCreated(gasGame);
       });
-    }
+    },
   );
 
   socket.on(
@@ -77,7 +77,7 @@ export const initialiseGasOutSocket = (io: SocketIOServer, socket: Socket) => {
 
       // console.log('UPDATED GAME', updatedGame);
       io.emit(GAS_GAMES_UPDATE, activeGasGames);
-    }
+    },
   );
 
   socket.on(EXPLODE_PLAYER, (gameId: string, playerId: string) => {
@@ -113,7 +113,7 @@ export const initialiseGasOutSocket = (io: SocketIOServer, socket: Socket) => {
     const game = getGameOrThrow(activeGasGames, gameId);
 
     const updatedGame = moveToNextAlivePlayerWithExtraCardRules(
-      resetCloud(game)
+      resetCloud(game),
     );
     activeGasGames = updateGames(activeGasGames, updatedGame);
 
@@ -143,7 +143,7 @@ export const initialiseGasOutSocket = (io: SocketIOServer, socket: Socket) => {
 
       // console.log('UPDATED GAME', updatedGame);
       io.emit(GAS_GAMES_UPDATE, activeGasGames);
-    }
+    },
   );
 
   socket.on(PLAYER_TIMED_OUT, (gameId: string, playerId: string) => {

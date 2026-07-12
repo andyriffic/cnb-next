@@ -3,7 +3,7 @@ import {
   ZombieRunDetails,
   getPlayerZombieRunDetails,
 } from "../../types/Player";
-import { getPlayer, updatePlayer } from "../../utils/data/aws-dynamodb";
+import { getPlayer, updatePlayer } from "../../utils/data/aws-dynamodb-players";
 import { addToMonthlyCoinTotal } from "../../utils/player";
 import { PlayerGameMoves } from "./types";
 
@@ -12,7 +12,7 @@ const STARTING_DISTANCE_FROM_ZOMBIE = 4;
 const updatePlayerGameMoves = (
   playerMoves: PlayerGameMoves,
   zombieCurrentPosition: number,
-  team?: string
+  team?: string,
 ): Promise<void> => {
   return new Promise((resolve, reject) => {
     getPlayer(playerMoves.playerId)
@@ -27,7 +27,7 @@ const updatePlayerGameMoves = (
             "Skipping player",
             playerMoves.playerId,
             "not on team",
-            team
+            team,
           );
           return;
         }
@@ -48,7 +48,7 @@ const updatePlayerGameMoves = (
         const totalCoins = (player.details?.totalCoins || 0) + totalCoinsWon;
         const monthlyCoinTotals = addToMonthlyCoinTotal(
           player.details?.monthlyCoinTotals,
-          totalCoinsWon
+          totalCoinsWon,
         );
 
         updatePlayer(playerMoves.playerId, {
@@ -71,7 +71,7 @@ const updatedGameIds: string[] = [];
 export const savePlayersGameMoves = (
   gameId: string,
   moves: PlayerGameMoves[],
-  team?: string
+  team?: string,
 ): Promise<void> => {
   if (updatedGameIds.includes(gameId)) {
     console.log(`Game ${gameId} already updated`, updatedGameIds);
@@ -88,7 +88,7 @@ export const savePlayersGameMoves = (
           : 0;
 
         const promises = moves.map((move) =>
-          updatePlayerGameMoves(move, zombieCurrentPosition, team)
+          updatePlayerGameMoves(move, zombieCurrentPosition, team),
         );
 
         Promise.all(promises)

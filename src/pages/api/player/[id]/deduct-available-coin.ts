@@ -1,9 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getPlayer, updatePlayer } from "../../../../utils/data/aws-dynamodb";
+import {
+  getPlayer,
+  updatePlayer,
+} from "../../../../utils/data/aws-dynamodb-players";
 
 export default async function userHandler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { query, method } = req;
   const { id } = query;
@@ -24,7 +27,7 @@ export default async function userHandler(
       if (currentAvailableCoins <= 0) {
         console.info(
           `Player ${id} does not have enough coins (${currentAvailableCoins})`,
-          playerFromDb
+          playerFromDb,
         );
         res.status(400).json({ error: "No available coins to deduct" });
         return;

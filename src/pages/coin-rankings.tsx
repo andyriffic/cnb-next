@@ -2,7 +2,7 @@ import { get } from "http";
 import { GetServerSideProps } from "next";
 import ScreenView from "../components/pages/coin-rankings";
 import { SpectatorPageLayout } from "../components/SpectatorPageLayout";
-import { getAllPlayers } from "../utils/data/aws-dynamodb";
+import { getAllPlayers } from "../utils/data/aws-dynamodb-players";
 import {
   PlayerCoinRankTier,
   PlayerCoinTotalByYearAndMonth,
@@ -43,17 +43,17 @@ export const getServerSideProps: GetServerSideProps = async () => {
   const currentYearAndMonth = getYearAndMonth();
   const previousYearAndMonth = getPreviousYearAndMonth(
     currentYearAndMonth.year,
-    currentYearAndMonth.month
+    currentYearAndMonth.month,
   );
   const thisMonthsCoinRankings = getPlayersCoinRankingsForYearAndMonth(
     activePlayers,
     currentYearAndMonth.year,
-    currentYearAndMonth.month
+    currentYearAndMonth.month,
   );
   const previousMonthsCoinRankings = getPlayersCoinRankingsForYearAndMonth(
     activePlayers,
     previousYearAndMonth.year,
-    previousYearAndMonth.month
+    previousYearAndMonth.month,
   );
 
   const coinRankings = combineCoinRankings([
@@ -79,7 +79,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 export default Page;
 
 function combineCoinRankings(
-  rankings: { year: number; month: number; rankings: PlayerCoinRankTier[] }[]
+  rankings: { year: number; month: number; rankings: PlayerCoinRankTier[] }[],
 ): { [year: number]: { [month: number]: PlayerCoinRankTier[] } } {
   const result: { [year: number]: { [month: number]: PlayerCoinRankTier[] } } =
     {};

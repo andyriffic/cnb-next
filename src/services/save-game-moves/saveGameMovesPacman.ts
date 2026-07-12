@@ -2,13 +2,13 @@ import {
   DEFAULT_PACMAN_DETAILS,
   getPlayerPacManDetails,
 } from "../../types/Player";
-import { getPlayer, updatePlayer } from "../../utils/data/aws-dynamodb";
+import { getPlayer, updatePlayer } from "../../utils/data/aws-dynamodb-players";
 import { addToMonthlyCoinTotal } from "../../utils/player";
 import { PlayerGameMoves } from "./types";
 
 const updatePlayerGameMoves = (
   playerMoves: PlayerGameMoves,
-  team?: string
+  team?: string,
 ): Promise<void> => {
   console.log("Updating player moves", playerMoves, team);
   return new Promise((resolve, reject) => {
@@ -24,7 +24,7 @@ const updatePlayerGameMoves = (
             "Skipping player",
             playerMoves.playerId,
             "not on team",
-            team
+            team,
           );
           return;
         }
@@ -41,7 +41,7 @@ const updatePlayerGameMoves = (
         const totalCoins = (player.details?.totalCoins || 0) + totalCoinsWon;
         const monthlyCoinTotals = addToMonthlyCoinTotal(
           player.details?.monthlyCoinTotals,
-          totalCoinsWon
+          totalCoinsWon,
         );
 
         updatePlayer(playerMoves.playerId, {
@@ -69,7 +69,7 @@ const updatedGameIds: string[] = [];
 export const savePlayersGameMoves = (
   gameId: string,
   moves: PlayerGameMoves[],
-  team?: string
+  team?: string,
 ): Promise<void[]> | Promise<void> => {
   if (updatedGameIds.includes(gameId)) {
     console.log(`Game ${gameId} already updated`, updatedGameIds);

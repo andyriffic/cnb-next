@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next";
 import ZombieScreen from "../components/zombie-run";
 import { Player, getPlayerZombieRunDetails } from "../types/Player";
-import { getAllPlayers } from "../utils/data/aws-dynamodb";
+import { getAllPlayers } from "../utils/data/aws-dynamodb-players";
 import { sortByPlayerName } from "../utils/sort";
 import { SETTINGS_PLAYER_ID } from "../constants";
 import { OriginalZombieDetails } from "../components/zombie-run/types";

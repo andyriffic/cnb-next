@@ -8,7 +8,7 @@ import { PlayerAutoJoinDialog } from "../../../components/player/PlayerAutoJoinG
 import { PlayerGamesList } from "../../../components/rock-paper-scissors/PlayerGamesList";
 import { Player } from "../../../types/Player";
 import { setPlayerLocalStorageSettings } from "../../../utils/client-only/localStorage";
-import { getPlayer } from "../../../utils/data/aws-dynamodb";
+import { getPlayer } from "../../../utils/data/aws-dynamodb-players";
 import { getPlayerJoinUrl } from "../../../utils/url";
 import { PlayerColourSelector } from "../../../components/player/PlayerColourSelector";
 

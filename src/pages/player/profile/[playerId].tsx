@@ -6,7 +6,10 @@ import { PlayerAvatar } from "../../../components/PlayerAvatar";
 import { SpectatorPageLayout } from "../../../components/SpectatorPageLayout";
 import { Player } from "../../../types/Player";
 import { updatePlayerDetails } from "../../../utils/api";
-import { getAllPlayers, getPlayer } from "../../../utils/data/aws-dynamodb";
+import {
+  getAllPlayers,
+  getPlayer,
+} from "../../../utils/data/aws-dynamodb-players";
 
 const CenterAlignContainer = styled.div`
   display: flex;
@@ -38,7 +41,7 @@ type Props = {
 
 const updateDetails = (player: Player) => {
   updatePlayerDetails(player.id, { gameMoves: 5 }).then(() =>
-    console.log("player updated")
+    console.log("player updated"),
   );
 };
 

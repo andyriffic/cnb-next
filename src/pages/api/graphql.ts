@@ -1,5 +1,8 @@
 import { createServer } from "@graphql-yoga/node";
-import { getAllPlayers, getPlayer } from "../../utils/data/aws-dynamodb";
+import {
+  getAllPlayers,
+  getPlayer,
+} from "../../utils/data/aws-dynamodb-players";
 
 const typeDefs = /* GraphQL */ `
   type Query {

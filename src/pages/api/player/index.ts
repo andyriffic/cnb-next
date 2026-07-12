@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { addPlayer, getPlayer } from "../../../utils/data/aws-dynamodb";
+import { addPlayer, getPlayer } from "../../../utils/data/aws-dynamodb-players";
 
 export type CreatePlayerParams = {
   id: string;
@@ -8,7 +8,7 @@ export type CreatePlayerParams = {
 
 export default async function userHandler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { method } = req;
   const createPlayerParams = req.body as CreatePlayerParams;

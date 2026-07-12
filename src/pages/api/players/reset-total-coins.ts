@@ -1,11 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getAllPlayers, updatePlayer } from "../../../utils/data/aws-dynamodb";
+import {
+  getAllPlayers,
+  updatePlayer,
+} from "../../../utils/data/aws-dynamodb-players";
 import { PlayerDetails } from "../../../types/Player";
 import { SETTINGS_PLAYER_ID } from "../../../constants";
 
 export default async function userHandler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { query, method } = req;
   const { id } = query;
@@ -31,7 +34,7 @@ export default async function userHandler(
           };
 
           await updatePlayer(player.id, playerDetails).then(() =>
-            console.info("Reset player total coins details", player.id)
+            console.info("Reset player total coins details", player.id),
           );
         });
 

@@ -4,7 +4,7 @@ import * as E from "fp-ts/Either";
 import * as TE from "fp-ts/TaskEither";
 import * as O from "fp-ts/Option";
 import { sendClientMessage } from "../socket";
-import { getPlayerTE } from "../../utils/data/aws-dynamodb";
+import { getPlayerTE } from "../../utils/data/aws-dynamodb-players";
 import { PlayerGroup } from "./types";
 import { addPlayerToGroup, createPlayerJoinGroup } from ".";
 
@@ -16,24 +16,24 @@ export enum PLAYER_JOIN_ACTIONS {
 
 export type CreatePlayerGroupSocketHandler = (
   groupId: string,
-  onCreated?: (groupId: string) => void
+  onCreated?: (groupId: string) => void,
 ) => void;
 
 export type PlayerJoinGroupSocketHandler = (
   playerId: string,
   groupId: string,
-  onJoined?: (groupId: string) => void
+  onJoined?: (groupId: string) => void,
 ) => void;
 
 let inMemoryGroups: PlayerGroup[] = [createPlayerJoinGroup("1234")];
 
 export function initialiseGroupJoinSocket(
   io: SocketIOServer,
-  socket: Socket
+  socket: Socket,
 ): void {
   const createGroupHandler: CreatePlayerGroupSocketHandler = (
     groupId,
-    onCreated?
+    onCreated?,
   ) => {
     const newGroup = createPlayerJoinGroup(groupId);
     inMemoryGroups.push(newGroup);
@@ -44,7 +44,7 @@ export function initialiseGroupJoinSocket(
   const playerJoinGroupHandler: PlayerJoinGroupSocketHandler = async (
     playerId,
     groupId,
-    onJoined
+    onJoined,
   ) => {
     console.log("JOINING GROUP", playerId, groupId);
 
@@ -68,14 +68,14 @@ export function initialiseGroupJoinSocket(
 
                 const updatedGroup = addPlayerToGroup(player, group);
                 inMemoryGroups = inMemoryGroups.map((g) =>
-                  g.id === groupId ? updatedGroup : g
+                  g.id === groupId ? updatedGroup : g,
                 );
                 io.emit(PLAYER_JOIN_ACTIONS.JOIN_GROUP_UPDATE, inMemoryGroups);
                 onJoined && onJoined(groupId);
-              }
-            )
-          )
-      )
+              },
+            ),
+          ),
+      ),
     );
   };
 

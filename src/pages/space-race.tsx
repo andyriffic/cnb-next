@@ -2,7 +2,7 @@ import { GetServerSideProps } from "next";
 import SpaceRaceScreen from "../components/space-race";
 import { SETTINGS_PLAYER_ID } from "../constants";
 import { Player } from "../types/Player";
-import { getAllPlayers } from "../utils/data/aws-dynamodb";
+import { getAllPlayers } from "../utils/data/aws-dynamodb-players";
 import { sortByPlayerName } from "../utils/sort";
 
 type Props = { players: Player[] };
