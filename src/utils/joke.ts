@@ -129,7 +129,7 @@ type JokeCategory = "default" | "shark" | "dog";
 const getJokesByCategory = (category: JokeCategory): Joke[] => {
   switch (category) {
     case "default":
-      return SHARK_JOKES;
+      return JOKES;
     case "shark":
       return SHARK_JOKES;
     case "dog":

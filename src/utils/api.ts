@@ -6,6 +6,7 @@ import { CreatePlayerParams } from "../pages/api/player";
 import { AiOverlordGame } from "../services/ai-overlord/types";
 import { PlayerGameMoves } from "../services/save-game-moves/types";
 import { Player, PlayerDetails } from "../types/Player";
+import { TeamSettings } from "../types/Settings";
 
 export const addPlayerFetch = (params: CreatePlayerParams): Promise<void> => {
   return new Promise((resolve, reject) => {
@@ -26,7 +27,7 @@ export const addPlayerFetch = (params: CreatePlayerParams): Promise<void> => {
 
 export const updatePlayerDetails = (
   playerId: string,
-  details: Partial<PlayerDetails>
+  details: Partial<PlayerDetails>,
 ): Promise<void> => {
   return new Promise((resolve, reject) => {
     fetch(`/api/player/${playerId}`, {
@@ -123,7 +124,7 @@ export const deletePlayerPacmanDetails = (playerId: string): Promise<void> => {
 };
 
 export const deletePlayerSpaceRaceDetails = (
-  playerId: string
+  playerId: string,
 ): Promise<void> => {
   return new Promise((resolve, reject) => {
     fetch(`/api/player/${playerId}/delete/space-race`, {
@@ -140,7 +141,7 @@ export const deletePlayerSpaceRaceDetails = (
 export const savePlayerGameMovesFetch = (
   gameId: string,
   gameMoves: PlayerGameMoves[],
-  team?: string
+  team?: string,
 ): Promise<Response> => {
   return fetch(
     `/api/save-game-moves?gameId=${gameId}${team ? `&team=${team}` : ""}`,
@@ -150,12 +151,12 @@ export const savePlayerGameMovesFetch = (
         "Content-Type": "application/json",
       },
       body: JSON.stringify(gameMoves),
-    }
+    },
   );
 };
 
 export const incrementPlayersWhosThatCountFetch = (
-  playerId: string
+  playerId: string,
 ): Promise<Response> => {
   return fetch(`/api/player/${playerId}/viewed-whos-that`, {
     method: "PUT",
@@ -166,7 +167,7 @@ export const incrementPlayersWhosThatCountFetch = (
 };
 
 export const deductAvailableCoinFromPlayer = (
-  playerId: string
+  playerId: string,
 ): Promise<Response> => {
   return fetch(`/api/player/${playerId}/deduct-available-coin`, {
     method: "PUT",
@@ -177,7 +178,7 @@ export const deductAvailableCoinFromPlayer = (
 };
 
 export const fetchCreateAiOverlordGame = (
-  request: ApiGameCreationRequest
+  request: ApiGameCreationRequest,
 ): Promise<AiOverlordGame> => {
   return fetch(`/api/ai-overlord`, {
     method: "PUT",
@@ -189,7 +190,7 @@ export const fetchCreateAiOverlordGame = (
 };
 
 export const fetchStartAiOverlordBattle = (
-  request: ApiAiOverlordNewOpponentRequest
+  request: ApiAiOverlordNewOpponentRequest,
 ): Promise<AiOverlordGame> => {
   return fetch(`/api/ai-overlord`, {
     method: "POST",
@@ -201,21 +202,31 @@ export const fetchStartAiOverlordBattle = (
 };
 
 export const fetchGetAiOverlordGame = (
-  gameId: string
+  gameId: string,
 ): Promise<AiOverlordGame | undefined> => {
   return fetch(`/api/ai-overlord?overlordId=${gameId}`, {
     method: "GET",
   }).then((response) =>
-    response.status === 200 ? response.json() : undefined
+    response.status === 200 ? response.json() : undefined,
   );
 };
 
 export const fetchGetPlayer = (
-  playerId: string
+  playerId: string,
 ): Promise<Player | undefined> => {
   return fetch(`/api/player/${playerId}`, {
     method: "GET",
   }).then((response) =>
-    response.status === 200 ? response.json() : undefined
+    response.status === 200 ? response.json() : undefined,
   );
 };
+
+export function fetchGetTeamSettings(
+  category: string,
+): Promise<TeamSettings | undefined> {
+  return fetch(`/api/setting/${category}`, {
+    method: "GET",
+  }).then((response) =>
+    response.status === 200 ? response.json() : undefined,
+  );
+}
