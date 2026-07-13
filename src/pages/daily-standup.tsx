@@ -141,7 +141,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const { jokeId, team } = query;
 
   const jokeCategory =
-    team === "Corgi" ? "dog" : team === "Finvengers" ? "shark" : "default";
+    team === "corgi" ? "dog" : team === "finvengers" ? "shark" : "default";
 
   const parsedJokeId = jokeId ? parseInt(jokeId as string, 10) : null;
   if (parsedJokeId) {
