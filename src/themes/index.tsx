@@ -125,6 +125,10 @@ export const CORGI_THEME: GlobalGameTheme = {
     "number-crunch-guessing-music": "/sounds/corgi/luigi.mp3",
     "number-crunch-player-guessed": "/sounds/corgi/monkey_bark.mp3",
     "number-crunch-reveal-guess": "/sounds/corgi/dog_growl.mp3",
+    "space-race-intro": "/sounds/corgi/dog_sms.mp3",
+    "space-race-plot-course": "/sounds/corgi/dog_sms.mp3",
+    "space-race-rocket-move": "/sounds/corgi/dog_bark.mp3",
+    "space-race-rocket-collision": "/sounds/corgi/husky_bark.mp3",
   },
   components: {
     ...DEFAULT_THEME.components,

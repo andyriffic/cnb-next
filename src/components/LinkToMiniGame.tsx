@@ -9,10 +9,12 @@ type Props = {
 };
 
 export function LinkToMiniGame({ team }: Props) {
+  const miniGameUrl = team?.toLowerCase() === "corgi" ? "/dog-park" : "/pacman";
+
   return (
     <FancyLink
       href={urlWithTeamQueryParam(
-        getWhosThatUrl(urlWithTeamQueryParam("/pacman", team)),
+        getWhosThatUrl(urlWithTeamQueryParam(miniGameUrl, team)),
         team,
       )}
     >

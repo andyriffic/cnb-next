@@ -8,6 +8,7 @@ import { SpectatorPageLayout } from "../SpectatorPageLayout";
 import { SplashContent } from "../SplashContent";
 import { useDoOnce } from "../hooks/useDoOnce";
 import { useSound } from "../hooks/useSound";
+import { FeatureHeading } from "../Atoms";
 import { StarMap } from "./Starmap";
 import { useSpaceRace } from "./useSpaceRace";
 
@@ -20,7 +21,7 @@ const View = ({ players }: Props) => {
   const [showPlotCourse, setShowPlotCourse] = useState(false);
   const spaceRace = useSpaceRace(
     players,
-    isClientSideFeatureEnabled("no-save")
+    isClientSideFeatureEnabled("no-save"),
   );
 
   useDoOnce(() => {
@@ -62,21 +63,11 @@ const View = ({ players }: Props) => {
         </div>
       )}
       <SplashContent>
-        <Image
-          src="/images/space-race-text.png"
-          alt="Space Race"
-          width={480}
-          height={48}
-        />
+        <FeatureHeading>Welcome to the Dog Park 🐶</FeatureHeading>
       </SplashContent>
       {showPlotCourse && (
         <SplashContent>
-          <Image
-            src="/images/plot-your-course-text.png"
-            alt="Plot your course"
-            width={777}
-            height={60}
-          />
+          <FeatureHeading>Arf arf</FeatureHeading>
         </SplashContent>
       )}
       {/* <div style={{ position: "absolute", bottom: 0 }}>

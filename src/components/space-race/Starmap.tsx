@@ -13,6 +13,7 @@ import { STARMAP_HEIGHT, STARMAP_WIDTH } from "./constants";
 import { SpaceEntity } from "./SpaceEntity";
 import { PlayerShip } from "./PlayerShip";
 import { PlayerHorse } from "./PlayerHorse";
+import { PlayerSpaceAvatar } from "./PlayerSpaceAvatar";
 
 const Space = styled.div`
   position: fixed;
@@ -169,7 +170,7 @@ export const StarMap = ({
             key={i}
             style={getStarmapCssPosition(player.currentPosition, offset)}
           >
-            <PlayerHorse player={player} />
+            <PlayerSpaceAvatar player={player} />
           </SpacePlayerContainer>
         );
       })}

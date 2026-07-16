@@ -32,7 +32,13 @@ const GateValue = styled.div`
   padding: 0.2rem;
   border-radius: 1rem;
 `;
-const GateIcon = styled.div``;
+
+const ObstacleIcon = styled.div`
+  font-size: 2rem;
+`;
+const GateIcon = styled.div`
+  font-size: 4rem;
+`;
 
 const EntityContainer = styled.div`
   position: relative;
@@ -94,13 +100,13 @@ export const STARMAP_CHART: SpaceRaceStarmap = {
     createEntity("asteroid", { x: 16, y: 7 }),
     createEntity("gate", { x: 16, y: 8 }, "block", 2),
     createEntity("satellite", { x: 17, y: 1 }, "block", undefined, false),
-    createEntity("gate", { x: 17, y: 2 }, "block", 2),
+    createEntity("gate", { x: 17, y: 2 }, "block", 3),
     createEntity("asteroid", { x: 17, y: 3 }),
     createEntity("asteroid", { x: 17, y: 5 }),
     createEntity("asteroid", { x: 19, y: 0 }),
     createEntity("satellite", { x: 19, y: 3 }, "block", undefined, false),
     createEntity("asteroid", { x: 19, y: 4 }),
-    createEntity("gate", { x: 19, y: 6 }, "block", 2),
+    createEntity("gate", { x: 19, y: 6 }, "block", 3),
     createEntity("asteroid", { x: 19, y: 7 }),
     createEntity("asteroid", { x: 21, y: 1 }),
     createEntity("asteroid", { x: 21, y: 2 }),
@@ -161,23 +167,12 @@ function getDisplayElement(
 ): JSX.Element {
   switch (entityType) {
     case "satellite":
-      return (
-        <Image src={cnyRedLantern} alt="Red lantern" width={60} height={60} />
-      );
+      return <ObstacleIcon style={{ fontSize: "2rem" }}>💩</ObstacleIcon>;
     case "planet":
-      return (
-        <Image src={cnyGoldIngot} alt="Gold ingot" width={60} height={60} />
-      );
+      return <ObstacleIcon style={{ fontSize: "1.2rem" }}>🎾</ObstacleIcon>;
 
     case "asteroid":
-      return (
-        <Image
-          src={cnyFireCrackers}
-          alt="Fire crackers"
-          width={45}
-          height={45}
-        />
-      );
+      return <ObstacleIcon style={{ fontSize: "2.8rem" }}>🪵</ObstacleIcon>;
     case "gate":
       return (
         <Gate>
@@ -188,13 +183,15 @@ function getDisplayElement(
     case "earth1":
       return (
         <Attention animation="pulse">
-          <Image src={cnyGrandGate} alt="Grand gate" width={80} height={80} />
+          <GateIcon>🦴</GateIcon>
         </Attention>
       );
     case "earth2":
       return (
         <Attention animation="pulse">
-          <Image src={cnyGrandGate} alt="Grand gate" width={100} height={100} />
+          <GateIcon>
+            <GateIcon>🦴</GateIcon>
+          </GateIcon>
 
           {/* <EntityContainer>
             <Image src={cnyGrandGate} alt="Grand gate" width={80} height={80} />
@@ -205,7 +202,7 @@ function getDisplayElement(
     case "earth3":
       return (
         <Attention animation="pulse">
-          <Image src={cnyGrandGate} alt="Grand gate" width={100} height={100} />
+          <GateIcon>🦴</GateIcon>
         </Attention>
       );
     default:
