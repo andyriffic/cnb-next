@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import savePlayersGameMoves from "../../services/save-game-moves";
+import getSaveGameForTeam from "../../services/save-game-moves";
 import { PlayerGameMoves } from "../../services/save-game-moves/types";
 
 export default async function userHandler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { query, method } = req;
   const { gameId, team } = query;
@@ -14,16 +14,14 @@ export default async function userHandler(
   }
 
   const playerMoves = req.body as PlayerGameMoves[];
+  const teamLowerCase = (team as string)?.toLowerCase();
+  const pointsAllocator = getSaveGameForTeam(teamLowerCase);
 
   switch (method) {
     case "PUT":
       try {
         console.info("Saving game moves for game", gameId, playerMoves);
-        await savePlayersGameMoves(
-          gameId as string,
-          playerMoves,
-          team as string
-        );
+        await pointsAllocator(gameId as string, playerMoves, team as string);
         res.status(200).send("OK");
       } catch (err) {
         console.error("Error when saving player details", err);

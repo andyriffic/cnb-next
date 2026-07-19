@@ -120,7 +120,7 @@ export const FinalResults = ({ gameView, finalResults, team }: Props) => {
 
   useDoOnce(() => {
     const gameMoves = numberCrunchGameToPoints(gameView);
-    savePlayerGameMovesFetch(gameView.id, gameMoves);
+    savePlayerGameMovesFetch(gameView.id, gameMoves, team);
     console.log("saving game moves", gameMoves);
   }, revealState === RevealState.SHOW_POINTS_LEGEND);
 

@@ -89,7 +89,7 @@ export const GameOverResultsByRound = ({ game, team }: Props) => {
 
   useDoOnce(() => {
     const gameMoves = MysteryBoxGameToPoints(game);
-    savePlayerGameMovesFetch(game.id, gameMoves);
+    savePlayerGameMovesFetch(game.id, gameMoves, team);
     console.log("saving Mysterybox game moves", gameMoves);
   });
 

@@ -104,7 +104,7 @@ export const initialiseGasOutSocket = (io: SocketIOServer, socket: Socket) => {
     if (!!updatedGame.winningPlayerId) {
       const playerPoints = gasGameToPoints(updatedGame);
       console.log("Player Points (press)", playerPoints);
-      savePlayersGameMoves(game.id, playerPoints, game.team);
+      savePlayersGameMoves(updatedGame.team)(game.id, playerPoints, game.team);
     }
   });
 
@@ -159,7 +159,7 @@ export const initialiseGasOutSocket = (io: SocketIOServer, socket: Socket) => {
     if (!!updatedGame.winningPlayerId) {
       const playerPoints = gasGameToPoints(updatedGame);
       console.log("Player Points (timed out)", playerPoints);
-      savePlayersGameMoves(game.id, playerPoints, game.team);
+      savePlayersGameMoves(updatedGame.team)(game.id, playerPoints, game.team);
     }
   });
 
