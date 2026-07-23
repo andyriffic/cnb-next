@@ -23,7 +23,7 @@ import {
 } from "./types";
 
 const SPACE_COURSE_QUESTION_ID = "SPACERACE_COURSE";
-const REMOVE_OBSTACLE_DISTANCE = 1;
+const REMOVE_OBSTACLE_DISTANCE = 2;
 
 const MAX_COURSE_Y_OFFSET = 2;
 
