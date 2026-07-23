@@ -32,7 +32,7 @@ export function WinningPlayer({ winningPlayer }: Props) {
   return winningPlayer ? (
     <Container>
       <Appear animation="roll-in-left" delayMilliseconds={2000}>
-        <Heading>Winner!</Heading>
+        <Heading style={{ color: "green" }}>Winner!</Heading>
         <PlayerAvatar playerId={winningPlayer.player.id} size="medium" />
       </Appear>
     </Container>
