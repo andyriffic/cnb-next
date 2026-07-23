@@ -115,9 +115,13 @@ const DOG_JOKES: Joke[] = [
   //   jokeText: "What did the mortgage broker say to the Golden Retriever?",
   //   answer: "Great news! you've been pre-a-paw-ved",
   // },
+  // {
+  //   jokeText: "Why did dog get get rejected for a Home Loan?",
+  //   answer: "Their credit score was ruff",
+  // },
   {
-    jokeText: "Why did dog get get rejected for a Home Loan?",
-    answer: "Their credit score was ruff",
+    jokeText: "Why did the web developer get a Labrador?",
+    answer: "He needed help fetching the API data!",
   },
 ];
 
@@ -126,9 +130,13 @@ const SHARK_JOKES: Joke[] = [
   //   jokeText: "What did the mortgage broker say to the Great White?",
   //   answer: "We're going to need a bigger down payment.",
   // },
+  // {
+  //   jokeText: "Why did shark want to refinance their loan?",
+  //   answer: "They were tired of the 'current' rates",
+  // },
   {
-    jokeText: "Why did shark want to refinance their loan?",
-    answer: "They were tired of the 'current' rates",
+    jokeText: "What kind of home loan does a shark prefer?",
+    answer: "A floating rate mortgage.",
   },
 ];
 
