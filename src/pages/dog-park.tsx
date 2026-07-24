@@ -11,12 +11,18 @@ function Page({ players }: Props) {
   return <SpaceRaceScreen players={players} />;
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const allPlayers = await getAllPlayers();
+  const { team } = query;
 
   const activePlayers = allPlayers
     ? allPlayers
         // .filter((p) => !p.details?.retired)
+        .filter(
+          (p) =>
+            !team ||
+            p?.details?.team?.toLowerCase() === (team as string).toLowerCase(),
+        )
         .filter((p) => p.id !== SETTINGS_PLAYER_ID)
         .filter((p) => !!p.details?.spaceRace)
     : [];
