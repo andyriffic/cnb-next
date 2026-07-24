@@ -47,7 +47,7 @@ const CollisionIndicator = styled.div`
 
 const PlayerName = styled.div<{ attention: boolean }>`
   position: absolute;
-  top: 25%;
+  bottom: 25%;
   font-size: 0.6rem;
   line-height: 1;
   text-transform: uppercase;
