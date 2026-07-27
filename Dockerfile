@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 node:18-alpine AS base
+FROM --platform=linux/amd64 node:26.5-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -7,13 +7,8 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
-COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
-RUN \
-    if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
-    elif [ -f package-lock.json ]; then npm ci; \
-    elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i --frozen-lockfile; \
-    else echo "Lockfile not found." && exit 1; \
-    fi
+COPY package.json package-lock.json* ./
+RUN npm ci
 
 
 # Rebuild the source code only when needed
@@ -30,16 +25,20 @@ COPY . .
 ARG DYNAMO_DB_ACCESS_KEY
 ARG DYNAMO_DB_ACCESS_KEY_SECRET
 
-RUN DYNAMO_DB_ACCESS_KEY=$DYNAMO_DB_ACCESS_KEY DYNAMO_DB_ACCESS_KEY_SECRET=$DYNAMO_DB_ACCESS_KEY_SECRET yarn build
+# RUN DYNAMO_DB_ACCESS_KEY=$DYNAMO_DB_ACCESS_KEY DYNAMO_DB_ACCESS_KEY_SECRET=$DYNAMO_DB_ACCESS_KEY_SECRET yarn build
 
 # If using npm comment out above and use below instead
-# RUN npm run build
+RUN DYNAMO_DB_ACCESS_KEY=$DYNAMO_DB_ACCESS_KEY DYNAMO_DB_ACCESS_KEY_SECRET=$DYNAMO_DB_ACCESS_KEY_SECRET npm run build
+#RUN npm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
+# ENV DYNAMO_DB_ACCESS_KEY=$DYNAMO_DB_ACCESS_KEY
+# ENV DYNAMO_DB_ACCESS_KEY_SECRET=$DYNAMO_DB_ACCESS_KEY_SECRET
+
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
