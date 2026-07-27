@@ -9,6 +9,8 @@ import curseImage from "./cnb-card-curse.png";
 import darkModeImage from "./cnb-card-dark-mode.png";
 import reverseImage from "./cnb-card-reverse.png";
 
+import type { JSX } from "react";
+
 const BaseCard = styled.div`
   display: flex;
   justify-content: flex-start;

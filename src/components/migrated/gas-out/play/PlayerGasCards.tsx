@@ -7,6 +7,8 @@ import {
 } from "../../../../services/migrated/gas-out/types";
 import { BalloonCard } from "../BalloonCard";
 
+import type { JSX } from "react";
+
 const Container = styled.div`
   display: flex;
   transition: opacity 300ms ease-out;

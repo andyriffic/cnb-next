@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 export enum SpaceRaceGameState {
   WAITING = 0,
   PLAYERS_MOVING = 1,

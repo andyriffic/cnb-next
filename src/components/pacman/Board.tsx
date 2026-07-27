@@ -9,6 +9,8 @@ import { getCoordinatesForOffset } from "./coordinateOffsets";
 import { PacManUiState } from "./hooks/usePacman/reducer";
 import { Coordinates } from "./types";
 
+import type { JSX } from "react";
+
 const debug = false;
 
 const BoardBackground = styled.div`

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type JSX } from "react";
 import styled from "styled-components";
 import THEME from "../themes";
 

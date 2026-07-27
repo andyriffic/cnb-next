@@ -2,6 +2,8 @@ import Image from "next/image";
 import styled from "styled-components";
 import backgroundImage from "./underwater-image.png";
 
+import type { JSX } from "react";
+
 const Container = styled.div`
   position: relative;
   // background: url(${backgroundImage.src}) repeat-x bottom left;

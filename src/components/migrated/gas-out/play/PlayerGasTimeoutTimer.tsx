@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, type JSX } from "react";
 import styled, { css, keyframes } from "styled-components";
 
 const fillAnimation = keyframes`

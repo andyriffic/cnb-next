@@ -8,7 +8,7 @@ export function useGasSound(game: GasGame | undefined) {
   const playingSounds = useRef<{ [id: string]: Howl }>({});
 
   const { play, loop } = useSound();
-  const lastPlayerPlayedCardRef = useRef<string | undefined>();
+  const lastPlayerPlayedCardRef = useRef<string | undefined>(undefined);
 
   const pressedCount = useMemo<number>(() => {
     if (!game || game.gasCloud.exploded) {

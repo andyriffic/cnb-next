@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from "react";
+import React, { useMemo, useRef, type JSX } from "react";
 import styled from "styled-components";
 import { GasGame } from "../../../services/migrated/gas-out/types";
 import { RotatingPlayerCarousel } from "./RotatingPlayerCarousel";

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, type JSX } from "react";
 import styled, { css, keyframes } from "styled-components";
 import { PlayerAvatar } from "../../PlayerAvatar";
 import { spinAwayAnimationUp } from "../../animations/keyframes/spinAnimations";

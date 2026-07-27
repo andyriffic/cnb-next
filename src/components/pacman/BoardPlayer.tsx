@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, type JSX } from "react";
 import styled, { css } from "styled-components";
 import tinycolor from "tinycolor2";
 import { FONT_FAMILY } from "../../colors";

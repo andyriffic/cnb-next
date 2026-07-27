@@ -1,4 +1,4 @@
-import React from "react";
+import React, { type JSX } from "react";
 import styled, { css } from "styled-components";
 import { GasGame, GasPlayer } from "../../../services/migrated/gas-out/types";
 import { useSocketIo } from "../../../providers/SocketIoProvider";

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, type JSX } from "react";
 import styled from "styled-components";
 import { GasGame } from "../../../../services/migrated/gas-out/types";
 import { PlayerAvatar } from "../../../PlayerAvatar";

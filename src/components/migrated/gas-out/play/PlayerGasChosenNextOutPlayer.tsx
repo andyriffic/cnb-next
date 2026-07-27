@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { GasPlayer } from "../../../../services/migrated/gas-out/types";
 import { PlayerAvatar } from "../../../PlayerAvatar";
 
+import type { JSX } from "react";
+
 const Container = styled.div`
   display: flex;
   justify-content: center;

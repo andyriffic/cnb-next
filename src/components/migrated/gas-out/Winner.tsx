@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, type JSX } from "react";
 import styled from "styled-components";
 import { fadeInDownAnimation } from "../../animations/keyframes/fade";
 import { GasGame, GasPlayer } from "../../../services/migrated/gas-out/types";

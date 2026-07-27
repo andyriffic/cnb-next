@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, type JSX } from "react";
 import { Coordinates } from "../pacman/types";
 
 type Props = {
@@ -38,6 +38,16 @@ export const DisplayItemsInCircle = ({ width, height, items }: Props) => {
   }, [items.length]);
 
   return (
+    // <div style={{ display: "flex", gap: "0.5rem" }}>
+    //   <SmallHeading style={{ textAlign: "center" }}>
+    //     {box.id} : {box.contents.type} - {box.contents.value}
+    //   </SmallHeading>
+    //   <div style={{ display: "flex", gap: "0.5rem" }}>
+    //     {box.playerIds.map((pid) => (
+    //       <p key={pid}>{pid}</p>
+    //     ))}
+    //   </div>
+    // </div>
     <div
       style={{
         width: `${width}px`,
@@ -65,15 +75,5 @@ export const DisplayItemsInCircle = ({ width, height, items }: Props) => {
         );
       })}
     </div>
-    // <div style={{ display: "flex", gap: "0.5rem" }}>
-    //   <SmallHeading style={{ textAlign: "center" }}>
-    //     {box.id} : {box.contents.type} - {box.contents.value}
-    //   </SmallHeading>
-    //   <div style={{ display: "flex", gap: "0.5rem" }}>
-    //     {box.playerIds.map((pid) => (
-    //       <p key={pid}>{pid}</p>
-    //     ))}
-    //   </div>
-    // </div>
   );
 };

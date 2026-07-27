@@ -6,7 +6,7 @@ const Container = styled.div`
 
 type Props = {
   flip?: boolean;
-  children: React.ReactNode | React.ReactNodeArray;
+  children: React.ReactNode | ReadonlyArray<React.ReactNode>;
 };
 
 export function FlipX({ flip = true, children }: Props) {

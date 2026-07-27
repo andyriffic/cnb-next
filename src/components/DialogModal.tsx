@@ -30,7 +30,7 @@ export const DialogOptionsContainer = styled.div``;
 type Props = {
   options?: { text: string; onSelected: () => void }[];
   show: boolean;
-  children: React.ReactNode | React.ReactNodeArray;
+  children: React.ReactNode | ReadonlyArray<React.ReactNode>;
 };
 
 export function DialogModal({ children, options, show }: Props) {

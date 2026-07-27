@@ -1,5 +1,7 @@
 import styled, { keyframes, css } from "styled-components";
 
+import type { JSX } from "react";
+
 export const animation = keyframes`
   from {
     opacity: 0;

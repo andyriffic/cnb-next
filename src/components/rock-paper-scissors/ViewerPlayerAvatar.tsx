@@ -1,5 +1,7 @@
 import { AvatarSize, FacingDirection, PlayerAvatar } from "../PlayerAvatar";
 
+import type { JSX } from "react";
+
 type Props = {
   playerId: string;
   facing?: FacingDirection;

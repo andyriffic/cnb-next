@@ -3,6 +3,8 @@ import styled from "styled-components";
 import backgroundImage from "./corgi-decoration.png";
 import dirtImage from "./dirt.png";
 
+import type { JSX } from "react";
+
 const Container = styled.div`
   position: relative;
   background: url(${dirtImage.src}) repeat-x bottom left;

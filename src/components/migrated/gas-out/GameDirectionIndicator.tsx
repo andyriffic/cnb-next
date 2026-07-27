@@ -1,4 +1,4 @@
-import React from "react";
+import React, { type JSX } from "react";
 import styled, { css } from "styled-components";
 import { Direction, GasGame } from "../../../services/migrated/gas-out/types";
 

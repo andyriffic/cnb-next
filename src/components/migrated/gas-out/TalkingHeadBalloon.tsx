@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type JSX } from "react";
 import styled, { css } from "styled-components";
 import { GasCloud } from "../../../services/migrated/gas-out/types";
 import THEME from "../../../themes";

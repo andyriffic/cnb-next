@@ -4,6 +4,8 @@ import { getClassicCnbPlayerUrl, getPlayerHomeUrl } from "../utils/url";
 import THEME from "../themes";
 import { PlayerQuestionDialog } from "./player/PlayerQuestionDialog";
 
+import type { JSX } from "react";
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;

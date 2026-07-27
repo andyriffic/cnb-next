@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useMemo } from "react";
+import { useMemo, type JSX } from "react";
 import styled from "styled-components";
 import { useSocketIo } from "../../providers/SocketIoProvider";
 import { Card, SubHeading } from "../Atoms";

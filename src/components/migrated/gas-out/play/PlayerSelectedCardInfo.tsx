@@ -4,6 +4,8 @@ import { BalloonCard } from "../BalloonCard";
 import { NormalText } from "../../../Atoms";
 import { PressableButton } from "./PressableButton";
 
+import type { JSX } from "react";
+
 const Container = styled.div`
   /* display: flex;
   gap: 1rem;

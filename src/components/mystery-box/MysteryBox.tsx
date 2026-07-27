@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type JSX } from "react";
 import styled, { css, keyframes } from "styled-components";
 import tinycolor from "tinycolor2";
 import Image from "next/image";
@@ -193,13 +193,6 @@ export const MysteryBoxUi = ({ box, onReveal, open }: Props) => {
 
   //codepen.io/RoyLee0702/pen/RwNgVya
   return (
-    <Box>
-      {open && (
-        <BoxContents isOpen={open}>{getBoxContents(box.contents)}</BoxContents>
-      )}
-      <BoxBody primaryColor={boxColorHex} />
-      <BoxLid isOpen={open} primaryColor={boxColorHex} />
-    </Box>
     // <div style={{ display: "flex", gap: "0.5rem" }}>
     //   <SmallHeading style={{ textAlign: "center" }}>
     //     {box.id} : {box.contents.type} - {box.contents.value}
@@ -210,5 +203,12 @@ export const MysteryBoxUi = ({ box, onReveal, open }: Props) => {
     //     ))}
     //   </div>
     // </div>
+    <Box>
+      {open && (
+        <BoxContents isOpen={open}>{getBoxContents(box.contents)}</BoxContents>
+      )}
+      <BoxBody primaryColor={boxColorHex} />
+      <BoxLid isOpen={open} primaryColor={boxColorHex} />
+    </Box>
   );
 };

@@ -1,6 +1,6 @@
 import { relative } from "path";
 import Image from "next/image";
-import { CSSProperties } from "react";
+import { CSSProperties, type JSX } from "react";
 import styled, { css } from "styled-components";
 import { getPlayerAvatarUrl } from "../utils/url";
 

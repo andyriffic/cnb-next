@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type JSX } from "react";
 import styled from "styled-components";
 import { useSocketIo } from "../../../providers/SocketIoProvider";
 import { GasGame } from "../../../services/migrated/gas-out/types";
