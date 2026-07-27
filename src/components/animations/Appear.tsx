@@ -5,6 +5,8 @@ import styled, {
 } from "styled-components";
 import { textFocusIn } from "./keyframes/textFocusIn";
 
+import type { JSX } from "react";
+
 type AppearAnimation =
   | "roll-in-left"
   | "roll-in-right"

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, type JSX } from "react";
 import styled from "styled-components";
 import { useTrail, animated, config } from "@react-spring/web";
 import { COLORS } from "../../colors";

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type JSX } from "react";
 import styled, { css } from "styled-components";
 import { fadeInBottom, fadeOutTop } from "./keyframes/fade";
 

@@ -9,6 +9,8 @@ import {
 import redLanternImage from "./cny-red-lantern.png";
 import cathyFaceImage from "./cathy.png";
 
+import type { JSX } from "react";
+
 function getCloudAnimationSpeedMilliSeconds(intensity: number): number {
   return Math.max(6000 - intensity * 500, 100);
 }

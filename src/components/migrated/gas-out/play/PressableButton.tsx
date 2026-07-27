@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef, ReactNode } from "react";
+import { ComponentPropsWithoutRef, ReactNode, type JSX } from "react";
 import styled from "styled-components";
 
 const Container = styled.button`

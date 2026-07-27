@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useState, type JSX } from "react";
 import styled, { css } from "styled-components";
 import { slideInBlurredTop } from "./animations/keyframes/slideInBlurredTop";
 import { slideOutBlurredBottom } from "./animations/keyframes/slideOutBlurredBottom";

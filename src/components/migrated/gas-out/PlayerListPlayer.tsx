@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type JSX } from "react";
 import styled, { css } from "styled-components";
 import { spinAwayAnimationUp } from "../../animations/keyframes/spinAnimations";
 import { fadeInAnimation } from "../../animations/keyframes/fade";

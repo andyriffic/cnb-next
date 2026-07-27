@@ -1,5 +1,5 @@
 import styled, { keyframes } from "styled-components";
-import { useEffect } from "react";
+import { useEffect, type JSX } from "react";
 import { Appear } from "../../animations/Appear";
 import { useSound } from "../../hooks/useSound";
 

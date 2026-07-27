@@ -1,5 +1,5 @@
 import { animated, config, useTransition } from "@react-spring/web";
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, type JSX } from "react";
 import styled from "styled-components";
 import { COLORS } from "../../colors";
 import { usePlayerNames } from "../../providers/PlayerNamesProvider";

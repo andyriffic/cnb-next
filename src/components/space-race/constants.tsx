@@ -15,6 +15,8 @@ import {
   SpaceRaceStarmap,
 } from "./types";
 
+import type { JSX } from "react";
+
 export const STARMAP_WIDTH = 30;
 export const STARMAP_HEIGHT = 9;
 

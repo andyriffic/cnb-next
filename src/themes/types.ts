@@ -1,5 +1,7 @@
 import { SoundName } from "../components/hooks/useSound/types";
 
+import type { JSX } from "react";
+
 export type ThemeTokens = {
   colours: {
     primaryText: string;

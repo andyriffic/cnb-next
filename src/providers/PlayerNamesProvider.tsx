@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, type JSX } from "react";
 import { useFetchAllPlayersQuery } from "./GraphqlProvider";
 
 type PlayerNames = { [playerId: string]: string };

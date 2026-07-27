@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, type JSX } from "react";
 import { GasGame } from "../../../services/migrated/gas-out/types";
 import { SplashContent } from "../../SplashContent";
 

@@ -8,6 +8,8 @@ import dinosaurImage from "./dino-01.png";
 import rocketImage from "./pixel-rocket.png";
 import giftBoxImage from "./gift-box.png";
 
+import type { JSX } from "react";
+
 const Container = styled.div`
   border-bottom: 50px solid #9c8df5;
   position: relative;

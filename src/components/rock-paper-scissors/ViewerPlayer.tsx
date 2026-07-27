@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, type JSX } from "react";
 import { GroupBettingGame } from "../../services/betting/types";
 import { RPSSpectatorGameView } from "../../services/rock-paper-scissors/types";
 import { Player, getPlayerZombieRunDetails } from "../../types/Player";

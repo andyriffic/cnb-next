@@ -4,6 +4,8 @@ import { GasGame } from "../../../services/migrated/gas-out/types";
 import { PlayerAvatar } from "../../PlayerAvatar";
 import { Appear } from "../../animations/Appear";
 
+import type { JSX } from "react";
+
 const Container = styled.div`
   display: flex;
   flex-wrap: wrap;

@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { CaptionText, Heading, SubHeading } from "../../Atoms";
 
+import type { JSX } from "react";
+
 const Container = styled.div`
   width: 50vw;
   text-align: right;

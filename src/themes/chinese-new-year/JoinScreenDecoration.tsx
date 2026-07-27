@@ -2,6 +2,8 @@ import Image from "next/image";
 import { Attention } from "../../components/animations/Attention";
 import imageSrc from "./farewell-xian-sticker.png";
 
+import type { JSX } from "react";
+
 export function CnyJoinScreenDecoration(): JSX.Element {
   return (
     <div style={{ textAlign: "center", marginBottom: "2rem" }}>

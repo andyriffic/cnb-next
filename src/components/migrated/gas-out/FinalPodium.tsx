@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, type JSX } from "react";
 import styled from "styled-components";
 import { FONT_FAMILY } from "../../../colors";
 import { GasGame } from "../../../services/migrated/gas-out/types";

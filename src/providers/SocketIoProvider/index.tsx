@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, type JSX } from "react";
 import { io } from "socket.io-client";
 import { SOCKET_ENDPOINT } from "../../environment";
 import { AiOverlordSocketService, useAiOverlord } from "./useAiOverlord";

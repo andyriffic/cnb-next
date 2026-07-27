@@ -5,7 +5,7 @@ const TextContainer = styled.span`
 `;
 
 type Props = {
-  children: React.ReactNode | React.ReactNodeArray;
+  children: React.ReactNode | ReadonlyArray<React.ReactNode>;
 };
 
 export function ChineseText({ children }: Props) {

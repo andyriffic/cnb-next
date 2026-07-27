@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type JSX } from "react";
 import styled from "styled-components";
 import { fadeOutUpAnimation } from "../../animations/keyframes/fade";
 

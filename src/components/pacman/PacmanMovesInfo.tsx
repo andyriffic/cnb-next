@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, type JSX } from "react";
 import { Card, SmallHeading } from "../Atoms";
 import THEME from "../../themes";
 import {

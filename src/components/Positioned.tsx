@@ -1,5 +1,7 @@
 import styled, { css } from "styled-components";
 
+import type { JSX } from "react";
+
 const AbsoluteContainer = styled.div<{ absolute: AbsolutePosition }>`
   position: absolute;
   ${({ absolute }) =>

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, type JSX } from "react";
 import { GasCard } from "../../../services/migrated/gas-out/types";
 import { Appear } from "../../animations/Appear";
 import { useSound } from "../../hooks/useSound";

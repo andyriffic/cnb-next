@@ -10,6 +10,8 @@ import { ZombieTransform } from "../../JoinedPlayer";
 import { getPlayerZombieRunDetails } from "../../../types/Player";
 import { PlayerBonusPoints } from "./PlayerBonusPoints";
 
+import type { JSX } from "react";
+
 const PlayerAvatarContainer = styled.div`
   opacity: 0.6;
 `;

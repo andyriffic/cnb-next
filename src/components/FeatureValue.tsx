@@ -3,6 +3,8 @@ import { COLORS } from "../colors";
 import THEME from "../themes";
 import { NumericValue } from "./NumericValue";
 
+import type { JSX } from "react";
+
 const Container = styled.div`
   width: 5vw;
   height: 5vw;
