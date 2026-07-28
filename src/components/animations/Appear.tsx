@@ -1,8 +1,4 @@
-import styled, {
-  css,
-  FlattenSimpleInterpolation,
-  keyframes,
-} from "styled-components";
+import styled, { css, RuleSet, keyframes } from "styled-components";
 import { textFocusIn } from "./keyframes/textFocusIn";
 
 import type { JSX } from "react";
@@ -51,7 +47,7 @@ const Animation_FlipIn = keyframes`
 `;
 
 const ANIMATION_CSS: {
-  [key in AppearAnimation]: (delayMs: number) => FlattenSimpleInterpolation;
+  [key in AppearAnimation]: (delayMs: number) => RuleSet;
 } = {
   "roll-in-left": (delayMs) => css`
     animation: ${Animation_RollInBlurredLeft} 0.65s
@@ -71,8 +67,8 @@ const ANIMATION_CSS: {
   `,
 };
 
-const Container = styled.div<{ animation?: FlattenSimpleInterpolation }>`
-  ${({ animation }) => animation}
+const Container = styled.div<{ $animation?: RuleSet }>`
+  ${({ $animation }) => $animation}
 `;
 
 type Props = {
@@ -90,7 +86,7 @@ export const Appear = ({
 }: Props): JSX.Element | null => {
   return show ? (
     <Container
-      animation={animation && ANIMATION_CSS[animation](delayMilliseconds)}
+      $animation={animation && ANIMATION_CSS[animation](delayMilliseconds)}
     >
       {children}
     </Container>

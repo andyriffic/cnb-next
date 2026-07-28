@@ -1,10 +1,6 @@
 import Image from "next/image";
 import { useEffect, useReducer } from "react";
-import styled, {
-  css,
-  FlattenSimpleInterpolation,
-  keyframes,
-} from "styled-components";
+import styled, { css, RuleSet, keyframes } from "styled-components";
 import { generateRandomInt, selectRandomOneOf } from "../../utils/random";
 import { Animation_ShakeBottom } from "../animations/Attention";
 import { clampOrMin } from "../../utils/number";
@@ -50,7 +46,7 @@ type BoxDropperStartDropperAction = { type: "START_DROPPER" };
 type BoxDropperReturnToWaitingDropperAction = { type: "WAITING" };
 
 const ANIMATION_MAP: {
-  [key in BoxFrameAction]: FlattenSimpleInterpolation | undefined;
+  [key in BoxFrameAction]: RuleSet | undefined;
 } = {
   none: undefined,
   wobble: css`
@@ -79,11 +75,11 @@ const DropperPerson = styled.div`
 `;
 
 const Dropper = styled.div<{
-  animation: FlattenSimpleInterpolation | undefined;
+  $animation: RuleSet | undefined;
 }>`
   position: relative;
   z-index: 2;
-  ${({ animation }) => animation}
+  ${({ $animation }) => $animation}
   // filter: drop-shadow(-0 -10px 8px rgba(255, 141, 0, 0.9));
   filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.8));
 `;
@@ -164,7 +160,7 @@ export const MysteryBoxBombDropper = ({
             height={120}
           />
         </DropperPerson>
-        <Dropper animation={ANIMATION_MAP[state.currentFrame.action]}>
+        <Dropper $animation={ANIMATION_MAP[state.currentFrame.action]}>
           <Image src={bombImage} alt="Bomb" width={80} height={80} />
           {/* {state.dropperState} */}
         </Dropper>
