@@ -1,8 +1,4 @@
-import styled, {
-  FlattenSimpleInterpolation,
-  css,
-  keyframes,
-} from "styled-components";
+import styled, { RuleSet, css, keyframes } from "styled-components";
 
 type AttentionAnimation = "vibrate" | "slow-vibrate" | "shake" | "pulse";
 
@@ -79,7 +75,7 @@ export const Animation_Pulse_Plus = keyframes` {
 }`;
 
 const ANIMATION_CSS: {
-  [key in AttentionAnimation]: FlattenSimpleInterpolation;
+  [key in AttentionAnimation]: RuleSet;
 } = {
   vibrate: css`
     animation: ${Animation_Vibrate} 0.3s linear infinite both;
@@ -96,8 +92,8 @@ const ANIMATION_CSS: {
   `,
 };
 
-const Container = styled.div<{ animation: FlattenSimpleInterpolation }>`
-  ${({ animation }) => animation}
+const Container = styled.div<{ $animation: RuleSet }>`
+  ${({ $animation }) => $animation}
 `;
 
 type Props = {
@@ -112,7 +108,7 @@ export const Attention = ({
   animation = "vibrate",
 }: Props) => {
   return animate ? (
-    <Container animation={ANIMATION_CSS[animation]}>{children}</Container>
+    <Container $animation={ANIMATION_CSS[animation]}>{children}</Container>
   ) : (
     <>{children}</>
   );

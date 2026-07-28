@@ -6,27 +6,27 @@ import { GlobalGameTheme } from "../themes/types";
 
 const Container = styled.div<{
   theme: GlobalGameTheme;
-  scrollable: boolean;
-  overrideBackgroundColor?: string;
+  $scrollable: boolean;
+  $overrideBackgroundColor?: string;
 }>`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   width: 100vw;
-  overflow: ${({ scrollable }) => (scrollable ? "visible" : "hidden")};
+  overflow: ${({ $scrollable }) => ($scrollable ? "visible" : "hidden")};
   justify-content: center;
   align-items: center;
-  background-color: ${({ overrideBackgroundColor, theme }) =>
-    overrideBackgroundColor || theme.tokens.colours.primaryBackground};
+  background-color: ${({ $overrideBackgroundColor, theme }) =>
+    $overrideBackgroundColor || theme.tokens.colours.primaryBackground};
   color: ${({ theme }) => theme.tokens.colours.primaryText};
 `;
 
-const Main = styled.div<{ scrollable: boolean }>`
+const Main = styled.div<{ $scrollable: boolean }>`
   /* border: 1px solid black; */
   width: 100vw;
   flex: 1;
   /* min-height: 100vh; */
-  overflow: ${({ scrollable }) => (scrollable ? "visible" : "hidden")};
+  overflow: ${({ $scrollable }) => ($scrollable ? "visible" : "hidden")};
 `;
 
 const DebugContainer = styled.div<{ theme: GlobalGameTheme }>`
@@ -66,10 +66,10 @@ export function SpectatorPageLayout({
   return (
     <Container
       theme={theme}
-      scrollable={scrollable}
-      overrideBackgroundColor={overrideBackgroundColor}
+      $scrollable={scrollable}
+      $overrideBackgroundColor={overrideBackgroundColor}
     >
-      <Main scrollable={scrollable}>{children}</Main>
+      <Main $scrollable={scrollable}>{children}</Main>
       <SuperSecretDebugToggle onClick={() => setShowDebug(!showDebug)} />
       {showDebug && debug && (
         <DebugContainer
