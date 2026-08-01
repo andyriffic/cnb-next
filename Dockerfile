@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 node:26.5-alpine AS base
+FROM node:26.5-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -28,7 +28,7 @@ ARG DYNAMO_DB_ACCESS_KEY_SECRET
 # RUN DYNAMO_DB_ACCESS_KEY=$DYNAMO_DB_ACCESS_KEY DYNAMO_DB_ACCESS_KEY_SECRET=$DYNAMO_DB_ACCESS_KEY_SECRET yarn build
 
 # If using npm comment out above and use below instead
-RUN DYNAMO_DB_ACCESS_KEY=$DYNAMO_DB_ACCESS_KEY DYNAMO_DB_ACCESS_KEY_SECRET=$DYNAMO_DB_ACCESS_KEY_SECRET npm run build
+RUN NODE_OPTIONS='' DYNAMO_DB_ACCESS_KEY=$DYNAMO_DB_ACCESS_KEY DYNAMO_DB_ACCESS_KEY_SECRET=$DYNAMO_DB_ACCESS_KEY_SECRET npm run build
 #RUN npm run build
 
 # Production image, copy all the files and run next
