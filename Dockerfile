@@ -22,22 +22,47 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
+# Secrets: always provided by the caller (Copilot manifest.yml or the
+# auto/start*.sh scripts), so they're applied unconditionally.
 ARG DYNAMO_DB_ACCESS_KEY
 ARG DYNAMO_DB_ACCESS_KEY_SECRET
+ARG OPEN_AI_API_KEY
 
-# RUN DYNAMO_DB_ACCESS_KEY=$DYNAMO_DB_ACCESS_KEY DYNAMO_DB_ACCESS_KEY_SECRET=$DYNAMO_DB_ACCESS_KEY_SECRET yarn build
+# Plain config: normally comes from whichever .env.* file is present in the
+# build context (see src/environment.ts), but can be overridden per build -
+# e.g. auto/start-dev.sh passes these to build the SSG pages (/play,
+# /player/profile/[id]) against dev DynamoDB data instead of prod. Left
+# empty by default so an unset ARG doesn't blank out the .env file's value.
+ARG ENVIRONMENT_NAME=
+ARG NEXT_PUBLIC_GRAPHQL_ENDPOINT=
+ARG NEXT_PUBLIC_SOCKET_ENDPOINT=
+ARG DB_TABLE_NAME_PLAYERS=
+ARG DB_TABLE_NAME_SETTINGS=
+ARG S3_BUCKET_NAME=
 
-# If using npm comment out above and use below instead
-RUN NODE_OPTIONS='' DYNAMO_DB_ACCESS_KEY=$DYNAMO_DB_ACCESS_KEY DYNAMO_DB_ACCESS_KEY_SECRET=$DYNAMO_DB_ACCESS_KEY_SECRET npm run build
-#RUN npm run build
+# Note: the conditional ${VAR:+NAME=$VAR} words below only work as env-var
+# assignments because they're arguments to `env` (which parses its own argv
+# at runtime); the shell itself only recognises name=value as an assignment
+# when it's written literally, not when it comes from an expansion - passed
+# straight to `RUN` without `env`, a non-empty one would be misread as the
+# command to execute and break the build.
+RUN env \
+ DYNAMO_DB_ACCESS_KEY=$DYNAMO_DB_ACCESS_KEY \
+ DYNAMO_DB_ACCESS_KEY_SECRET=$DYNAMO_DB_ACCESS_KEY_SECRET \
+ OPEN_AI_API_KEY=$OPEN_AI_API_KEY \
+ ${ENVIRONMENT_NAME:+ENVIRONMENT_NAME=$ENVIRONMENT_NAME} \
+ ${NEXT_PUBLIC_GRAPHQL_ENDPOINT:+NEXT_PUBLIC_GRAPHQL_ENDPOINT=$NEXT_PUBLIC_GRAPHQL_ENDPOINT} \
+ ${NEXT_PUBLIC_SOCKET_ENDPOINT:+NEXT_PUBLIC_SOCKET_ENDPOINT=$NEXT_PUBLIC_SOCKET_ENDPOINT} \
+ ${DB_TABLE_NAME_PLAYERS:+DB_TABLE_NAME_PLAYERS=$DB_TABLE_NAME_PLAYERS} \
+ ${DB_TABLE_NAME_SETTINGS:+DB_TABLE_NAME_SETTINGS=$DB_TABLE_NAME_SETTINGS} \
+ ${S3_BUCKET_NAME:+S3_BUCKET_NAME=$S3_BUCKET_NAME} \
+ npm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
-# ENV DYNAMO_DB_ACCESS_KEY=$DYNAMO_DB_ACCESS_KEY
-# ENV DYNAMO_DB_ACCESS_KEY_SECRET=$DYNAMO_DB_ACCESS_KEY_SECRET
 
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED 1
