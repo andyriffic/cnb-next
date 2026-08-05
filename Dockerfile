@@ -1,3 +1,4 @@
+# FROM --platform=linux/amd64 node:26.5-alpine AS base
 FROM node:26.5-alpine AS base
 
 # Install dependencies only when needed
