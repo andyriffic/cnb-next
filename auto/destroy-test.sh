@@ -6,4 +6,4 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR" || exit
 cd ..
 
-AWS_PROFILE=cnb-next-copilot copilot svc delete -n web -e test --yes
+AWS_PROFILE=cnb-next-copilot bash -c 'cd infra && npx cdk destroy --force'

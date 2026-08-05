@@ -16,4 +16,4 @@ DYNAMO_DB_ACCESS_KEY_SECRET=$(AWS_PROFILE=cnb-next-copilot aws ssm get-parameter
 OPEN_AI_API_KEY=$(AWS_PROFILE=cnb-next-copilot aws ssm get-parameter --name "/copilot/cnb-next/test/secrets/OPEN_AI_API_KEY" --with-decryption --query "Parameter.Value" --output text) \
 AWS_PROFILE=cnb-next-copilot \
 NODE_OPTIONS= \
- copilot svc deploy -n web -e test
+bash -c 'cd infra && npx cdk deploy --require-approval never'

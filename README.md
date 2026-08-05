@@ -27,8 +27,23 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The `test` environment runs on ECS Fargate behind an ALB, managed by an AWS CDK app in [`infra/`](infra/) (not Vercel). The stack builds and pushes the Docker image, and serves it at `cnb.finx-rocks.com`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+One-time setup, per AWS account/region:
+
+```bash
+cd infra
+npm install
+npx cdk bootstrap aws://766741520701/ap-southeast-2
+```
+
+Deploy/destroy the `test` environment:
+
+```bash
+auto/deploy-test.sh    # typechecks, pulls secrets from SSM, runs cdk deploy
+auto/destroy-test.sh   # runs cdk destroy
+```
+
+See `infra/lib/cnb-next-stack.ts` for the stack definition (VPC, ECS cluster/service, ALB, ACM cert, Route53 alias).
