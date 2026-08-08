@@ -111,45 +111,49 @@ const JOKES: Joke[] = [
 ];
 
 const DOG_JOKES: Joke[] = [
-  // {
-  //   jokeText: "What did the mortgage broker say to the Golden Retriever?",
-  //   answer: "Great news! you've been pre-a-paw-ved",
-  // },
-  // {
-  //   jokeText: "Why did dog get get rejected for a Home Loan?",
-  //   answer: "Their credit score was ruff",
-  // },
-  // {
-  //   jokeText: "Why did the web developer get a Labrador?",
-  //   answer: "He needed help fetching the API data!",
-  // },
-  // {
-  //   jokeText: "Why did the dog fail the coding interview?",
-  //   answer: "Their bark-end code had too many bugs",
-  // },
+  {
+    jokeText: "What did the mortgage broker say to the Golden Retriever?",
+    answer: "Great news! you've been pre-a-paw-ved",
+  },
+  {
+    jokeText: "Why did dog get get rejected for a Home Loan?",
+    answer: "Their credit score was ruff",
+  },
+  {
+    jokeText: "Why did the web developer get a Labrador?",
+    answer: "He needed help fetching the API data!",
+  },
+  {
+    jokeText: "Why did the dog fail the coding interview?",
+    answer: "Their bark-end code had too many bugs",
+  },
   {
     jokeText: "How did the puppy buy his first house?",
     answer: "He put down a 20% down-paw-ment",
   },
+  {
+    jokeText: "Why did the dogs web application run out of memory?",
+    answer: "It had too many barks and not enough bytes.",
+  },
 ];
 
 const SHARK_JOKES: Joke[] = [
-  // {
-  //   jokeText: "What did the mortgage broker say to the Great White?",
-  //   answer: "We're going to need a bigger down payment.",
-  // },
-  // {
-  //   jokeText: "Why did shark want to refinance their loan?",
-  //   answer: "They were tired of the 'current' rates",
-  // },
-  // {
-  //   jokeText: "What kind of home loan does a shark prefer?",
-  //   answer: "A floating rate mortgage.",
-  // },
-  // {
-  //   jokeText: "Why do sharks make great UX designers?",
-  //   answer: "They appreciage a good user fin-terface",
-  // },
+  {
+    jokeText: "What did the mortgage broker say to the Great White?",
+    answer: "We're going to need a bigger down payment.",
+  },
+  {
+    jokeText: "Why did shark want to refinance their loan?",
+    answer: "They were tired of the 'current' rates",
+  },
+  {
+    jokeText: "What kind of home loan does a shark prefer?",
+    answer: "A floating rate mortgage.",
+  },
+  {
+    jokeText: "Why do sharks make great UX designers?",
+    answer: "They appreciage a good user fin-terface",
+  },
   {
     jokeText: "Why did the fishing software run out of memory?",
     answer: "The sharks kept taking lots of bytes",

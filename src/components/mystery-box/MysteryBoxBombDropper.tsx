@@ -11,7 +11,7 @@ import { clampOrMin } from "../../utils/number";
 import { useSound } from "../hooks/useSound";
 import { SoundName } from "../hooks/useSound/types";
 import bombImage from "./mystery-box-bomb.png";
-import cinbyWaveImage from "./cinby-wave.png";
+import sharkImage from "./shark.png";
 import { BoxPosition, PositionedBox } from "./MysteryBoxCurrentRoundUi";
 
 const fakeDropAnimation = keyframes`
@@ -157,12 +157,7 @@ export const MysteryBoxBombDropper = ({
         }}
       >
         <DropperPerson>
-          <Image
-            src={cinbyWaveImage}
-            alt="Cinby waving"
-            width={100}
-            height={120}
-          />
+          <Image src={sharkImage} alt="Cinby waving" width={130} height={150} />
         </DropperPerson>
         <Dropper animation={ANIMATION_MAP[state.currentFrame.action]}>
           <Image src={bombImage} alt="Bomb" width={80} height={80} />
