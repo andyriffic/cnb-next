@@ -1,0 +1,41 @@
+name: deploy-test
+run-name: Deploy web service to test environment
+on: workflow_dispatch
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  COPILOT_VERSION: v1.33.0
+  AWS_REGION: ap-southeast-2
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+      - run: npm install
+      - run: npm run typecheck
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Install AWS Copilot CLI
+        run: |
+          curl -Lo copilot https://github.com/aws/copilot-cli/releases/download/${COPILOT_VERSION}/copilot-linux
+          chmod +x copilot
+          sudo mv copilot /usr/local/bin/copilot
+          copilot version
+
+      - name: Deploy web service
+        run: |
+          DYNAMO_DB_ACCESS_KEY=$(aws ssm get-parameter --name "/copilot/cnb-next/test/secrets/DYNAMO_DB_ACCESS_KEY" --with-decryption --query "Parameter.Value" --output text) \
+          DYNAMO_DB_ACCESS_KEY_SECRET=$(aws ssm get-parameter --name "/copilot/cnb-next/test/secrets/DYNAMO_DB_ACCESS_KEY_SECRET" --with-decryption --query "Parameter.Value" --output text) \
+          OPEN_AI_API_KEY=$(aws ssm get-parameter --name "/copilot/cnb-next/test/secrets/OPEN_AI_API_KEY" --with-decryption --query "Parameter.Value" --output text) \
+          copilot svc deploy -n web -e test

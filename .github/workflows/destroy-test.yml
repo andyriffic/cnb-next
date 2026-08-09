@@ -1,0 +1,32 @@
+name: destroy-test
+run-name: Destroy web service in test environment
+on: workflow_dispatch
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  COPILOT_VERSION: v1.33.0
+  AWS_REGION: ap-southeast-2
+
+jobs:
+  destroy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Install AWS Copilot CLI
+        run: |
+          curl -Lo copilot https://github.com/aws/copilot-cli/releases/download/${COPILOT_VERSION}/copilot-linux
+          chmod +x copilot
+          sudo mv copilot /usr/local/bin/copilot
+          copilot version
+
+      - name: Destroy web service
+        run: copilot svc delete -n web -e test --yes
