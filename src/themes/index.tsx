@@ -122,7 +122,7 @@ export const CORGI_THEME: GlobalGameTheme = {
     ...DEFAULT_THEME.sounds,
     "join-music": "/sounds/corgi/sunlit-strumming-parade.mp3",
     "join-player-joined": "/sounds/corgi/monkey_bark.mp3",
-    "number-crunch-guessing-music": "/sounds/corgi/luigi.mp3",
+    "number-crunch-guessing-music": "/sounds/corgi/naruto_dog.mp3",
     "number-crunch-player-guessed": "/sounds/corgi/monkey_bark.mp3",
     "number-crunch-reveal-guess": "/sounds/corgi/dog_growl.mp3",
     "space-race-intro": "/sounds/corgi/dog_sms.mp3",

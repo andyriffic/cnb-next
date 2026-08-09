@@ -33,7 +33,10 @@ const View = ({ game, team }: Props) => {
 
   useNumberCrunchGameSound(game, gameState.state);
   return (
-    <SpectatorPageLayout debug={<DebugNumberCrunchGame game={game} />}>
+    <SpectatorPageLayout
+      overrideBackgroundColor="#CAAA5C"
+      debug={<DebugNumberCrunchGame game={game} />}
+    >
       {/* <SmallHeading centered={true}>
         {NUMBER_CRUNCH_GAME_STATE[gameState.state]}
       </SmallHeading> */}
