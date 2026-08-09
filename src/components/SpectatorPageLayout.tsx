@@ -1,8 +1,11 @@
 import { useState } from "react";
 import styled from "styled-components";
 import THEME from "../themes";
+import { useUiTheme } from "../providers/UiThemeProvider";
+import { GlobalGameTheme } from "../themes/types";
 
 const Container = styled.div<{
+  theme: GlobalGameTheme;
   scrollable: boolean;
   overrideBackgroundColor?: string;
 }>`
@@ -13,9 +16,9 @@ const Container = styled.div<{
   overflow: ${({ scrollable }) => (scrollable ? "visible" : "hidden")};
   justify-content: center;
   align-items: center;
-  background-color: ${({ overrideBackgroundColor }) =>
-    overrideBackgroundColor || THEME.tokens.colours.primaryBackground};
-  color: ${THEME.tokens.colours.primaryText};
+  background-color: ${({ overrideBackgroundColor, theme }) =>
+    overrideBackgroundColor || theme.tokens.colours.primaryBackground};
+  color: ${({ theme }) => theme.tokens.colours.primaryText};
 `;
 
 const Main = styled.div<{ scrollable: boolean }>`
@@ -26,14 +29,14 @@ const Main = styled.div<{ scrollable: boolean }>`
   overflow: ${({ scrollable }) => (scrollable ? "visible" : "hidden")};
 `;
 
-const DebugContainer = styled.div`
+const DebugContainer = styled.div<{ theme: GlobalGameTheme }>`
   position: fixed;
   bottom: 0;
   border-top: 2px solid #b03461;
   min-height: 20px;
   width: 100vw;
   padding: 1rem;
-  background-color: ${THEME.tokens.colours.primaryBackground};
+  background-color: ${({ theme }) => theme.tokens.colours.primaryBackground};
   overflow: hidden;
 `;
 
@@ -59,15 +62,20 @@ export function SpectatorPageLayout({
   scrollable = false,
 }: Props): JSX.Element {
   const [showDebug, setShowDebug] = useState(false);
+  const { theme } = useUiTheme();
   return (
     <Container
+      theme={theme}
       scrollable={scrollable}
       overrideBackgroundColor={overrideBackgroundColor}
     >
       <Main scrollable={scrollable}>{children}</Main>
       <SuperSecretDebugToggle onClick={() => setShowDebug(!showDebug)} />
       {showDebug && debug && (
-        <DebugContainer style={{ zIndex: 1, border: "1px solid white" }}>
+        <DebugContainer
+          theme={theme}
+          style={{ zIndex: 1, border: "1px solid white" }}
+        >
           <div style={{ position: "absolute", top: 0, right: 0 }}>
             <button type="button" onClick={() => setShowDebug(false)}>
               close

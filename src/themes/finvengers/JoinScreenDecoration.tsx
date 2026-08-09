@@ -1,6 +1,6 @@
 import Image from "next/image";
 import styled from "styled-components";
-import backgroundImage from "./underwater-image.png";
+import backgroundImage from "./finvengers-undersea-graphic.png";
 
 const Container = styled.div`
   position: relative;
@@ -12,7 +12,7 @@ const BackgroundImage = styled(Image)`
   position: relative;
   display: block;
   width: 100%;
-  height: 170px;
+  height: 270px;
 `;
 
 export function JoinScreenDecoration(): JSX.Element {
