@@ -11,17 +11,19 @@ import {
   MysteryBoxUIState,
 } from "./useMysteryBoxGameState";
 import { MysteryBoxBombDropper } from "./MysteryBoxBombDropper";
+import { MysteryBeachBox } from "./MysteryBeachBox";
 
 const BoxLayoutContainer = styled.div`
   position: relative;
   width: 100%;
+  margin-top: 2rem;
   height: 50vh;
   // border: 1px solid blue;
 `;
 
 const BombDropperContainer = styled.div`
   position: relative;
-  height: 8vh;
+  height: 10vh;
   width: 100%;
   // border: 1px solid red;
 `;
@@ -127,7 +129,7 @@ export const MysteryBoxCurrentRoundUi = ({
           return (
             <PositionedBox key={box.id} position={position}>
               <BoxOptionContainerItem>
-                <MysteryBoxUi
+                <MysteryBeachBox
                   key={`${round.id}-${box.id}`}
                   box={box}
                   open={gameState.boxesOpen}

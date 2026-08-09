@@ -120,7 +120,7 @@ function getInitialPositionMap(
     playerCloseness,
     {
       x: leftOffset,
-      y: 40,
+      y: 45,
     },
   );
 

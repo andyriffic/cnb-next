@@ -234,12 +234,12 @@ function getCustomRoundBoxContents(
 } {
   if (numberPlayersRemaining === 1) {
     return {
-      specialInfo: "One player remaining, 3 bombs! Good Luck! 🤞",
+      specialInfo: "One player remaining, 3 sharks! Good Luck! 🤞",
       boxes: [
         createBoxContents("bomb"),
         createBoxContents("bomb"),
         createBoxContents("bomb"),
-        createBoxContents("points", 2),
+        createBoxContents("points", 4),
       ],
     };
   }
@@ -247,7 +247,7 @@ function getCustomRoundBoxContents(
   switch (roundNumber) {
     case 0: {
       return {
-        specialInfo: "Free round - no bombs!",
+        specialInfo: "Free round - no sharks!",
         boxes: [
           createBoxContents("points", 1),
           createBoxContents("points", 2),
@@ -258,19 +258,19 @@ function getCustomRoundBoxContents(
     }
     case 4: {
       return {
-        specialInfo: "2 bombs this round! - choose wisely!",
+        specialInfo: "2 sharks this round! - choose wisely!",
         boxes: [
           createBoxContents("bomb"),
           createBoxContents("bomb"),
+          createBoxContents("points", 2),
           createBoxContents("points", 1),
-          createBoxContents("empty"),
         ],
       };
     }
 
     case 10: {
       return {
-        specialInfo: "3 bombs this round! 💀",
+        specialInfo: "3 sharks this round! 💀",
         boxes: [
           createBoxContents("bomb"),
           createBoxContents("bomb"),
@@ -286,7 +286,7 @@ function getCustomRoundBoxContents(
           createBoxContents("bomb"),
           createBoxContents("points", 1),
           createBoxContents("points", 2),
-          createBoxContents("empty"),
+          createBoxContents("points", 1),
         ],
       };
     }

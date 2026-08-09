@@ -129,7 +129,7 @@ const GAME_CONFIG: {
   "balloon-quick": { displayName: "Balloon (quick)", canTakeCoins: false },
   ai: { displayName: "AI Overlord", canTakeCoins: false },
   "number-crunch": { displayName: "Number Crunch 💯", canTakeCoins: true },
-  "mystery-box": { displayName: "Mystery Box (beta) 🎁", canTakeCoins: false },
+  "mystery-box": { displayName: "Shark Attack 🦈", canTakeCoins: false },
 };
 
 const gameCreators: {

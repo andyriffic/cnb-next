@@ -2,7 +2,10 @@ import { useState } from "react";
 import styled from "styled-components";
 import THEME from "../themes";
 
-const Container = styled.div<{ scrollable: boolean }>`
+const Container = styled.div<{
+  scrollable: boolean;
+  overrideBackgroundColor?: string;
+}>`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -10,7 +13,8 @@ const Container = styled.div<{ scrollable: boolean }>`
   overflow: ${({ scrollable }) => (scrollable ? "visible" : "hidden")};
   justify-content: center;
   align-items: center;
-  background-color: ${THEME.tokens.colours.primaryBackground};
+  background-color: ${({ overrideBackgroundColor }) =>
+    overrideBackgroundColor || THEME.tokens.colours.primaryBackground};
   color: ${THEME.tokens.colours.primaryText};
 `;
 
@@ -45,16 +49,21 @@ type Props = {
   children: React.ReactNode;
   debug?: React.ReactNode;
   scrollable?: boolean;
+  overrideBackgroundColor?: string;
 };
 
 export function SpectatorPageLayout({
   children,
   debug,
+  overrideBackgroundColor,
   scrollable = false,
 }: Props): JSX.Element {
   const [showDebug, setShowDebug] = useState(false);
   return (
-    <Container scrollable={scrollable}>
+    <Container
+      scrollable={scrollable}
+      overrideBackgroundColor={overrideBackgroundColor}
+    >
       <Main scrollable={scrollable}>{children}</Main>
       <SuperSecretDebugToggle onClick={() => setShowDebug(!showDebug)} />
       {showDebug && debug && (
