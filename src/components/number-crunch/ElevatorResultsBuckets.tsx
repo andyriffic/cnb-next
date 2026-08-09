@@ -128,6 +128,7 @@ export const ElevatorResultsBuckets = ({
                   backgroundImage: `url(${BUCKET_BACKGROUNDS[i]})`,
                   backgroundRepeat: "repeat-x",
                   backgroundSize: "100% 100%",
+                  borderWidth: `${i + 3}px`,
                   // backgroundColor: tinycolor("#BAC662")
                   //   .darken(i * 4)
                   //   // .setAlpha(0.3)
