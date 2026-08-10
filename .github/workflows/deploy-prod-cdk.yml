@@ -1,0 +1,43 @@
+name: deploy-prod-cdk
+run-name: Deploy web service to prod via CDK
+on: workflow_dispatch
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION: ap-southeast-2
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - run: npm install
+      - run: npm run typecheck
+
+      # aws-cdk-lib requires Node >= 20, so the cdk/ app uses a separate
+      # Node install rather than the Node 18 used for the app's own scripts.
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - run: npm install
+        working-directory: cdk
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy stack
+        working-directory: cdk
+        run: |
+          export DYNAMO_DB_ACCESS_KEY=$(aws ssm get-parameter --name "/cnb-next/prod/DYNAMO_DB_ACCESS_KEY" --with-decryption --query "Parameter.Value" --output text)
+          export DYNAMO_DB_ACCESS_KEY_SECRET=$(aws ssm get-parameter --name "/cnb-next/prod/DYNAMO_DB_ACCESS_KEY_SECRET" --with-decryption --query "Parameter.Value" --output text)
+          npx cdk deploy --require-approval never
