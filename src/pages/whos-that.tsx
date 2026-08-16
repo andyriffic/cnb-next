@@ -142,7 +142,11 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const allPlayers = (await getAllPlayers()) || [];
   const allValidPlayers = allPlayers
     .filter((p) => !p.tags.includes("no-whos-that"))
-    .filter((p) => !team || p.details?.team === team);
+    .filter(
+      (p) =>
+        !team ||
+        p.details?.team?.toLowerCase() === (team as string).toLowerCase(),
+    );
   const allViewCounts = allValidPlayers.map(
     (p) => p.details?.whosThatCount || 0,
   );

@@ -36,7 +36,9 @@ function createPacManPlayer(
     status: "",
     offset: 0,
     teamName: player.details?.team,
-    onTeam: team ? player.details?.team === team : true,
+    onTeam: team
+      ? player.details?.team?.toLowerCase() === team.toLowerCase()
+      : true,
     movesRemaining: player.details?.gameMoves || 0,
     pathIndex: player.details?.pacmanDetails?.index || 0,
     color: player.details?.colourHex || "#FF0000",

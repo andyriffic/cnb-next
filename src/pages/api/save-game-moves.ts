@@ -21,7 +21,7 @@ export default async function userHandler(
     case "PUT":
       try {
         console.info("Saving game moves for game", gameId, playerMoves);
-        await pointsAllocator(gameId as string, playerMoves, team as string);
+        await pointsAllocator(gameId as string, playerMoves, teamLowerCase);
         res.status(200).send("OK");
       } catch (err) {
         console.error("Error when saving player details", err);

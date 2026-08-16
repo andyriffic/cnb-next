@@ -22,7 +22,7 @@ const updatePlayerGameMoves = (
           return;
         }
 
-        if (team && player.details?.team !== team) {
+        if (team && player.details?.team?.toLowerCase() !== team.toLowerCase()) {
           console.log(
             "Skipping player",
             playerMoves.playerId,
