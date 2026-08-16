@@ -1,4 +1,5 @@
 import { savePlayersGameMoves as saveSpaceRacePlayersGameMoves } from "./saveGameMovesSpaceRace";
+import { savePlayersGameMoves as saveZombieRunPlayersGameMoves } from "./saveGameMovesZombieRun";
 
 //Update this to the current mini-game so users get the correct points allocation and game behaviour
 
@@ -9,7 +10,7 @@ const getSaveGameForTeam = (team: string | undefined) => {
 
   switch (team.toLowerCase()) {
     case "corgi": {
-      return saveSpaceRacePlayersGameMoves;
+      return saveZombieRunPlayersGameMoves;
     }
     default: {
       return saveSpaceRacePlayersGameMoves;
