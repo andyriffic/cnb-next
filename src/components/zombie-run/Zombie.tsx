@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { fadeInBottom } from "../animations/keyframes/fade";
 import { useSound } from "../hooks/useSound";
-import zombieImage from "./zombie.png";
+import zombieImage from "./zombie-corgi.png";
 import { OriginalZombieDetails } from "./types";
 import { ZOMBIE_COLOR } from "./ZombieRunPlayer";
 
