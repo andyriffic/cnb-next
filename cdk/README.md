@@ -49,24 +49,34 @@ version you use for the Next.js app itself.
 ```
 cd cdk
 npm install
-DYNAMO_DB_ACCESS_KEY=... DYNAMO_DB_ACCESS_KEY_SECRET=... npx cdk deploy
 ```
 
-Or trigger the `deploy-prod-cdk` GitHub Actions workflow manually
-(`workflow_dispatch`), which pulls those two values from SSM the same way
-`deploy-test.yml` does today.
+Then use one of the two scripts in `scripts/`, both of which pull the
+DynamoDB build-time credentials from SSM for you:
 
-The stack outputs `LoadBalancerDnsName` — use it to validate the app end to
-end (including the socket.io-based games) before touching DNS.
+- **`scripts/deploy-preview.sh`** — deploys without a custom domain, so you
+  validate against the load balancer's own auto-generated DNS name (printed
+  as the `LoadBalancerDnsName` stack output). Use this for every change
+  before cutting real traffic over.
+- **`scripts/deploy-live.sh`** — deploys **with** `cnb.finx-rocks.com`
+  attached (ACM cert + HTTPS listener, HTTP redirects to HTTPS). Prompts for
+  confirmation before running, since this is the real DNS cutover. Only run
+  this after validating with `deploy-preview.sh` first.
+
+Both assume the `cnb-next-copilot` AWS profile; override with
+`AWS_PROFILE=... ./scripts/deploy-preview.sh` if needed. They also accept
+any extra `cdk deploy` flags, e.g. `./scripts/deploy-preview.sh --require-approval never`.
+
+Alternatively trigger the `deploy-prod-cdk` GitHub Actions workflow manually
+(`workflow_dispatch`), which follows the same SSM-fetch pattern as
+`deploy-test.yml` does today, but always deploys without a custom domain.
 
 ## Cutting over from Copilot
 
-Once validated against the ALB's own DNS name:
+Once validated against the ALB's own DNS name (`scripts/deploy-preview.sh`):
 
-1. Set `DOMAIN_NAME=cnb.finx-rocks.com`, `HOSTED_ZONE_ID=<zone id>`,
-   `HOSTED_ZONE_NAME=finx-rocks.com` as env vars and redeploy — this adds an
-   ACM certificate and points the real domain at the CDK-managed load
-   balancer (HTTP will redirect to HTTPS).
+1. Run `scripts/deploy-live.sh` — this adds an ACM certificate and points
+   the real domain at the CDK-managed load balancer.
 2. Confirm traffic is flowing correctly on the real domain.
 3. Remove the Copilot service/environment/app (`copilot svc delete`,
    `copilot env delete`, `copilot app delete`) and delete the `copilot/`
