@@ -1,5 +1,4 @@
 import {
-  DynamoDBClient,
   GetItemCommand,
   GetItemCommandInput,
   PutItemCommand,
@@ -13,22 +12,10 @@ import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import * as O from "fp-ts/Option";
 import * as TE from "fp-ts/TaskEither";
 import { pipe } from "fp-ts/lib/function";
-import { AWS_REGION } from "../../constants";
-import {
-  DB_TABLE_NAME_PLAYERS,
-  DYNAMO_DB_ACCESS_KEY,
-  DYNAMO_DB_ACCESS_KEY_SECRET,
-} from "../../environment";
+import { DB_TABLE_NAME_PLAYERS } from "../../environment";
 import { Player, PlayerDetails } from "../../types/Player";
 import { ErrorMessage } from "../../types/common";
-
-const ddbClient = new DynamoDBClient({
-  region: AWS_REGION,
-  credentials: {
-    accessKeyId: DYNAMO_DB_ACCESS_KEY,
-    secretAccessKey: DYNAMO_DB_ACCESS_KEY_SECRET,
-  },
-});
+import { ddbClient } from "./dynamodb-client";
 
 export const addPlayer = (id: string, name: string): Promise<void> => {
   const params: PutItemInput = {

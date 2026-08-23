@@ -1,5 +1,8 @@
 auto
 copilot
+cdk
 .next
 .env.local
 .vscode
+.git
+node_modules

@@ -1,26 +1,13 @@
 import {
-  DynamoDBClient,
   GetItemCommand,
   GetItemCommandInput,
   PutItemCommand,
   PutItemInput,
 } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
-import { AWS_REGION } from "../../constants";
-import {
-  DB_TABLE_NAME_SETTINGS,
-  DYNAMO_DB_ACCESS_KEY,
-  DYNAMO_DB_ACCESS_KEY_SECRET,
-} from "../../environment";
+import { DB_TABLE_NAME_SETTINGS } from "../../environment";
 import { SettingsCategory } from "../../types/Settings";
-
-const ddbClient = new DynamoDBClient({
-  region: AWS_REGION,
-  credentials: {
-    accessKeyId: DYNAMO_DB_ACCESS_KEY,
-    secretAccessKey: DYNAMO_DB_ACCESS_KEY_SECRET,
-  },
-});
+import { ddbClient } from "./dynamodb-client";
 
 export const updateSetting = (
   settingsCategory: SettingsCategory,
