@@ -169,7 +169,7 @@ function Page({ regularPlayers }: Props) {
   const team = router.query.team as string;
   const socketService = useSocketIo();
   const { getName } = usePlayerNames();
-  const { play, loop } = useSound();
+  const { play, loop } = useSound(theme);
   const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [showWaitingPlayersHint, setShowWaitingPlayersHint] = useState(false);
   const [suggestedGame] = useState(getSuggestedGame(new Date()));

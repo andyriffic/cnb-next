@@ -156,6 +156,8 @@ export const FINVENGERS_THEME: GlobalGameTheme = {
   },
   sounds: {
     ...DEFAULT_THEME.sounds,
+    "join-music": "/sounds/finvengers/paperboy_arcade.mp3",
+    "join-player-joined": "/sounds/default/jaws_opening_notes.mp3",
   },
   components: {
     ...DEFAULT_THEME.components,
