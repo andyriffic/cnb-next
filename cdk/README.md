@@ -82,6 +82,15 @@ Once validated against the ALB's own DNS name (`scripts/deploy-preview.sh`):
    `copilot env delete`, `copilot app delete`) and delete the `copilot/`
    directory and the `deploy-test`/`destroy-test` workflows.
 
+## Tearing down
+
+`scripts/destroy.sh` runs `cdk destroy` on the stack (VPC, ECS
+service/cluster, load balancer, and — if attached — the ACM cert), after a
+confirmation prompt. It deletes by stack name, so it works the same way
+regardless of whether the stack was last deployed via `deploy-preview.sh` or
+`deploy-live.sh`. The imported DynamoDB tables are not part of the stack's
+own resources and are never touched by this.
+
 ## Why the task role only covers runtime, not build
 
 Two pages (`/play`, `/player/profile/[playerId]`) use `getStaticProps` and
