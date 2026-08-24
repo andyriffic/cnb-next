@@ -1,14 +1,14 @@
 name: destroy-prod-cdk
-run-name: Destroy prod stack via CDK
+run-name: "${{ github.event_name == 'schedule' && 'Scheduled check - destroy prod' || 'Manual - destroy prod' }}"
 on:
   workflow_dispatch:
   schedule:
-    # Runs hourly; the "Check business hours window" step below decides
-    # whether to actually do anything. A fixed UTC cron can't express
-    # "5pm Sydney time" year-round because Sydney's UTC offset changes with
-    # daylight saving — checking the real Sydney wall-clock time at runtime
-    # sidesteps that entirely. Minute 7 (not 0) avoids the top-of-hour
-    # congestion that commonly delays GitHub's scheduled runs.
+    # Runs hourly; the "check" job below decides whether to actually do
+    # anything. A fixed UTC cron can't express "5pm Sydney time" year-round
+    # because Sydney's UTC offset changes with daylight saving — checking
+    # the real Sydney wall-clock time at runtime sidesteps that entirely.
+    # Minute 7 (not 0) avoids the top-of-hour congestion that commonly
+    # delays GitHub's scheduled runs.
     - cron: "7 * * * *"
 
 permissions:
@@ -19,8 +19,10 @@ env:
   AWS_REGION: ap-southeast-2
 
 jobs:
-  destroy:
+  check:
     runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check.outputs.should_run }}
     steps:
       - name: Check business hours window
         id: check
@@ -35,30 +37,32 @@ jobs:
           echo "Sydney day=$day hour=$hour"
           if [[ "$day" =~ ^(1|2|4|5)$ ]] && [ "$hour" = "17" ]; then
             echo "should_run=true" >> "$GITHUB_OUTPUT"
+            echo "### Destroying — end of business hours (Sydney day=$day hour=$hour)" >> "$GITHUB_STEP_SUMMARY"
           else
             echo "should_run=false" >> "$GITHUB_OUTPUT"
+            echo "### Skipped — outside business hours (Sydney day=$day hour=$hour)" >> "$GITHUB_STEP_SUMMARY"
           fi
 
+  destroy:
+    needs: check
+    if: needs.check.outputs.should_run == 'true'
+    runs-on: ubuntu-latest
+    steps:
       - uses: actions/checkout@v4
-        if: steps.check.outputs.should_run == 'true'
 
       # Node 26 matches the Dockerfile's node:26.5-alpine base image.
       - uses: actions/setup-node@v3
-        if: steps.check.outputs.should_run == 'true'
         with:
           node-version: "26"
 
       - run: npm install
-        if: steps.check.outputs.should_run == 'true'
         working-directory: cdk
 
       - uses: aws-actions/configure-aws-credentials@v4
-        if: steps.check.outputs.should_run == 'true'
         with:
           role-to-assume: ${{ vars.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Destroy stack
-        if: steps.check.outputs.should_run == 'true'
         working-directory: cdk
         run: npx cdk destroy --force
