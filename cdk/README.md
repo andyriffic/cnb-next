@@ -43,8 +43,8 @@ service has been validated and DNS has been cut over.
 
 ## Deploy
 
-Requires Node >= 20 (aws-cdk-lib's minimum) — separate from whatever Node
-version you use for the Next.js app itself.
+Requires Node >= 26, matching the Dockerfile's `node:26.5-alpine` base image
+(aws-cdk-lib's own minimum is >=20, but this repo standardizes on 26).
 
 ```
 cd cdk

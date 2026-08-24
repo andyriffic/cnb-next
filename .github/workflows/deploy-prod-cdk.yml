@@ -42,22 +42,18 @@ jobs:
       - uses: actions/checkout@v4
         if: steps.check.outputs.should_run == 'true'
 
+      # Node 26 matches the Dockerfile's node:26.5-alpine base image and
+      # satisfies aws-cdk-lib's minimum (>=20), so one install covers both
+      # the app's own scripts and the cdk/ app.
       - uses: actions/setup-node@v3
         if: steps.check.outputs.should_run == 'true'
         with:
-          node-version: "18"
+          node-version: "26"
 
       - run: npm install
         if: steps.check.outputs.should_run == 'true'
       - run: npm run typecheck
         if: steps.check.outputs.should_run == 'true'
-
-      # aws-cdk-lib requires Node >= 20, so the cdk/ app uses a separate
-      # Node install rather than the Node 18 used for the app's own scripts.
-      - uses: actions/setup-node@v3
-        if: steps.check.outputs.should_run == 'true'
-        with:
-          node-version: "20"
 
       - run: npm install
         if: steps.check.outputs.should_run == 'true'

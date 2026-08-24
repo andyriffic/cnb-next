@@ -2,6 +2,9 @@
   "name": "cnb-next-cdk",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=26"
+  },
   "scripts": {
     "build": "tsc",
     "synth": "cdk synth",
@@ -10,7 +13,7 @@
     "destroy": "cdk destroy"
   },
   "devDependencies": {
-    "@types/node": "18.7.18",
+    "@types/node": "^26.0.0",
     "aws-cdk": "^2.150.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
