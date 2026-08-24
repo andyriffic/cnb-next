@@ -1,6 +1,15 @@
 name: deploy-prod-cdk
-run-name: Deploy web service to prod via CDK
-on: workflow_dispatch
+run-name: Deploy prod (with domain) via CDK
+on:
+  workflow_dispatch:
+  schedule:
+    # Runs hourly; the "Check business hours window" step below decides
+    # whether to actually do anything. A fixed UTC cron can't express
+    # "9am Sydney time" year-round because Sydney's UTC offset changes with
+    # daylight saving — checking the real Sydney wall-clock time at runtime
+    # sidesteps that entirely. Minute 7 (not 0) avoids the top-of-hour
+    # congestion that commonly delays GitHub's scheduled runs.
+    - cron: "7 * * * *"
 
 permissions:
   id-token: write
@@ -13,30 +22,60 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Check business hours window
+        id: check
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "Manually triggered, running regardless of schedule."
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          day=$(TZ='Australia/Sydney' date +%u)   # 1=Mon .. 7=Sun
+          hour=$(TZ='Australia/Sydney' date +%H)
+          echo "Sydney day=$day hour=$hour"
+          if [[ "$day" =~ ^(1|2|4|5)$ ]] && [ "$hour" = "09" ]; then
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_run=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/checkout@v4
+        if: steps.check.outputs.should_run == 'true'
+
       - uses: actions/setup-node@v3
+        if: steps.check.outputs.should_run == 'true'
         with:
           node-version: "18"
 
       - run: npm install
+        if: steps.check.outputs.should_run == 'true'
       - run: npm run typecheck
+        if: steps.check.outputs.should_run == 'true'
 
       # aws-cdk-lib requires Node >= 20, so the cdk/ app uses a separate
       # Node install rather than the Node 18 used for the app's own scripts.
       - uses: actions/setup-node@v3
+        if: steps.check.outputs.should_run == 'true'
         with:
           node-version: "20"
 
       - run: npm install
+        if: steps.check.outputs.should_run == 'true'
         working-directory: cdk
 
       - uses: aws-actions/configure-aws-credentials@v4
+        if: steps.check.outputs.should_run == 'true'
         with:
           role-to-assume: ${{ vars.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Deploy stack
+      - name: Deploy stack (with domain)
+        if: steps.check.outputs.should_run == 'true'
         working-directory: cdk
+        env:
+          DOMAIN_NAME: cnb.finx-rocks.com
+          HOSTED_ZONE_NAME: finx-rocks.com
+          HOSTED_ZONE_ID: Z3H2KCS6G4PEXD
         run: |
           export DYNAMO_DB_ACCESS_KEY=$(aws ssm get-parameter --name "/cnb-next/prod/DYNAMO_DB_ACCESS_KEY" --with-decryption --query "Parameter.Value" --output text)
           export DYNAMO_DB_ACCESS_KEY_SECRET=$(aws ssm get-parameter --name "/cnb-next/prod/DYNAMO_DB_ACCESS_KEY_SECRET" --with-decryption --query "Parameter.Value" --output text)

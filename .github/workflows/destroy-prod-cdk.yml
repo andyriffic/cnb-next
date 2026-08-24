@@ -1,6 +1,15 @@
 name: destroy-prod-cdk
 run-name: Destroy prod stack via CDK
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  schedule:
+    # Runs hourly; the "Check business hours window" step below decides
+    # whether to actually do anything. A fixed UTC cron can't express
+    # "5pm Sydney time" year-round because Sydney's UTC offset changes with
+    # daylight saving — checking the real Sydney wall-clock time at runtime
+    # sidesteps that entirely. Minute 7 (not 0) avoids the top-of-hour
+    # congestion that commonly delays GitHub's scheduled runs.
+    - cron: "7 * * * *"
 
 permissions:
   id-token: write
@@ -13,21 +22,43 @@ jobs:
   destroy:
     runs-on: ubuntu-latest
     steps:
+      - name: Check business hours window
+        id: check
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "Manually triggered, running regardless of schedule."
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          day=$(TZ='Australia/Sydney' date +%u)   # 1=Mon .. 7=Sun
+          hour=$(TZ='Australia/Sydney' date +%H)
+          echo "Sydney day=$day hour=$hour"
+          if [[ "$day" =~ ^(1|2|4|5)$ ]] && [ "$hour" = "17" ]; then
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_run=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/checkout@v4
+        if: steps.check.outputs.should_run == 'true'
 
       # aws-cdk-lib requires Node >= 20.
       - uses: actions/setup-node@v3
+        if: steps.check.outputs.should_run == 'true'
         with:
           node-version: "20"
 
       - run: npm install
+        if: steps.check.outputs.should_run == 'true'
         working-directory: cdk
 
       - uses: aws-actions/configure-aws-credentials@v4
+        if: steps.check.outputs.should_run == 'true'
         with:
           role-to-assume: ${{ vars.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Destroy stack
+        if: steps.check.outputs.should_run == 'true'
         working-directory: cdk
         run: npx cdk destroy --force
