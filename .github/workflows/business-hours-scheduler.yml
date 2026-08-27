@@ -1,0 +1,42 @@
+name: business-hours-scheduler
+run-name: Business hours check
+on:
+  schedule:
+    # Runs hourly. A fixed UTC cron can't express "9am/5pm Sydney time"
+    # year-round because Sydney's UTC offset changes with daylight saving —
+    # checking the real Sydney wall-clock time at runtime sidesteps that
+    # entirely. Minute 7 (not 0) avoids the top-of-hour congestion that
+    # commonly delays GitHub's scheduled runs.
+    - cron: "7 * * * *"
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check business hours window and trigger deploy/destroy
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          day=$(TZ='Australia/Sydney' date +%u)   # 1=Mon .. 7=Sun
+          hour=$(TZ='Australia/Sydney' date +%H)
+          echo "Sydney day=$day hour=$hour"
+
+          if [[ ! "$day" =~ ^(1|2|4|5)$ ]]; then
+            echo "Outside business days (Mon/Tue/Thu/Fri), nothing to do."
+            exit 0
+          fi
+
+          if [ "$hour" = "09" ]; then
+            echo "Start of business hours — triggering deploy-prod-cdk"
+            gh workflow run deploy-prod-cdk.yml --ref main --repo "${{ github.repository }}"
+          elif [ "$hour" = "17" ]; then
+            echo "End of business hours — triggering destroy-prod-cdk"
+            gh workflow run destroy-prod-cdk.yml --ref main --repo "${{ github.repository }}"
+          else
+            echo "Outside trigger hours, nothing to do."
+          fi
