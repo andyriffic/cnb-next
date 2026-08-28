@@ -2,7 +2,7 @@ name: business-hours-scheduler
 run-name: Business hours check
 on:
   schedule:
-    # Runs hourly. A fixed UTC cron can't express "9am/5pm Sydney time"
+    # Runs hourly. A fixed UTC cron can't express "9am-5pm Sydney time"
     # year-round because Sydney's UTC offset changes with daylight saving —
     # checking the real Sydney wall-clock time at runtime sidesteps that
     # entirely. Minute 7 (not 0) avoids the top-of-hour congestion that
@@ -11,14 +11,23 @@ on:
   workflow_dispatch:
 
 permissions:
+  id-token: write
   actions: write
   contents: read
 
+env:
+  AWS_REGION: ap-southeast-2
+
 jobs:
-  check:
+  reconcile:
     runs-on: ubuntu-latest
     steps:
-      - name: Check business hours window and trigger deploy/destroy
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Reconcile actual stack state against business hours
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -26,17 +35,40 @@ jobs:
           hour=$(TZ='Australia/Sydney' date +%H)
           echo "Sydney day=$day hour=$hour"
 
-          if [[ ! "$day" =~ ^(1|2|4|5)$ ]]; then
-            echo "Outside business days (Mon/Tue/Thu/Fri), nothing to do."
-            exit 0
+          desired="down"
+          if [[ "$day" =~ ^(1|2|4|5)$ ]] && [ "$hour" -ge 9 ] && [ "$hour" -lt 17 ]; then
+            desired="up"
           fi
+          echo "Desired state: $desired"
 
-          if [ "$hour" = "09" ]; then
-            echo "Start of business hours — triggering deploy-prod-cdk"
+          status=$(aws cloudformation describe-stacks --stack-name CnbNextProdStack \
+            --query 'Stacks[0].StackStatus' --output text 2>/dev/null || echo "NOT_FOUND")
+          echo "Stack status: $status"
+
+          case "$status" in
+            NOT_FOUND)
+              actual="down"
+              ;;
+            *_IN_PROGRESS)
+              echo "Stack operation already in progress ($status) — skipping this cycle, will re-check next hour."
+              exit 0
+              ;;
+            CREATE_COMPLETE|UPDATE_COMPLETE|UPDATE_ROLLBACK_COMPLETE|IMPORT_COMPLETE|IMPORT_ROLLBACK_COMPLETE)
+              actual="up"
+              ;;
+            *)
+              echo "Stack in unexpected state ($status) — skipping, this needs manual attention."
+              exit 0
+              ;;
+          esac
+          echo "Actual state: $actual"
+
+          if [ "$desired" = "up" ] && [ "$actual" = "down" ]; then
+            echo "Should be up but isn't — triggering deploy-prod-cdk"
             gh workflow run deploy-prod-cdk.yml --ref main --repo "${{ github.repository }}"
-          elif [ "$hour" = "17" ]; then
-            echo "End of business hours — triggering destroy-prod-cdk"
+          elif [ "$desired" = "down" ] && [ "$actual" = "up" ]; then
+            echo "Should be down but is up — triggering destroy-prod-cdk"
             gh workflow run destroy-prod-cdk.yml --ref main --repo "${{ github.repository }}"
           else
-            echo "Outside trigger hours, nothing to do."
+            echo "Already in desired state ($desired) — nothing to do."
           fi
