@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type JSX } from "react";
 import styled, { css, keyframes } from "styled-components";
 import tinycolor from "tinycolor2";
 import Image, { StaticImageData } from "next/image";
