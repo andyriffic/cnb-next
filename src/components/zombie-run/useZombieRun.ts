@@ -67,13 +67,13 @@ const createZombieGame = (
       action: "zombie-boost",
       index: 10,
       name: "Brains",
-      icon: "🧠",
+      icon: "🦴",
     } as const,
     {
       action: "zombie-boost",
       index: 15,
       name: "Brains",
-      icon: "🧠",
+      icon: "🦴",
     } as const,
     {
       action: "player-stop",
@@ -85,13 +85,13 @@ const createZombieGame = (
       action: "zombie-boost",
       index: 24,
       name: "Brains",
-      icon: "🧠",
+      icon: "🦴",
     } as const,
     {
       action: "zombie-boost",
       index: 30,
       name: "Brains",
-      icon: "🧠",
+      icon: "🦴",
     } as const,
     {
       action: "player-stop",
@@ -103,7 +103,7 @@ const createZombieGame = (
       action: "zombie-boost",
       index: 40,
       name: "Brains",
-      icon: "🧠",
+      icon: "🦴",
     } as const,
 
     {
