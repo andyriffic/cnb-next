@@ -87,8 +87,8 @@ const Container = styled.div`
 `;
 
 const RemainingPointsContainer = styled.div<{
-  size: number;
-  exploded: boolean;
+  $size: number;
+  $exploded: boolean;
 }>`
   // position: absolute;
   text-align: center;
@@ -96,14 +96,14 @@ const RemainingPointsContainer = styled.div<{
   margin-top: 40px;
   gap: 20px;
   transition: all 180ms ease-in;
-  ${({ size, exploded }) =>
-    exploded
+  ${({ $size, $exploded }) =>
+    $exploded
       ? css`
           animation: ${explodeAnimation} 100ms ease-in 0s 1 forwards;
         `
       : css`
           animation: ${shakeExtremeAnimation}
-            ${getCloudAnimationSpeedMilliSeconds(size)}ms ease-in-out 0s
+            ${getCloudAnimationSpeedMilliSeconds($size)}ms ease-in-out 0s
             infinite;
         `};
 `;
@@ -122,10 +122,10 @@ const TextContainer = styled.div`
   min-width: 300px;
 `;
 
-const FaceImage = styled(Image)<{ size: number }>`
+const FaceImage = styled(Image)<{ $size: number }>`
   display: inline-block;
-  width: ${({ size }) => size * 10 + 80}px;
-  height: ${({ size }) => size * 10 + 80}px;
+  width: ${({ $size }) => $size * 10 + 80}px;
+  height: ${({ $size }) => $size * 10 + 80}px;
   transition: all 180ms ease-in;
 `;
 
@@ -193,7 +193,7 @@ export function ScopeCreepBalloon({ gasCloud }: Props): JSX.Element {
 
   return (
     <Container>
-      <RemainingPointsContainer size={visibleSize} exploded={gasCloud.exploded}>
+      <RemainingPointsContainer $size={visibleSize} $exploded={gasCloud.exploded}>
         <RemainingPointsTitle>Sprint Points:</RemainingPointsTitle>
         <RemainingPointsValue>{visibleSize}</RemainingPointsValue>
       </RemainingPointsContainer>

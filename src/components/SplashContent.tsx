@@ -20,15 +20,15 @@ const Container = styled.div`
   /* z-index: 100; */
 `;
 
-const AnimatedContent = styled.div<{ show: boolean }>`
+const AnimatedContent = styled.div<{ $show: boolean }>`
   /* position: absolute;
   top: 50%;
   left: 50%; */
   margin-top: 15vh;
   transform: translateX(-50%);
-  ${({ show }) =>
+  ${({ $show }) =>
     css`
-      animation: ${show ? slideInBlurredTop : slideOutBlurredBottom}
+      animation: ${$show ? slideInBlurredTop : slideOutBlurredBottom}
         ${ANIMATION_DURATION_MS}ms both;
     `}
 `;
@@ -62,7 +62,7 @@ export function SplashContent({
 
   return (
     <Container>
-      <AnimatedContent show={show}>{children}</AnimatedContent>
+      <AnimatedContent $show={show}>{children}</AnimatedContent>
     </Container>
   );
 }

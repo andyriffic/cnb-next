@@ -48,10 +48,10 @@ const SpacePlayerContainer = styled.span`
     left 0.5s;
 `;
 
-const GridLine = styled.div<{ visible: boolean }>`
+const GridLine = styled.div<{ $visible: boolean }>`
   position: absolute;
   background-color: #333;
-  opacity: ${({ visible }) => (visible ? 0.5 : 0)};
+  opacity: ${({ $visible }) => ($visible ? 0.5 : 0)};
   transition: opacity 0.5s;
 `;
 
@@ -114,7 +114,7 @@ export const StarMap = ({
         .fill(0)
         .map((_, i) => (
           <HorizontalGridLine
-            visible={showGridlines}
+            $visible={showGridlines}
             key={i}
             style={{
               top: `${(100 / STARMAP_HEIGHT) * i}vh`,
@@ -125,7 +125,7 @@ export const StarMap = ({
         .fill(0)
         .map((_, i) => (
           <VerticalGridLine
-            visible={showGridlines}
+            $visible={showGridlines}
             key={i}
             style={{
               left: `${(100 / STARMAP_WIDTH) * i}vw`,

@@ -14,10 +14,10 @@ export const animation = keyframes`
   }
 `;
 
-const Container = styled.div<{ delayMilliseconds: number }>`
-  ${({ delayMilliseconds }) =>
+const Container = styled.div<{ $delayMilliseconds: number }>`
+  ${({ $delayMilliseconds }) =>
     css`
-      animation: ${animation} 500ms ease-in ${delayMilliseconds}ms 1 both;
+      animation: ${animation} 500ms ease-in ${$delayMilliseconds}ms 1 both;
     `}
 `;
 
@@ -31,6 +31,6 @@ export const AnimateFadeInRight = ({
   delayMilliseconds = 0,
 }: Props): JSX.Element => {
   return (
-    <Container delayMilliseconds={delayMilliseconds}>{children}</Container>
+    <Container $delayMilliseconds={delayMilliseconds}>{children}</Container>
   );
 };

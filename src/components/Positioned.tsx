@@ -2,44 +2,44 @@ import styled, { css } from "styled-components";
 
 import type { JSX } from "react";
 
-const AbsoluteContainer = styled.div<{ absolute: AbsolutePosition }>`
+const AbsoluteContainer = styled.div<{ $absolute: AbsolutePosition }>`
   position: absolute;
-  ${({ absolute }) =>
-    absolute.topPercent &&
+  ${({ $absolute }) =>
+    $absolute.topPercent &&
     css`
-      top: ${absolute.topPercent}vh;
+      top: ${$absolute.topPercent}vh;
     `}
-  ${({ absolute }) =>
-    absolute.bottomPercent &&
+  ${({ $absolute }) =>
+    $absolute.bottomPercent &&
     css`
-      bottom: ${absolute.bottomPercent}vh;
+      bottom: ${$absolute.bottomPercent}vh;
     `}
-  ${({ absolute }) =>
-    absolute.leftPercent &&
+  ${({ $absolute }) =>
+    $absolute.leftPercent &&
     css`
-      left: ${absolute.leftPercent}vw;
+      left: ${$absolute.leftPercent}vw;
     `}
-    ${({ absolute }) =>
-    absolute.rightPercent &&
+    ${({ $absolute }) =>
+    $absolute.rightPercent &&
     css`
-      right: ${absolute.rightPercent}vw;
+      right: ${$absolute.rightPercent}vw;
     `}
 `;
 
 const HorizontalContainer = styled.div<{
-  topPercent?: number;
-  bottomPercent?: number;
+  $topPercent?: number;
+  $bottomPercent?: number;
 }>`
   position: absolute;
-  ${({ topPercent }) =>
-    topPercent !== undefined &&
+  ${({ $topPercent }) =>
+    $topPercent !== undefined &&
     css`
-      top: ${topPercent}vh;
+      top: ${$topPercent}vh;
     `};
-  ${({ bottomPercent }) =>
-    bottomPercent !== undefined &&
+  ${({ $bottomPercent }) =>
+    $bottomPercent !== undefined &&
     css`
-      bottom: ${bottomPercent}vh;
+      bottom: ${$bottomPercent}vh;
     `};
   left: 50%;
   transform: translateX(-50%);
@@ -69,15 +69,15 @@ export function Positioned({
 }: Props): JSX.Element {
   if (absolute) {
     return (
-      <AbsoluteContainer absolute={absolute}>{children}</AbsoluteContainer>
+      <AbsoluteContainer $absolute={absolute}>{children}</AbsoluteContainer>
     );
   }
 
   if (horizontalAlign) {
     return (
       <HorizontalContainer
-        topPercent={horizontalAlign.topPercent}
-        bottomPercent={horizontalAlign.bottomPercent}
+        $topPercent={horizontalAlign.topPercent}
+        $bottomPercent={horizontalAlign.bottomPercent}
       >
         {children}
       </HorizontalContainer>

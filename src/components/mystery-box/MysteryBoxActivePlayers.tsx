@@ -14,27 +14,27 @@ import {
   MysteryBoxUIState,
 } from "./useMysteryBoxGameState";
 
-const PositionedPlayer = styled.div<{ position: Position }>`
+const PositionedPlayer = styled.div<{ $position: Position }>`
   position: absolute;
-  top: ${({ position }) => `${position.topPercent}%`};
-  right: ${({ position }) => `${position.rightPercent}%`};
+  top: ${({ $position }) => `${$position.topPercent}%`};
+  right: ${({ $position }) => `${$position.rightPercent}%`};
   transition:
     top linear 500ms,
     right linear 500ms;
 `;
-const PositionedPlayerPixels = styled.div<{ coordinates: Coordinates }>`
+const PositionedPlayerPixels = styled.div<{ $coordinates: Coordinates }>`
   position: absolute;
-  top: ${({ coordinates }) => `${coordinates.y}px`};
-  left: ${({ coordinates }) => `${coordinates.x}px`};
+  top: ${({ $coordinates }) => `${$coordinates.y}px`};
+  left: ${({ $coordinates }) => `${$coordinates.x}px`};
   transition:
     top linear 500ms,
     left linear 500ms;
 `;
 
-const PositionedPlayerPercentage = styled.div<{ coordinates: Coordinates }>`
+const PositionedPlayerPercentage = styled.div<{ $coordinates: Coordinates }>`
   position: absolute;
-  top: ${({ coordinates }) => `${coordinates.y}vh`};
-  left: ${({ coordinates }) => `${coordinates.x}vw`};
+  top: ${({ $coordinates }) => `${$coordinates.y}vh`};
+  left: ${({ $coordinates }) => `${$coordinates.x}vw`};
   transition:
     top linear 500ms,
     left linear 500ms;
@@ -268,7 +268,7 @@ export const MysteryBoxActivePlayers = ({
         );
         // const offset = positionMap[index] || { x: 0, y: 0 };
         return (
-          <PositionedPlayerPercentage key={player.id} coordinates={coordinates}>
+          <PositionedPlayerPercentage key={player.id} $coordinates={coordinates}>
             <Attention
               animate={
                 !!game.individualMode &&

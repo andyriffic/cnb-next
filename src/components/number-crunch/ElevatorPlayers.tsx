@@ -12,15 +12,15 @@ import { useSound } from "../hooks/useSound";
 import { PlayerVisibleBucketIndexes } from "./ElevatorResultsBuckets";
 
 const PlayerPositionContainer = styled.div<{
-  leftIndex: number;
-  totalPlayers: number;
-  currentGuessContainerIndex: number;
+  $leftIndex: number;
+  $totalPlayers: number;
+  $currentGuessContainerIndex: number;
 }>`
   position: absolute;
-  top: ${({ currentGuessContainerIndex }) =>
-    currentGuessContainerIndex * (100 / NUMBER_CRUNCH_BUCKET_RANGES.length) +
+  top: ${({ $currentGuessContainerIndex }) =>
+    $currentGuessContainerIndex * (100 / NUMBER_CRUNCH_BUCKET_RANGES.length) +
     2}%;
-  left: ${({ leftIndex, totalPlayers }) => leftIndex * (100 / totalPlayers)}%;
+  left: ${({ $leftIndex, $totalPlayers }) => $leftIndex * (100 / $totalPlayers)}%;
   transition:
     top 1s ease-in-out 500ms,
     transform 0.3s ease-in-out;
@@ -140,9 +140,9 @@ export const ElevatorPlayers = ({
         return (
           <PlayerPositionContainer
             key={p.id}
-            leftIndex={i}
-            totalPlayers={gameView.players.length}
-            currentGuessContainerIndex={
+            $leftIndex={i}
+            $totalPlayers={gameView.players.length}
+            $currentGuessContainerIndex={
               currentGuessContainer !== undefined
                 ? currentGuessContainer
                 : NUMBER_CRUNCH_BUCKET_RANGES.length

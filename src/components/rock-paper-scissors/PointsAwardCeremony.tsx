@@ -83,7 +83,7 @@ export const PointsAwardCeremony = ({
     <Container>
       {currentStoryboard >= STORYBOARD.SHOW_WINNER && (
         <Appear animation="flip-in">
-          <CenterSpaced stacked={true} style={{ marginTop: "3vh" }}>
+          <CenterSpaced $stacked={true} style={{ marginTop: "3vh" }}>
             <Heading>Winner 优胜者</Heading>
             {gamePoints.outrightWinner ? (
               <PlayerContainer>
@@ -110,7 +110,7 @@ export const PointsAwardCeremony = ({
       )}
       {currentStoryboard >= STORYBOARD.SHOW_MIDDLE && (
         <Appear animation="flip-in">
-          <CenterSpaced stacked={true} style={{ marginTop: "4vh" }}>
+          <CenterSpaced $stacked={true} style={{ marginTop: "4vh" }}>
             <SubHeading>Others 其他的</SubHeading>
             <PlayerList>
               {gamePoints.middleOfThePack.map((playerPoints) => (
@@ -128,7 +128,7 @@ export const PointsAwardCeremony = ({
       )}
       {currentStoryboard >= STORYBOARD.SHOW_LOSER && hasLosers && (
         <Appear animation="flip-in">
-          <CenterSpaced stacked={true} style={{ marginTop: "4vh" }}>
+          <CenterSpaced $stacked={true} style={{ marginTop: "4vh" }}>
             <SubHeading>Biggest losers 大输家</SubHeading>
             <PlayerList>
               {gamePoints.zeroPointLosers.map((playerPoints) => (
@@ -147,7 +147,7 @@ export const PointsAwardCeremony = ({
       {currentStoryboard >= STORYBOARD.SHOW_MINIGAME_CTA && (
         <Appear animation="flip-in">
           {" "}
-          <CenterSpaced stacked={true} style={{ marginTop: "4vh" }}>
+          <CenterSpaced $stacked={true} style={{ marginTop: "4vh" }}>
             <LinkToMiniGame team={team} />
           </CenterSpaced>
         </Appear>

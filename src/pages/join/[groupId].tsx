@@ -306,7 +306,7 @@ function Page({ regularPlayers }: Props) {
                           >
                             <div>
                               <ThemedPrimaryButton
-                                highlight={gameType === suggestedGame}
+                                $highlight={gameType === suggestedGame}
                                 disabled={group.playerIds.length < 3}
                                 style={{
                                   fontSize: "0.8rem",

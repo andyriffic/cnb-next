@@ -7,12 +7,12 @@ export const EvenlySpaced = styled.div`
   gap: 1rem;
 `;
 
-export const CenterSpaced = styled.div<{ stacked?: boolean }>`
+export const CenterSpaced = styled.div<{ $stacked?: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 1rem;
-  flex-direction: ${({ stacked }) => (stacked ? "column" : "row")};
+  flex-direction: ${({ $stacked }) => ($stacked ? "column" : "row")};
 
   // > * {
   //   flex: 1;

@@ -25,17 +25,17 @@ const ZombiePlayerContainer = styled.div`
   position: relative;
 `;
 
-const SlippedOver = styled.div<{ fallen: boolean }>`
-  ${({ fallen }) =>
-    fallen &&
+const SlippedOver = styled.div<{ $fallen: boolean }>`
+  ${({ $fallen }) =>
+    $fallen &&
     css`
       animation: ${SlippedAnimation} 0.5s ease-in-out 0.5s 1 both;
     `};
 `;
 
-const ZombieTransform = styled.div<{ isZombie: boolean }>`
-  ${({ isZombie }) =>
-    isZombie &&
+const ZombieTransform = styled.div<{ $isZombie: boolean }>`
+  ${({ $isZombie }) =>
+    $isZombie &&
     css`
       filter: hue-rotate(90deg);
     `}
@@ -69,20 +69,20 @@ const PlayerDetailsContainer = styled.div`
   width: 100%;
 `;
 
-const ArrowIndicator = styled.div<{ isZombie: boolean }>`
+const ArrowIndicator = styled.div<{ $isZombie: boolean }>`
   width: 0;
   height: 0;
   border-left: 20px solid transparent;
   border-right: 20px solid transparent;
 
   border-top: 20px solid
-    ${({ isZombie }) => (isZombie ? ZOMBIE_COLOR : PLAYER_COLOR)};
+    ${({ $isZombie }) => ($isZombie ? ZOMBIE_COLOR : PLAYER_COLOR)};
   margin: 0 auto;
   opacity: 0.4;
 `;
 
-const PlayerName = styled.div<{ isZombie: boolean }>`
-  background: ${({ isZombie }) => (isZombie ? ZOMBIE_COLOR : PLAYER_COLOR)};
+const PlayerName = styled.div<{ $isZombie: boolean }>`
+  background: ${({ $isZombie }) => ($isZombie ? ZOMBIE_COLOR : PLAYER_COLOR)};
   color: white;
   text-align: center;
   padding: 0.2rem;
@@ -136,11 +136,11 @@ export const ZombieRunPlayer = ({
   return (
     <ZombiePlayerContainer>
       <SlippedOver
-        fallen={
+        $fallen={
           endGameStatus !== ZombieRunEndGameStatus.ZOMBIE_PARTY && fallOver
         }
       >
-        <ZombieTransform isZombie={isZombie}>
+        <ZombieTransform $isZombie={isZombie}>
           <PlayerAvatar playerId={zombiePlayer.id} size="thumbnail" />
         </ZombieTransform>
       </SlippedOver>
@@ -166,9 +166,9 @@ export const ZombieRunPlayer = ({
       )}
       {endGameStatus !== ZombieRunEndGameStatus.ZOMBIE_PARTY && (
         <PlayerDetailsContainer>
-          {/* <ArrowIndicator isZombie={isZombie} /> */}
+          {/* <ArrowIndicator $isZombie={isZombie} /> */}
           <PlayerName
-            isZombie={isZombie}
+            $isZombie={isZombie}
             style={{ transform: `translateY(${stackIndex * 100}%)` }}
           >
             {playerName}{" "}

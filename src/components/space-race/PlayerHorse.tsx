@@ -8,7 +8,7 @@ import { STARMAP_CHART, STARMAP_HEIGHT, STARMAP_WIDTH } from "./constants";
 import { SpaceRacePlayer } from "./types";
 import { CnyHorse } from "./CnyHorse";
 
-const Container = styled.div<{ hide: boolean; attention: boolean }>`
+const Container = styled.div<{ $hide: boolean; $attention: boolean }>`
   font-size: 3rem;
   width: ${100 / STARMAP_WIDTH}vw;
   height: ${100 / STARMAP_HEIGHT}vh;
@@ -20,14 +20,14 @@ const Container = styled.div<{ hide: boolean; attention: boolean }>`
   flex-direction: column;
   cursor: pointer;
   z-index: unset;
-  ${({ hide }) =>
-    hide &&
+  ${({ $hide }) =>
+    $hide &&
     css`
       animation: ${fadeOut} 1000ms ease-in 0ms 1 both;
     `}
 
-  ${({ attention }) =>
-    attention &&
+  ${({ $attention }) =>
+    $attention &&
     css`
       animation: ${Animation_Pulse_Plus} 3s ease-in-out 1 both;
       z-index: 1;
@@ -44,7 +44,7 @@ const CollisionIndicator = styled.div`
   animation: ${fadeInOutRight} 1000ms ease-in 0ms 1 both;
 `;
 
-const PlayerName = styled.div<{ attention: boolean }>`
+const PlayerName = styled.div<{ $attention: boolean }>`
   position: absolute;
   top: 25%;
   font-size: 0.6rem;
@@ -53,18 +53,18 @@ const PlayerName = styled.div<{ attention: boolean }>`
   padding: 0.2rem;
   border-radius: 0.3rem 0.3rem 0 0;
   z-index: unset;
-  ${({ attention }) =>
-    attention &&
+  ${({ $attention }) =>
+    $attention &&
     css`
       animation: ${Animation_Pulse_Plus} 3s ease-in-out 1 both;
       // z-index: 1;
     `}
 `;
 
-const PlayerShipContainer = styled.div<{ colorHex: string }>`
+const PlayerShipContainer = styled.div<{ $colorHex: string }>`
   // transform: rotate(45deg);
   // color: transparent;
-  // text-shadow: 0 0 0 ${({ colorHex }) => colorHex};
+  // text-shadow: 0 0 0 ${({ $colorHex }) => $colorHex};
   filter: brightness(1.6);
 `;
 
@@ -105,12 +105,12 @@ export const PlayerHorse = ({ player }: Props) => {
   );
 
   return (
-    <Container hide={landed} attention={player.highlight}>
-      <PlayerShipContainer colorHex={player.color}>
+    <Container $hide={landed} $attention={player.highlight}>
+      <PlayerShipContainer $colorHex={player.color}>
         <CnyHorse player={player} />
       </PlayerShipContainer>
       <PlayerName
-        attention={player.highlight}
+        $attention={player.highlight}
         style={{
           color: playerNameFontColour.current,
           backgroundColor: player.color,

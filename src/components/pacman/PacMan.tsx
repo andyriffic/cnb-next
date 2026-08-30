@@ -36,14 +36,14 @@ const Turban = styled.img`
   width: 70%;
 `;
 
-const Head = styled.div<{ reverse: boolean }>`
+const Head = styled.div<{ $reverse: boolean }>`
   width: 3vw;
   height: 3vw;
   border-radius: 50%;
   background: #f2d648;
   position: relative;
-  ${({ reverse }) =>
-    reverse &&
+  ${({ $reverse }) =>
+    $reverse &&
     css`
       transform: scaleX(-1);
     `}
@@ -83,7 +83,7 @@ type Props = {
 export function PacMan({ state }: Props): JSX.Element {
   return (
     <Container>
-      <Head reverse={state.pacMan.facingDirection === "left"}>
+      <Head $reverse={state.pacMan.facingDirection === "left"}>
         <Mouth />
       </Head>
       {state.pacMan.movesRemaining > 0 && (

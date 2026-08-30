@@ -7,12 +7,12 @@ import { getPlayerAvatarUrl } from "../utils/url";
 export type FacingDirection = "right" | "left";
 export type AvatarSize = "tiny" | "thumbnail" | "small" | "medium" | "large";
 
-const ImageContainer = styled.div<{ reverseImage: boolean }>`
+const ImageContainer = styled.div<{ $reverseImage: boolean }>`
   /* width: 70vh; */
   /* height: 90vh; */
   display: block;
-  ${({ reverseImage }) =>
-    reverseImage &&
+  ${({ $reverseImage }) =>
+    $reverseImage &&
     css`
       transform: scaleX(-1);
     `}
@@ -51,7 +51,7 @@ export const PlayerAvatar = ({
 }: Props): JSX.Element => {
   return (
     <IconContainer>
-      <ImageContainer reverseImage={facing === "left"}>
+      <ImageContainer $reverseImage={facing === "left"}>
         <Image
           src={getPlayerAvatarUrl(playerId)}
           alt=""

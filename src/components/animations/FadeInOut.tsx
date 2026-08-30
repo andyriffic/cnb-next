@@ -2,10 +2,10 @@ import { useEffect, useState, type JSX } from "react";
 import styled, { css } from "styled-components";
 import { fadeInBottom, fadeOutTop } from "./keyframes/fade";
 
-const Container = styled.div<{ isExiting: boolean }>`
-  ${({ isExiting }) =>
+const Container = styled.div<{ $isExiting: boolean }>`
+  ${({ $isExiting }) =>
     css`
-      animation: ${isExiting ? fadeOutTop : fadeInBottom} 300ms ease-in 0ms 1
+      animation: ${$isExiting ? fadeOutTop : fadeInBottom} 300ms ease-in 0ms 1
         both;
     `}
 `;
@@ -22,5 +22,5 @@ export const AnimateFadeInOut = ({ children }: Props): JSX.Element => {
     return () => clearTimeout(timeout);
   }, []);
 
-  return <Container isExiting={isExiting}>{children}</Container>;
+  return <Container $isExiting={isExiting}>{children}</Container>;
 };

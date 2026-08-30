@@ -16,10 +16,10 @@ const PlayerAvatarContainer = styled.div`
   opacity: 0.6;
 `;
 
-const PlayerListItem = styled.div<{ active: boolean }>`
+const PlayerListItem = styled.div<{ $active: boolean }>`
   position: relative;
   transition: top 300ms ease-in-out, opacity 1s linear;
-  top: ${({ active }) => (active ? "-20%" : "0")};
+  top: ${({ $active }) => ($active ? "-20%" : "0")};
 `;
 
 const PlayerFinishedPosition = styled.div`
@@ -82,7 +82,7 @@ export function GraveyardPlayer({ player, game }: Props): JSX.Element {
   return (
     <PlayerListItem
       key={player.player.id}
-      active={notDead && (active || winner)}
+      $active={notDead && (active || winner)}
     >
       <div style={{ position: "absolute", top: 0 }}>
         <PlayerBonusPoints points={player.guesses.correctGuessCount} />
@@ -94,7 +94,7 @@ export function GraveyardPlayer({ player, game }: Props): JSX.Element {
       )}
       <PlayerAvatarContainer>
         <ZombieTransform
-          isZombie={getPlayerZombieRunDetails(player.player).isZombie}
+          $isZombie={getPlayerZombieRunDetails(player.player).isZombie}
         >
           <PlayerAvatar playerId={player.player.id} size="thumbnail" />
         </ZombieTransform>

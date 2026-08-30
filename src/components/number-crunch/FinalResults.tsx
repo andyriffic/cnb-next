@@ -125,17 +125,17 @@ export const FinalResults = ({ gameView, finalResults, team }: Props) => {
   }, revealState === RevealState.SHOW_POINTS_LEGEND);
 
   return (
-    <CenterSpaced stacked={true}>
+    <CenterSpaced $stacked={true}>
       {revealState >= RevealState.SHOW_TARGET && (
         <Appear>
-          <SmallHeading centered={true}>Target</SmallHeading>
+          <SmallHeading $centered={true}>Target</SmallHeading>
           <FeatureHeading>{finalResults.target}</FeatureHeading>
         </Appear>
       )}
       {revealState >= RevealState.SHOW_WINNERS && (
         <Appear>
           <Attention animate={gameView.guessedInFirstRound} animation="vibrate">
-            <SmallHeading centered={true}>
+            <SmallHeading $centered={true}>
               {gameView.guessedInFirstRound && "🎉 "}Winner
               {finalResults.winningPlayerIds.length > 1 ? "s" : ""}
               {gameView.guessedInFirstRound &&
@@ -152,7 +152,7 @@ export const FinalResults = ({ gameView, finalResults, team }: Props) => {
       {revealState >= RevealState.SHOW_REST && (
         <Appear animation="text-focus-in">
           <div style={{ width: "90vw" }}>
-            <SmallHeading centered={true}>Final Guesses</SmallHeading>
+            <SmallHeading $centered={true}>Final Guesses</SmallHeading>
             <FinalGuessLine>
               {/* <TargetDot style={{ left: `${finalResults.target}%` }} /> */}
               <FinalGuessDotsContainer>

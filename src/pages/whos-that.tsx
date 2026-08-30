@@ -22,9 +22,9 @@ const Background = styled.div`
   background-color: #000;
 `;
 
-const PlayerContainer = styled.div<{ reveal: boolean }>`
-  ${({ reveal }) =>
-    !reveal &&
+const PlayerContainer = styled.div<{ $reveal: boolean }>`
+  ${({ $reveal }) =>
+    !$reveal &&
     css`
       filter: brightness(0) invert(0);
     `}
@@ -110,7 +110,7 @@ export default function Page({ player, continueUrl }: Props) {
 
   return (
     <Background>
-      <PlayerContainer reveal={reveal}>
+      <PlayerContainer $reveal={reveal}>
         <PlayerAvatar playerId={player.id} />
       </PlayerContainer>
       <TextContainer style={{ position: "absolute", bottom: 0, right: 0 }}>

@@ -28,16 +28,16 @@ const BombDropperContainer = styled.div`
   // border: 1px solid red;
 `;
 
-export const PositionedBox = styled.div<{ position: BoxPosition }>`
+export const PositionedBox = styled.div<{ $position: BoxPosition }>`
   position: absolute;
-  top: ${({ position }) =>
-    position.top !== undefined ? `${position.top}vh` : "auto"};
-  left: ${({ position }) =>
-    position.left !== undefined ? `${position.left}vw` : "auto"};
-  right: ${({ position }) =>
-    position.right !== undefined ? `${position.right}vw` : "auto"};
-  bottom: ${({ position }) =>
-    position.bottom !== undefined ? `${position.bottom}vh` : "auto"};
+  top: ${({ $position }) =>
+    $position.top !== undefined ? `${$position.top}vh` : "auto"};
+  left: ${({ $position }) =>
+    $position.left !== undefined ? `${$position.left}vw` : "auto"};
+  right: ${({ $position }) =>
+    $position.right !== undefined ? `${$position.right}vw` : "auto"};
+  bottom: ${({ $position }) =>
+    $position.bottom !== undefined ? `${$position.bottom}vh` : "auto"};
 `;
 
 const Explosion = styled.div`
@@ -127,7 +127,7 @@ export const MysteryBoxCurrentRoundUi = ({
         {round.boxes.map((box, index) => {
           const position = BoxPositions[index] || {};
           return (
-            <PositionedBox key={box.id} position={position}>
+            <PositionedBox key={box.id} $position={position}>
               <BoxOptionContainerItem>
                 <MysteryBeachBox
                   key={`${round.id}-${box.id}`}

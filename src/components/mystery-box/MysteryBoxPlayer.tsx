@@ -13,15 +13,15 @@ export const explodeAnimation = keyframes`
   100% { transform: translate(0, -2000px) rotate(-1080deg); }
 `;
 
-const ExplodingPlayerContainer = styled.div<{ exploded: boolean }>`
+const ExplodingPlayerContainer = styled.div<{ $exploded: boolean }>`
   /* display: flex;
   justify-content: center;
   width: 100%; */
-  // visibility: ${({ exploded }) => (exploded ? "visible" : "hidden")};
+  // visibility: ${({ $exploded }) => ($exploded ? "visible" : "hidden")};
   /* visibility: hidden; */
-  /* opacity: ${({ exploded }) => (exploded ? "1" : "0.3")}; */
-  ${({ exploded }) =>
-    exploded &&
+  /* opacity: ${({ $exploded }) => ($exploded ? "1" : "0.3")}; */
+  ${({ $exploded }) =>
+    $exploded &&
     css`
       animation: ${explodeAnimation} 2000ms ease-in-out 2s 1 both;
     `}
@@ -44,7 +44,7 @@ export const MysteryBoxPlayerUi = ({
 }: Props) => {
   return (
     <Container>
-      <ExplodingPlayerContainer exploded={explode}>
+      <ExplodingPlayerContainer $exploded={explode}>
         <Attention animate={status === "winner"} animation="pulse">
           <PlayerAvatar playerId={player.id} size={avatarSize} />
           <div

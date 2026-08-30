@@ -43,7 +43,7 @@ const RandomAiTaskText = styled.div`
   text-align: center;
 `;
 
-const Gear = styled.div<{ animate: boolean; direction: "left" | "right" }>`
+const Gear = styled.div<{ $animate: boolean; $direction: "left" | "right" }>`
   width: 2em;
   height: 2em;
   top: 50%;
@@ -53,10 +53,10 @@ const Gear = styled.div<{ animate: boolean; direction: "left" | "right" }>`
   background: #05a9c7;
   position: absolute;
   border-radius: 1em;
-  ${({ animate, direction }) =>
-    animate &&
+  ${({ $animate, $direction }) =>
+    $animate &&
     css`
-      animation: ${direction === "right"
+      animation: ${$direction === "right"
           ? gearRotateRightKeyframes
           : gearRotateLeftKeyframes}
         1s infinite linear;
@@ -163,10 +163,10 @@ export const OverlordThinkingIndicator = ({ isThinking }: Props) => {
   return (
     <Container>
       <GearContainer>
-        <Gear animate={isThinking} direction="right" />
+        <Gear $animate={isThinking} $direction="right" />
         <Gear
-          animate={isThinking}
-          direction="left"
+          $animate={isThinking}
+          $direction="left"
           style={{ marginTop: "-2.2em", marginLeft: 0, left: 0 }}
         />
       </GearContainer>

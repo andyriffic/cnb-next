@@ -20,11 +20,11 @@ export const AdminPlayerSummaryView = ({ player, onStartEdit }: Props) => {
   const teamDetails = getTeamDetails(player.details?.team || "none");
   return (
     <Card>
-      <CenterSpaced stacked style={{ gap: "0.4rem" }}>
+      <CenterSpaced $stacked style={{ gap: "0.4rem" }}>
         <PlayerAvatar playerId={player.id} size="thumbnail" />
-        <SmallPill fullWidth>{player.name}</SmallPill>
+        <SmallPill $fullWidth>{player.name}</SmallPill>
         <SmallPill
-          fullWidth
+          $fullWidth
           style={{
             backgroundColor: teamDetails.backgroundColor,
             color: teamDetails.textColor,

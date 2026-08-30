@@ -4,11 +4,11 @@ import { useSocketIo } from "../../providers/SocketIoProvider";
 import { FeatureSubHeading, SmallHeading, SubHeading } from "../Atoms";
 import { DialogModal } from "../DialogModal";
 
-const QuestionOptionsContainer = styled.div<{ stack: boolean }>`
+const QuestionOptionsContainer = styled.div<{ $stack: boolean }>`
   display: flex;
   margin: 1rem 0;
   gap: 1rem;
-  flex-direction: ${({ stack }) => (stack ? "column" : "row")};
+  flex-direction: ${({ $stack }) => ($stack ? "column" : "row")};
   flex-wrap: wrap;
 `;
 
@@ -46,7 +46,7 @@ export const PlayerQuestionDialog = ({ playerId }: Props) => {
       <div style={{ width: "90vw" }}>
         <SmallHeading>{activePlayerQuestion.question}</SmallHeading>
         <QuestionOptionsContainer
-          stack={activePlayerQuestion.style !== "emoji"}
+          $stack={activePlayerQuestion.style !== "emoji"}
         >
           {activePlayerQuestion.options.map((option, i) => (
             <QuestionOptionButton

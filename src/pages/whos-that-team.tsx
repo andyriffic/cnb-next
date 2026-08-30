@@ -26,10 +26,10 @@ const PlayersContainer = styled.div`
   flex-wrap: wrap;
 `;
 
-const PlayerContainer = styled.div<{ reveal: boolean }>`
+const PlayerContainer = styled.div<{ $reveal: boolean }>`
   padding: 3rem;
-  ${({ reveal }) =>
-    !reveal &&
+  ${({ $reveal }) =>
+    !$reveal &&
     css`
       filter: brightness(0) invert(0);
     `}
@@ -103,7 +103,7 @@ export default function Page({ players, continueUrl, teamName }: Props) {
     <Background>
       <PlayersContainer>
         {players.map((player) => (
-          <PlayerContainer reveal={reveal} key={player.id}>
+          <PlayerContainer $reveal={reveal} key={player.id}>
             <PlayerAvatar playerId={player.id} size="small" />
             <Appear show={reveal} animation="flip-in">
               <PlayerName>{player.name}</PlayerName>

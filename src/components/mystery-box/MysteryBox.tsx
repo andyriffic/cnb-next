@@ -62,18 +62,18 @@ const Box = styled.div`
   height: 100px;
 `;
 
-const BoxBody = styled.div<{ primaryColor: string }>`
+const BoxBody = styled.div<{ $primaryColor: string }>`
   position: relative;
   height: 100px;
   width: 100px;
   margin-top: 80px;
-  background-color: ${({ primaryColor }) => primaryColor};
+  background-color: ${({ $primaryColor }) => $primaryColor};
   border-bottom-left-radius: 5%;
   border-bottom-right-radius: 5%;
   box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.3);
   background: linear-gradient(
-    ${({ primaryColor }) => tinycolor(primaryColor).darken(20).toHexString()},
-    ${({ primaryColor }) => primaryColor}
+    ${({ $primaryColor }) => tinycolor($primaryColor).darken(20).toHexString()},
+    ${({ $primaryColor }) => $primaryColor}
   );
 
   &::after {
@@ -88,7 +88,7 @@ const BoxBody = styled.div<{ primaryColor: string }>`
   }
 `;
 
-const BoxContents = styled.div<{ isOpen: boolean }>`
+const BoxContents = styled.div<{ $isOpen: boolean }>`
   transition: all 500ms ease-in-out 2s;
   opacity: 0;
   z-index: 2;
@@ -105,21 +105,21 @@ const BoxContents = styled.div<{ isOpen: boolean }>`
   animation: ${RevealBoxContents} 1s ease-in-out forwards;
 `;
 
-const BoxLid = styled.div<{ isOpen: boolean; primaryColor: string }>`
+const BoxLid = styled.div<{ $isOpen: boolean; $primaryColor: string }>`
   position: absolute;
   z-index: 1;
   left: 50px;
   bottom: 15px;
   transform: translateX(-50%);
   height: 40px;
-  background-color: ${({ primaryColor }) => primaryColor};
+  background-color: ${({ $primaryColor }) => $primaryColor};
   height: 20px;
   width: 110px;
   border-radius: 5%;
   box-shadow: 0 8px 4px -4px rgba(0, 0, 0, 0.3);
 
   ${(props) =>
-    props.isOpen &&
+    props.$isOpen &&
     css`
       animation: ${BoxLidAnimation} 1s ease-in-out forwards;
     `}
@@ -205,10 +205,10 @@ export const MysteryBoxUi = ({ box, onReveal, open }: Props) => {
     // </div>
     <Box>
       {open && (
-        <BoxContents isOpen={open}>{getBoxContents(box.contents)}</BoxContents>
+        <BoxContents $isOpen={open}>{getBoxContents(box.contents)}</BoxContents>
       )}
-      <BoxBody primaryColor={boxColorHex} />
-      <BoxLid isOpen={open} primaryColor={boxColorHex} />
+      <BoxBody $primaryColor={boxColorHex} />
+      <BoxLid $isOpen={open} $primaryColor={boxColorHex} />
     </Box>
   );
 };

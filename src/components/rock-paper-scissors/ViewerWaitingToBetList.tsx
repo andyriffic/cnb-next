@@ -153,7 +153,7 @@ export const ViewerWaitingToBetList = ({
             <div key={wallet.player.id}>
               {/* <SubHeading>{names[wallet.playerId]}</SubHeading> */}
               <ZombieTransform
-                isZombie={getPlayerZombieRunDetails(wallet.player).isZombie}
+                $isZombie={getPlayerZombieRunDetails(wallet.player).isZombie}
               >
                 <PlayerAvatar playerId={wallet.player.id} size="thumbnail" />
               </ZombieTransform>

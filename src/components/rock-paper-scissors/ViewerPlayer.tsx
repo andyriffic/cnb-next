@@ -84,7 +84,7 @@ export const ViewerPlayer = ({
 
   return (
     <div style={{ position: "relative" }}>
-      <ZombieTransform isZombie={getPlayerZombieRunDetails(player).isZombie}>
+      <ZombieTransform $isZombie={getPlayerZombieRunDetails(player).isZombie}>
         <ViewerPlayersAvatar
           playerId={player.id}
           size="medium"

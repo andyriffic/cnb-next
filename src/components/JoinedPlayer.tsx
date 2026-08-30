@@ -40,11 +40,11 @@ const CoinContainer = styled.div`
   text-align: center;
 `;
 
-export const ZombieTransform = styled.div<{ isZombie: boolean }>`
+export const ZombieTransform = styled.div<{ $isZombie: boolean }>`
   transition: filter 1s ease-in-out;
   // animation: ${Animation_ShakeBottom} 2.5s linear infinite both;
-  ${({ isZombie }) =>
-    isZombie &&
+  ${({ $isZombie }) =>
+    $isZombie &&
     css`
       filter: hue-rotate(90deg);
     `}
@@ -72,7 +72,7 @@ export function JoinedPlayer({ player, team, avatarSize }: Props) {
 
   return (
     <div style={{ position: "relative" }}>
-      <ZombieTransform isZombie={isZombie}>
+      <ZombieTransform $isZombie={isZombie}>
         <PlayerAvatar playerId={player.id} size={avatarSize} />
       </ZombieTransform>
       {player && !isZombie && (

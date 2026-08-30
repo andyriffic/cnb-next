@@ -3,10 +3,10 @@ import styled from 'styled-components';
 import { boardConfig } from './boardConfig';
 import { Coordinates, PacManSquare } from './types';
 
-const Container = styled.div<{ position: Coordinates }>`
+const Container = styled.div<{ $position: Coordinates }>`
   position: absolute;
-  top: ${({ position }) => boardConfig.gridCoordinates.y[position.y]}%;
-  left: ${({ position }) => boardConfig.gridCoordinates.x[position.x]}%;
+  top: ${({ $position }) => boardConfig.gridCoordinates.y[$position.y]}%;
+  left: ${({ $position }) => boardConfig.gridCoordinates.x[$position.x]}%;
   width: 5%;
   height: 5%;
   text-align: center;
@@ -24,7 +24,7 @@ type Props = {
 
 export function BoardSquare({ square, color, content }: Props): JSX.Element {
   return (
-    <Container style={{ color }} position={square.coordinates}>
+    <Container style={{ color }} $position={square.coordinates}>
       {content && content}
     </Container>
   );

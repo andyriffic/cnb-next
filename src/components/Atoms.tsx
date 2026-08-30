@@ -21,14 +21,14 @@ export const FeatureSubHeading = styled.h2`
   letter-spacing: 0.2rem;
 `;
 
-export const SmallHeading = styled.h3<{ centered?: boolean }>`
+export const SmallHeading = styled.h3<{ $centered?: boolean }>`
   font-size: 2rem;
   margin: 0;
   font-family: ${THEME.tokens.fonts.feature};
   color: ${THEME.tokens.colours.primaryText};
   text-transform: uppercase;
   letter-spacing: 0.2rem;
-  text-align: ${({ centered }) => (centered ? "center" : "left")};
+  text-align: ${({ $centered }) => ($centered ? "center" : "left")};
 `;
 
 export const NormalText = styled.p`
@@ -58,14 +58,14 @@ export const ThemedPrimaryLinkButton = styled(Link)`
   }
 `;
 
-export const ThemedPrimaryButton = styled.button<{ highlight?: boolean }>`
+export const ThemedPrimaryButton = styled.button<{ $highlight?: boolean }>`
   display: block;
   padding: 1rem 2rem;
   font-weight: 600;
   font-size: 1.4rem;
   text-decoration: none;
-  ${({ highlight }) =>
-    highlight
+  ${({ $highlight }) =>
+    $highlight
       ? css`
           background-image: linear-gradient(
             to right,
@@ -104,7 +104,7 @@ export const Pill = styled.div`
   display: inline-block;
 `;
 
-export const SmallPill = styled.div<{ fullWidth?: boolean }>`
+export const SmallPill = styled.div<{ $fullWidth?: boolean }>`
   background-color: ${THEME.tokens.colours.primaryBackground};
   font-size: 0.7rem;
   padding: 0.3rem 0.5rem;
@@ -112,8 +112,8 @@ export const SmallPill = styled.div<{ fullWidth?: boolean }>`
   display: inline-block;
   text-align: center;
   text-transform: uppercase;
-  ${({ fullWidth }) =>
-    fullWidth &&
+  ${({ $fullWidth }) =>
+    $fullWidth &&
     css`
       width: 100%;
     `}

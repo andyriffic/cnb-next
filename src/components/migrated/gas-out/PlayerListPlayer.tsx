@@ -16,19 +16,19 @@ const CardContainer = styled.div`
   transform: translateX(-50%);
 `;
 
-const PlayerAvatarContainer = styled.div<{ alive: boolean }>`
-  opacity: ${({ alive }) => (alive ? 1 : 0.4)};
-  ${({ alive }) =>
-    !alive &&
+const PlayerAvatarContainer = styled.div<{ $alive: boolean }>`
+  opacity: ${({ $alive }) => ($alive ? 1 : 0.4)};
+  ${({ $alive }) =>
+    !$alive &&
     css`
       animation: ${spinAwayAnimationUp} 1000ms ease-in-out 0s 1 backwards;
     `}
 `;
 
-const PlayerListItem = styled.div<{ active: boolean }>`
+const PlayerListItem = styled.div<{ $active: boolean }>`
   position: relative;
   transition: top 300ms ease-in-out, opacity 1s linear;
-  top: ${({ active }) => (active ? "-20%" : "0")};
+  top: ${({ $active }) => ($active ? "-20%" : "0")};
 `;
 
 const PlayerFinishedPosition = styled.div`
@@ -145,7 +145,7 @@ export function PlayerListPlayer({
   return show ? (
     <PlayerListItem
       key={player.player.id}
-      active={notDead && (active || winner)}
+      $active={notDead && (active || winner)}
     >
       <div style={{ position: "absolute", top: 0 }}>
         <PlayerBonusPoints points={player.guesses.correctGuessCount} />
@@ -170,7 +170,7 @@ export function PlayerListPlayer({
       {(winner || (active && notDead && !gameOver)) && (
         <PlayerName>{player.player.name}</PlayerName>
       )}
-      <PlayerAvatarContainer alive={alive}>
+      <PlayerAvatarContainer $alive={alive}>
         <PlayerAvatar playerId={player.player.id} size={size} />
       </PlayerAvatarContainer>
       {(!notDead || winner) && <PlayerPoints>{player.points}</PlayerPoints>}

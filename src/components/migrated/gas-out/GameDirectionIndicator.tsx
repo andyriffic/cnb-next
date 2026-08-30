@@ -2,12 +2,12 @@ import React, { type JSX } from "react";
 import styled, { css } from "styled-components";
 import { Direction, GasGame } from "../../../services/migrated/gas-out/types";
 
-const Arrow = styled.img<{ direction: Direction }>`
+const Arrow = styled.img<{ $direction: Direction }>`
   width: 70px;
   transition: transform 300ms ease-in-out;
-  ${({ direction }) =>
+  ${({ $direction }) =>
     css`
-      transform: rotate(${direction === "right" ? "180" : "0"}deg);
+      transform: rotate(${$direction === "right" ? "180" : "0"}deg);
     `}
 `;
 
@@ -20,7 +20,7 @@ export function GameDirectionIndicator({ game }: Props): JSX.Element {
     <Arrow
       src="/images/gas-out/arrow-left-1"
       alt=""
-      direction={game.direction}
+      $direction={game.direction}
     />
   );
 }

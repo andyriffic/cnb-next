@@ -12,10 +12,10 @@ const Container = styled.div`
   background-color: gray;
 `;
 
-const ProgressFill = styled.div<{ timeOutMilliseconds: number }>`
-  ${({ timeOutMilliseconds }) =>
+const ProgressFill = styled.div<{ $timeOutMilliseconds: number }>`
+  ${({ $timeOutMilliseconds }) =>
     css`
-      animation: ${fillAnimation} ${timeOutMilliseconds}ms linear 1 0s both;
+      animation: ${fillAnimation} ${$timeOutMilliseconds}ms linear 1 0s both;
     `}
   border-radius: 10px;
   padding: 8px;
@@ -44,7 +44,7 @@ export const PlayerGasTimeoutTimer = ({
 
   return (
     <Container>
-      <ProgressFill timeOutMilliseconds={timeOutMilliseconds}>
+      <ProgressFill $timeOutMilliseconds={timeOutMilliseconds}>
         Hurry! 匆忙
       </ProgressFill>
     </Container>

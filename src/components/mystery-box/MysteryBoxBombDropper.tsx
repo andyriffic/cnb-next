@@ -147,7 +147,7 @@ export const MysteryBoxBombDropper = ({
   return (
     <Container>
       <PositionedBox
-        position={boxPositions[state.currentFrame.boxIndex]!}
+        $position={boxPositions[state.currentFrame.boxIndex]!}
         style={{
           transition: `left ${state.dropperState === "dropping" ? "0.8s" : "2s"} ease-in-out`,
         }}

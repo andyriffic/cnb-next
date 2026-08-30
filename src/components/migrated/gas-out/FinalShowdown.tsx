@@ -11,7 +11,7 @@ const Container = styled.div`
   gap: 30px;
 `;
 
-const PlayerContainer = styled.div<{ isActive: boolean }>`
+const PlayerContainer = styled.div<{ $isActive: boolean }>`
   width: 100%;
   box-sizing: border-box;
   padding: 0;
@@ -19,9 +19,9 @@ const PlayerContainer = styled.div<{ isActive: boolean }>`
   justify-content: center;
   position: relative;
   transition: transform 0.3s;
-  ${({ isActive }) =>
+  ${({ $isActive }) =>
     css`
-      transform: scale(${isActive ? 1 : 0.7});
+      transform: scale(${$isActive ? 1 : 0.7});
     `}
 `;
 
@@ -57,7 +57,7 @@ export function FinalShowdown({ game, gameOver }: Props): JSX.Element | null {
   return (
     <Container>
       {player1 && (
-        <PlayerContainer isActive={game.currentPlayer.id === player1.player.id}>
+        <PlayerContainer $isActive={game.currentPlayer.id === player1.player.id}>
           <PlayerCarouselPlayer
             game={game}
             gameOver={gameOver}
@@ -66,7 +66,7 @@ export function FinalShowdown({ game, gameOver }: Props): JSX.Element | null {
         </PlayerContainer>
       )}
       {player2 && (
-        <PlayerContainer isActive={game.currentPlayer.id === player2.player.id}>
+        <PlayerContainer $isActive={game.currentPlayer.id === player2.player.id}>
           <PlayerCarouselPlayer
             game={game}
             gameOver={gameOver}

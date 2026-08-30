@@ -38,7 +38,7 @@ export function DialogModal({ children, options, show }: Props) {
     <FullScreenBackground>
       <DialogContainer>
         <Card>
-          <CenterSpaced stacked={true}>
+          <CenterSpaced $stacked={true}>
             <DialogBodyContainer>{children}</DialogBodyContainer>
             {options && (
               <DialogOptionsContainer>

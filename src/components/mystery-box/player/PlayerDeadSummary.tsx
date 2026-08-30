@@ -34,7 +34,7 @@ type Props = {
 
 export const PlayerDeadSummary = ({ player, game }: Props) => {
   return (
-    <CenterSpaced stacked={true}>
+    <CenterSpaced $stacked={true}>
       <SmallHeading>You dead!</SmallHeading>
       <DeadIcon>☠️</DeadIcon>
       <div>

@@ -62,8 +62,8 @@ const HigherPoints = styled(Points)`
   background-color: darkgreen;
 `;
 
-const BoxName = styled.div<{ primaryColor: string }>`
-  border: 8px solid ${({ primaryColor }) => primaryColor};
+const BoxName = styled.div<{ $primaryColor: string }>`
+  border: 8px solid ${({ $primaryColor }) => $primaryColor};
   border-top: none;
   border-radius: 0 0 1rem 1rem;
   background-color: white;
@@ -75,24 +75,24 @@ const BoxName = styled.div<{ primaryColor: string }>`
   // text-transform: uppercase;
 `;
 
-const Box = styled.div<{ primaryColor: string; image: StaticImageData }>`
+const Box = styled.div<{ $primaryColor: string; $image: StaticImageData }>`
   border-radius: 1rem 1rem 0 0;
   border-width: 4px;
   border-style: solid;
-  border-color: ${({ primaryColor }) => primaryColor};
+  border-color: ${({ $primaryColor }) => $primaryColor};
   overflow: hidden;
   padding: 0;
   position: relative;
   width: 150px;
   height: 150px;
-  background: url(${(props) => props.image.src}) no-repeat center center;
+  background: url(${(props) => props.$image.src}) no-repeat center center;
   background-size: cover;
-  background-color: ${({ primaryColor }) => primaryColor};
+  background-color: ${({ $primaryColor }) => $primaryColor};
 `;
 
 const BoxImageContainer = styled.div``;
 
-const BoxContents = styled.div<{ isOpen: boolean }>`
+const BoxContents = styled.div<{ $isOpen: boolean }>`
   transition: all 500ms ease-in-out 2s;
   opacity: 0;
   z-index: 2;
@@ -174,9 +174,9 @@ export const MysteryBeachBox = ({ box, onReveal, open }: Props) => {
   //codepen.io/RoyLee0702/pen/RwNgVya
   return (
     <div>
-      <Box primaryColor={boxColorHex} image={boxConfig.image}>
+      <Box $primaryColor={boxColorHex} $image={boxConfig.image}>
         {open && (
-          <BoxContents isOpen={open}>
+          <BoxContents $isOpen={open}>
             {getBoxContents(box.contents)}
           </BoxContents>
         )}
@@ -195,7 +195,7 @@ export const MysteryBeachBox = ({ box, onReveal, open }: Props) => {
       /> */}
       </Box>
       {boxConfig.name && (
-        <BoxName primaryColor={boxColorHex}>{boxConfig.name}</BoxName>
+        <BoxName $primaryColor={boxColorHex}>{boxConfig.name}</BoxName>
       )}
     </div>
     // <div style={{ display: "flex", gap: "0.5rem" }}>

@@ -71,7 +71,7 @@ const Container = styled.div`
   align-items: center;
 `;
 
-const ImageContainer = styled.div<{ size: number; exploded: boolean }>`
+const ImageContainer = styled.div<{ $size: number; $exploded: boolean }>`
   // position: absolute;
   pointer-events: none;
   margin-top: 40px;
@@ -80,14 +80,14 @@ const ImageContainer = styled.div<{ size: number; exploded: boolean }>`
   align-items: center;
   gap: 20px;
   transition: all 180ms ease-in;
-  ${({ size, exploded }) =>
-    exploded
+  ${({ $size, $exploded }) =>
+    $exploded
       ? css`
           animation: ${explodeAnimation} 100ms ease-in 0s 1 forwards;
         `
       : css`
           animation: ${shakeExtremeAnimation}
-            ${getCloudAnimationSpeedMilliSeconds(size)}ms ease-in-out 0s
+            ${getCloudAnimationSpeedMilliSeconds($size)}ms ease-in-out 0s
             infinite;
         `};
 `;
@@ -96,10 +96,10 @@ const TextContainer = styled.div`
   min-width: 300px;
 `;
 
-const FaceImage = styled(Image)<{ size: number }>`
+const FaceImage = styled(Image)<{ $size: number }>`
   display: inline-block;
-  width: ${({ size }) => size * 10 + 80}px;
-  height: ${({ size }) => size * 10 + 80}px;
+  width: ${({ $size }) => $size * 10 + 80}px;
+  height: ${({ $size }) => $size * 10 + 80}px;
   transition: all 180ms ease-in;
 `;
 
@@ -189,11 +189,11 @@ export function TalkingHeadBalloon({ gasCloud }: Props): JSX.Element {
 
   return (
     <Container>
-      <ImageContainer size={visibleSize} exploded={gasCloud.exploded}>
+      <ImageContainer $size={visibleSize} $exploded={gasCloud.exploded}>
         <FaceImage
           src={michelleFaceImage}
           alt="Michelle Face"
-          size={visibleSize}
+          $size={visibleSize}
         />
       </ImageContainer>
       <TextContainer>

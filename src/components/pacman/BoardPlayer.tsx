@@ -9,11 +9,11 @@ import { useSound } from "../hooks/useSound";
 import { PacManGhost } from "./PacManGhost";
 import { PacManPlayer } from "./types";
 
-const Container = styled.div<{ goingToJail: boolean; onTeam: boolean }>`
+const Container = styled.div<{ $goingToJail: boolean; $onTeam: boolean }>`
   position: relative;
-  opacity: ${({ onTeam }) => (onTeam ? 1 : 0.3)};
-  ${({ goingToJail }) =>
-    goingToJail &&
+  opacity: ${({ $onTeam }) => ($onTeam ? 1 : 0.3)};
+  ${({ $goingToJail }) =>
+    $goingToJail &&
     css`
       animation: ${spinAnimation} 1000ms linear;
     `}
@@ -107,7 +107,7 @@ export function BoardPlayer({ pacPlayer }: Props): JSX.Element {
   }, [inJail, pacPlayer.jailTurnsCount]);
 
   return (
-    <Container goingToJail={goingToJail} onTeam={pacPlayer.onTeam}>
+    <Container $goingToJail={goingToJail} $onTeam={pacPlayer.onTeam}>
       <PacManGhost color={inJail ? "#777777" : pacPlayer.color} width="3vw" />
       <PlayerName
         style={{

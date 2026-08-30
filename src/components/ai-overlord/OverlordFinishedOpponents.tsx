@@ -23,8 +23,8 @@ const Player = styled.div`
   align-items: center;
 `;
 
-const OutcomeGrouping = styled.div<{ color: string }>`
-  border-bottom: 2rem solid ${({ color }) => color};
+const OutcomeGrouping = styled.div<{ $color: string }>`
+  border-bottom: 2rem solid ${({ $color }) => $color};
   border-radius: 0 0 1rem 1rem;
   display: flex;
   position: relative;
@@ -65,7 +65,7 @@ export const OverlordFinishedOpponents = ({ aiOverlordGame, team }: Props) => {
   return (
     <PlayerAvatarGroup>
       {winningFinishedOutcomes.length > 0 && (
-        <OutcomeGrouping color="green">
+        <OutcomeGrouping $color="green">
           {winningFinishedOutcomes.map((result) => (
             <Player key={result.opponentId}>
               <PlayerAvatar playerId={result.opponentId} size="thumbnail" />
@@ -76,7 +76,7 @@ export const OverlordFinishedOpponents = ({ aiOverlordGame, team }: Props) => {
         </OutcomeGrouping>
       )}
       {drawnFinishedOutcomes.length > 0 && (
-        <OutcomeGrouping color="goldenrod">
+        <OutcomeGrouping $color="goldenrod">
           {drawnFinishedOutcomes.map((result) => (
             <Player key={result.opponentId}>
               <PlayerAvatar playerId={result.opponentId} size="thumbnail" />
@@ -87,7 +87,7 @@ export const OverlordFinishedOpponents = ({ aiOverlordGame, team }: Props) => {
         </OutcomeGrouping>
       )}
       {losingFinishedOutcomes.length > 0 && (
-        <OutcomeGrouping color="red">
+        <OutcomeGrouping $color="red">
           {losingFinishedOutcomes.map((result) => (
             <Player key={result.opponentId}>
               <PlayerAvatar playerId={result.opponentId} size="thumbnail" />

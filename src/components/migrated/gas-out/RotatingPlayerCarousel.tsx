@@ -29,45 +29,45 @@ const CarouselContainer = styled.div`
   }
 `;
 
-const CarouselItem = styled.div<{ apothem: number; rotate: number }>`
+const CarouselItem = styled.div<{ $apothem: number; $rotate: number }>`
   margin: 0;
 
   width: ${TILE_WIDTH_PX}px;
   transform-style: preserve-3d;
   transition: transform 0.5s;
   /* flex: 0 0 auto; */
-  ${({ apothem, rotate }) =>
+  ${({ $apothem, $rotate }) =>
     css`
-      transform-origin: 50% 50% ${-apothem}px;
-      transform: rotateY(${rotate}rad);
+      transform-origin: 50% 50% ${-$apothem}px;
+      transform: rotateY(${$rotate}rad);
     `}
 `;
 
 const CarouselContent = styled.div<{
-  apothem: number;
-  rotate: number;
-  showing: boolean;
-  transparent: boolean;
+  $apothem: number;
+  $rotate: number;
+  $showing: boolean;
+  $transparent: boolean;
 }>`
   width: 100%;
   box-sizing: border-box;
   padding: 0;
-  backface-visibility: ${({ transparent }) =>
-    transparent ? "visible" : "hidden"};
+  backface-visibility: ${({ $transparent }) =>
+    $transparent ? "visible" : "hidden"};
   display: flex;
   justify-content: center;
 
   position: relative;
-  ${({ showing }) =>
-    showing &&
+  ${({ $showing }) =>
+    $showing &&
     css`
       z-index: 1;
     `}
 
-  ${({ apothem, rotate }) =>
+  ${({ $apothem, $rotate }) =>
     css`
-      transform-origin: 50% 50% ${-apothem}px;
-      transform: rotateY(${rotate}rad);
+      transform-origin: 50% 50% ${-$apothem}px;
+      transform: rotateY(${$rotate}rad);
     `}
 
   &:not(:first-of-type) {
@@ -104,7 +104,7 @@ export const RotatingPlayerCarousel = ({
   return (
     <Container>
       <CarouselContainer>
-        <CarouselItem apothem={apothem} rotate={displayIndex * -theta}>
+        <CarouselItem $apothem={apothem} $rotate={displayIndex * -theta}>
           {game.alivePlayersIds.map((playerId, index) => {
             const player = game.allPlayers.find(
               (p) => p.player.id === playerId
@@ -112,15 +112,15 @@ export const RotatingPlayerCarousel = ({
             return (
               <CarouselContent
                 key={player.player.id}
-                apothem={apothem}
-                rotate={index * theta}
-                showing={
+                $apothem={apothem}
+                $rotate={index * theta}
+                $showing={
                   index ===
                   displayIndex -
                     Math.floor(displayIndex / game.alivePlayersIds.length) *
                       game.alivePlayersIds.length
                 }
-                transparent={transparent}
+                $transparent={transparent}
               >
                 <PlayerCarouselPlayer
                   game={game}

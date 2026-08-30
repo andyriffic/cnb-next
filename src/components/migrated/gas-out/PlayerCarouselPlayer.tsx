@@ -19,23 +19,23 @@ const CardContainer = styled.div`
   transform: translate(-50%, -50%);
 `;
 
-const PlayerAvatarContainer = styled.div<{ alive: boolean; blackout: boolean }>`
+const PlayerAvatarContainer = styled.div<{ $alive: boolean; $blackout: boolean }>`
   display: flex;
   justify-content: center;
   width: 100%;
-  ${({ alive }) =>
-    !alive &&
+  ${({ $alive }) =>
+    !$alive &&
     css`
       animation: ${spinAwayAnimationUp} 1000ms ease-in-out 0s 1 backwards;
     `}
-  ${({ blackout }) =>
-    blackout &&
+  ${({ $blackout }) =>
+    $blackout &&
     css`
       filter: brightness(0.2) invert(0);
     `}
 `;
 
-const PlayerListItem = styled.div<{ active: boolean }>`
+const PlayerListItem = styled.div<{ $active: boolean }>`
   width: 100%;
   display: flex;
   justify-content: center;
@@ -71,13 +71,13 @@ const PlayerName = styled.div`
   white-space: nowrap;
 `;
 
-const DeathContainer = styled.div<{ active: boolean }>`
+const DeathContainer = styled.div<{ $active: boolean }>`
   position: absolute;
   bottom: -5%;
   left: 50%;
   transform: translateX(-50%);
   transition: opacity 0.1s;
-  opacity: ${({ active }) => (active ? "1" : "0.5")};
+  opacity: ${({ $active }) => ($active ? "1" : "0.5")};
   /* border: 2px solid darkred;
   border-radius: 25%;
   background: black;
@@ -116,7 +116,7 @@ const markedForDeath = (
   }
 
   return (
-    <DeathContainer active={active}>
+    <DeathContainer $active={active}>
       <DeathIcon>
         {getDeathIcons(player.guesses.nominatedCount).map((d, i) => (
           <span key={i}>{d}</span>
@@ -164,15 +164,15 @@ export function PlayerCarouselPlayer({
   return show ? (
     <PlayerListItem
       key={player.player.id}
-      active={notDead && (active || winner)}
+      $active={notDead && (active || winner)}
     >
       {/* {(winner || (active && notDead && !gameOver)) && (
         <PlayerName>{player.player.name}</PlayerName>
       )} */}
 
-      <PlayerAvatarContainer alive={alive} blackout={lightsOut}>
+      <PlayerAvatarContainer $alive={alive} $blackout={lightsOut}>
         <ZombieTransform
-          isZombie={getPlayerZombieRunDetails(player.player).isZombie}
+          $isZombie={getPlayerZombieRunDetails(player.player).isZombie}
         >
           <PlayerAvatar
             playerId={player.player.id}

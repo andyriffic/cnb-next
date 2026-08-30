@@ -38,7 +38,7 @@ export function PacmanMovesInfo({ uiState }: Props): JSX.Element {
   return (
     <Container>
       <Card>
-        <SmallHeading centered={true} style={{ paddingBottom: "1rem" }}>
+        <SmallHeading $centered={true} style={{ paddingBottom: "1rem" }}>
           Pacman moves
         </SmallHeading>
         <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>

@@ -18,9 +18,9 @@ const PlayerListContainer = styled.div`
   gap: 20px;
 `;
 
-const PlayerListItem = styled.div<{ active: boolean }>`
-  ${({ active }) =>
-    active &&
+const PlayerListItem = styled.div<{ $active: boolean }>`
+  ${({ $active }) =>
+    $active &&
     css`
       background-color: blue;
     `}
@@ -42,7 +42,7 @@ export function GasPlayerDebug({ game }: Props): JSX.Element {
         return (
           <PlayerListItem
             key={p.player.id}
-            active={p.player.id === game.currentPlayer.id}
+            $active={p.player.id === game.currentPlayer.id}
           >
             {p.player.name}
             <div>

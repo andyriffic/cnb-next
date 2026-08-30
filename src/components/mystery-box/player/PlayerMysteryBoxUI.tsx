@@ -7,18 +7,18 @@ const Box = styled.div`
   height: 100px;
 `;
 
-const BoxBody = styled.div<{ primaryColor: string }>`
+const BoxBody = styled.div<{ $primaryColor: string }>`
   position: relative;
   height: 100px;
   width: 100px;
   margin-top: 80px;
-  background-color: ${({ primaryColor }) => primaryColor};
+  background-color: ${({ $primaryColor }) => $primaryColor};
   border-bottom-left-radius: 5%;
   border-bottom-right-radius: 5%;
   box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.3);
   background: linear-gradient(
-    ${({ primaryColor }) => tinycolor(primaryColor).darken(20).toHexString()},
-    ${({ primaryColor }) => primaryColor}
+    ${({ $primaryColor }) => tinycolor($primaryColor).darken(20).toHexString()},
+    ${({ $primaryColor }) => $primaryColor}
   );
 
   &::after {
@@ -33,7 +33,7 @@ const BoxBody = styled.div<{ primaryColor: string }>`
   }
 `;
 
-const BoxContents = styled.div<{ isOpen: boolean }>`
+const BoxContents = styled.div<{ $isOpen: boolean }>`
   transition: all 500ms ease-in-out 2s;
   opacity: 0;
   z-index: 2;
@@ -48,7 +48,7 @@ const BoxContents = styled.div<{ isOpen: boolean }>`
   top: 0;
 
   ${(props) =>
-    props.isOpen &&
+    props.$isOpen &&
     css`
       opacity: 1;
       z-index: 1;
@@ -56,14 +56,14 @@ const BoxContents = styled.div<{ isOpen: boolean }>`
     `}
 `;
 
-const BoxLid = styled.div<{ primaryColor: string }>`
+const BoxLid = styled.div<{ $primaryColor: string }>`
   position: absolute;
   z-index: 1;
   left: 50px;
   bottom: 15px;
   transform: translateX(-50%);
   height: 40px;
-  background-color: ${({ primaryColor }) => primaryColor};
+  background-color: ${({ $primaryColor }) => $primaryColor};
   height: 20px;
   width: 110px;
   border-radius: 5%;

@@ -27,15 +27,15 @@ const Container = styled.div`
   align-items: center;
 `;
 
-const TeamJoinButton = styled.button<{ squadColor: string }>`
+const TeamJoinButton = styled.button<{ $squadColor: string }>`
   display: block;
   border: 5px solid
-    ${(props) => tinycolor(props.squadColor).darken(10).toString()};
+    ${(props) => tinycolor(props.$squadColor).darken(10).toString()};
   border-radius: 1rem;
   cursor: pointer;
   padding: 1rem;
   min-width: 200px;
-  background-color: ${(props) => props.squadColor};
+  background-color: ${(props) => props.$squadColor};
 
   transition:
     background-color 0.2s ease-in-out,
@@ -43,8 +43,8 @@ const TeamJoinButton = styled.button<{ squadColor: string }>`
 
   &:hover {
     background-color: ${(props) =>
-      tinycolor(props.squadColor).darken(10).toString()};
-    border-color: ${(props) => props.squadColor};
+      tinycolor(props.$squadColor).darken(10).toString()};
+    border-color: ${(props) => props.$squadColor};
   }
 `;
 
@@ -91,7 +91,7 @@ function Page() {
               delayMilliseconds={index * 200 + 500}
             >
               <TeamJoinButton
-                squadColor={team.backgroundColor}
+                $squadColor={team.backgroundColor}
                 onClick={() => startNewGame(team.id)}
               >
                 <Image

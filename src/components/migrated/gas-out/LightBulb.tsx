@@ -3,9 +3,9 @@ import styled from "styled-components";
 import { GasGame } from "../../../services/migrated/gas-out/types";
 import { PlayerListPlayer } from "./PlayerListPlayer";
 
-const Bulb = styled.div<{ glow: boolean }>`
+const Bulb = styled.div<{ $glow: boolean }>`
   font-size: 8rem;
-  filter: ${({ glow }) => (glow ? "unset" : "invert(80%)")};
+  filter: ${({ $glow }) => ($glow ? "unset" : "invert(80%)")};
 `;
 
 //box-shadow: 100px 100px 80px 100px #ffffff;
@@ -24,7 +24,7 @@ type Props = {
 export function LightBulb({ state }: Props): JSX.Element {
   return (
     <div>
-      <Bulb glow={state === "on"}>💡</Bulb>
+      <Bulb $glow={state === "on"}>💡</Bulb>
       {state === "off" && <Text>Dark mode</Text>}
     </div>
   );

@@ -13,15 +13,15 @@ export const explodeAnimation = keyframes`
   100% { transform: translate(0, -2000px) rotate(-1080deg); }
 `;
 
-const PlayerAvatarContainer = styled.div<{ exploded: boolean }>`
+const PlayerAvatarContainer = styled.div<{ $exploded: boolean }>`
   /* display: flex;
   justify-content: center;
   width: 100%; */
-  visibility: ${({ exploded }) => (exploded ? "visible" : "hidden")};
+  visibility: ${({ $exploded }) => ($exploded ? "visible" : "hidden")};
   /* visibility: hidden; */
-  /* opacity: ${({ exploded }) => (exploded ? "1" : "0.3")}; */
-  ${({ exploded }) =>
-    exploded &&
+  /* opacity: ${({ $exploded }) => ($exploded ? "1" : "0.3")}; */
+  ${({ $exploded }) =>
+    $exploded &&
     css`
       animation: ${explodeAnimation} 2000ms ease-in-out 0s 1 backwards;
     `}
@@ -52,7 +52,7 @@ export function ExplodingPlayer({ game, forcePlayerId }: Props): JSX.Element {
 
   return (
     <Container>
-      <PlayerAvatarContainer exploded={currentPlayer.status === "dead"}>
+      <PlayerAvatarContainer $exploded={currentPlayer.status === "dead"}>
         <PlayerAvatar playerId={currentPlayer.player.id} size="medium" />
       </PlayerAvatarContainer>
       <Boomerang></Boomerang>

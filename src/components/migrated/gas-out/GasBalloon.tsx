@@ -15,32 +15,32 @@ function getCloudAnimationSpeedMilliSeconds(intensity: number): number {
   return Math.max(6000 - intensity * 500, 100);
 }
 
-const Container = styled.div<{ size: number; exploded: boolean }>`
+const Container = styled.div<{ $size: number; $exploded: boolean }>`
   pointer-events: none;
   margin-top: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 20px;
-  ${({ size, exploded }) =>
-    exploded
+  ${({ $size, $exploded }) =>
+    $exploded
       ? css`
           animation: ${explodeAnimation} 100ms ease-in 0s 1 forwards;
         `
       : css`
           animation: ${shakeExtremeAnimation}
-            ${getCloudAnimationSpeedMilliSeconds(size)}ms ease-in-out 0s
+            ${getCloudAnimationSpeedMilliSeconds($size)}ms ease-in-out 0s
             infinite;
         `};
 `;
 
-const Ballon = styled.div<{ size: number }>`
+const Ballon = styled.div<{ $size: number }>`
   display: inline-block;
-  width: ${({ size }) => size * 10 + 50}px;
-  height: ${({ size }) => size * 10 + 50}px;
-  background: ${({ size }) =>
+  width: ${({ $size }) => $size * 10 + 50}px;
+  height: ${({ $size }) => $size * 10 + 50}px;
+  background: ${({ $size }) =>
     tinycolor("#FBA727")
-      .saturate(size * 10)
+      .saturate($size * 10)
       .toString()};
   border-radius: 80%;
   position: relative;
@@ -51,9 +51,9 @@ const Ballon = styled.div<{ size: number }>`
   &::before {
     content: "▲";
     font-size: 20px;
-    color: ${({ size }) =>
+    color: ${({ $size }) =>
       tinycolor("#d28b20")
-        .saturate(size * 10)
+        .saturate($size * 10)
         .toString()};
     display: block;
     text-align: center;
@@ -64,10 +64,10 @@ const Ballon = styled.div<{ size: number }>`
   }
 `;
 
-const CustomImage = styled(Image)<{ size: number }>`
+const CustomImage = styled(Image)<{ $size: number }>`
   display: inline-block;
-  width: ${({ size }) => size * 10 + 100}px;
-  height: ${({ size }) => size * 10 + 100}px;
+  width: ${({ $size }) => $size * 10 + 100}px;
+  height: ${({ $size }) => $size * 10 + 100}px;
   transition: all 180ms ease-in;
 `;
 
@@ -78,8 +78,8 @@ type Props = {
 export function GasBallon({ gasCloud }: Props): JSX.Element {
   const visibleSize = gasCloud.exploded ? 10 : gasCloud.pressed;
   return (
-    <Container size={visibleSize} exploded={gasCloud.exploded}>
-      <Ballon size={visibleSize} />
+    <Container $size={visibleSize} $exploded={gasCloud.exploded}>
+      <Ballon $size={visibleSize} />
       {/* <span
         style={{
           fontSize: `${visibleSize * 0.6 + 3}rem`,
@@ -88,7 +88,7 @@ export function GasBallon({ gasCloud }: Props): JSX.Element {
       >
         💪
       </span> */}
-      {/* <CustomImage size={visibleSize} src={cathyFaceImage} alt="Cathy" /> */}
+      {/* <CustomImage $size={visibleSize} src={cathyFaceImage} alt="Cathy" /> */}
     </Container>
   );
 }
