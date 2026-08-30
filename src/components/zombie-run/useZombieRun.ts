@@ -12,7 +12,7 @@ import {
 } from "./types";
 
 const MIN_PLAYER_MOVES = 1;
-const MAX_ZOMBIE_MOVES = 3;
+const MAX_ZOMBIE_MOVES = 5;
 const ZOMBIE_BOOST_MOVES = 3;
 
 export type UseZombieRun = {
