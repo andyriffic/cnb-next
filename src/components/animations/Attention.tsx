@@ -2,7 +2,7 @@ import styled, { RuleSet, css, keyframes } from "styled-components";
 
 type AttentionAnimation = "vibrate" | "slow-vibrate" | "shake" | "pulse";
 
-const Animation_Vibrate = keyframes` {
+const Animation_Vibrate = keyframes`
   0% {
     transform: translate(0);
   }
@@ -21,9 +21,9 @@ const Animation_Vibrate = keyframes` {
   100% {
     transform: translate(0);
   }
-}`;
+`;
 
-export const Animation_ShakeBottom = keyframes` {
+export const Animation_ShakeBottom = keyframes`
   0%,
   100% {
             transform: rotate(0deg);
@@ -48,9 +48,9 @@ export const Animation_ShakeBottom = keyframes` {
   90% {
             transform: rotate(1deg);
   }
-}`;
+`;
 
-export const Animation_Pulse = keyframes` {
+export const Animation_Pulse = keyframes`
   0% {
     transform: scale(1);
   }
@@ -60,9 +60,9 @@ export const Animation_Pulse = keyframes` {
   100% {
     transform: scale(1);
   }
-}`;
+`;
 
-export const Animation_Pulse_Plus = keyframes` {
+export const Animation_Pulse_Plus = keyframes`
   0% {
     transform: scale(1) rotate(0deg);
   }
@@ -72,7 +72,7 @@ export const Animation_Pulse_Plus = keyframes` {
   100% {
     transform: scale(1) rotate(0deg);
   }
-}`;
+`;
 
 const ANIMATION_CSS: {
   [key in AttentionAnimation]: RuleSet;

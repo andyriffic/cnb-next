@@ -9,7 +9,7 @@ type AppearAnimation =
   | "flip-in"
   | "text-focus-in";
 
-const Animation_RollInBlurredLeft = keyframes` {
+const Animation_RollInBlurredLeft = keyframes`
   0% {
     transform: translateX(-20vw) rotate(-720deg);
     filter: blur(50px);
@@ -20,9 +20,9 @@ const Animation_RollInBlurredLeft = keyframes` {
     filter: blur(0);
     opacity: 1;
   }
-}`;
+`;
 
-const Animation_RollInBlurredRight = keyframes` {
+const Animation_RollInBlurredRight = keyframes`
   0% {
     transform: translateX(20vw) rotate(-720deg);
     filter: blur(50px);
@@ -33,7 +33,7 @@ const Animation_RollInBlurredRight = keyframes` {
     filter: blur(0);
     opacity: 1;
   }
-}`;
+`;
 
 const Animation_FlipIn = keyframes`
   0% {
