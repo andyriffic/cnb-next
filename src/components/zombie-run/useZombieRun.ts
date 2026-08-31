@@ -12,7 +12,7 @@ import {
 } from "./types";
 
 const MIN_PLAYER_MOVES = 1;
-const MAX_ZOMBIE_MOVES = 5;
+const MAX_ZOMBIE_MOVES = 0; // 0 means no limit on zombie moves
 const ZOMBIE_BOOST_MOVES = 3;
 
 export type UseZombieRun = {
@@ -138,7 +138,10 @@ const createZombieGame = (
       .map((p) => ({
         id: p.id,
         totalMetresRun: p.details?.zombieRun?.totalMetresRun || 0,
-        totalMetresToRun: Math.min(p.details?.gameMoves || 0, MAX_ZOMBIE_MOVES),
+        totalMetresToRun:
+          MAX_ZOMBIE_MOVES === 0
+            ? p.details?.gameMoves || 0
+            : Math.min(p.details?.gameMoves || 0, MAX_ZOMBIE_MOVES),
         isZombie: true,
         gotBitten: false,
         nerfedPoints: Math.max(
