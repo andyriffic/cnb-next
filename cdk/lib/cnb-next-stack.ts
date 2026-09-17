@@ -92,11 +92,15 @@ export class CnbNextStack extends cdk.Stack {
       "Service",
       {
         cluster,
-        cpu: 256,
-        memoryLimitMiB: 512,
+        cpu: 512,
+        memoryLimitMiB: 1024,
         desiredCount: 1,
         publicLoadBalancer: true,
         enableExecuteCommand: true,
+        taskSubnets: {
+          subnetGroupName: "Private",
+          availabilityZones: ["ap-southeast-2a"],
+        },
         protocol: certificate
           ? elbv2.ApplicationProtocol.HTTPS
           : elbv2.ApplicationProtocol.HTTP,
