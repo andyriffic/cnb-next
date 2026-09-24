@@ -54,6 +54,11 @@ export class CnbNextStack extends cdk.Stack {
       buildArgs: {
         DYNAMO_DB_ACCESS_KEY: props.dynamoDbBuildAccessKey,
         DYNAMO_DB_ACCESS_KEY_SECRET: props.dynamoDbBuildAccessKeySecret,
+        ENVIRONMENT_NAME: props.envName,
+        NEXT_PUBLIC_GRAPHQL_ENDPOINT: "/api/graphql",
+        NEXT_PUBLIC_SOCKET_ENDPOINT: "/api/socketio",
+        DB_TABLE_NAME_PLAYERS: props.playersTableName,
+        DB_TABLE_NAME_SETTINGS: props.settingsTableName,
       },
     });
 
