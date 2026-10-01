@@ -14,6 +14,7 @@ import {
 import { Zombie } from "./Zombie";
 import { ZombieObstacleView } from "./ZombieObstacle";
 import { ZombieRunPlayer } from "./ZombieRunPlayer";
+import { ZombieSafeHouse } from "./ZombieSafeHouse";
 
 const TOTAL_TRACK_WIDTH = 94;
 const STACK_INDEX_RANGE = 2;
@@ -73,6 +74,12 @@ const DistanceMarker = styled.div`
 const PositionedObstacle = styled.div`
   position: absolute;
   bottom: 0;
+`;
+
+const PositionedSafeHouse = styled.div`
+  position: absolute;
+  bottom: 0;
+  right: 0;
 `;
 
 const BewareSign = styled.div`
@@ -143,6 +150,9 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
           />
         </BewareSign>
         <ZombieCharactersContainer>
+          <PositionedSafeHouse>
+            <ZombieSafeHouse />
+          </PositionedSafeHouse>
           <PositionedZombiePlayer
             style={{
               left: `${
