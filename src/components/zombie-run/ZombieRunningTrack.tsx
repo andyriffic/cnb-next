@@ -16,6 +16,7 @@ import { ZombieRunPlayer } from "./ZombieRunPlayer";
 import { ZombieSafeHouse } from "./ZombieSafeHouse";
 
 const TOTAL_TRACK_WIDTH = 94;
+const TRACK_SIDE_MARGIN_VW = (100 - TOTAL_TRACK_WIDTH) / 2;
 const STACK_INDEX_RANGE = 2;
 const TRACK_TRAILING_BUFFER_METRES = 2;
 const TRACK_LOOKAHEAD_METRES = 5;
@@ -55,7 +56,7 @@ const ZombieCharactersContainer = styled.div`
   position: absolute;
   top: 0;
   bottom: 0;
-  left: ${(100 - TOTAL_TRACK_WIDTH) / 2}vw;
+  left: ${TRACK_SIDE_MARGIN_VW}vw;
   width: ${TOTAL_TRACK_WIDTH}vw;
   box-sizing: border-box;
   padding: 0;
@@ -199,7 +200,10 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
         <ZombieCharactersContainer>
           <PositionedSafeHouse
             style={{
-              left: `${getTrackPosition(ZOMBIE_RUNNING_TRACK_LENGTH_METRES)}vw`,
+              left: `${
+                getTrackPosition(ZOMBIE_RUNNING_TRACK_LENGTH_METRES) +
+                TRACK_SIDE_MARGIN_VW
+              }vw`,
             }}
           >
             <ZombieSafeHouse />

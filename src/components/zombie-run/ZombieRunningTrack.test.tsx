@@ -54,7 +54,7 @@ test("clamps the crop to the finish while keeping the full image height", () => 
     container
       .querySelector('img[alt="A dog safehouse at the finish of the zombie run"]')
       ?.parentElement?.style.left,
-  ).toBe("94vw");
+  ).toBe("97vw");
 });
 
 test("keeps player positions within both track edges", () => {
