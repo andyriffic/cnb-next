@@ -1,6 +1,5 @@
 import Image from "next/image";
 import styled from "styled-components";
-import { useState } from "react";
 import { isNumberInRange } from "../../utils/number";
 import { Attention } from "../animations/Attention";
 import bewareBananaSignImage from "./beware-banana-02.png";
@@ -18,6 +17,8 @@ import { ZombieSafeHouse } from "./ZombieSafeHouse";
 
 const TOTAL_TRACK_WIDTH = 94;
 const STACK_INDEX_RANGE = 2;
+const TRACK_TRAILING_BUFFER_METRES = 2;
+const TRACK_LOOKAHEAD_METRES = 5;
 
 const ZombieBackground = styled.div`
   border: 1px solid #ccc;
@@ -26,10 +27,19 @@ const ZombieBackground = styled.div`
   width: 100vw;
   margin: 0 auto;
   box-sizing: border-box;
+  overflow: hidden;
+`;
+
+const TrackBackground = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
   background: url("/images/zombie-background-day.png") no-repeat bottom right;
-  // background-size: 150% 100%;
-  // background-position: 100% 100%;
-  transition: background 3s ease-in-out;
+  transition:
+    background-size 3s ease-in-out,
+    background-position 3s ease-in-out;
 `;
 
 const PositionedZombiePlayer = styled.div`
@@ -42,9 +52,11 @@ const PositionedZombiePlayer = styled.div`
 `;
 
 const ZombieCharactersContainer = styled.div`
-  /* position: relative; */
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: ${(100 - TOTAL_TRACK_WIDTH) / 2}vw;
   width: ${TOTAL_TRACK_WIDTH}vw;
-  margin: 0 auto;
   box-sizing: border-box;
   padding: 0;
 `;
@@ -79,7 +91,8 @@ const PositionedObstacle = styled.div`
 const PositionedSafeHouse = styled.div`
   position: absolute;
   bottom: 0;
-  right: 0;
+  left: 0;
+  transform: translateX(-100%);
 `;
 
 const BewareSign = styled.div`
@@ -92,6 +105,9 @@ const allMarkers: number[] = Array.from(
   { length: ZOMBIE_RUNNING_TRACK_LENGTH_METRES },
   (_, index) => index + 1,
 );
+
+const clampTrackDistance = (distance: number) =>
+  Math.min(Math.max(distance, 0), ZOMBIE_RUNNING_TRACK_LENGTH_METRES);
 
 const sortByZombiePlayerDistance = (a: ZombiePlayer, b: ZombiePlayer) => {
   return a.totalMetresRun - b.totalMetresRun;
@@ -126,22 +142,53 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
     zombieGame.gameStatus === ZombieRunGameStatus.GAME_OVER &&
     zombieGame.endGameStatus === ZombieRunEndGameStatus.ZOMBIE_PARTY;
 
-  const [minDistance] = useState(
-    Math.max(zombieGame.originalZombie.totalMetresRun - 5, 0),
+  const playerDistances = [
+    zombieGame.originalZombie.totalMetresRun,
+    ...zombieGame.survivors.map((player) => player.totalMetresRun),
+    ...zombieGame.zombies.map((player) => player.totalMetresRun),
+  ].map(clampTrackDistance);
+  const minPlayerDistance = Math.min(...playerDistances);
+  const maxPlayerDistance = Math.max(...playerDistances);
+  const viewStartMetres = zombieParty
+    ? 0
+    : Math.max(minPlayerDistance - TRACK_TRAILING_BUFFER_METRES, 0);
+  const viewEndMetres = zombieParty
+    ? ZOMBIE_RUNNING_TRACK_LENGTH_METRES
+    : Math.min(
+        maxPlayerDistance + TRACK_LOOKAHEAD_METRES,
+        ZOMBIE_RUNNING_TRACK_LENGTH_METRES,
+      );
+  const totalTrackVisibleMetres = Math.max(
+    viewEndMetres - viewStartMetres,
+    1,
   );
-  const [totalTrackVisibleMetres] = useState(
-    ZOMBIE_RUNNING_TRACK_LENGTH_METRES - minDistance,
-  );
+  const backgroundPositionX =
+    totalTrackVisibleMetres === ZOMBIE_RUNNING_TRACK_LENGTH_METRES
+      ? 0
+      : Number(
+          (
+            (viewStartMetres /
+              (ZOMBIE_RUNNING_TRACK_LENGTH_METRES -
+                totalTrackVisibleMetres)) *
+            100
+          ).toFixed(2),
+        );
+  const getTrackPosition = (distance: number) =>
+    (TOTAL_TRACK_WIDTH / totalTrackVisibleMetres) *
+    (clampTrackDistance(distance) - viewStartMetres);
 
   return (
     <div>
-      <ZombieBackground
-        style={{
-          backgroundSize: `${
-            (ZOMBIE_RUNNING_TRACK_LENGTH_METRES / totalTrackVisibleMetres) * 100
-          }% 100%`,
-        }}
-      >
+      <ZombieBackground>
+        <TrackBackground
+          style={{
+            backgroundSize: `${
+              (ZOMBIE_RUNNING_TRACK_LENGTH_METRES / totalTrackVisibleMetres) *
+              100
+            }% 100%`,
+            backgroundPosition: `${backgroundPositionX}% 100%`,
+          }}
+        />
         <BewareSign>
           <Image
             src={bewareBananaSignImage}
@@ -150,7 +197,11 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
           />
         </BewareSign>
         <ZombieCharactersContainer>
-          <PositionedSafeHouse>
+          <PositionedSafeHouse
+            style={{
+              left: `${getTrackPosition(ZOMBIE_RUNNING_TRACK_LENGTH_METRES)}vw`,
+            }}
+          >
             <ZombieSafeHouse />
           </PositionedSafeHouse>
           <PositionedZombiePlayer
@@ -158,8 +209,9 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
               left: `${
                 zombieGame.endGameStatus === ZombieRunEndGameStatus.ZOMBIE_PARTY
                   ? 2
-                  : (TOTAL_TRACK_WIDTH / totalTrackVisibleMetres) *
-                    (zombieGame.originalZombie.totalMetresRun - minDistance)
+                  : getTrackPosition(
+                      zombieGame.originalZombie.totalMetresRun,
+                    )
               }vw`,
             }}
           >
@@ -179,8 +231,7 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
                       ? zombieGame.survivors.findIndex((z) => z.id === zp.id) *
                           3 +
                         10
-                      : (TOTAL_TRACK_WIDTH / totalTrackVisibleMetres) *
-                        (zp.totalMetresRun - minDistance)
+                      : getTrackPosition(zp.totalMetresRun)
                   }vw`,
                 }}
               >
@@ -206,8 +257,7 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
                           3 +
                         5 +
                         zombieGame.survivors.length * 3
-                      : (TOTAL_TRACK_WIDTH / totalTrackVisibleMetres) *
-                        (zp.totalMetresRun - minDistance)
+                      : getTrackPosition(zp.totalMetresRun)
                   }vw`,
                 }}
               >
@@ -227,10 +277,7 @@ export const ZombieRunningTrack = ({ zombieGame }: Props) => {
                 <PositionedObstacle
                   key={i}
                   style={{
-                    left: `${
-                      (TOTAL_TRACK_WIDTH / totalTrackVisibleMetres) *
-                      (obstacle.index - minDistance)
-                    }vw`,
+                    left: `${getTrackPosition(obstacle.index)}vw`,
                   }}
                 >
                   <ZombieObstacleView obstacle={obstacle} />
