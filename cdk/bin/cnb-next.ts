@@ -20,9 +20,9 @@ function buildTimeEnv(name: string): string {
   return value || "";
 }
 
-// Set DOMAIN_NAME/HOSTED_ZONE_ID/HOSTED_ZONE_NAME once you've validated the
-// stack against its own load balancer DNS name and are ready to cut real
-// traffic over from the Copilot-managed service.
+// Set DOMAIN_NAME/HOSTED_ZONE_ID/HOSTED_ZONE_NAME to attach the real domain
+// (see scripts/deploy-live.sh). Leave unset to deploy against the load
+// balancer's own DNS name only.
 const domainName = process.env.DOMAIN_NAME;
 const hostedZoneId = process.env.HOSTED_ZONE_ID;
 const hostedZoneName = process.env.HOSTED_ZONE_NAME;

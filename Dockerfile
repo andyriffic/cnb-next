@@ -23,7 +23,7 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
-# Secrets: always provided by the caller (Copilot manifest.yml or the
+# Secrets: always provided by the caller (the CDK stack or the
 # auto/start*.sh scripts), so they're applied unconditionally.
 ARG DYNAMO_DB_ACCESS_KEY
 ARG DYNAMO_DB_ACCESS_KEY_SECRET

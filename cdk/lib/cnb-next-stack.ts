@@ -27,9 +27,8 @@ export interface CnbNextStackProps extends cdk.StackProps {
   dynamoDbBuildAccessKey: string;
   dynamoDbBuildAccessKeySecret: string;
   /**
-   * Custom domain to attach to the load balancer. Leave undefined for the
-   * first deploy so you can validate against the ALB's own DNS name before
-   * cutting real traffic over from the existing Copilot-managed service.
+   * Custom domain to attach to the load balancer. Leave undefined to
+   * validate against the ALB's own DNS name before attaching the real domain.
    */
   domainName?: string;
   hostedZoneId?: string;
