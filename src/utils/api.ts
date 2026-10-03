@@ -115,6 +115,19 @@ export const resetAllPlayerSpaceRaceDetails = (): Promise<void> => {
   });
 };
 
+export const resetAllPlayerSnakesAndLaddersDetails = (): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    fetch(`/api/players/reset-snakes-and-ladders`, {
+      method: "PUT",
+    })
+      .then(() => resolve())
+      .catch((reason) => {
+        console.log(reason);
+        reject(reason);
+      });
+  });
+};
+
 export const deletePlayerZombieDetails = (playerId: string): Promise<void> => {
   return new Promise((resolve, reject) => {
     fetch(`/api/player/${playerId}/delete/zombie`, {

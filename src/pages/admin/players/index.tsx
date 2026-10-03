@@ -14,6 +14,7 @@ import { AdminPlayerAdd } from "../../../components/admin/AdminPlayerAdd";
 import {
   fetchGetPlayer,
   resetAllPlayerPacmanDetails,
+  resetAllPlayerSnakesAndLaddersDetails,
   resetAllPlayerSpaceRaceDetails,
   resetAllPlayerTotalCoins,
   resetAllPlayerZombieDetails,
@@ -169,6 +170,19 @@ export default function Page({ activePlayers }: Props) {
             }}
           >
             Reset ALL Space Race details 🚀
+          </button>
+          <button
+            type="button"
+            style={{ backgroundColor: "seagreen", color: "white" }}
+            onClick={() => {
+              resetAllPlayerSnakesAndLaddersDetails().then(() => {
+                alert(
+                  "All player Snakes and Ladders details reset. Remember to check Setting Player settings!",
+                );
+              });
+            }}
+          >
+            Reset ALL Snakes and Ladders details 🐍
           </button>
           <button
             type="button"
