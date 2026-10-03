@@ -31,6 +31,7 @@ const updatePlayerGameMoves = (
             "not on team",
             team,
           );
+          resolve();
           return;
         }
 

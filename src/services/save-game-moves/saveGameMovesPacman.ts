@@ -19,13 +19,18 @@ const updatePlayerGameMoves = (
           return;
         }
 
-        if (team && player.details?.team?.toLowerCase() !== team.toLowerCase()) {
+        if (
+          team &&
+          player.details?.team?.toLowerCase() !== team.toLowerCase()
+        ) {
           console.log(
             "Skipping player",
             playerMoves.playerId,
             "not on team",
             team,
           );
+          resolve();
+
           return;
         }
 
