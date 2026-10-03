@@ -156,6 +156,21 @@ export const deletePlayerSpaceRaceDetails = (
   });
 };
 
+export const deletePlayerSnakesAndLaddersDetails = (
+  playerId: string,
+): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    fetch(`/api/player/${playerId}/delete/snakes-and-ladders`, {
+      method: "DELETE",
+    })
+      .then(() => resolve())
+      .catch((reason) => {
+        console.log(reason);
+        reject(reason);
+      });
+  });
+};
+
 export const savePlayerGameMovesFetch = (
   gameId: string,
   gameMoves: PlayerGameMoves[],

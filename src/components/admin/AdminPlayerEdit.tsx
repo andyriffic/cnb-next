@@ -5,11 +5,13 @@ import {
   PlayerDetails,
   getPlayerAchievements,
   getPlayerPacManDetails,
+  getPlayerSnakesAndLaddersDetails,
   getPlayerSpaceRaceDetails,
   getPlayerZombieRunDetails,
 } from "../../types/Player";
 import {
   deletePlayerPacmanDetails,
+  deletePlayerSnakesAndLaddersDetails,
   deletePlayerSpaceRaceDetails,
   deletePlayerZombieDetails,
   updatePlayerDetails,
@@ -431,6 +433,76 @@ export const AdminPlayerEdit = ({ player, onClose }: Props) => {
           />
 
           <hr />
+          <EvenlySpaced>
+            <h6 style={{ fontWeight: "bold" }}>Snakes and Ladders</h6>
+            <button
+              type="button"
+              style={{ backgroundColor: "seagreen", color: "white" }}
+              onClick={() => {
+                deletePlayerSnakesAndLaddersDetails(playerCopy.id).then(() => {
+                  onClose(true);
+                });
+              }}
+            >
+              Delete Snakes and Ladders details 🐍
+            </button>
+          </EvenlySpaced>
+          <AdminPlayerEditBooleanValue
+            label="Participant"
+            id="snakes_and_ladders_participant"
+            value={!!playerCopy.details?.snakesAndLadders?.isParticipant}
+            onChange={(checked) =>
+              setPlayerCopy({
+                ...playerCopy,
+                details: {
+                  ...playerCopy.details,
+                  snakesAndLadders: {
+                    ...getPlayerSnakesAndLaddersDetails(playerCopy),
+                    isParticipant: checked,
+                  },
+                },
+              })
+            }
+          />
+          <AdminPlayerEditNumberValue
+            label="Cell Index"
+            id="snakes_and_ladders_cell_index"
+            value={playerCopy.details?.snakesAndLadders?.cellIndex || 0}
+            min={0}
+            max={51}
+            onChange={(value) =>
+              setPlayerCopy({
+                ...playerCopy,
+                details: {
+                  ...playerCopy.details,
+                  snakesAndLadders: {
+                    ...getPlayerSnakesAndLaddersDetails(playerCopy),
+                    cellIndex: value,
+                  },
+                },
+              })
+            }
+          />
+          <AdminPlayerEditNumberValue
+            label="Moves Remaining"
+            id="snakes_and_ladders_moves_remaining"
+            value={playerCopy.details?.snakesAndLadders?.movesRemaining || 0}
+            min={0}
+            onChange={(value) =>
+              setPlayerCopy({
+                ...playerCopy,
+                details: {
+                  ...playerCopy.details,
+                  snakesAndLadders: {
+                    ...getPlayerSnakesAndLaddersDetails(playerCopy),
+                    movesRemaining: value,
+                  },
+                },
+              })
+            }
+          />
+
+          <hr />
           <fieldset>
             <legend>Achievements</legend>
             <AdminPlayerEditNumberValue
@@ -463,7 +535,7 @@ export const AdminPlayerEdit = ({ player, onClose }: Props) => {
           onClick={() => {
             console.log("Saving", playerCopy);
             updatePlayerDetails(playerCopy.id, playerCopy.details || {}).then(
-              () => onClose(true)
+              () => onClose(true),
             );
           }}
         >

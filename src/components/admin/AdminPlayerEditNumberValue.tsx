@@ -3,6 +3,7 @@ type Props = {
   id: string;
   value: number;
   min?: number;
+  max?: number;
   onChange: (value: number) => void;
 };
 
@@ -12,6 +13,7 @@ export const AdminPlayerEditNumberValue = ({
   value,
   onChange,
   min = 0,
+  max,
 }: Props) => {
   return (
     <fieldset>
@@ -21,6 +23,7 @@ export const AdminPlayerEditNumberValue = ({
         type="number"
         value={value}
         min={min}
+        max={max}
         onChange={(e) => onChange(e.target.valueAsNumber)}
       />
     </fieldset>
