@@ -1,50 +1,53 @@
 import { Player, SnakesAndLaddersDetails } from "../../types/Player";
-import {
-  BOARD_CELLS,
-  createBoardPlayers,
-  getLandingCellIndex,
-} from "./game";
+import { BOARD_CELLS, createBoardPlayers, getLandingCellIndex } from "./game";
 
-const player = (snakesAndLadders?: SnakesAndLaddersDetails): Player => ({
+const player = (
+  snakesAndLadders?: SnakesAndLaddersDetails,
+  gameMoves?: number,
+): Player => ({
   id: "player-1",
   name: "Test Player",
   tags: [],
-  details: snakesAndLadders ? { snakesAndLadders } : undefined,
+  details: snakesAndLadders ? { snakesAndLadders, gameMoves } : undefined,
 });
 
 describe("snakes and ladders board", () => {
   it("contains 52 connected board spaces", () => {
     expect(BOARD_CELLS).toHaveLength(52);
-    expect(BOARD_CELLS.every((cell, index) => cell.number === index)).toBe(true);
+    expect(BOARD_CELLS.every((cell, index) => cell.number === index)).toBe(
+      true,
+    );
   });
 
   it("loads participants and safely defaults malformed tag values", () => {
     expect(
       createBoardPlayers([
-        player({ isParticipant: true, cellIndex: 12, movesRemaining: 3 }),
+        player({ isParticipant: true, cellIndex: 12 }, 3),
         {
-          ...player({ isParticipant: false, cellIndex: 5, movesRemaining: 2 }),
+          ...player({ isParticipant: false, cellIndex: 5 }, 2),
           id: "not-playing",
         },
         {
-          ...player({ isParticipant: true, cellIndex: -2, movesRemaining: -3 }),
+          ...player({ isParticipant: true, cellIndex: -2 }, -3),
           id: "invalid",
         },
       ]),
     ).toEqual([
       {
-        player: player({ isParticipant: true, cellIndex: 12, movesRemaining: 3 }),
+        player: player({ isParticipant: true, cellIndex: 12 }, 3),
         cellIndex: 12,
         movesRemaining: 3,
         isMoving: false,
       },
       {
         player: {
-          ...player({
-            isParticipant: true,
-            cellIndex: -2,
-            movesRemaining: -3,
-          }),
+          ...player(
+            {
+              isParticipant: true,
+              cellIndex: -2,
+            },
+            -3,
+          ),
           id: "invalid",
         },
         cellIndex: 0,

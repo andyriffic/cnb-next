@@ -40,7 +40,6 @@ export type PacmanDetails = {
 export type SnakesAndLaddersDetails = {
   isParticipant: boolean;
   cellIndex: number;
-  movesRemaining: number;
 };
 
 export type ZombieRunDetails = {
@@ -77,7 +76,6 @@ export const DEFAULT_PACMAN_DETAILS: PacmanDetails = {
 export const DEFAULT_SNAKES_AND_LADDERS_DETAILS: SnakesAndLaddersDetails = {
   isParticipant: false,
   cellIndex: 0,
-  movesRemaining: 0,
 };
 
 const DEFAULT_ZOMBIE_RUN_DETAILS: ZombieRunDetails = {

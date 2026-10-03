@@ -88,9 +88,10 @@ export const createBoardPlayers = (players: Player[]): BoardPlayer[] =>
     .map((player) => ({
       player,
       details: getPlayerSnakesAndLaddersDetails(player),
+      gameMoves: player.details?.gameMoves ?? 0,
     }))
     .filter(({ details }) => details.isParticipant)
-    .map(({ player, details }) => ({
+    .map(({ player, details, gameMoves }) => ({
       player,
       cellIndex: Math.min(
         Math.max(
@@ -100,9 +101,7 @@ export const createBoardPlayers = (players: Player[]): BoardPlayer[] =>
         BOARD_CELLS.length - 1,
       ),
       movesRemaining:
-        Number.isInteger(details.movesRemaining) && details.movesRemaining > 0
-          ? details.movesRemaining
-          : 0,
+        Number.isInteger(gameMoves) && gameMoves > 0 ? gameMoves : 0,
       isMoving: false,
     }));
 

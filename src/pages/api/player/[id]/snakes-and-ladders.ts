@@ -6,7 +6,7 @@ import {
 
 type UpdateRequest = {
   cellIndex: number;
-  movesRemaining: number;
+  gameMoves: number;
 };
 
 export default async function handler(
@@ -19,13 +19,13 @@ export default async function handler(
   }
 
   const { id } = req.query;
-  const { cellIndex, movesRemaining } = (req.body ?? {}) as UpdateRequest;
+  const { cellIndex, gameMoves } = (req.body ?? {}) as UpdateRequest;
   if (
     !Number.isInteger(cellIndex) ||
     cellIndex < 0 ||
     cellIndex > 51 ||
-    !Number.isInteger(movesRemaining) ||
-    movesRemaining < 0
+    !Number.isInteger(gameMoves) ||
+    gameMoves < 0
   ) {
     return res.status(400).json({ error: "Invalid game position" });
   }
@@ -37,11 +37,11 @@ export default async function handler(
 
   await updatePlayer(player.id, {
     ...player.details,
+    gameMoves,
     snakesAndLadders: {
       isParticipant: true,
       cellIndex,
-      movesRemaining,
     },
   });
-  return res.status(200).json({ cellIndex, movesRemaining });
+  return res.status(200).json({ cellIndex, gameMoves });
 }

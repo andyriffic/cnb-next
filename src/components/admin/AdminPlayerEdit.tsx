@@ -483,24 +483,6 @@ export const AdminPlayerEdit = ({ player, onClose }: Props) => {
               })
             }
           />
-          <AdminPlayerEditNumberValue
-            label="Moves Remaining"
-            id="snakes_and_ladders_moves_remaining"
-            value={playerCopy.details?.snakesAndLadders?.movesRemaining || 0}
-            min={0}
-            onChange={(value) =>
-              setPlayerCopy({
-                ...playerCopy,
-                details: {
-                  ...playerCopy.details,
-                  snakesAndLadders: {
-                    ...getPlayerSnakesAndLaddersDetails(playerCopy),
-                    movesRemaining: value,
-                  },
-                },
-              })
-            }
-          />
 
           <hr />
           <fieldset>

@@ -48,14 +48,14 @@ export const updatePlayerDetails = (
 export const updateSnakesAndLaddersState = (
   playerId: string,
   cellIndex: number,
-  movesRemaining: number,
+  gameMoves: number,
 ): Promise<void> => {
   return fetch(`/api/player/${playerId}/snakes-and-ladders`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ cellIndex, movesRemaining }),
+    body: JSON.stringify({ cellIndex, gameMoves }),
   }).then((response) => {
     if (!response.ok) {
       throw new Error("Failed to save snakes and ladders state");

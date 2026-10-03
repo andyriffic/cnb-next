@@ -57,7 +57,6 @@ const updatePlayerGameMoves = async (
       snakesAndLadders: {
         ...snakesAndLadders,
         isParticipant: true,
-        movesRemaining: snakesAndLadders.movesRemaining + playerMoves.moves,
       },
     }),
   ];
