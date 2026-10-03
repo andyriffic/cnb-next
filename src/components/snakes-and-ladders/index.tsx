@@ -1,12 +1,11 @@
-import { useRef, useState } from "react";
 import styled from "styled-components";
 import { Player } from "../../types/Player";
-import { updateSnakesAndLaddersState } from "../../utils/api";
+import { bounceInTopAnimation } from "../animations/keyframes/bounceInTop";
 import { PlayerAvatar } from "../PlayerAvatar";
 import { SpectatorPageLayout } from "../SpectatorPageLayout";
-import { BOARD_CELLS, createBoardPlayers, getLandingCellIndex } from "./game";
-
-const STEP_DELAY_MS = 350;
+import { BoardToken } from "./BoardToken";
+import { BOARD_CELLS, isWinner } from "./game";
+import { useBoardPlayers } from "./hooks/useBoardPlayers";
 
 const BoardFrame = styled.main`
   position: relative;
@@ -56,52 +55,40 @@ const ParticipantCount = styled.p`
   opacity: 0.8;
 `;
 
-const PlayerToken = styled.button<{ $moving: boolean }>`
+const WormholeMarker = styled.img`
   position: absolute;
-  z-index: 1;
-  display: grid;
-  place-items: center;
-  width: 8vh;
-  height: 10vh;
-  padding: 0;
-  border: 0;
-  border-radius: 1vh;
-  background: transparent;
-  cursor: pointer;
-  transform-origin: center;
-  animation: ${({ $moving }) =>
-    $moving ? "token-hop 500ms ease-in-out infinite" : "none"};
+  z-index: 0;
+  width: 7vh;
+  height: 7vh;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: wormhole-spin 10s linear infinite;
 
-  &:focus-visible {
-    outline: 3px solid #101820;
-    outline-offset: 2px;
-  }
-
-  &:disabled {
-    cursor: default;
-  }
-
-  @keyframes token-hop {
-    50% {
-      margin-top: -2vh;
+  @keyframes wormhole-spin {
+    to {
+      transform: translate(-50%, -50%) rotate(360deg);
     }
   }
 `;
 
-const MoveCount = styled.span`
-  position: absolute;
-  right: -2px;
-  bottom: -2px;
-  display: grid;
-  place-items: center;
-  width: 3vh;
-  height: 3vh;
-  border: 2px solid white;
-  border-radius: 50%;
-  background: #172b3a;
-  color: white;
-  font-size: 1.6vh;
-  font-weight: 700;
+const WinnerBanner = styled(BoardOverlay)`
+  top: 30%;
+  left: 50%;
+  z-index: 4;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 32px;
+  margin-left: -10vw;
+  width: 20vw;
+  box-shadow: 1px 2px 15px 5px rgba(0, 0, 0, 0.6);
+  background: white;
+  animation: ${bounceInTopAnimation} 1.5s ease-in both;
+`;
+
+const WinnerHeading = styled.h2`
+  margin: 0;
+  font-size: 2rem;
 `;
 
 const BoardLegend = styled.div`
@@ -134,80 +121,14 @@ const getStackOffset = (position: number, total: number): [number, number] => {
 
 type Props = { players: Player[] };
 
+const wormholeCells = BOARD_CELLS.filter((cell) => cell.kind === "wormhole");
+
 export default function SnakesAndLadders({ players }: Props) {
-  const [boardPlayers, setBoardPlayers] = useState(() =>
-    createBoardPlayers(players),
-  );
-  const [feedback, setFeedback] = useState("");
-  const movingPlayers = useRef(new Set<string>());
-
-  const startTurn = (playerId: string) => {
-    const selectedPlayer = boardPlayers.find(
-      (boardPlayer) => boardPlayer.player.id === playerId,
-    );
-    if (
-      !selectedPlayer ||
-      selectedPlayer.movesRemaining <= 0 ||
-      selectedPlayer.cellIndex === BOARD_CELLS.length - 1 ||
-      movingPlayers.current.has(playerId)
-    ) {
-      return;
-    }
-
-    movingPlayers.current.add(playerId);
-    setFeedback("");
-    setBoardPlayers((current) =>
-      current.map((boardPlayer) =>
-        boardPlayer.player.id === playerId
-          ? { ...boardPlayer, isMoving: true }
-          : boardPlayer,
-      ),
-    );
-
-    let cellIndex = selectedPlayer.cellIndex;
-    let movesRemaining = selectedPlayer.movesRemaining;
-    const moveOneSpace = () => {
-      cellIndex = Math.min(cellIndex + 1, BOARD_CELLS.length - 1);
-      movesRemaining -= 1;
-      setBoardPlayers((current) =>
-        current.map((boardPlayer) =>
-          boardPlayer.player.id === playerId
-            ? { ...boardPlayer, cellIndex, movesRemaining }
-            : boardPlayer,
-        ),
-      );
-
-      if (movesRemaining > 0) {
-        window.setTimeout(moveOneSpace, STEP_DELAY_MS);
-        return;
-      }
-
-      window.setTimeout(() => {
-        cellIndex = getLandingCellIndex(cellIndex);
-        movingPlayers.current.delete(playerId);
-        setBoardPlayers((current) =>
-          current.map((boardPlayer) =>
-            boardPlayer.player.id === playerId
-              ? {
-                  ...boardPlayer,
-                  cellIndex,
-                  movesRemaining: 0,
-                  isMoving: false,
-                }
-              : boardPlayer,
-          ),
-        );
-        updateSnakesAndLaddersState(playerId, cellIndex, 0).catch(() => {
-          setFeedback("Could not save the player position.");
-        });
-      }, STEP_DELAY_MS);
-    };
-
-    window.setTimeout(moveOneSpace, STEP_DELAY_MS);
-  };
+  const { boardPlayers, startPlayerTurn, advancePlayer, feedback } =
+    useBoardPlayers(players);
 
   const winningPlayer = boardPlayers.find(
-    (boardPlayer) => boardPlayer.cellIndex === BOARD_CELLS.length - 1,
+    (boardPlayer) => isWinner(boardPlayer) && boardPlayer.phase === "idle",
   );
 
   return (
@@ -217,6 +138,17 @@ export default function SnakesAndLadders({ players }: Props) {
           <Heading>Snakes &amp; Ladders</Heading>
           <ParticipantCount>{boardPlayers.length} players</ParticipantCount>
         </PageHeader>
+        {wormholeCells.map((cell) => (
+          <WormholeMarker
+            key={cell.number}
+            src="/images/snakes-and-ladders-vortex.png"
+            alt=""
+            style={{
+              left: `${cell.coordinates[0]}%`,
+              top: `${cell.coordinates[1]}%`,
+            }}
+          />
+        ))}
         {boardPlayers.length === 0 && (
           <EmptyBoard>No players are currently on the board.</EmptyBoard>
         )}
@@ -227,48 +159,35 @@ export default function SnakesAndLadders({ players }: Props) {
           const stackPosition = sameCellPlayers.findIndex(
             (candidate) => candidate.player.id === boardPlayer.player.id,
           );
-          const [offsetX, offsetY] = getStackOffset(
-            stackPosition,
-            sameCellPlayers.length,
-          );
-          const cell = BOARD_CELLS[boardPlayer.cellIndex]!;
-          const isWinner = boardPlayer.cellIndex === BOARD_CELLS.length - 1;
 
           return (
-            <PlayerToken
+            <BoardToken
               key={boardPlayer.player.id}
-              type="button"
-              $moving={boardPlayer.isMoving}
-              disabled={
-                boardPlayer.movesRemaining === 0 ||
-                boardPlayer.isMoving ||
-                isWinner
-              }
-              aria-label={`${boardPlayer.player.name}, space ${cell.number}, ${boardPlayer.movesRemaining} moves remaining`}
-              title={`${boardPlayer.player.name}: space ${cell.number}`}
-              onClick={() => startTurn(boardPlayer.player.id)}
-              style={{
-                left: `${cell.coordinates[0]}%`,
-                top: `${cell.coordinates[1]}%`,
-                transform: `translate(calc(-50% + ${offsetX}vh), calc(-50% + ${offsetY}vh))`,
-              }}
-            >
-              <PlayerAvatar playerId={boardPlayer.player.id} size="thumbnail" />
-              {boardPlayer.movesRemaining > 0 && (
-                <MoveCount>{boardPlayer.movesRemaining}</MoveCount>
+              boardPlayer={boardPlayer}
+              stackOffset={getStackOffset(
+                stackPosition,
+                sameCellPlayers.length,
               )}
-            </PlayerToken>
+              onStartTurn={startPlayerTurn}
+              onAdvance={advancePlayer}
+            />
           );
         })}
+        {winningPlayer && (
+          <WinnerBanner role="status">
+            <WinnerHeading>🏆 Winner! 🏆</WinnerHeading>
+            <PlayerAvatar playerId={winningPlayer.player.id} size="medium" />
+            <p style={{ margin: 0, fontWeight: 700 }}>
+              {winningPlayer.player.name}
+            </p>
+          </WinnerBanner>
+        )}
         <BoardFooter>
           <BoardLegend aria-label="Board legend">
             <span>🐍 Snake</span>
             <span>🪜 Ladder</span>
             <span>🌀 Wormhole</span>
           </BoardLegend>
-          {winningPlayer && (
-            <p style={{ margin: 0 }}>Winner: {winningPlayer.player.name}</p>
-          )}
           <Feedback role="status">{feedback}</Feedback>
         </BoardFooter>
       </BoardFrame>

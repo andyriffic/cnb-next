@@ -10,11 +10,24 @@ export type BoardCell = {
   destination?: number | number[];
 };
 
+/**
+ * A turn runs idle → moving (one square per step) → landed, then the landing
+ * square is actioned: snakes and ladders slide, wormholes swallow the player
+ * and spit them out at a random destination.
+ */
+export type TurnPhase =
+  | "idle"
+  | "moving"
+  | "landed"
+  | "sliding"
+  | "wormhole-in"
+  | "wormhole-out";
+
 export type BoardPlayer = {
   player: Player;
   cellIndex: number;
   movesRemaining: number;
-  isMoving: boolean;
+  phase: TurnPhase;
 };
 
 type BoardRow = [number, number, CellKind, (number | number[])?];
@@ -102,7 +115,7 @@ export const createBoardPlayers = (players: Player[]): BoardPlayer[] =>
       ),
       movesRemaining:
         Number.isInteger(gameMoves) && gameMoves > 0 ? gameMoves : 0,
-      isMoving: false,
+      phase: "idle" as const,
     }));
 
 export const getLandingCellIndex = (
@@ -121,4 +134,74 @@ export const getLandingCellIndex = (
     return cell.destination[destinationIndex] ?? cellIndex;
   }
   return cellIndex;
+};
+
+export const END_CELL_INDEX = BOARD_CELLS.length - 1;
+
+export const isWinner = (boardPlayer: BoardPlayer): boolean =>
+  boardPlayer.cellIndex === END_CELL_INDEX;
+
+export const canStartTurn = (boardPlayer: BoardPlayer): boolean =>
+  boardPlayer.phase === "idle" &&
+  boardPlayer.movesRemaining > 0 &&
+  !isWinner(boardPlayer);
+
+export const startTurn = (boardPlayer: BoardPlayer): BoardPlayer =>
+  canStartTurn(boardPlayer)
+    ? { ...boardPlayer, phase: "moving" }
+    : boardPlayer;
+
+const movePlayerOneSquare = (boardPlayer: BoardPlayer): BoardPlayer => {
+  const cellIndex = Math.min(boardPlayer.cellIndex + 1, END_CELL_INDEX);
+  // Reaching the finish ends the move even if there are moves to spare
+  const movesRemaining =
+    cellIndex === END_CELL_INDEX ? 0 : boardPlayer.movesRemaining - 1;
+  return {
+    ...boardPlayer,
+    cellIndex,
+    movesRemaining,
+    phase: movesRemaining > 0 ? "moving" : "landed",
+  };
+};
+
+const actionLandingCell = (
+  boardPlayer: BoardPlayer,
+  random: () => number,
+): BoardPlayer => {
+  const { kind } = BOARD_CELLS[boardPlayer.cellIndex]!;
+  if (kind === "snake" || kind === "ladder") {
+    return {
+      ...boardPlayer,
+      cellIndex: getLandingCellIndex(boardPlayer.cellIndex, random),
+      phase: "sliding",
+    };
+  }
+  if (kind === "wormhole") {
+    return { ...boardPlayer, phase: "wormhole-in" };
+  }
+  return { ...boardPlayer, phase: "idle" };
+};
+
+/** Advances a player's turn by one step; idle players are left unchanged. */
+export const advanceTurn = (
+  boardPlayer: BoardPlayer,
+  random = Math.random,
+): BoardPlayer => {
+  switch (boardPlayer.phase) {
+    case "moving":
+      return movePlayerOneSquare(boardPlayer);
+    case "landed":
+      return actionLandingCell(boardPlayer, random);
+    case "wormhole-in":
+      return {
+        ...boardPlayer,
+        cellIndex: getLandingCellIndex(boardPlayer.cellIndex, random),
+        phase: "wormhole-out",
+      };
+    case "sliding":
+    case "wormhole-out":
+      return { ...boardPlayer, phase: "idle" };
+    case "idle":
+      return boardPlayer;
+  }
 };
