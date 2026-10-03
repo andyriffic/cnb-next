@@ -1,4 +1,5 @@
 import { Player } from "../../types/Player";
+import { getPlayerSnakesAndLaddersDetails } from "../../types/Player";
 import {
   getPlayer,
   updatePlayer,
@@ -37,61 +38,40 @@ const tagsWithKongImmunity = (
   return [...tags, "kong_immunity"];
 };
 
-const updateLegacyMovesTag = (
+const updatePlayerGameMoves = async (
   player: Player,
-  playerMoves: PlayerGameMoves,
-): Promise<void> => {
-  const newTags = tagsWithKongImmunity(
-    [
-      ...incrementIntegerTag(
-        "sl_moves:",
-        playerMoves.moves,
-        player.tags,
-      ).filter((t) => t !== "sl_participant"),
-      "sl_participant",
-    ],
-    !!playerMoves.winner,
-  );
-  return updatePlayerLegacyTags(player.id, newTags);
-};
-
-const updatePlayerGameMoves = (
   playerMoves: PlayerGameMoves,
   team?: string,
 ): Promise<void> => {
-  return new Promise((resolve, reject) => {
-    getPlayer(playerMoves.playerId)
-      .then((player) => {
-        if (!player) {
-          reject(new Error(`Player with id ${playerMoves.playerId} not found`));
-          return;
-        }
+  if (team && player.details?.team?.toLowerCase() !== team.toLowerCase()) {
+    console.log("Skipping player", player.id, "not on team", team);
+    return;
+  }
 
-        if (team && player.details?.team?.toLowerCase() !== team.toLowerCase()) {
-          console.log(
-            "Skipping player",
-            playerMoves.playerId,
-            "not on team",
-            team,
-          );
-          return;
-        }
+  const currentGameMoves = player.details?.gameMoves || 0;
+  const snakesAndLadders = getPlayerSnakesAndLaddersDetails(player);
+  const updates: Promise<void>[] = [
+    updatePlayer(player.id, {
+      ...player.details,
+      gameMoves: currentGameMoves + playerMoves.moves,
+      snakesAndLadders: {
+        ...snakesAndLadders,
+        isParticipant: true,
+        movesRemaining: snakesAndLadders.movesRemaining + playerMoves.moves,
+      },
+    }),
+  ];
 
-        const currentGameMoves = player.details?.gameMoves || 0;
+  if (playerMoves.winner && !player.tags.includes("kong_immunity")) {
+    updates.push(
+      updatePlayerLegacyTags(
+        player.id,
+        tagsWithKongImmunity(player.tags, true),
+      ),
+    );
+  }
 
-        updatePlayer(playerMoves.playerId, {
-          ...player.details,
-          gameMoves: currentGameMoves + playerMoves.moves,
-        })
-          .then(() => {
-            updateLegacyMovesTag(player, playerMoves)
-              .then(() => resolve())
-              .catch((err) => reject(err));
-          })
-          .catch((err) => reject(err));
-      })
-      .catch((err) => reject(err));
-  });
+  await Promise.all(updates);
 };
 
 const updatedGameIds: string[] = [];
@@ -108,7 +88,13 @@ export const savePlayersGameMoves = (
 
   updatedGameIds.push(gameId);
 
-  const promises = moves.map((move) => updatePlayerGameMoves(move, team));
+  const promises = moves.map(async (move) => {
+    const player = await getPlayer(move.playerId);
+    if (!player) {
+      throw new Error(`Player with id ${move.playerId} not found`);
+    }
+    await updatePlayerGameMoves(player, move, team);
+  });
 
   return Promise.all(promises);
 };

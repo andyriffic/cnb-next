@@ -45,6 +45,24 @@ export const updatePlayerDetails = (
   });
 };
 
+export const updateSnakesAndLaddersState = (
+  playerId: string,
+  cellIndex: number,
+  movesRemaining: number,
+): Promise<void> => {
+  return fetch(`/api/player/${playerId}/snakes-and-ladders`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ cellIndex, movesRemaining }),
+  }).then((response) => {
+    if (!response.ok) {
+      throw new Error("Failed to save snakes and ladders state");
+    }
+  });
+};
+
 export const resetAllPlayerZombieDetails = (): Promise<void> => {
   return new Promise((resolve, reject) => {
     fetch(`/api/players/reset-zombie-run`, {

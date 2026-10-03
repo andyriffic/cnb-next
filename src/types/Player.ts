@@ -18,6 +18,7 @@ export type PlayerDetails = {
   pacmanPlayer?: boolean;
   team?: string;
   pacmanDetails?: PacmanDetails;
+  snakesAndLadders?: SnakesAndLaddersDetails;
   zombieRun?: ZombieRunDetails;
   achievements?: PlayerAchievements;
   spaceRace?: SpaceRaceDetails;
@@ -34,6 +35,12 @@ export type PacmanDetails = {
   index: number;
   jailTurnsRemaining: number;
   hasPowerPill: boolean;
+};
+
+export type SnakesAndLaddersDetails = {
+  isParticipant: boolean;
+  cellIndex: number;
+  movesRemaining: number;
 };
 
 export type ZombieRunDetails = {
@@ -65,6 +72,12 @@ export const DEFAULT_PACMAN_DETAILS: PacmanDetails = {
   index: 0,
   jailTurnsRemaining: 0,
   hasPowerPill: false,
+};
+
+export const DEFAULT_SNAKES_AND_LADDERS_DETAILS: SnakesAndLaddersDetails = {
+  isParticipant: false,
+  cellIndex: 0,
+  movesRemaining: 0,
 };
 
 const DEFAULT_ZOMBIE_RUN_DETAILS: ZombieRunDetails = {
@@ -101,6 +114,13 @@ export const getPlayerPacManDetails = (player: Player): PacmanDetails => {
     ...player.details?.pacmanDetails,
   };
 };
+
+export const getPlayerSnakesAndLaddersDetails = (
+  player: Player,
+): SnakesAndLaddersDetails => ({
+  ...DEFAULT_SNAKES_AND_LADDERS_DETAILS,
+  ...player.details?.snakesAndLadders,
+});
 
 export const getPlayerZombieRunDetails = (player: Player): ZombieRunDetails => {
   return {
