@@ -15,7 +15,10 @@ export type UseBoardPlayers = {
   feedback: string;
 };
 
-export function useBoardPlayers(players: Player[]): UseBoardPlayers {
+export function useBoardPlayers(
+  players: Player[],
+  saveDisabled = false,
+): UseBoardPlayers {
   const [boardPlayers, setBoardPlayers] = useState(() =>
     createBoardPlayers(players),
   );
@@ -39,20 +42,27 @@ export function useBoardPlayers(players: Player[]): UseBoardPlayers {
     );
   }, []);
 
-  const advancePlayer = useCallback((boardPlayer: BoardPlayer) => {
-    const updated = advanceTurn(boardPlayer);
-    replacePlayer(updated);
+  const advancePlayer = useCallback(
+    (boardPlayer: BoardPlayer) => {
+      const updated = advanceTurn(boardPlayer);
+      replacePlayer(updated);
 
-    if (boardPlayer.phase !== "idle" && updated.phase === "idle") {
-      updateSnakesAndLaddersState(
-        updated.player.id,
-        updated.cellIndex,
-        updated.movesRemaining,
-      ).catch(() => {
-        setFeedback("Could not save the player position.");
-      });
-    }
-  }, []);
+      if (
+        !saveDisabled &&
+        boardPlayer.phase !== "idle" &&
+        updated.phase === "idle"
+      ) {
+        updateSnakesAndLaddersState(
+          updated.player.id,
+          updated.cellIndex,
+          updated.movesRemaining,
+        ).catch(() => {
+          setFeedback("Could not save the player position.");
+        });
+      }
+    },
+    [saveDisabled],
+  );
 
   return { boardPlayers, startPlayerTurn, advancePlayer, feedback };
 }

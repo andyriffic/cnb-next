@@ -69,4 +69,10 @@ export type SoundName =
   | "mystery-box-show-box-contents"
   | "mystery-box-everyone-survives-round"
   | "mystery-box-zero-point-losers"
-  | "mystery-box-player-explode";
+  | "mystery-box-player-explode"
+  | "snakes-and-ladders-move"
+  | "snakes-and-ladders-ladder"
+  | "snakes-and-ladders-snake"
+  | "snakes-and-ladders-wormhole-in"
+  | "snakes-and-ladders-wormhole-out"
+  | "snakes-and-ladders-winner";

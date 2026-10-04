@@ -1,12 +1,8 @@
 import { useEffect } from "react";
 import styled, { css, keyframes } from "styled-components";
 import { PlayerAvatar } from "../PlayerAvatar";
-import {
-  BOARD_CELLS,
-  BoardPlayer,
-  canStartTurn,
-  TurnPhase,
-} from "./game";
+import { BOARD_CELLS, BoardPlayer, canStartTurn, TurnPhase } from "./game";
+import { useBoardTokenSound } from "./hooks/useBoardTokenSound";
 
 const STEP_MS = 350;
 const LANDED_PAUSE_MS = 400;
@@ -121,6 +117,7 @@ export function BoardToken({
 }: Props) {
   const { player, cellIndex, movesRemaining, phase } = boardPlayer;
   const cell = BOARD_CELLS[cellIndex]!;
+  useBoardTokenSound(boardPlayer);
 
   useEffect(() => {
     if (phase === "idle") {

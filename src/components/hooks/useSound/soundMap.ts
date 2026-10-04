@@ -73,6 +73,13 @@ export const defaultSounds: { [key in SoundName]: string } = {
   "mystery-box-everyone-survives-round": "/sounds/crowd_oooo.mp3",
   "mystery-box-zero-point-losers": "/sounds/wah_wah_wah.mp3",
   "mystery-box-player-explode": "/sounds/default/explode.mp3",
+  "snakes-and-ladders-move": "/sounds/default/pokemon_snap_so_so.mp3",
+  "snakes-and-ladders-ladder": "/sounds/wuuhee_cute.mp3",
+  "snakes-and-ladders-snake": "/sounds/fall_scream.mp3",
+  "snakes-and-ladders-wormhole-in": "/sounds/spinning_heart.mp3",
+  "snakes-and-ladders-wormhole-out":
+    "/sounds/default/spinning_heart_reverse.mp3",
+  "snakes-and-ladders-winner": "/sounds/fanfare.mp3",
 };
 
 export const xmasSounds: { [key in SoundName]: string } = {

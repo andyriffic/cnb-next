@@ -1,5 +1,9 @@
+import { useEffect, useRef } from "react";
 import styled from "styled-components";
+import { TeamId } from "../../teams";
 import { Player } from "../../types/Player";
+import { isClientSideFeatureEnabled } from "../../utils/feature";
+import { useSound } from "../hooks/useSound";
 import { bounceInTopAnimation } from "../animations/keyframes/bounceInTop";
 import { PlayerAvatar } from "../PlayerAvatar";
 import { SpectatorPageLayout } from "../SpectatorPageLayout";
@@ -7,12 +11,12 @@ import { BoardToken } from "./BoardToken";
 import { BOARD_CELLS, isWinner } from "./game";
 import { useBoardPlayers } from "./hooks/useBoardPlayers";
 
-const BoardFrame = styled.main`
+const BoardFrame = styled.main<{ $backgroundImageUrl: string }>`
   position: relative;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background-image: url("/images/snakes-and-ladders-board.jpg");
+  background-image: url(${({ $backgroundImageUrl }) => $backgroundImageUrl});
   background-position: center;
   background-repeat: no-repeat;
   background-size: 100% 100%;
@@ -119,25 +123,42 @@ const getStackOffset = (position: number, total: number): [number, number] => {
   return [(column - (columns - 1) / 2) * 4, (row - (rows - 1) / 2) * 3];
 };
 
-type Props = { players: Player[] };
+type Props = { players: Player[]; teamId: TeamId };
+
+const getBoardBackgroundImageUrl = (teamId: TeamId) =>
+  teamId === "finvengers"
+    ? "/images/snakes-and-ladders-board-shark-tank.png"
+    : "/images/snakes-and-ladders-board-dog-park.png";
 
 const wormholeCells = BOARD_CELLS.filter((cell) => cell.kind === "wormhole");
 
-export default function SnakesAndLadders({ players }: Props) {
+export default function SnakesAndLadders({ players, teamId }: Props) {
   const { boardPlayers, startPlayerTurn, advancePlayer, feedback } =
-    useBoardPlayers(players);
+    useBoardPlayers(players, isClientSideFeatureEnabled("no-save"));
 
   const winningPlayer = boardPlayers.find(
     (boardPlayer) => isWinner(boardPlayer) && boardPlayer.phase === "idle",
   );
+  const winningPlayerId = winningPlayer?.player.id;
+  const winnerOnPageLoad = useRef(winningPlayerId);
+  const { play } = useSound();
+
+  useEffect(() => {
+    winningPlayerId &&
+      winningPlayerId !== winnerOnPageLoad.current &&
+      play("snakes-and-ladders-winner");
+  }, [play, winningPlayerId]);
 
   return (
     <SpectatorPageLayout>
-      <BoardFrame aria-label="Snakes and ladders game board">
-        <PageHeader>
+      <BoardFrame
+        aria-label="Snakes and ladders game board"
+        $backgroundImageUrl={getBoardBackgroundImageUrl(teamId)}
+      >
+        {/* <PageHeader>
           <Heading>Snakes &amp; Ladders</Heading>
           <ParticipantCount>{boardPlayers.length} players</ParticipantCount>
-        </PageHeader>
+        </PageHeader> */}
         {wormholeCells.map((cell) => (
           <WormholeMarker
             key={cell.number}
@@ -182,14 +203,14 @@ export default function SnakesAndLadders({ players }: Props) {
             </p>
           </WinnerBanner>
         )}
-        <BoardFooter>
+        {/* <BoardFooter>
           <BoardLegend aria-label="Board legend">
             <span>🐍 Snake</span>
             <span>🪜 Ladder</span>
             <span>🌀 Wormhole</span>
           </BoardLegend>
           <Feedback role="status">{feedback}</Feedback>
-        </BoardFooter>
+        </BoardFooter> */}
       </BoardFrame>
     </SpectatorPageLayout>
   );

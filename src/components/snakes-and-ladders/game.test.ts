@@ -65,10 +65,10 @@ describe("snakes and ladders board", () => {
     ]);
   });
 
-  it("resolves snakes, ladders, and random wormhole destinations", () => {
+  it("resolves snakes and ladders destinations", () => {
     expect(getLandingCellIndex(10)).toBe(24);
     expect(getLandingCellIndex(21)).toBe(13);
-    expect(getLandingCellIndex(2, () => 0.75)).toBe(8);
+    expect(getLandingCellIndex(2)).toBe(6);
     expect(getLandingCellIndex(1)).toBe(1);
   });
 });
@@ -155,11 +155,13 @@ describe("snakes and ladders turns", () => {
     expect(steps.map(({ phase }) => phase)).not.toContain("sliding");
   });
 
-  it("sends players through a wormhole to a random destination", () => {
+  // Skipped while the board has no wormholes — re-enable when they're added back
+  it.skip("sends players through a wormhole to a random destination", () => {
     expect(
-      playTurn(boardPlayer({ cellIndex: 1, movesRemaining: 1 }), () => 0.75).map(
-        ({ cellIndex, phase }) => [cellIndex, phase],
-      ),
+      playTurn(
+        boardPlayer({ cellIndex: 1, movesRemaining: 1 }),
+        () => 0.75,
+      ).map(({ cellIndex, phase }) => [cellIndex, phase]),
     ).toEqual([
       [1, "moving"],
       [2, "landed"],
