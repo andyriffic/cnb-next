@@ -155,10 +155,13 @@ export default function SnakesAndLadders({ players, teamId }: Props) {
         aria-label="Snakes and ladders game board"
         $backgroundImageUrl={getBoardBackgroundImageUrl(teamId)}
       >
-        {/* <PageHeader>
-          <Heading>Snakes &amp; Ladders</Heading>
-          <ParticipantCount>{boardPlayers.length} players</ParticipantCount>
-        </PageHeader> */}
+        <PageHeader>
+          <Heading>Click each player to move</Heading>
+          <ParticipantCount>
+            Please waiting until the player has completed their move before
+            clicking another player 😅
+          </ParticipantCount>
+        </PageHeader>
         {wormholeCells.map((cell) => (
           <WormholeMarker
             key={cell.number}
