@@ -10,7 +10,9 @@ type Props = {
 
 export function LinkToMiniGame({ team }: Props) {
   const miniGameUrl =
-    team?.toLowerCase() === "corgi" ? "/snakes-and-ladders" : "/dog-park";
+    team?.toLowerCase() === "corgi"
+      ? "/snakes-and-ladders"
+      : "/snakes-and-ladders";
 
   return (
     <FancyLink
