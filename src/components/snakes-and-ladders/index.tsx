@@ -158,7 +158,7 @@ export default function SnakesAndLadders({ players, teamId }: Props) {
         <PageHeader>
           <Heading>Click each player to move</Heading>
           <ParticipantCount>
-            Please waiting until the player has completed their move before
+            Please wait until the player has completed their move before
             clicking another player 😅
           </ParticipantCount>
         </PageHeader>
