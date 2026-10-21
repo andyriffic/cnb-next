@@ -1,4 +1,9 @@
-import CORGI_THEME, { DEFAULT_THEME, FINVENGERS_THEME } from "./themes";
+import {
+  CORGI_THEME,
+  DEFAULT_THEME,
+  FINVENGERS_THEME,
+  HALLOWEEN_THEME,
+} from "./themes";
 import { GlobalGameTheme } from "./themes/types";
 
 export type TeamId = "none" | "corgi" | "finvengers";

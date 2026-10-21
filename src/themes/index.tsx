@@ -165,4 +165,28 @@ export const FINVENGERS_THEME: GlobalGameTheme = {
   },
 };
 
-export default CORGI_THEME;
+export const HALLOWEEN_THEME: GlobalGameTheme = {
+  tokens: {
+    ...DEFAULT_THEME.tokens,
+    colours: {
+      ...DEFAULT_THEME.tokens.colours,
+      primaryText: "#F5F0E6",
+      textAccent: "#FF7518",
+
+      primaryBackground: "#3B1F4F",
+      secondaryBackground: "#24122F",
+
+      buttonPrimaryBackground: "#FF7518",
+      buttonSecondaryBackground: "#B8F26B",
+
+      buttonPrimaryText: "#1A0F1F",
+      buttonAccent: "rgb(0 0 0 / 0.3)",
+    },
+  },
+  sounds: DEFAULT_THEME.sounds,
+  components: {
+    ...DEFAULT_THEME.components,
+  },
+};
+
+export default DEFAULT_THEME;
