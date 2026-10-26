@@ -126,9 +126,10 @@ const getStackOffset = (position: number, total: number): [number, number] => {
 type Props = { players: Player[]; teamId: TeamId };
 
 const getBoardBackgroundImageUrl = (teamId: TeamId) =>
-  teamId === "finvengers"
-    ? "/images/snakes-and-ladders-board-shark-tank.png"
-    : "/images/snakes-and-ladders-board-dog-park.png";
+  "/images/snakes-and-ladders-board-dog-park-halloween.png";
+// teamId === "finvengers"
+//   ? "/images/snakes-and-ladders-board-shark-tank.png"
+//   : "/images/snakes-and-ladders-board-dog-park.png";
 
 const wormholeCells = BOARD_CELLS.filter((cell) => cell.kind === "wormhole");
 
