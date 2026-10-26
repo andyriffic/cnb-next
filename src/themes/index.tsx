@@ -10,6 +10,7 @@ import { GlobalGameTheme, ThemeTokens } from "./types";
 import { XmasJoinScreenDecoration } from "./xmas/JoinScreenDecoration";
 import { JoinScreenDecoration as CorgiJoinScreenDecoration } from "./corgi/JoinScreenDecoration";
 import { JoinScreenDecoration as FinvengersJoinScreenDecoration } from "./finvengers/JoinScreenDecoration";
+import { JoinScreenDecoration as HalloweeenJoinScreenDecoration } from "./halloween/JoinScreenDecoration";
 
 export const DEFAULT_THEME: GlobalGameTheme = {
   tokens: {
@@ -183,10 +184,16 @@ export const HALLOWEEN_THEME: GlobalGameTheme = {
       buttonAccent: "rgb(0 0 0 / 0.3)",
     },
   },
-  sounds: DEFAULT_THEME.sounds,
+  sounds: {
+    ...DEFAULT_THEME.sounds,
+    "join-music": "/sounds/halloween/ghostly.mp3",
+    "join-player-joined": "/sounds/halloween/screme.mp3",
+    "gas-background-music": "/sounds/music/pop_goes_the_weasal.mp3",
+  },
   components: {
     ...DEFAULT_THEME.components,
+    JoinScreenDecoration: <HalloweeenJoinScreenDecoration />,
   },
 };
 
-export default DEFAULT_THEME;
+export default HALLOWEEN_THEME;

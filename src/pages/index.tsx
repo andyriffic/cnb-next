@@ -26,7 +26,7 @@ const Space = styled.div`
   width: 100vw;
   height: 100vh;
   background-color: black;
-  background-image: url("/images/cnb-dogpark-background.png");
+  background-image: url("/images/cnb-dogpark-background-halloween.jpg");
   background-size: 100% 100%;
 `;
 
