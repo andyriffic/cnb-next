@@ -39,10 +39,7 @@ const View = ({ game, team }: Props) => {
   }, [disableAutoNextRound, game.id, gameState.gameState, mysteryBox]);
 
   return (
-    <SpectatorPageLayout
-      overrideBackgroundColor="#4D8DFF"
-      debug={<DebugMysteryBoxGame game={game} />}
-    >
+    <SpectatorPageLayout debug={<DebugMysteryBoxGame game={game} />}>
       {/* <p>
         {game.id} - {MysteryBoxGameState[gameState.gameState]}
       </p> */}

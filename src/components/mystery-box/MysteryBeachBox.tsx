@@ -11,10 +11,10 @@ import { Coins } from "../Coins";
 import THEME from "../../themes";
 import bombImage from "./mystery-box-bomb.png";
 import beachImage from "./beach-box.png";
-import beachImage01 from "./beach-box-01.png";
-import beachImage02 from "./beach-box-02.png";
-import beachImage03 from "./beach-box-03.png";
-import beachImage04 from "./beach-box-04.png";
+import beachImage01 from "./beach-box-01-halloween.jpg";
+import beachImage02 from "./beach-box-02-halloween.jpg";
+import beachImage03 from "./beach-box-03-halloween.jpg";
+import beachImage04 from "./beach-box-04-halloween.jpg";
 
 const BoxLidAnimation = keyframes`
 0%,
@@ -128,10 +128,10 @@ const EXTRA_BOX_CONFIG: Record<
   number,
   { name: string; image: StaticImageData }
 > = {
-  0: { name: "Broker Beach", image: beachImage01 },
-  1: { name: "Equity Bay", image: beachImage02 },
-  2: { name: "Turtle Cove", image: beachImage03 },
-  3: { name: "Interest Island", image: beachImage04 },
+  0: { name: "Blood Beach", image: beachImage01 },
+  1: { name: "Blue Murder Bay", image: beachImage02 },
+  2: { name: "Zombie Cove", image: beachImage03 },
+  3: { name: "Oooze Island", image: beachImage04 },
 };
 
 export const getBoxContents = (
