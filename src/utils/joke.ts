@@ -111,29 +111,61 @@ const JOKES: Joke[] = [
 ];
 
 const DOG_JOKES: Joke[] = [
+  // {
+  //   jokeText: "What did the mortgage broker say to the Golden Retriever?",
+  //   answer: "Great news! you've been pre-a-paw-ved",
+  // },
+  // {
+  //   jokeText: "Why did dog get get rejected for a Home Loan?",
+  //   answer: "Their credit score was ruff",
+  // },
+  // {
+  //   jokeText: "Why did the web developer get a Labrador?",
+  //   answer: "He needed help fetching the API data!",
+  // },
+  // {
+  //   jokeText: "Why did the web developer get a Labrador?",
+  //   answer: "He needed help re-fetching the API data!",
+  // },
+  // {
+  //   jokeText: "Why did the dog fail the coding interview?",
+  //   answer: "Their bark-end code had too many bugs",
+  // },
+  // {
+  //   jokeText: "How did the puppy buy his first house?",
+  //   answer: "He put down a 20% down-paw-ment",
+  // },
+  // {
+  //   jokeText: "Why did the dogs web application run out of memory?",
+  //   answer: "It had too many barks and not enough bytes.",
+  // },
   {
-    jokeText: "What did the mortgage broker say to the Golden Retriever?",
-    answer: "Great news! you've been pre-a-paw-ved",
+    jokeText: "How did the Mortgage Choice broker help his dog?",
+    answer: "He lender dog a bone",
   },
   {
-    jokeText: "Why did dog get get rejected for a Home Loan?",
-    answer: "Their credit score was ruff",
+    jokeText: "How did the bank know Fido was in financial hardship?",
+    answer: "He had to paws his morgage repayments",
   },
   {
-    jokeText: "Why did the web developer get a Labrador?",
-    answer: "He needed help fetching the API data!",
+    jokeText: "What type of job did the corgi list on their loan applications?",
+    answer: "A white collar job",
   },
   {
-    jokeText: "Why did the dog fail the coding interview?",
-    answer: "Their bark-end code had too many bugs",
+    jokeText: "What did the dog trainer tell the the BRA interest rate?",
+    answer: "Stay!",
   },
   {
-    jokeText: "How did the puppy buy his first house?",
-    answer: "He put down a 20% down-paw-ment",
+    jokeText: "How did the corgi add more money to their offset account?",
+    answer: "Then earnt more WAGes",
   },
   {
-    jokeText: "Why did the dogs web application run out of memory?",
-    answer: "It had too many barks and not enough bytes.",
+    jokeText: "How did the corgi join the CNB game?",
+    answer: "He scanned the barkcode",
+  },
+  {
+    jokeText: "What type of loan was the desexed corgi looking for?",
+    answer: "A fixed rate loan",
   },
 ];
 
