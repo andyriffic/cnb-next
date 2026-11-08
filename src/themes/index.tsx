@@ -196,4 +196,4 @@ export const HALLOWEEN_THEME: GlobalGameTheme = {
   },
 };
 
-export default HALLOWEEN_THEME;
+export default DEFAULT_THEME;

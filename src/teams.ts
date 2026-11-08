@@ -44,7 +44,7 @@ export const TEAM_DETAILS: { [key in TeamId]: TeamDetails } = {
     backgroundColor: "#1c7721",
     textColor: "#fff",
     mascotImageUrl: "/images/teams/corgi/corgi-mascot-square.png",
-    theme: HALLOWEEN_THEME,
+    theme: CORGI_THEME,
   },
   finvengers: {
     id: "finvengers",
@@ -52,6 +52,6 @@ export const TEAM_DETAILS: { [key in TeamId]: TeamDetails } = {
     backgroundColor: "#2F5FD0",
     textColor: "#fff",
     mascotImageUrl: "/images/teams/finvengers/finvengers-mascot-square.png",
-    theme: HALLOWEEN_THEME,
+    theme: FINVENGERS_THEME,
   },
 };
