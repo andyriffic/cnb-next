@@ -1,4 +1,5 @@
 import { savePlayersGameMoves as saveSnakesAndLaddeersPlayersGameMoves } from "./saveGameMovesSnakesAndLadders";
+import { savePlayersGameMoves as savePacmansPlayersGameMoves } from "./saveGameMovesPacman";
 
 //Update this to the current mini-game so users get the correct points allocation and game behaviour
 
@@ -9,7 +10,7 @@ const getSaveGameForTeam = (team: string | undefined) => {
 
   switch (team.toLowerCase()) {
     case "corgi": {
-      return saveSnakesAndLaddeersPlayersGameMoves;
+      return savePacmansPlayersGameMoves;
     }
     default: {
       return saveSnakesAndLaddeersPlayersGameMoves;
