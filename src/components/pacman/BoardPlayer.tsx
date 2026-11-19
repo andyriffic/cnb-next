@@ -126,7 +126,7 @@ export function BoardPlayer({ pacPlayer }: Props): JSX.Element {
       {pacPlayer.movesRemaining > 0 && (
         <MovesRemaining>{pacPlayer.movesRemaining}</MovesRemaining>
       )}
-      {pacPlayer.powerPill && <PowerPill>💊</PowerPill>}
+      {pacPlayer.powerPill && <PowerPill>🦴</PowerPill>}
       {usedPowerPill && (
         <Appear>
           <SafeIndicator>SAFE</SafeIndicator>

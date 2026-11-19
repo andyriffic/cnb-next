@@ -7,7 +7,7 @@ import {
   PacManPlayerStatus,
 } from "../../types";
 
-export const MIN_PACMAN_MOVES = 25;
+export const MIN_PACMAN_MOVES = 30;
 const TURNS_IN_JAIL = 2;
 
 export type GameUiStatus =

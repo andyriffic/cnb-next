@@ -105,9 +105,9 @@ const getDirectionIndicator = (
           </span>
         );
       case "start":
-        return <>🏠</>;
+        return <>🐾</>;
       case "end":
-        return <>🦴</>;
+        return <>🏠</>;
       default:
         return <></>;
     }
