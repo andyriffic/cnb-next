@@ -1,0 +1,97 @@
+import React from "react";
+import tinycolor from "tinycolor2";
+import cuteDogImage from "./cute-front-facing-dog.svg";
+import styled from "styled-components";
+
+const Svg = styled.svg<{ color: string }>`
+  .primary {
+    fill: var(--dog-primary, ${({ color }) => color});
+  }
+  .ink {
+    stroke: #3d2b25;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+`;
+
+type Props = {
+  color?: string;
+  width?: number | string;
+};
+
+export const PacManDog = ({ color = "#c47a45", width = 30 }: Props) => {
+  const shadeColor = tinycolor(color).darken(20).toHexString();
+
+  // return <img src={cuteDogImage.src} alt="PacMan Dog" width={"70%"} />;
+  return (
+    <Svg
+      width={width}
+      height={width}
+      viewBox="0 0 80 80"
+      role="img"
+      aria-labelledby="title desc"
+      // style="--dog-primary:#c47a45"
+      color={color}
+    >
+      <title id="title">Cute front-facing dog</title>
+      <desc id="desc">
+        A cheerful comic-style dog with a customizable coat color.
+      </desc>
+      <path
+        className="primary ink"
+        d="M24 52 Q19 58 19 68 Q19 76 27 76 H53 Q61 76 61 68 Q61 58 56 52Z"
+      />
+      <path
+        fill="#f3c58e"
+        className="ink"
+        d="M23 67 Q22 74 28 74 H34 Q37 72 36 67M44 67 Q43 72 46 74 H52 Q58 74 57 67"
+      />
+      <path
+        className="primary ink"
+        d="M22 17 Q11 9 8 20 Q5 34 14 43 Q19 47 25 39Z"
+      />
+      <path
+        className="primary ink"
+        d="M58 17 Q69 9 72 20 Q75 34 66 43 Q61 47 55 39Z"
+      />
+      <path fill="#e89a78" d="M17 20 Q12 17 12 23 Q12 32 17 37 Q20 39 21 35Z" />
+      <path fill="#e89a78" d="M63 20 Q68 17 68 23 Q68 32 63 37 Q60 39 59 35Z" />
+      <path
+        className="primary ink"
+        d="M16 32 Q16 11 40 10 Q64 11 64 32 V43 Q64 57 50 60 H30 Q16 57 16 43Z"
+      />
+      <path fill="#f0b77f" d="M35 12 Q40 8 45 12 Q42 16 40 17 Q37 15 35 12Z" />
+      <ellipse cx="31" cy="33" rx="3.1" ry="4" fill="#35251f" />
+      <ellipse cx="49" cy="33" rx="3.1" ry="4" fill="#35251f" />
+      <circle cx="32" cy="32" r="1" fill="#fff8e9" />
+      <circle cx="50" cy="32" r="1" fill="#fff8e9" />
+      <path
+        fill="#fff0d8"
+        className="ink"
+        d="M24 43 Q25 37 32 38 Q36 39 40 41 Q44 39 48 38 Q55 37 56 43 Q56 53 40 55 Q24 53 24 43Z"
+      />
+      <path fill="#3d2b25" d="M35 41 Q40 38 45 41 Q45 45 40 46 Q35 45 35 41Z" />
+      <path
+        d="M40 46 V49 M40 49 Q37 52 34 49 M40 49 Q43 52 46 49"
+        fill="none"
+        className="ink"
+        stroke-width="2"
+      />
+      <path
+        d="M24 57 Q40 64 56 57"
+        fill="none"
+        stroke="#d94f42"
+        stroke-width="4"
+        stroke-linecap="round"
+      />
+      <path
+        d="M40 61 L43 65 L40 69 L37 65Z"
+        fill="#ffd15c"
+        stroke="#3d2b25"
+        stroke-width="1.5"
+        stroke-linejoin="round"
+      />
+    </Svg>
+  );
+};

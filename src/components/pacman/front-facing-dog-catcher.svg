@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" role="img" aria-labelledby="title desc">
+  <title id="title">Front-facing dog catcher</title>
+  <desc id="desc">A cheerful comic-style dog catcher in a red uniform, holding a net.</desc>
+  <style>
+    .ink { stroke: #3d2b25; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .uniform { fill: var(--uniform-red, #d94f42); }
+  </style>
+  <defs>
+    <clipPath id="netClip"><ellipse cx="67" cy="18.5" rx="9.5" ry="12"/></clipPath>
+  </defs>
+  <!-- Net and handle behind the catcher -->
+  <path d="M62 29 L51 52" fill="none" stroke="#3d2b25" stroke-width="4.5" stroke-linecap="round"/>
+  <path d="M62 29 L51 52" fill="none" stroke="#bd8c58" stroke-width="2" stroke-linecap="round"/>
+  <ellipse cx="67" cy="18.5" rx="9.5" ry="12" fill="#fff0d8" stroke="#3d2b25" stroke-width="2.5"/>
+  <g clip-path="url(#netClip)" fill="none" stroke="#b88c67" stroke-width="1">
+    <path d="M55 8 L77 29 M55 15 L72 31 M61 5 L78 20 M57 25 L75 10 M62 31 L77 13"/>
+    <path d="M60 5 V32 M67 5 V32 M74 5 V32 M54 13 H79 M54 20 H79 M55 27 H78"/>
+  </g>
+  <!-- Body and legs -->
+  <path class="uniform ink" d="M28 42 H52 Q58 43 60 51 L63 72 H17 L20 52 Q21 44 28 42Z"/>
+  <path d="M40 57 V71" fill="none" stroke="#9f3933" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M17 69 Q25 72 37 69 L38 77 H15 Q14 73 17 69Z" fill="#594239" class="ink"/>
+  <path d="M43 69 Q55 72 63 69 Q66 73 64 77 H42Z" fill="#594239" class="ink"/>
+  <!-- Neck, ears, and face -->
+  <path d="M35 39 H45 V48 H35Z" fill="#e9b184" class="ink"/>
+  <ellipse cx="25" cy="29" rx="4.5" ry="5.5" fill="#e9b184" class="ink"/>
+  <ellipse cx="55" cy="29" rx="4.5" ry="5.5" fill="#e9b184" class="ink"/>
+  <path d="M26 22 C26 14 32 12 40 12 C48 12 54 14 54 22 L53 35 C53 43 48 46 40 46 C32 46 27 43 27 35Z" fill="#f3c58e" class="ink"/>
+  <!-- Friendly face -->
+  <path d="M30 24 Q33 22 36 24 M44 24 Q47 22 50 24" fill="none" stroke="#3d2b25" stroke-width="1.8" stroke-linecap="round"/>
+  <ellipse cx="33.5" cy="28" rx="2" ry="2.8" fill="#35251f"/>
+  <ellipse cx="46.5" cy="28" rx="2" ry="2.8" fill="#35251f"/>
+  <circle cx="34.2" cy="27.3" r="0.7" fill="#fff8e9"/>
+  <circle cx="47.2" cy="27.3" r="0.7" fill="#fff8e9"/>
+  <ellipse cx="40" cy="33" rx="2.3" ry="1.7" fill="#a85c4b"/>
+  <path d="M36 38 Q40 41 44 38" fill="none" stroke="#8c4b3c" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M31 37 Q35 34 40 37 Q45 34 49 37 Q47 42 40 40 Q33 42 31 37Z" fill="#594239"/>
+  <!-- Uniform details -->
+  <path d="M27 45 L22 49 L27 54 M53 45 L58 49 L55 53" fill="none" stroke="#a63834" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="32" cy="50" r="1.7" fill="#ffd15c"/>
+  <circle cx="48" cy="50" r="1.7" fill="#ffd15c"/>
+  <path d="M44 53 L50 53 L50 59 L44 59Z" fill="#c63f39" stroke="#8f332f" stroke-width="1.2" stroke-linejoin="round"/>
+  <path d="M46 55 H48 M46 57 H48" stroke="#ffd15c" stroke-width="1" stroke-linecap="round"/>
+  <!-- Red cap -->
+  <path class="uniform ink" d="M24 19 C23 10 30 5 40 5 C50 5 57 10 56 19 Q40 16 24 19Z"/>
+  <path class="uniform ink" d="M21 19 Q40 16 59 19 Q56 23 40 23 Q24 23 21 19Z"/>
+  <circle cx="40" cy="13.5" r="4" fill="#ffd15c" stroke="#3d2b25" stroke-width="1.2"/>
+  <circle cx="40" cy="14.2" r="1.2" fill="#a63834"/>
+  <circle cx="37.9" cy="12.4" r="0.7" fill="#a63834"/>
+  <circle cx="39.4" cy="11.5" r="0.7" fill="#a63834"/>
+  <circle cx="41" cy="11.5" r="0.7" fill="#a63834"/>
+  <circle cx="42.3" cy="12.4" r="0.7" fill="#a63834"/>
+  <!-- Raised sleeve and hand gripping the net -->
+  <path class="uniform ink" d="M50 44 Q57 43 60 49 L56 56 Q52 56 48 53Z"/>
+  <ellipse cx="51" cy="50" rx="3.6" ry="3.2" fill="#f3c58e" stroke="#3d2b25" stroke-width="2"/>
+</svg>

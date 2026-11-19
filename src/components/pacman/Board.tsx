@@ -10,6 +10,7 @@ import { PacManUiState } from "./hooks/usePacman/reducer";
 import { Coordinates } from "./types";
 
 import type { JSX } from "react";
+import { DogCatcher } from "./DogCatcher";
 
 const debug = false;
 
@@ -77,20 +78,36 @@ const getDirectionIndicator = (
     switch (pathDirection) {
       case "up":
         // return <>👆🏻</>;
-        return <>↑</>;
+        return <>🐾</>;
       case "down":
         // return <>👇🏻</>;
-        return <>↓</>;
+        return (
+          <span
+            style={{ display: "inline-block", transform: "rotate(180deg)" }}
+          >
+            🐾
+          </span>
+        );
       case "left":
         // return <>👈🏻</>;
-        return <>←</>;
+        return (
+          <span
+            style={{ display: "inline-block", transform: "rotate(260deg)" }}
+          >
+            🐾
+          </span>
+        );
       case "right":
         // return <>👉🏻</>;
-        return <>→</>;
+        return (
+          <span style={{ display: "inline-block", transform: "rotate(90deg)" }}>
+            🐾
+          </span>
+        );
       case "start":
-        return <>🏡</>;
+        return <>🏠</>;
       case "end":
-        return <>🍒</>;
+        return <>🦴</>;
       default:
         return <></>;
     }
@@ -101,7 +118,7 @@ export function Board({ uiState }: Props): JSX.Element {
   const animatePath = isClientSideFeatureEnabled("animate");
   return (
     <BoardBackground>
-      <BoardBackgroundImage src="/images/pacman/pac-man-board.png" />
+      <BoardBackgroundImage src="/images/pacman/pac-man-dog-park-board.png" />
       {boardConfig.playerPath.map((s, i) => {
         const direction = getCellDirection(boardConfig, i);
         return (
@@ -160,9 +177,12 @@ export function Board({ uiState }: Props): JSX.Element {
       <PositionedPlayer
         $moveSpeedMs={240}
         $offset={{ x: 0, y: 0 }}
-        $position={boardConfig.pacManPath[uiState.pacMan.pathIndex]!.coordinates}
+        $position={
+          boardConfig.pacManPath[uiState.pacMan.pathIndex]!.coordinates
+        }
       >
-        <PacMan state={uiState} />
+        <DogCatcher />
+        {/* <PacMan state={uiState} /> */}
       </PositionedPlayer>
     </BoardBackground>
   );

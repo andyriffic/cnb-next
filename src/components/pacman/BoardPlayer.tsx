@@ -8,6 +8,7 @@ import { spinAnimation } from "../animations/keyframes/spinAnimations";
 import { useSound } from "../hooks/useSound";
 import { PacManGhost } from "./PacManGhost";
 import { PacManPlayer } from "./types";
+import { PacManDog } from "./PacManDog";
 
 const Container = styled.div<{ $goingToJail: boolean; $onTeam: boolean }>`
   position: relative;
@@ -29,14 +30,17 @@ const PlayerName = styled.div`
   text-align: center;
   position: absolute;
   bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
   border: 1px solid;
   white-space: nowrap;
 `;
 
 const MovesRemaining = styled.div`
   position: absolute;
-  top: -50%;
-  left: 15%;
+  top: -10%;
+  left: 50%;
+  transform: translateX(-50%);
   padding: 0.1rem;
   background: black;
   border-radius: 50%;
@@ -108,7 +112,8 @@ export function BoardPlayer({ pacPlayer }: Props): JSX.Element {
 
   return (
     <Container $goingToJail={goingToJail} $onTeam={pacPlayer.onTeam}>
-      <PacManGhost color={inJail ? "#777777" : pacPlayer.color} width="3vw" />
+      {/* <PacManGhost color={inJail ? "#777777" : pacPlayer.color} width="3vw" /> */}
+      <PacManDog color={pacPlayer.color} width="3.5vw" />
       <PlayerName
         style={{
           backgroundColor: pacPlayer.color,
